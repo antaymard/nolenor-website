@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components";
+import Container from "@/components/ui/Container.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { secondaryFeatures } from "@/data/secondaryFeatures";
+---
+
+<section class="py-24 sm:py-32">
+  <Container class="flex flex-col gap-14">
+    <SectionHeading
+      align="center"
+      eyebrow="And there's more"
+      title="Built for how you actually work."
+      class="mx-auto"
+    />
+
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-reveal>
+      {
+        secondaryFeatures.map((feature) => (
+          <div class="flex flex-col gap-3 rounded-2xl border border-border p-6 transition-colors hover:border-brand/30">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-brand">
+              <Icon name={feature.icon} class="h-5 w-5" />
+            </span>
+            <h3 class="text-sm font-semibold">{feature.title}</h3>
+            <p class="text-sm text-muted-foreground text-pretty">
+              {feature.description}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</section>

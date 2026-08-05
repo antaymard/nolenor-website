@@ -1,0 +1,24 @@
+---
+interface Props {
+  tone?: "brand" | "highlight" | "neutral";
+  class?: string;
+}
+
+const { tone = "neutral", class: className = "" } = Astro.props;
+
+// --highlight (warm gold) fails contrast as a text color at any lightness
+// combo tested — it is used here ONLY as a chip background, always paired
+// with dark --foreground text, matching how the product app itself only
+// ever uses it as a small accent.
+const tones = {
+  brand: "bg-brand/10 text-brand",
+  highlight: "bg-highlight text-foreground",
+  neutral: "bg-muted text-muted-foreground",
+};
+---
+
+<span
+  class={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${tones[tone]} ${className}`}
+>
+  <slot />
+</span>

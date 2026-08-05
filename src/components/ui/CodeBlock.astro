@@ -1,0 +1,25 @@
+---
+interface Props {
+  code: string;
+  filename?: string;
+  class?: string;
+}
+
+const { code, filename, class: className = "" } = Astro.props;
+---
+
+<div
+  class={`overflow-hidden rounded-2xl border border-border bg-foreground text-background shadow-xl ${className}`}
+>
+  <div class="flex items-center gap-2 border-b border-background/10 px-4 py-3">
+    <span class="h-2.5 w-2.5 rounded-full bg-background/25"></span>
+    <span class="h-2.5 w-2.5 rounded-full bg-background/25"></span>
+    <span class="h-2.5 w-2.5 rounded-full bg-background/25"></span>
+    {
+      filename && (
+        <span class="ml-2 text-xs text-background/60">{filename}</span>
+      )
+    }
+  </div>
+  <pre class="overflow-x-auto p-5 text-sm leading-relaxed"><code>{code}</code></pre>
+</div>

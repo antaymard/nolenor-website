@@ -1,0 +1,80 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  id: string;
+  kind?: "video" | "image";
+  aspectRatio?: string;
+  poster?: string;
+  src?: string;
+  alt: string;
+  autoplay?: boolean;
+  restartOnExit?: boolean;
+  priority?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  kind = "video",
+  aspectRatio = "16/10",
+  poster,
+  src,
+  alt,
+  autoplay = true,
+  restartOnExit = false,
+  priority = false,
+  class: className = "",
+} = Astro.props;
+
+// No real media exists yet (see MEDIA_BRIEF.md) — every MediaFrame renders
+// a clearly-labelled placeholder state until `src` is supplied, so the
+// page looks intentional rather than broken while media is in production.
+const isPlaceholder = !src;
+---
+
+<div
+  data-media-id={id}
+  class={`group relative overflow-hidden rounded-2xl border border-border bg-muted ${className}`}
+  style={`aspect-ratio: ${aspectRatio};`}
+>
+  {
+    isPlaceholder ? (
+      <div class="flex h-full w-full flex-col items-center justify-center gap-3 border border-dashed border-border/80 p-8 text-center">
+        <span class="flex h-11 w-11 items-center justify-center rounded-full bg-background text-brand">
+          <Icon
+            name={kind === "video" ? "lucide:play" : "lucide:image"}
+            class="h-5 w-5"
+          />
+        </span>
+        <p class="max-w-xs text-sm font-medium text-muted-foreground">
+          {alt}
+        </p>
+        <span class="text-xs uppercase tracking-wide text-muted-foreground/70">
+          Media placeholder — {id}
+        </span>
+      </div>
+    ) : kind === "video" ? (
+      <video
+        class="h-full w-full object-cover"
+        src={src}
+        poster={poster}
+        muted
+        loop
+        playsinline
+        preload={priority ? "auto" : "metadata"}
+        autoplay={priority}
+        data-autoplay-on-scroll={autoplay ? "true" : undefined}
+        data-restart-on-exit={restartOnExit ? "true" : "false"}
+        aria-label={alt}
+      />
+    ) : (
+      <img
+        src={src}
+        alt={alt}
+        class="h-full w-full object-cover"
+        loading={priority ? "eager" : "lazy"}
+      />
+    )
+  }
+</div>

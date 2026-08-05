@@ -1,0 +1,76 @@
+---
+import { Icon } from "astro-icon/components";
+import Container from "@/components/ui/Container.astro";
+import Button from "@/components/ui/Button.astro";
+import Badge from "@/components/ui/Badge.astro";
+import MediaFrame from "@/components/ui/MediaFrame.astro";
+import { APP_URL } from "@/lib/constants";
+
+const proofStrip = [
+  { icon: "lucide:layout-grid", label: "11 node types" },
+  { icon: "lucide:zap", label: "Real-time by default" },
+  { icon: "lucide:plug", label: "Native MCP server" },
+  { icon: "lucide:rotate-ccw-clock", label: "Full version history" },
+  { icon: "lucide:download", label: "Export anytime — no lock-in" },
+];
+---
+
+<section class="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
+  <Container class="flex flex-col items-center gap-8 text-center">
+    <Badge tone="brand">
+      <Icon name="lucide:sparkles" class="h-3.5 w-3.5" />
+      Built for the agentic era
+    </Badge>
+
+    <h1 class="max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
+      Your thinking deserves a canvas.
+    </h1>
+
+    <p class="max-w-2xl text-lg text-muted-foreground text-pretty sm:text-xl">
+      Nolenor is the visual workspace where you and Nolë — your AI agent —
+      turn ideas into structured documents, dashboards, and live mini-apps.
+      Not walls of chat text. Nothing ever blocks you.
+    </p>
+
+    <div class="flex flex-col gap-3 sm:flex-row">
+      <Button href={APP_URL} size="lg">
+        Start free trial
+        <Icon name="lucide:arrow-right" class="h-4 w-4" />
+      </Button>
+      <Button href="#features" variant="ghost" size="lg">
+        See how it works
+      </Button>
+    </div>
+
+    <!--
+      MEDIA: hero-demo — wide hero shot, 16:9, ~8-14s loop.
+      Content: cursor drags a Link node onto an already-populated canvas
+      (a Blocknote doc, a Table, an Image node visible), preview metadata
+      auto-fetches, then the Nolë side panel opens and streams a short
+      structured response. Should read as "calm, fast, in control" — this
+      is the very first impression of the product. See MEDIA_BRIEF.md.
+    -->
+    <div class="mt-6 w-full max-w-5xl" data-reveal data-reveal-variant="zoom">
+      <MediaFrame
+        id="hero-demo"
+        aspectRatio="16/9"
+        priority
+        alt="Nolenor canvas: dragging a node onto the board while Nolë responds in a structured side panel"
+      />
+    </div>
+
+    <div
+      class="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3"
+      data-reveal
+    >
+      {
+        proofStrip.map((item) => (
+          <span class="inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <Icon name={item.icon} class="h-4 w-4 text-brand" />
+            {item.label}
+          </span>
+        ))
+      }
+    </div>
+  </Container>
+</section>
