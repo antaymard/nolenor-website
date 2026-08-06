@@ -27,7 +27,7 @@ export const faqEntries: FaqEntry[] = [
   {
     question: "Is this like Notion, or Miro, or just another chatbot?",
     answer:
-      "None of those, exactly. Nolenor is a visual canvas like a whiteboard, with document editing like Notion, and an AI agent built into every node — not a separate chat window bolted on the side.",
+      "None of those, exactly — and unlike a lot of AI tools, nothing here is a black box. Nolenor is a visual canvas like a whiteboard, with document editing like Notion, and an AI agent that shows its work in every node — not a chat window bolted on the side.",
   },
   {
     question: "What does it cost?",

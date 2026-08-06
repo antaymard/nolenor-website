@@ -8,21 +8,21 @@ const cards = [
     icon: "lucide:message-square",
     title: "Linear chat",
     description:
-      "One thread, one thing at a time. Context gets lost in a wall of text, and you can't work on two ideas at once.",
+      "One thread holds everything. Ask a follow-up three messages later and the context you needed is already buried.",
     tone: "problem" as const,
   },
   {
     icon: "lucide:box",
     title: "Autonomous agents",
     description:
-      "You hand off a task and hope. No visibility into intermediate steps, no way to correct course until it's done — or wrong.",
+      "You hand off a task and wait. No visibility into what's happening, no way to step in until it's already done — right or wrong.",
     tone: "problem" as const,
   },
   {
     icon: "lucide:layout-dashboard",
     title: "Nolenor",
     description:
-      "A visual surface where AI works in structured, visible blocks — and you can jump in on any node, any time, without stopping the rest.",
+      "Every action lands as a visible, structured block. Watch it happen. Jump in on any node, any time, without stopping the rest.",
     tone: "answer" as const,
   },
 ];
@@ -33,8 +33,8 @@ const cards = [
     <SectionHeading
       align="center"
       eyebrow="The interface problem"
-      title="Chat is too linear. Autonomous agents are a black box."
-      description="Neither is the right interface for working with AI — the same way a single document was never the right interface for a team."
+      title="Chat hides context. Agents hide everything."
+      description="Neither is built for trust. Nolenor shows you exactly what's happening — every time."
       class="mx-auto"
     />
 

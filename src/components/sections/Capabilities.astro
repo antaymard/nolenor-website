@@ -1,0 +1,56 @@
+---
+import Container from "@/components/ui/Container.astro";
+
+const capabilities = [
+  {
+    number: "01",
+    statement: "See every move.",
+    description:
+      "Watch Nolë's tool calls and reasoning stream in, live. Never a black box.",
+  },
+  {
+    number: "02",
+    statement: "Never wait.",
+    description:
+      "Sub-agents work in parallel while you keep moving. Nothing blocks you.",
+  },
+  {
+    number: "03",
+    statement: "Undo anything.",
+    description:
+      "Every change checkpointed automatically. Restore any node, any version, one click.",
+  },
+  {
+    number: "04",
+    statement: "Own it all.",
+    description:
+      "Export everything, any time, in open formats. Never locked in.",
+  },
+];
+---
+
+<section class="py-24 sm:py-32">
+  <Container class="flex flex-col gap-14">
+    <span class="text-sm font-semibold uppercase tracking-wide text-brand">
+      What changes
+    </span>
+
+    <div class="grid gap-x-12 gap-y-14 sm:grid-cols-2" data-reveal>
+      {
+        capabilities.map((item) => (
+          <div class="flex flex-col gap-3">
+            <span class="text-sm font-semibold text-muted-foreground/40">
+              {item.number}
+            </span>
+            <h3 class="text-2xl font-semibold tracking-tight sm:text-3xl">
+              {item.statement}
+            </h3>
+            <p class="max-w-sm text-base text-muted-foreground text-pretty">
+              {item.description}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</section>

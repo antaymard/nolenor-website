@@ -7,11 +7,12 @@ import MediaFrame from "@/components/ui/MediaFrame.astro";
 import { APP_URL } from "@/lib/constants";
 
 const proofStrip = [
+  { icon: "lucide:eye", label: "Every tool call, visible" },
   { icon: "lucide:layout-grid", label: "11 node types" },
-  { icon: "lucide:zap", label: "Real-time by default" },
+  { icon: "lucide:users", label: "Real-time collaboration" },
   { icon: "lucide:plug", label: "Native MCP server" },
   { icon: "lucide:rotate-ccw-clock", label: "Full version history" },
-  { icon: "lucide:download", label: "Export anytime — no lock-in" },
+  { icon: "lucide:download", label: "No lock-in, ever" },
 ];
 ---
 
@@ -19,17 +20,16 @@ const proofStrip = [
   <Container class="flex flex-col items-center gap-8 text-center">
     <Badge tone="brand">
       <Icon name="lucide:sparkles" class="h-3.5 w-3.5" />
-      Built for the agentic era
+      Transparent by design
     </Badge>
 
     <h1 class="max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
-      Your thinking deserves a canvas.
+      Watch your AI think. Not just talk.
     </h1>
 
     <p class="max-w-2xl text-lg text-muted-foreground text-pretty sm:text-xl">
-      Nolenor is the visual workspace where you and Nolë — your AI agent —
-      turn ideas into structured documents, dashboards, and live mini-apps.
-      Not walls of chat text. Nothing ever blocks you.
+      Every action Nolë takes lands as a visible block — not a wall of chat
+      text, not a black box. See it. Edit it. Redirect it. Any time.
     </p>
 
     <div class="flex flex-col gap-3 sm:flex-row">
