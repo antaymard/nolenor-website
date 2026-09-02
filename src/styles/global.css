@@ -95,10 +95,32 @@
   animation: appear 0.5s ease-out both;
 }
 
+/* Stacked sticky media: all steps overlap in one grid cell, only the
+   active one is visible, so swapping between them crossfades. */
+[data-sticky-media] {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s linear 0.45s;
+}
+
+[data-sticky-media][data-active="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
     opacity: 1 !important;
     animation: none !important;
+  }
+
+  [data-sticky-media] {
+    transition: none;
   }
 }
 

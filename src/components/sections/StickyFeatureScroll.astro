@@ -1,0 +1,82 @@
+---
+import { Icon } from "astro-icon/components";
+import Container from "@/components/ui/Container.astro";
+import MediaFrame from "@/components/ui/MediaFrame.astro";
+import type { FeatureStep } from "@/data/features";
+
+interface Props {
+  id?: string;
+  steps: FeatureStep[];
+  aspectRatio?: string;
+}
+
+const { id, steps, aspectRatio = "16/10" } = Astro.props;
+---
+
+<section id={id} class="py-12 sm:py-20" data-sticky-scroll>
+  <Container>
+    <div class="grid gap-x-12 lg:grid-cols-3">
+      <div class="lg:col-span-1">
+        {
+          steps.map((step, index) => (
+            <div
+              class="flex flex-col justify-center gap-6 py-12 lg:min-h-screen lg:py-24"
+              data-sticky-step={index}
+            >
+              <div class="flex flex-col gap-3">
+                <h2 class="font-serif text-3xl leading-tight text-balance text-foreground sm:text-4xl">
+                  {step.title}
+                </h2>
+                <p class="text-lg font-medium text-brand">{step.subtitle}</p>
+              </div>
+
+              <ul class="flex flex-col gap-4">
+                {step.bullets.map((bullet) => (
+                  <li class="flex items-start gap-3 text-base text-foreground/80">
+                    <Icon
+                      name={bullet.icon}
+                      class="mt-1 h-4.5 w-4.5 shrink-0 text-brand"
+                    />
+                    <span>{bullet.text}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="mt-2 lg:hidden">
+                <MediaFrame
+                  id={step.media.id}
+                  alt={step.media.alt}
+                  aspectRatio={aspectRatio}
+                />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="hidden lg:col-span-2 lg:block">
+        <div class="sticky top-0 flex h-screen items-center py-24">
+          <div class="grid w-full" data-sticky-media-stack>
+            {
+              steps.map((step, index) => (
+                <div
+                  class="col-start-1 row-start-1"
+                  data-sticky-media={index}
+                  data-active={index === 0 ? "true" : "false"}
+                  aria-hidden={index === 0 ? undefined : "true"}
+                >
+                  <MediaFrame
+                    id={step.media.id}
+                    alt={step.media.alt}
+                    aspectRatio={aspectRatio}
+                    autoplay={false}
+                  />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

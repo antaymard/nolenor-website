@@ -1,6 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/sections/Hero.astro";
+import StickyFeatureScroll from "@/components/sections/StickyFeatureScroll.astro";
+import { featureSteps } from "@/data/features";
 
 // Rebuilding the landing page from scratch, section by section, per the new
 // brief — the rest of src/components/sections/* is old-positioning content,
@@ -9,4 +11,5 @@ import Hero from "@/components/sections/Hero.astro";
 
 <Layout>
   <Hero />
+  <StickyFeatureScroll id="features" steps={featureSteps} />
 </Layout>
