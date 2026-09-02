@@ -1,0 +1,597 @@
+---
+import { Icon } from "astro-icon/components";
+
+/*
+ * Illustration for problem item 1: what the chat box does to a thought.
+ *
+ * A loose, connected cloud of half-formed thoughts hangs over a dimmed chat
+ * UI, then gets funnelled into the input and flattened into one long line —
+ * except the open question, which never fits and drifts away. The prompt is
+ * sent, the answer comes back as an undifferentiated wall, and two shorter
+ * retries pile on until the original idea has scrolled off the top.
+ *
+ * Geometry: every size is a multiple of --u, one container-query unit, so
+ * the whole scene scales with the card and only --u changes on mobile.
+ * Fragment positions are offsets in --u from the input's centre (the point
+ * everything collapses into), which lets the connector SVG be generated
+ * from the very same numbers below.
+ */
+
+const U_WIDE = 1;
+const U_TALL = 1.9;
+const ANCHOR_WIDE = { x: 50, y: 54 };
+const ANCHOR_TALL = { x: 50, y: 108.85 };
+
+interface Fragment {
+  text: string;
+  x: number;
+  y: number;
+  mx?: number;
+  my?: number;
+  /** The thought the input can't take: it drifts off instead of collapsing. */
+  drops?: boolean;
+}
+
+const fragments: Fragment[] = [
+  { text: "3 weeks of work?", x: -25, y: -42, mx: -9.5, my: -41.5 },
+  { text: "budget: 4k?", x: 13, y: -45, mx: 9.5, my: -34.5 },
+  { text: "the old deck", x: 29, y: -33 },
+  { text: "ask Marie first?", x: -33, y: -30 },
+  { text: "who's actually free?", x: -5, y: -35, mx: -4.2, my: -26.5 },
+  { text: "do we even need it?", x: 16, y: -25, mx: 5.3, my: -18.5, drops: true },
+];
+
+const links: [number, number][] = [
+  [0, 4],
+  [0, 3],
+  [4, 1],
+  [1, 2],
+  [2, 5],
+  [4, 5],
+];
+
+const line = (
+  a: Fragment,
+  b: Fragment,
+  anchor: { x: number; y: number },
+  unit: number,
+  narrow: boolean,
+) => ({
+  x1: anchor.x + (narrow ? a.mx! : a.x) * unit,
+  y1: anchor.y + (narrow ? a.my! : a.y) * unit,
+  x2: anchor.x + (narrow ? b.mx! : b.x) * unit,
+  y2: anchor.y + (narrow ? b.my! : b.y) * unit,
+});
+
+const wideLinks = links.map(([a, b]) =>
+  line(fragments[a], fragments[b], ANCHOR_WIDE, U_WIDE, false),
+);
+
+const tallLinks = links
+  .filter(([a, b]) => fragments[a].mx !== undefined && fragments[b].mx !== undefined)
+  .map(([a, b]) => line(fragments[a], fragments[b], ANCHOR_TALL, U_TALL, true));
+
+const PROMPT =
+  "Plan the June launch: work out the budget, check who's actually free, pull what we need from the old deck, and tell me if it's realistic.";
+---
+
+<div
+  class="cf-frame"
+  data-chat-flatten
+  data-phase="idle"
+  data-cf-prompt={PROMPT}
+  role="img"
+  aria-label="An AI chat: a cloud of connected half-formed thoughts collapses into the input, flattens into one long prompt, and the answer comes back as a wall of text followed by shorter and shorter retries."
+>
+  <!-- The chat, waiting behind the thinking. -->
+  <div class="cf-app" aria-hidden="true">
+    <div class="cf-topbar">
+      <span class="cf-dot"></span>
+      <span class="cf-tab">New chat</span>
+      <Icon name="lucide:plus" class="cf-topicon" />
+    </div>
+
+    <div class="cf-thread">
+      <div class="cf-row cf-row--user" data-cf-row>
+        <div><p class="cf-bubble">Help me plan the June launch.</p></div>
+      </div>
+      <div class="cf-row cf-row--ai" data-cf-row>
+        <div>
+          <div class="cf-bars">
+            <span class="cf-bar" style="width: 100%"></span>
+            <span class="cf-bar" style="width: 92%"></span>
+            <span class="cf-bar" style="width: 68%"></span>
+          </div>
+        </div>
+      </div>
+      <div class="cf-row cf-row--user" data-cf-row>
+        <div><p class="cf-bubble cf-bubble--long">{PROMPT}</p></div>
+      </div>
+      <div class="cf-row cf-row--ai" data-cf-row>
+        <div>
+          <div class="cf-bars">
+            <span class="cf-bar" style="width: 100%"></span>
+            <span class="cf-bar" style="width: 97%"></span>
+            <span class="cf-bar" style="width: 100%"></span>
+            <span class="cf-bar" style="width: 88%"></span>
+            <span class="cf-bar" style="width: 54%"></span>
+          </div>
+        </div>
+      </div>
+      <div class="cf-row cf-row--user" data-cf-row>
+        <div><p class="cf-bubble">No, not like that. Shorter.</p></div>
+      </div>
+      <div class="cf-row cf-row--user cf-row--last" data-cf-row>
+        <div><p class="cf-bubble">Actually, start over.</p></div>
+      </div>
+    </div>
+
+    <div class="cf-input">
+      <Icon name="lucide:paperclip" class="cf-icon" />
+      <div class="cf-field">
+        <span class="cf-placeholder">What should we get done?</span>
+        <span class="cf-typed" data-cf-text></span>
+      </div>
+      <span class="cf-send"><Icon name="lucide:arrow-up" class="cf-sendicon" /></span>
+    </div>
+  </div>
+
+  <!-- What is actually in your head. -->
+  <div class="cf-cloud" aria-hidden="true">
+    <svg class="cf-links cf-links--wide" viewBox="0 0 100 62.5" fill="none">
+      {
+        wideLinks.map((l) => (
+          <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+        ))
+      }
+    </svg>
+    <svg class="cf-links cf-links--tall" viewBox="0 0 100 125" fill="none">
+      {
+        tallLinks.map((l) => (
+          <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+        ))
+      }
+    </svg>
+
+    {
+      fragments.map((fragment, index) => (
+        <span
+          class="cf-frag"
+          data-drops={fragment.drops ? "true" : undefined}
+          data-narrow={fragment.mx === undefined ? "hide" : undefined}
+          style={`--i: ${index}; --wfx: calc(${fragment.x} * var(--u)); --wfy: calc(${fragment.y} * var(--u)); ${
+            fragment.mx === undefined
+              ? ""
+              : `--nfx: calc(${fragment.mx} * var(--u)); --nfy: calc(${fragment.my} * var(--u));`
+          }`}
+        >
+          <span class="cf-frag-inner">{fragment.text}</span>
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* One container unit drives every size in the scene, so the whole thing
+     scales with the card and mobile only has to redefine --u. */
+  .cf-frame {
+    --u: 1cqw;
+    container-type: inline-size;
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    background: var(--surface);
+    box-shadow: 0 18px 50px -30px rgba(47, 54, 83, 0.45);
+  }
+
+  .cf-app {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.6s ease;
+  }
+
+  /* The chat waits, greyed out, while the thinking happens in front of it. */
+  .cf-frame[data-phase="thinking"] .cf-app,
+  .cf-frame[data-phase="idle"] .cf-app {
+    opacity: 0.2;
+  }
+
+  .cf-topbar {
+    display: flex;
+    align-items: center;
+    gap: calc(2 * var(--u));
+    padding: 0 calc(3.5 * var(--u));
+    height: calc(7 * var(--u));
+    border-bottom: 1px solid var(--border);
+    color: var(--muted-foreground);
+    flex: none;
+  }
+
+  .cf-dot {
+    width: calc(2.6 * var(--u));
+    height: calc(2.6 * var(--u));
+    border-radius: 999px;
+    background: var(--muted);
+    flex: none;
+  }
+
+  .cf-tab {
+    font-size: calc(1.9 * var(--u));
+    flex: 1;
+  }
+
+  .cf-topicon {
+    width: calc(2.6 * var(--u));
+    height: calc(2.6 * var(--u));
+  }
+
+  .cf-thread {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    padding: 0 calc(9 * var(--u));
+    /* Once the thread outgrows the box the oldest messages leave through the
+       top, faded out, the way a real conversation scrolls away from you. */
+    mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+  }
+
+  /* 0fr -> 1fr so a message can grow the thread from nothing and push the
+     earlier ones off the top, exactly like a real chat. */
+  .cf-row {
+    display: grid;
+    grid-template-rows: 0fr;
+    /* Never shrink: extra messages push the thread past the top edge instead
+       of squashing every bubble. */
+    flex: none;
+    /* Flex items default to min-height:auto, which would keep a collapsed
+       row's content height reserved in the thread. */
+    min-height: 0;
+    opacity: 0;
+    max-width: 82%;
+    transition:
+      grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.3s ease;
+  }
+
+  .cf-row > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Spacing on the child, not the clipped box: padding on the box itself
+     survives the 0fr collapse and leaves a phantom gap per hidden row. */
+  .cf-row > div > * {
+    margin-top: calc(2.2 * var(--u));
+  }
+
+  .cf-row.is-on {
+    opacity: 1;
+    grid-template-rows: 1fr;
+  }
+
+  .cf-row--user {
+    align-self: flex-end;
+  }
+
+  .cf-row--ai {
+    align-self: stretch;
+    max-width: 100%;
+  }
+
+  /* The two retries land one after the other, not together. */
+  .cf-row--last {
+    transition-delay: 0.45s;
+  }
+
+  .cf-bubble {
+    margin: 0;
+    border-radius: calc(3 * var(--u)) calc(3 * var(--u)) calc(0.8 * var(--u))
+      calc(3 * var(--u));
+    background: var(--brand);
+    color: var(--brand-foreground);
+    padding: calc(1.6 * var(--u)) calc(2.4 * var(--u));
+    font-size: calc(2.1 * var(--u));
+    line-height: 1.45;
+  }
+
+  .cf-bars {
+    display: flex;
+    flex-direction: column;
+    gap: calc(1.4 * var(--u));
+  }
+
+  .cf-bar {
+    height: calc(1.5 * var(--u));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--foreground) 13%, transparent);
+  }
+
+  .cf-input {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: calc(2 * var(--u));
+    margin: calc(3 * var(--u)) calc(9 * var(--u)) calc(4 * var(--u));
+    padding: calc(1.6 * var(--u)) calc(1.6 * var(--u)) calc(1.6 * var(--u))
+      calc(2.6 * var(--u));
+    min-height: calc(9 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: calc(4.5 * var(--u));
+    background: var(--surface);
+    box-shadow: 0 6px 18px -12px rgba(47, 54, 83, 0.5);
+  }
+
+  .cf-icon {
+    width: calc(2.8 * var(--u));
+    height: calc(2.8 * var(--u));
+    color: var(--muted-foreground);
+    flex: none;
+  }
+
+  /* Right-aligned and clipped: once the prompt outgrows the box, the start
+     of your own sentence scrolls out of sight. */
+  .cf-field {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+    height: calc(3.4 * var(--u));
+    font-size: calc(2.2 * var(--u));
+  }
+
+  .cf-placeholder {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    color: var(--muted-foreground);
+    transition: opacity 0.2s ease;
+  }
+
+  .cf-frame[data-phase="typing"] .cf-placeholder {
+    opacity: 0;
+  }
+
+  .cf-typed {
+    white-space: nowrap;
+    color: var(--foreground);
+  }
+
+  .cf-frame[data-phase="typing"] .cf-typed {
+    border-right: 2px solid var(--brand);
+    padding-right: calc(0.4 * var(--u));
+  }
+
+  .cf-send {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: calc(5.8 * var(--u));
+    height: calc(5.8 * var(--u));
+    border-radius: 999px;
+    background: var(--brand);
+    color: var(--brand-foreground);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cf-frame[data-phase="sent"] .cf-send {
+    transform: scale(0.86);
+  }
+
+  .cf-sendicon {
+    width: calc(3 * var(--u));
+    height: calc(3 * var(--u));
+  }
+
+  .cf-cloud {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .cf-links {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .cf-links line {
+    stroke: var(--brand);
+    stroke-width: 0.3;
+    stroke-linecap: round;
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+  }
+
+  .cf-links--tall {
+    display: none;
+  }
+
+  .cf-frame[data-phase="thinking"] .cf-links {
+    opacity: 0.4;
+  }
+
+  .cf-frame[data-phase="thinking"] .cf-links line {
+    animation: cf-draw 0.9s ease forwards;
+  }
+
+  /* The links snap first — the connections are the first thing the box loses. */
+  .cf-frame[data-phase="collapse"] .cf-links {
+    opacity: 0;
+    transition-duration: 0.18s;
+  }
+
+  @keyframes cf-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .cf-frag {
+    --fx: var(--wfx);
+    --fy: var(--wfy);
+    position: absolute;
+    left: 50%;
+    top: 86.4%;
+    opacity: 0;
+    transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
+      scale(0.92);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: 0 8px 20px -14px rgba(47, 54, 83, 0.6);
+    padding: calc(1.2 * var(--u)) calc(2.2 * var(--u));
+    font-size: calc(2.1 * var(--u));
+    line-height: 1.35;
+    white-space: nowrap;
+    color: var(--foreground);
+    transition:
+      opacity 0.45s ease,
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i) * 80ms);
+  }
+
+  .cf-frag[data-drops] {
+    border-style: dashed;
+    border-color: color-mix(in srgb, var(--brand) 45%, transparent);
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  .cf-frame[data-phase="thinking"] .cf-frag {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
+      scale(1);
+  }
+
+  .cf-frame[data-phase="thinking"] .cf-frag-inner {
+    animation: cf-float 4.5s ease-in-out infinite alternate;
+    animation-delay: calc(var(--i) * -700ms);
+  }
+
+  .cf-frag-inner {
+    display: block;
+  }
+
+  /* Everything funnels into the input and flattens... */
+  .cf-frame[data-phase="collapse"] .cf-frag {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+    transition-duration: 0.45s, 0.55s;
+    transition-delay: calc(var(--i) * 55ms);
+  }
+
+  /* ...except the open question, which just drifts off unsaid. */
+  .cf-frame[data-phase="collapse"] .cf-frag[data-drops] {
+    transform: translate(
+        calc(-50% + var(--fx) + 3 * var(--u)),
+        calc(-50% + var(--fy) - 9 * var(--u))
+      )
+      scale(0.96);
+    transition-duration: 0.8s;
+    transition-delay: 0.1s;
+  }
+
+  @keyframes cf-float {
+    from {
+      transform: translateY(calc(-0.7 * var(--u)));
+    }
+    to {
+      transform: translateY(calc(0.7 * var(--u)));
+    }
+  }
+
+  @media (max-width: 639px) {
+    .cf-frame {
+      --u: 1.9cqw;
+      aspect-ratio: 4 / 5;
+    }
+
+    .cf-thread,
+    .cf-input {
+      padding-left: calc(4 * var(--u));
+      padding-right: calc(4 * var(--u));
+    }
+
+    .cf-input {
+      margin-left: calc(4 * var(--u));
+      margin-right: calc(4 * var(--u));
+      padding-left: calc(2.6 * var(--u));
+      padding-right: calc(1.6 * var(--u));
+    }
+
+    .cf-links--wide {
+      display: none;
+    }
+
+    .cf-links--tall {
+      display: block;
+    }
+
+    /* Four fragments and a tighter spread: the wide scatter has nowhere to go. */
+    .cf-frag {
+      --fx: var(--nfx);
+      --fy: var(--nfy);
+      top: 87%;
+    }
+
+    .cf-frag[data-narrow="hide"] {
+      display: none;
+    }
+  }
+
+  /* Reduced motion: the scene is composed and readable, nothing moves. */
+  .cf-frame[data-phase="still"] .cf-app {
+    opacity: 0.32;
+  }
+
+  .cf-frame[data-phase="still"] .cf-links {
+    opacity: 0.4;
+  }
+
+  .cf-frame[data-phase="still"] .cf-links line {
+    stroke-dashoffset: 0;
+  }
+
+  .cf-frame[data-phase="still"] .cf-frag {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
+      scale(1);
+    transition: none;
+  }
+
+  .cf-frame[data-phase="still"] .cf-placeholder {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cf-app,
+    .cf-row,
+    .cf-links,
+    .cf-frag,
+    .cf-send,
+    .cf-placeholder {
+      transition: none !important;
+    }
+
+    .cf-frag-inner,
+    .cf-links line {
+      animation: none !important;
+    }
+  }
+</style>

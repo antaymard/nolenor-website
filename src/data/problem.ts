@@ -1,31 +1,33 @@
 export interface ProblemItem {
-  caption: string;
-  media: {
+  title: string;
+  subtitle: string;
+  /** Named illustration built in src/components/visuals, or a media slot. */
+  visual?: "chat-flattening";
+  media?: {
     id: string;
     alt: string;
   };
 }
 
-// SCAFFOLD — the three items of the problem section. Copy and visuals are
-// still to be defined; each slot renders a MediaFrame placeholder until the
-// animated visual we design replaces it.
 export const problemItems: ProblemItem[] = [
   {
-    caption: "Item 1 — visual and copy to come.",
-    media: {
-      id: "problem-item-1",
-      alt: "Problem section, first item — visual to be designed",
-    },
+    title: "The chat turns thinking into prompting.",
+    subtitle:
+      "Your thoughts become a sequence of requests instead of something you can develop.",
+    visual: "chat-flattening",
   },
+  // SCAFFOLD — copy and visuals for items 2 and 3 are still to be defined.
   {
-    caption: "Item 2 — visual and copy to come.",
+    title: "Item 2 — title to come.",
+    subtitle: "Item 2 — subtitle to come.",
     media: {
       id: "problem-item-2",
       alt: "Problem section, second item — visual to be designed",
     },
   },
   {
-    caption: "Item 3 — visual and copy to come.",
+    title: "Item 3 — title to come.",
+    subtitle: "Item 3 — subtitle to come.",
     media: {
       id: "problem-item-3",
       alt: "Problem section, third item — visual to be designed",

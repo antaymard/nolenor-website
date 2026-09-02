@@ -1,6 +1,7 @@
 ---
 import Container from "@/components/ui/Container.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
+import ChatFlattening from "@/components/visuals/ChatFlattening.astro";
 import { problemItems } from "@/data/problem";
 ---
 
@@ -23,18 +24,34 @@ import { problemItems } from "@/data/problem";
     </p>
   </Container>
 
-  <Container class="mt-16 flex flex-col gap-16 sm:mt-20 sm:gap-20">
+  <Container class="mt-16 flex flex-col gap-20 sm:mt-24 sm:gap-28">
     {
       problemItems.map((item, index) => (
         <div
-          class="flex flex-col items-center gap-5 text-center"
+          class="flex flex-col items-center gap-6 text-center"
           data-problem-item={index}
           data-reveal
         >
           <div class="w-full max-w-3xl">
-            <MediaFrame id={item.media.id} alt={item.media.alt} aspectRatio="16/10" />
+            {item.visual === "chat-flattening" ? (
+              <ChatFlattening />
+            ) : (
+              item.media && (
+                <MediaFrame
+                  id={item.media.id}
+                  alt={item.media.alt}
+                  aspectRatio="16/10"
+                />
+              )
+            )}
           </div>
-          <p class="max-w-xl text-base text-muted-foreground">{item.caption}</p>
+
+          <div class="flex max-w-xl flex-col gap-2">
+            <h3 class="text-balance text-foreground">{item.title}</h3>
+            <p class="text-base text-pretty text-muted-foreground">
+              {item.subtitle}
+            </p>
+          </div>
         </div>
       ))
     }
