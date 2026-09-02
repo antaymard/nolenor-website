@@ -3,6 +3,7 @@ import Container from "@/components/ui/Container.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import ChatFlattening from "@/components/visuals/ChatFlattening.astro";
 import HiddenWork from "@/components/visuals/HiddenWork.astro";
+import LostThread from "@/components/visuals/LostThread.astro";
 import { problemItems } from "@/data/problem";
 ---
 
@@ -38,6 +39,8 @@ import { problemItems } from "@/data/problem";
               <ChatFlattening />
             ) : item.visual === "hidden-work" ? (
               <HiddenWork />
+            ) : item.visual === "lost-thread" ? (
+              <LostThread />
             ) : (
               item.media && (
                 <MediaFrame

@@ -1,0 +1,316 @@
+---
+import { Icon } from "astro-icon/components";
+
+/*
+ * Illustration for problem item 3: where the work ends up.
+ *
+ * A thread list on the left, an open conversation on the right, and a search
+ * that has no idea where anything is. The conversation rushes past under a
+ * blur — you can see it is text, you cannot read a word of it — and the one
+ * piece of actual work in there, a decision, surfaces for a second before the
+ * scroll carries it off and blurs it with the rest.
+ *
+ * Like item 2, it plays once per entrance rather than looping.
+ */
+
+const QUERY = "Where did we discuss this?";
+
+const threads = [
+  "Project idea",
+  "Research",
+  "Draft v3",
+  "Follow-up",
+  "Pricing v2",
+  "Kickoff notes",
+  "Untitled",
+  "Untitled",
+  "Untitled",
+];
+
+const ACTIVE_THREAD = 2;
+
+type Block =
+  | { kind: "user"; text: string }
+  | { kind: "text"; text: string }
+  | { kind: "bars"; bars: number[] }
+  | { kind: "work" };
+
+/*
+ * Filler with the shape of a real conversation. It is all blurred at render
+ * time, so what it says never reaches the reader — only that there is a lot
+ * of it, and that the one legible card is buried in the middle.
+ */
+const blocks: Block[] = [
+  { kind: "user", text: "can you summarise where we landed?" },
+  { kind: "bars", bars: [100, 94, 62] },
+  { kind: "user", text: "no, the other thread" },
+  {
+    kind: "text",
+    text: "Here is a recap of the options we went through, with the trade-offs for each one and what it would cost to change course later.",
+  },
+  { kind: "bars", bars: [100, 88, 97, 51] },
+  { kind: "user", text: "and the numbers?" },
+  {
+    kind: "text",
+    text: "Based on the figures you shared earlier, the second option comes out ahead on cost but not on time to hire.",
+  },
+  { kind: "bars", bars: [96, 100, 73] },
+  { kind: "work" },
+  { kind: "bars", bars: [100, 91, 100, 58] },
+  { kind: "user", text: "wait, what did we decide?" },
+  {
+    kind: "text",
+    text: "You have discussed this across several conversations. Here is what I can find in this one.",
+  },
+  { kind: "bars", bars: [100, 84, 95, 100, 47] },
+  { kind: "user", text: "no, before that" },
+  { kind: "bars", bars: [92, 100, 66] },
+];
+---
+
+<div
+  class="chat-frame"
+  data-lost-thread
+  role="img"
+  aria-label="A chat app: a sidebar of conversations ending in three called Untitled, a search reading 'Where did we discuss this?', and a long blurred thread rushing past. One legible card — the decision to hold off hiring until the Q3 deal signs — surfaces for a second before the scroll carries it away."
+>
+  <div class="chat-app" aria-hidden="true">
+    <div class="chat-topbar">
+      <div class="lt-search">
+        <Icon name="lucide:search" class="lt-searchicon" />
+        <span class="lt-query" data-lt-query data-text={QUERY}></span>
+      </div>
+    </div>
+
+    <div class="lt-body">
+      <aside class="lt-sidebar">
+        {
+          threads.map((thread, index) => (
+            <span class="lt-thread" data-active={index === ACTIVE_THREAD ? "true" : undefined}>
+              {thread}
+            </span>
+          ))
+        }
+      </aside>
+
+      <div class="lt-viewport" data-lt-viewport>
+        <div class="lt-stream" data-lt-stream>
+          {
+            blocks.map((block) =>
+              block.kind === "work" ? (
+                <div class="lt-work" data-lt-card>
+                  <span class="lt-worklabel">Decision</span>
+                  <p class="lt-worktext">
+                    We hold off until the Q3 deal signs, then hire.
+                  </p>
+                  <span class="lt-workmeta">March 14</span>
+                </div>
+              ) : block.kind === "user" ? (
+                <p class="lt-user lt-blur">{block.text}</p>
+              ) : block.kind === "text" ? (
+                <p class="lt-text lt-blur">{block.text}</p>
+              ) : (
+                <div class="lt-bars lt-blur">
+                  {block.bars.map((width) => (
+                    <span class="chat-bar" style={`width: ${width}%`} />
+                  ))}
+                </div>
+              ),
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lt-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: calc(1.6 * var(--u));
+    height: calc(4.6 * var(--u));
+    padding: 0 calc(2.2 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--background);
+    font-size: calc(2 * var(--u));
+    color: var(--foreground);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .lt-searchicon {
+    flex: none;
+    width: calc(2.4 * var(--u));
+    height: calc(2.4 * var(--u));
+    color: var(--muted-foreground);
+  }
+
+  .chat-frame[data-phase="typing"] .lt-query {
+    border-right: 2px solid var(--brand);
+    padding-right: calc(0.4 * var(--u));
+  }
+
+  .lt-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+  }
+
+  .lt-sidebar {
+    flex: none;
+    width: calc(26 * var(--u));
+    display: flex;
+    flex-direction: column;
+    gap: calc(2.4 * var(--u));
+    padding: calc(3.5 * var(--u)) calc(3 * var(--u));
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+    font-size: calc(2 * var(--u));
+    color: var(--muted-foreground);
+    text-align: left;
+  }
+
+  .lt-thread {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* The three Untitled ones fade out rather than end: the list keeps going. */
+  .lt-thread:nth-last-child(-n + 3) {
+    color: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
+  }
+
+  .lt-thread[data-active] {
+    color: var(--foreground);
+    font-weight: 700;
+  }
+
+  .lt-viewport {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    padding: 0 calc(4 * var(--u));
+    /* Both edges fade, so the thread reads as a slice of something much
+       longer in either direction. */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    );
+  }
+
+  .lt-stream {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(2.6 * var(--u));
+    padding: calc(4 * var(--u)) 0;
+    will-change: transform;
+  }
+
+  /* Legible as text, unreadable as words — which is the whole complaint. */
+  .lt-blur {
+    filter: blur(calc(0.34 * var(--u)));
+  }
+
+  .lt-user {
+    margin: 0;
+    align-self: flex-end;
+    max-width: 72%;
+    border-radius: calc(3 * var(--u)) calc(3 * var(--u)) calc(0.8 * var(--u))
+      calc(3 * var(--u));
+    background: var(--brand);
+    color: var(--brand-foreground);
+    padding: calc(1.5 * var(--u)) calc(2.4 * var(--u));
+    font-size: calc(2 * var(--u));
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  .lt-text {
+    margin: 0;
+    max-width: 96%;
+    font-size: calc(2 * var(--u));
+    line-height: 1.5;
+    color: var(--foreground);
+    text-align: left;
+  }
+
+  .lt-bars {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: calc(1.4 * var(--u));
+  }
+
+  .lt-work {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: calc(0.8 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: calc(2.4 * var(--u));
+    background: var(--surface);
+    padding: calc(2.2 * var(--u)) calc(2.6 * var(--u));
+    text-align: left;
+    box-shadow: 0 10px 26px -18px rgba(47, 54, 83, 0.55);
+    /* Sharp while it is on screen, lost with everything else once the scroll
+       carries it past. */
+    filter: blur(0);
+    transition:
+      filter 0.8s ease,
+      box-shadow 0.6s ease,
+      border-color 0.6s ease;
+  }
+
+  .chat-frame[data-phase="found"] .lt-work {
+    border-color: color-mix(in srgb, var(--brand) 55%, transparent);
+    box-shadow: 0 14px 34px -16px rgba(80, 87, 133, 0.55);
+  }
+
+  .chat-frame[data-phase="lost"] .lt-work,
+  .chat-frame[data-phase="end"] .lt-work {
+    filter: blur(calc(0.34 * var(--u)));
+  }
+
+  .lt-worklabel {
+    font-size: calc(1.6 * var(--u));
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand);
+  }
+
+  .lt-worktext {
+    margin: 0;
+    font-size: calc(2.2 * var(--u));
+    line-height: 1.4;
+    color: var(--foreground);
+  }
+
+  .lt-workmeta {
+    font-size: calc(1.7 * var(--u));
+    color: var(--muted-foreground);
+  }
+
+  @media (max-width: 639px) {
+    /* No room for the list next to the thread; the search and the wall of
+       blurred conversation carry it on their own. */
+    .lt-sidebar {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lt-work {
+      transition: none;
+    }
+  }
+</style>

@@ -1,4 +1,5 @@
 import { prefersReducedMotion } from "./reduced-motion";
+import { typeInto } from "./typewriter";
 
 // Drives the chat-flattening illustration: a phase name on the root element,
 // plus how many thread rows are visible at that point. CSS owns every
@@ -55,20 +56,9 @@ function setupScene(root: HTMLElement): void {
   let beatTimer = 0;
   let typeTimer = 0;
 
-  const TICK = 16;
-
   const type = (duration: number) => {
     if (!field || !prompt) return;
-    // Reveal a fixed number of characters per frame rather than one per tick,
-    // so the sentence always lands inside the beat however long it is.
-    const ticks = Math.max(1, Math.floor((duration * 0.8) / TICK));
-    const perTick = Math.max(1, Math.ceil(prompt.length / ticks));
-    let typed = 0;
-    typeTimer = window.setInterval(() => {
-      typed = Math.min(prompt.length, typed + perTick);
-      field.textContent = prompt.slice(0, typed);
-      if (typed >= prompt.length) window.clearInterval(typeTimer);
-    }, TICK);
+    typeTimer = typeInto(field, prompt, duration);
   };
 
   const halt = () => {
