@@ -1,42 +1,26 @@
 ---
-import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
 import Button from "@/components/ui/Button.astro";
-import { primaryNavLinks } from "@/data/nav";
-import { APP_URL, APP_SIGNIN_URL, SITE_NAME } from "@/lib/constants";
+import Logo from "@/components/ui/Logo.astro";
+import { APP_URL, APP_SIGNIN_URL } from "@/lib/constants";
 ---
 
-<header class="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur-md">
-  <Container class="flex h-16 items-center justify-between">
-    <a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
-      <img src="/favicon.svg" alt="" width="28" height="28" class="h-7 w-7" />
-      <span class="text-base">{SITE_NAME}</span>
-    </a>
+<header class="sticky top-3 z-50 sm:top-4">
+  <Container>
+    <div
+      class="flex items-center justify-between rounded-3xl bg-surface px-4 py-3 shadow-[0_8px_30px_-12px_rgba(47,54,83,0.25)] sm:px-6 sm:py-4"
+    >
+      <Logo iconClass="h-7 w-7 text-foreground" textClass="text-base sm:text-lg" />
 
-    <nav class="hidden items-center gap-8 md:flex" aria-label="Primary">
-      {
-        primaryNavLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </nav>
-
-    <div class="flex items-center gap-3">
-      <a
-        href={APP_SIGNIN_URL}
-        class="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
-      >
-        Log in
-      </a>
-      <Button href={APP_URL} size="md">
-        Start free trial
-        <Icon name="lucide:arrow-right" class="h-4 w-4" />
-      </Button>
+      <div class="flex items-center gap-4 sm:gap-6">
+        <a
+          href={APP_SIGNIN_URL}
+          class="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-foreground sm:inline-flex"
+        >
+          Login
+        </a>
+        <Button href={APP_URL} size="md">Try it for free</Button>
+      </div>
     </div>
   </Container>
 </header>

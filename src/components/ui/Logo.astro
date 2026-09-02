@@ -1,0 +1,24 @@
+---
+// Placeholder brand mark — swap the <svg> below for the real logo PNG once
+// it comes through (the one referenced in chat never actually attached).
+interface Props {
+  class?: string;
+  iconClass?: string;
+  textClass?: string;
+}
+
+const {
+  class: className = "",
+  iconClass = "h-7 w-7 text-foreground",
+  textClass = "text-lg",
+} = Astro.props;
+---
+
+<a href="/" class={`flex items-center gap-2 ${className}`} aria-label="Nolënor home">
+  <svg viewBox="0 0 32 32" fill="currentColor" class={iconClass} aria-hidden="true">
+    <path
+      d="M6,16 C6,9.373 10.477,4 16,4 C21.523,4 26,9.373 26,16 L26,21 Q23.5,27 21,21.5 Q18.5,27 16,21.5 Q13.5,27 11,21.5 Q8.5,27 6,21.5 L6,16 Z"
+    ></path>
+  </svg>
+  <span class={`font-serif font-medium text-foreground ${textClass}`}>Nolënor.</span>
+</a>

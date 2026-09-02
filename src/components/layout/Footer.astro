@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
+import Logo from "@/components/ui/Logo.astro";
 import { footerProductLinks, footerLegalLinks } from "@/data/nav";
 import { GITHUB_REPO_URL, SITE_NAME, TAGLINE } from "@/lib/constants";
 
@@ -10,10 +11,7 @@ const year = new Date().getFullYear();
 <footer class="border-t border-border">
   <Container class="grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
     <div class="flex flex-col gap-3">
-      <a href="/" class="flex items-center gap-2 font-semibold tracking-tight">
-        <img src="/favicon.svg" alt="" width="24" height="24" class="h-6 w-6" />
-        <span>{SITE_NAME}</span>
-      </a>
+      <Logo iconClass="h-6 w-6 text-foreground" textClass="text-base" />
       <p class="max-w-xs text-sm text-muted-foreground">{TAGLINE}</p>
       <a
         href={GITHUB_REPO_URL}
