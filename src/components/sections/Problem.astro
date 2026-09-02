@@ -1,0 +1,42 @@
+---
+import Container from "@/components/ui/Container.astro";
+import MediaFrame from "@/components/ui/MediaFrame.astro";
+import { problemItems } from "@/data/problem";
+---
+
+<section class="py-20 sm:py-28">
+  <Container class="flex flex-col items-center gap-6 text-center">
+    <h2
+      class="fit-lines text-foreground"
+      style="--fit-max: 2.25rem; --fit-ratio: 16.5"
+    >
+      <span class="block whitespace-nowrap">Every AI tool hands you a chat box.</span>
+      <span class="block whitespace-nowrap">That's the problem.</span>
+    </h2>
+
+    <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+      A chat is built for conversation: one prompt, one answer, one thread at a
+      time.
+      <br />
+      But real thinking is messier. It moves between ideas, references,
+      questions, notes and half-formed connections.
+    </p>
+  </Container>
+
+  <Container class="mt-16 flex flex-col gap-16 sm:mt-20 sm:gap-20">
+    {
+      problemItems.map((item, index) => (
+        <div
+          class="flex flex-col items-center gap-5 text-center"
+          data-problem-item={index}
+          data-reveal
+        >
+          <div class="w-full max-w-3xl">
+            <MediaFrame id={item.media.id} alt={item.media.alt} aspectRatio="16/10" />
+          </div>
+          <p class="max-w-xl text-base text-muted-foreground">{item.caption}</p>
+        </div>
+      ))
+    }
+  </Container>
+</section>

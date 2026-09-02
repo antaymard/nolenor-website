@@ -95,6 +95,17 @@
   animation: appear 0.5s ease-out both;
 }
 
+/* Headings whose line breaks are hand-set and must never break anywhere
+   else. Size is capped for wide screens (--fit-max) and otherwise derived
+   from the viewport, divided by --fit-ratio: the measured width-to-font-size
+   ratio of the heading's longest line in Hedvig Letters Serif, plus a little
+   slack. The generic serif fallback measures ~11% narrower, so lines fit
+   there too while the webfont loads. 3rem is the Container's padding below
+   lg, where this branch applies. */
+.fit-lines {
+  font-size: min(var(--fit-max), calc((100vw - 3rem) / var(--fit-ratio)));
+}
+
 /* Stacked sticky media: all steps overlap in one grid cell, only the
    active one is visible, so swapping between them crossfades. */
 [data-sticky-media] {
@@ -138,5 +149,11 @@ html {
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    line-height: 1.2;
   }
 }
