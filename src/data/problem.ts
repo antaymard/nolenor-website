@@ -28,7 +28,7 @@ export const problemItems: ProblemItem[] = [
     // anymore."). Replace once the wording is settled.
     title: "The chat buries your work.",
     subtitle:
-      "The work is there — an idea, a decision, a document — but it lives in a thread you can't search, revisit, or build on.",
+      "An idea, a decision, a document — all of it produced inside a conversation, and none of it anywhere you can go back to.",
     visual: "lost-thread",
   },
 ];

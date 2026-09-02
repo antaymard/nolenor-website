@@ -1,14 +1,24 @@
 import { prefersReducedMotion } from "./reduced-motion";
-import { typeInto } from "./typewriter";
 
-// Scrolls a long thread past the viewport so the one legible card in it
-// surfaces, holds for a beat, then gets carried off. Distances are measured
-// rather than hard-coded, so the card lands centred whatever the text does
-// at a given width. Plays once per entrance, like the status stack.
-const TYPING = 1400;
-const RUSH = 2000;
-const FOUND = 1300;
-const LOST = 2200;
+// Runs the "Which chat was it?" illustration: open on the conversation, mark
+// the one real idea in it, then abandon it for the sidebar and hunt. The
+// list's travel is measured rather than hard-coded, so the cursor comes to
+// rest on the same conversation whatever the list does at a given width.
+// Plays once per entrance, like the status stack.
+interface Beat {
+  phase: string;
+  duration: number;
+}
+
+const TIMELINE: Beat[] = [
+  { phase: "open", duration: 1100 },
+  { phase: "idea", duration: 1300 },
+  { phase: "search", duration: 900 },
+  { phase: "hunt", duration: 1900 },
+  { phase: "stuck", duration: 1500 },
+  // Holds here: the closing line runs its own fade in, hold and fade out.
+  { phase: "end", duration: 3600 },
+];
 
 export function initLostThread(): void {
   document
@@ -17,30 +27,24 @@ export function initLostThread(): void {
 }
 
 function setupThread(root: HTMLElement): void {
-  const query = root.querySelector<HTMLElement>("[data-lt-query]");
-  const viewport = root.querySelector<HTMLElement>("[data-lt-viewport]");
-  const stream = root.querySelector<HTMLElement>("[data-lt-stream]");
-  const card = root.querySelector<HTMLElement>("[data-lt-card]");
-  if (!query || !viewport || !stream || !card) return;
+  const view = root.querySelector<HTMLElement>("[data-lt-listview]");
+  const list = root.querySelector<HTMLElement>("[data-lt-list]");
+  const mark = root.querySelector<HTMLElement>("[data-lt-mark]");
+  if (!view || !list || !mark) return;
 
-  const queryText = query.dataset.text ?? "Where did we discuss this?";
-
-  // Offset that puts the card in the middle of the viewport, and the one
-  // that runs the thread out to its end.
-  const offsets = () => ({
-    found: card.offsetTop + card.offsetHeight / 2 - viewport.clientHeight / 2,
-    end: stream.scrollHeight - viewport.clientHeight,
-  });
-
-  const shift = (to: number, duration: number, easing: string) => {
-    stream.style.transition = `transform ${duration}ms ${easing}`;
-    stream.style.transform = `translateY(${-to}px)`;
+  // Where the cursor starts and settles inside the list, and how far the list
+  // has to travel for the marked conversation to end up under it.
+  const place = () => {
+    const start = view.offsetTop + view.clientHeight * 0.2;
+    const rest = view.offsetTop + view.clientHeight * 0.58;
+    root.style.setProperty("--lt-start", `${start}px`);
+    root.style.setProperty("--lt-rest", `${rest}px`);
+    return mark.offsetTop - view.clientHeight * 0.58;
   };
 
   if (prefersReducedMotion()) {
-    root.dataset.phase = "found";
-    query.textContent = queryText;
-    stream.style.transform = `translateY(${-offsets().found}px)`;
+    root.dataset.phase = "stuck";
+    list.style.transform = `translateY(${-place()}px)`;
     return;
   }
 
@@ -48,51 +52,36 @@ function setupThread(root: HTMLElement): void {
 
   const stop = () => {
     timers.forEach((timer) => window.clearTimeout(timer));
-    timers.forEach((timer) => window.clearInterval(timer));
     timers = [];
   };
 
   const reset = () => {
     root.dataset.phase = "idle";
-    query.textContent = "";
-    stream.style.transition = "none";
-    stream.style.transform = "translateY(0)";
+    list.style.transition = "none";
+    list.style.transform = "translateY(0)";
   };
 
   const play = () => {
     reset();
-    // Read back the layout so the reset transform applies before the first
-    // shift, otherwise the browser collapses the two into one jump.
-    void stream.offsetHeight;
+    const travel = place();
+    // Read the layout back so the reset lands before the scroll starts,
+    // otherwise the browser collapses the two into a single jump.
+    void list.offsetHeight;
 
-    root.dataset.phase = "typing";
-    timers.push(typeInto(query, queryText, TYPING));
-
-    timers.push(
-      window.setTimeout(() => {
-        root.dataset.phase = "rush";
-        shift(offsets().found, RUSH, "cubic-bezier(0.16, 1, 0.3, 1)");
-      }, TYPING),
-    );
-
-    timers.push(
-      window.setTimeout(() => {
-        root.dataset.phase = "found";
-      }, TYPING + RUSH),
-    );
-
-    timers.push(
-      window.setTimeout(() => {
-        root.dataset.phase = "lost";
-        shift(offsets().end, LOST, "cubic-bezier(0.7, 0, 0.84, 0)");
-      }, TYPING + RUSH + FOUND),
-    );
-
-    timers.push(
-      window.setTimeout(() => {
-        root.dataset.phase = "end";
-      }, TYPING + RUSH + FOUND + LOST),
-    );
+    let at = 0;
+    for (const beat of TIMELINE) {
+      const start = at;
+      timers.push(
+        window.setTimeout(() => {
+          root.dataset.phase = beat.phase;
+          if (beat.phase === "hunt") {
+            list.style.transition = `transform ${beat.duration}ms cubic-bezier(0.16, 1, 0.3, 1)`;
+            list.style.transform = `translateY(${-travel}px)`;
+          }
+        }, start),
+      );
+      at += beat.duration;
+    }
   };
 
   const observer = new IntersectionObserver(

@@ -2,228 +2,356 @@
 import { Icon } from "astro-icon/components";
 
 /*
- * Illustration for problem item 3: where the work ends up.
+ * Illustration for problem item 3: "Which chat was it?"
  *
- * A thread list on the left, an open conversation on the right, and a search
- * that has no idea where anything is. The conversation rushes past under a
- * blur — you can see it is text, you cannot read a word of it — and the one
- * piece of actual work in there, a decision, surfaces for a second before the
- * scroll carries it off and blurs it with the rest.
+ * Left, an archive nobody can browse: two hundred and forty-seven
+ * conversations with titles that all say roughly nothing, several of them
+ * near-duplicates of each other. Right, a conversation that actually
+ * produced something — one real idea, marked, buried between bubbles, under
+ * a header of things the chat will not tell you and above a thread too long
+ * to display.
  *
- * Like item 2, it plays once per entrance rather than looping.
+ * The run opens on the idea, then abandons it for the sidebar and hunts:
+ * the list rushes past, the cursor drifts down and stops between two
+ * conversations called almost the same thing. Plays once per entrance.
  */
 
-const QUERY = "Where did we discuss this?";
+const SEARCH = "Search 247 conversations";
+const EMPTY = "No exact matches";
+const NOTE = "Which chat was it?";
+const FINAL = "Your work shouldn't live in a chat thread.";
 
-const threads = [
-  "Project idea",
-  "Research",
-  "Draft v3",
-  "Follow-up",
-  "Pricing v2",
-  "Kickoff notes",
-  "Untitled",
-  "Untitled",
-  "Untitled",
+/** Vague, near-identical, and several of them cut off mid-title. */
+const conversations = [
+  "Project ideas",
+  "Project research",
+  "Research — follow-up",
+  "Important discussion about…",
+  "AI workflow",
+  "New project",
+  "Notes",
+  "The thing we discussed yest…",
+  "Ideas for the new…",
+  "Final thoughts",
+  "Untitled conversation",
+  "Project ideas",
+  "New project — notes",
+  "Research — follow-up",
+  "Untitled conversation",
+  "Draft",
+  "Draft v2",
+  "Draft v2 final",
+  "Untitled conversation",
+  "Notes",
+  "Untitled conversation",
 ];
 
-const ACTIVE_THREAD = 2;
+/** The cursor comes to rest on this one, next to the two called almost this. */
+const MARKED = 17;
 
-type Block =
-  | { kind: "user"; text: string }
-  | { kind: "text"; text: string }
-  | { kind: "bars"; bars: number[] }
-  | { kind: "work" };
-
-/*
- * Filler with the shape of a real conversation. It is all blurred at render
- * time, so what it says never reaches the reader — only that there is a lot
- * of it, and that the one legible card is buried in the middle.
- */
-const blocks: Block[] = [
-  { kind: "user", text: "can you summarise where we landed?" },
-  { kind: "bars", bars: [100, 94, 62] },
-  { kind: "user", text: "no, the other thread" },
-  {
-    kind: "text",
-    text: "Here is a recap of the options we went through, with the trade-offs for each one and what it would cost to change course later.",
-  },
-  { kind: "bars", bars: [100, 88, 97, 51] },
-  { kind: "user", text: "and the numbers?" },
-  {
-    kind: "text",
-    text: "Based on the figures you shared earlier, the second option comes out ahead on cost but not on time to hire.",
-  },
-  { kind: "bars", bars: [96, 100, 73] },
-  { kind: "work" },
-  { kind: "bars", bars: [100, 91, 100, 58] },
-  { kind: "user", text: "wait, what did we decide?" },
-  {
-    kind: "text",
-    text: "You have discussed this across several conversations. Here is what I can find in this one.",
-  },
-  { kind: "bars", bars: [100, 84, 95, 100, 47] },
-  { kind: "user", text: "no, before that" },
-  { kind: "bars", bars: [92, 100, 66] },
-];
+const hidden = ["Context used", "Missing information", "Work created"];
 ---
 
 <div
   class="chat-frame"
   data-lost-thread
+  data-phase="idle"
   role="img"
-  aria-label="A chat app: a sidebar of conversations ending in three called Untitled, a search reading 'Where did we discuss this?', and a long blurred thread rushing past. One legible card — the decision to hold off hiring until the Q3 deal signs — surfaces for a second before the scroll carries it away."
+  aria-label="A chat app. On the right, a conversation where one real idea — that knowledge and execution should live together — is marked but buried between bubbles, under a header reading Context used, Missing information and Work created, each answered with a question mark, and above a thread too long to display. On the left, a search across 247 conversations with no exact matches, and a list of near-identical titles the cursor hunts through before stopping between Draft v2 and Draft v2 final."
 >
-  <div class="chat-app" aria-hidden="true">
-    <div class="chat-topbar">
+  <div class="lt-body">
+    <aside class="lt-sidebar">
       <div class="lt-search">
         <Icon name="lucide:search" class="lt-searchicon" />
-        <span class="lt-query" data-lt-query data-text={QUERY}></span>
+        <span>{SEARCH}</span>
       </div>
-    </div>
+      <span class="lt-empty">{EMPTY}</span>
 
-    <div class="lt-body">
-      <aside class="lt-sidebar">
-        {
-          threads.map((thread, index) => (
-            <span class="lt-thread" data-active={index === ACTIVE_THREAD ? "true" : undefined}>
-              {thread}
-            </span>
-          ))
-        }
-      </aside>
-
-      <div class="lt-viewport" data-lt-viewport>
-        <div class="lt-stream" data-lt-stream>
+      <div class="lt-listview" data-lt-listview>
+        <div class="lt-list" data-lt-list>
           {
-            blocks.map((block) =>
-              block.kind === "work" ? (
-                <div class="lt-work" data-lt-card>
-                  <span class="lt-worklabel">Decision</span>
-                  <p class="lt-worktext">
-                    We hold off until the Q3 deal signs, then hire.
-                  </p>
-                  <span class="lt-workmeta">March 14</span>
-                </div>
-              ) : block.kind === "user" ? (
-                <p class="lt-user lt-blur">{block.text}</p>
-              ) : block.kind === "text" ? (
-                <p class="lt-text lt-blur">{block.text}</p>
-              ) : (
-                <div class="lt-bars lt-blur">
-                  {block.bars.map((width) => (
-                    <span class="chat-bar" style={`width: ${width}%`} />
-                  ))}
-                </div>
-              ),
-            )
+            conversations.map((title, index) => (
+              <span class="lt-item" data-lt-mark={index === MARKED ? "true" : undefined}>
+                {title}
+              </span>
+            ))
           }
         </div>
       </div>
-    </div>
+
+      <span class="lt-cursor" data-lt-cursor>
+        <Icon name="lucide:mouse-pointer-2" class="lt-cursoricon" />
+      </span>
+      <span class="lt-note">{NOTE}</span>
+    </aside>
+
+    <section class="lt-main">
+      <!-- Three things the chat never answers. Deliberately quiet. -->
+      <div class="lt-meta">
+        {
+          hidden.map((label) => (
+            <span class="lt-metaitem">
+              {label}
+              <span class="lt-q">?</span>
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="lt-thread">
+        <div class="lt-bars">
+          <span class="chat-bar" style="width: 100%"></span>
+          <span class="chat-bar" style="width: 84%"></span>
+        </div>
+        <p class="lt-user lt-faded">and that never really connects back</p>
+
+        <p class="lt-user lt-key" data-lt-key>
+          I think knowledge and execution should live together.
+        </p>
+
+        <p class="lt-ai">
+          That could be a strong product direction. Here are three ways to
+          develop it…
+        </p>
+        <p class="lt-user lt-faded">Yes, and maybe the user should be able to…</p>
+        <p class="lt-ai lt-faded">Building on that, we could also explore…</p>
+
+        <span class="lt-more">Show more</span>
+        <span class="lt-toolong">This conversation is too long to display</span>
+      </div>
+    </section>
   </div>
+
+  <div class="lt-final"><p>{FINAL}</p></div>
 </div>
 
 <style>
+  .lt-body {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+
+  /* --- the archive ------------------------------------------------ */
+
+  .lt-sidebar {
+    position: relative;
+    flex: none;
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    padding: calc(3 * var(--u));
+    border-right: 1px solid var(--border);
+    background: var(--background);
+    text-align: left;
+    transition: opacity 0.6s ease;
+  }
+
   .lt-search {
-    flex: 1;
+    flex: none;
     display: flex;
     align-items: center;
-    gap: calc(1.6 * var(--u));
-    height: calc(4.6 * var(--u));
-    padding: 0 calc(2.2 * var(--u));
+    gap: calc(1.4 * var(--u));
+    height: calc(5 * var(--u));
+    padding: 0 calc(2 * var(--u));
     border: 1px solid var(--border);
     border-radius: 999px;
-    background: var(--background);
-    font-size: calc(2 * var(--u));
-    color: var(--foreground);
-    overflow: hidden;
+    background: var(--surface);
+    font-size: calc(1.7 * var(--u));
+    color: var(--muted-foreground);
     white-space: nowrap;
+    overflow: hidden;
   }
 
   .lt-searchicon {
     flex: none;
-    width: calc(2.4 * var(--u));
-    height: calc(2.4 * var(--u));
+    width: calc(2.2 * var(--u));
+    height: calc(2.2 * var(--u));
+  }
+
+  .lt-empty {
+    flex: none;
+    padding: calc(1.4 * var(--u)) calc(2 * var(--u)) calc(1.6 * var(--u));
+    font-size: calc(1.7 * var(--u));
     color: var(--muted-foreground);
+    opacity: 0;
+    transition: opacity 0.4s ease;
   }
 
-  .chat-frame[data-phase="typing"] .lt-query {
-    border-right: 2px solid var(--brand);
-    padding-right: calc(0.4 * var(--u));
+  .chat-frame[data-phase="stuck"] .lt-empty,
+  .chat-frame[data-phase="end"] .lt-empty {
+    opacity: 1;
   }
 
-  .lt-body {
+  .lt-listview {
     flex: 1;
     min-height: 0;
-    display: flex;
-  }
-
-  .lt-sidebar {
-    flex: none;
-    width: calc(26 * var(--u));
-    display: flex;
-    flex-direction: column;
-    gap: calc(2.4 * var(--u));
-    padding: calc(3.5 * var(--u)) calc(3 * var(--u));
-    border-right: 1px solid var(--border);
     overflow: hidden;
-    font-size: calc(2 * var(--u));
-    color: var(--muted-foreground);
-    text-align: left;
-  }
-
-  .lt-thread {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* The three Untitled ones fade out rather than end: the list keeps going. */
-  .lt-thread:nth-last-child(-n + 3) {
-    color: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
-  }
-
-  .lt-thread[data-active] {
-    color: var(--foreground);
-    font-weight: 700;
-  }
-
-  .lt-viewport {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    padding: 0 calc(4 * var(--u));
-    /* Both edges fade, so the thread reads as a slice of something much
-       longer in either direction. */
     mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      #000 8%,
-      #000 92%,
+      #000 7%,
+      #000 82%,
       transparent 100%
     );
   }
 
-  .lt-stream {
-    position: relative;
+  .lt-list {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: calc(2.6 * var(--u));
-    padding: calc(4 * var(--u)) 0;
+    gap: calc(0.4 * var(--u));
     will-change: transform;
   }
 
-  /* Legible as text, unreadable as words — which is the whole complaint. */
-  .lt-blur {
-    filter: blur(calc(0.34 * var(--u)));
+  .lt-item {
+    padding: calc(1.3 * var(--u)) calc(2 * var(--u));
+    border-radius: calc(1.8 * var(--u));
+    font-size: calc(2 * var(--u));
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background 0.4s ease;
+  }
+
+  /* The one under the cursor: still no more use than its neighbours. */
+  .chat-frame[data-phase="stuck"] .lt-item[data-lt-mark],
+  .chat-frame[data-phase="end"] .lt-item[data-lt-mark] {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+
+  .lt-cursor {
+    position: absolute;
+    left: 62%;
+    top: 0;
+    opacity: 0;
+    transform: translateY(var(--lt-start, 30%));
+    transition:
+      transform 2.1s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.35s ease;
+  }
+
+  .lt-cursoricon {
+    width: calc(3.4 * var(--u));
+    height: calc(3.4 * var(--u));
+    color: var(--foreground);
+    filter: drop-shadow(0 2px 4px rgba(47, 54, 83, 0.35));
+  }
+
+  .chat-frame[data-phase="search"] .lt-cursor {
+    opacity: 1;
+  }
+
+  .chat-frame[data-phase="hunt"] .lt-cursor,
+  .chat-frame[data-phase="stuck"] .lt-cursor,
+  .chat-frame[data-phase="end"] .lt-cursor {
+    opacity: 1;
+    transform: translateY(var(--lt-rest, 60%));
+  }
+
+  /* Floats out over the conversation: it is the reader's thought, not the
+     app's. */
+  .lt-note {
+    position: absolute;
+    left: 72%;
+    top: 0;
+    transform: translateY(calc(var(--lt-rest, 60%) + 3 * var(--u)));
+    padding: calc(1.2 * var(--u)) calc(2.2 * var(--u));
+    border-radius: 999px;
+    background: var(--foreground);
+    color: var(--background);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: calc(2.2 * var(--u));
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    box-shadow: 0 10px 26px -14px rgba(47, 54, 83, 0.7);
+  }
+
+  .chat-frame[data-phase="stuck"] .lt-note,
+  .chat-frame[data-phase="end"] .lt-note {
+    opacity: 1;
+  }
+
+  /* --- the conversation ------------------------------------------- */
+
+  .lt-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: calc(3 * var(--u)) calc(4 * var(--u));
+    transition:
+      opacity 0.7s ease,
+      filter 0.7s ease;
+  }
+
+  /* Once the hunt starts, the conversation is no longer the point. */
+  .chat-frame[data-phase="hunt"] .lt-main,
+  .chat-frame[data-phase="stuck"] .lt-main,
+  .chat-frame[data-phase="end"] .lt-main {
+    opacity: 0.45;
+    filter: blur(calc(0.2 * var(--u)));
+  }
+
+  .lt-meta {
+    flex: none;
+    display: flex;
+    gap: calc(1.6 * var(--u));
+    padding-bottom: calc(2.4 * var(--u));
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lt-metaitem {
+    display: flex;
+    align-items: center;
+    gap: calc(0.8 * var(--u));
+    font-size: calc(1.6 * var(--u));
+    color: color-mix(in srgb, var(--muted-foreground) 70%, transparent);
+    white-space: nowrap;
+  }
+
+  .lt-q {
+    display: grid;
+    place-items: center;
+    width: calc(2.4 * var(--u));
+    height: calc(2.4 * var(--u));
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-weight: 700;
+  }
+
+  .lt-thread {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: calc(2.2 * var(--u));
+    padding-top: calc(3 * var(--u));
+    overflow: hidden;
+    text-align: left;
+    mask-image: linear-gradient(to bottom, transparent 0, #000 7%);
+  }
+
+  .lt-thread > * {
+    flex: none;
+  }
+
+  .lt-bars {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: calc(1.3 * var(--u));
   }
 
   .lt-user {
     margin: 0;
     align-self: flex-end;
-    max-width: 72%;
+    max-width: 78%;
     border-radius: calc(3 * var(--u)) calc(3 * var(--u)) calc(0.8 * var(--u))
       calc(3 * var(--u));
     background: var(--brand);
@@ -231,86 +359,160 @@ const blocks: Block[] = [
     padding: calc(1.5 * var(--u)) calc(2.4 * var(--u));
     font-size: calc(2 * var(--u));
     line-height: 1.45;
-    text-align: left;
   }
 
-  .lt-text {
+  .lt-ai {
     margin: 0;
-    max-width: 96%;
+    max-width: 92%;
     font-size: calc(2 * var(--u));
     line-height: 1.5;
     color: var(--foreground);
-    text-align: left;
   }
 
-  .lt-bars {
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    gap: calc(1.4 * var(--u));
+  .lt-faded {
+    opacity: 0.45;
   }
 
-  .lt-work {
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    gap: calc(0.8 * var(--u));
-    border: 1px solid var(--border);
-    border-radius: calc(2.4 * var(--u));
-    background: var(--surface);
-    padding: calc(2.2 * var(--u)) calc(2.6 * var(--u));
-    text-align: left;
-    box-shadow: 0 10px 26px -18px rgba(47, 54, 83, 0.55);
-    /* Sharp while it is on screen, lost with everything else once the scroll
-       carries it past. */
-    filter: blur(0);
+  /* The one piece of real thinking in the thread, marked and still buried. */
+  .lt-key {
+    position: relative;
+    opacity: 0;
+    transform: translateY(calc(1.2 * var(--u)));
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--highlight) 90%, transparent);
     transition:
-      filter 0.8s ease,
-      box-shadow 0.6s ease,
-      border-color 0.6s ease;
+      opacity 0.5s ease,
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.6s ease;
   }
 
-  .chat-frame[data-phase="found"] .lt-work {
-    border-color: color-mix(in srgb, var(--brand) 55%, transparent);
-    box-shadow: 0 14px 34px -16px rgba(80, 87, 133, 0.55);
+  .chat-frame:not([data-phase="idle"]) .lt-key {
+    opacity: 1;
+    transform: none;
   }
 
-  .chat-frame[data-phase="lost"] .lt-work,
-  .chat-frame[data-phase="end"] .lt-work {
-    filter: blur(calc(0.34 * var(--u)));
+  .chat-frame[data-phase="idea"] .lt-key,
+  .chat-frame[data-phase="search"] .lt-key {
+    box-shadow:
+      0 0 0 calc(0.5 * var(--u)) color-mix(in srgb, var(--highlight) 90%, transparent),
+      0 12px 30px -16px rgba(47, 54, 83, 0.6);
   }
 
-  .lt-worklabel {
-    font-size: calc(1.6 * var(--u));
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--brand);
-  }
-
-  .lt-worktext {
-    margin: 0;
-    font-size: calc(2.2 * var(--u));
-    line-height: 1.4;
-    color: var(--foreground);
-  }
-
-  .lt-workmeta {
-    font-size: calc(1.7 * var(--u));
+  .lt-more {
+    align-self: center;
+    padding: calc(1 * var(--u)) calc(2.4 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: calc(1.8 * var(--u));
     color: var(--muted-foreground);
   }
 
+  .lt-toolong {
+    align-self: center;
+    font-size: calc(1.7 * var(--u));
+    color: color-mix(in srgb, var(--muted-foreground) 75%, transparent);
+  }
+
+  /* --- the last word ---------------------------------------------- */
+
+  .lt-final {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: calc(8 * var(--u));
+    background: color-mix(in srgb, var(--background) 86%, transparent);
+    backdrop-filter: blur(calc(0.5 * var(--u)));
+    opacity: 0;
+  }
+
+  .chat-frame[data-phase="end"] .lt-final {
+    animation: lt-final 3.6s ease forwards;
+  }
+
+  @keyframes lt-final {
+    0% {
+      opacity: 0;
+    }
+    18%,
+    72% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .lt-final p {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: calc(4 * var(--u));
+    line-height: 1.25;
+    color: var(--foreground);
+    text-align: center;
+    text-wrap: balance;
+  }
+
   @media (max-width: 639px) {
-    /* No room for the list next to the thread; the search and the wall of
-       blurred conversation carry it on their own. */
+    /* No room for two panels: the run slides from the conversation to the
+       archive, the way a phone actually moves between them. */
+    .lt-body {
+      width: 200%;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .chat-frame[data-phase="search"] .lt-body,
+    .chat-frame[data-phase="hunt"] .lt-body,
+    .chat-frame[data-phase="stuck"] .lt-body,
+    .chat-frame[data-phase="end"] .lt-body {
+      transform: translateX(-50%);
+    }
+
+    .lt-main {
+      order: -1;
+      width: 50%;
+      flex: none;
+    }
+
     .lt-sidebar {
-      display: none;
+      width: 50%;
+      border-right: 0;
+    }
+
+    /* The blur belongs to a panel you can still see. */
+    .chat-frame[data-phase="hunt"] .lt-main,
+    .chat-frame[data-phase="stuck"] .lt-main,
+    .chat-frame[data-phase="end"] .lt-main {
+      opacity: 1;
+      filter: none;
+    }
+
+    .lt-meta {
+      gap: calc(1.2 * var(--u));
+    }
+
+    .lt-metaitem {
+      font-size: calc(1.5 * var(--u));
+    }
+
+    .lt-note {
+      left: auto;
+      right: calc(3 * var(--u));
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .lt-work {
-      transition: none;
+    .lt-body,
+    .lt-cursor,
+    .lt-note,
+    .lt-main,
+    .lt-key,
+    .lt-final,
+    .lt-empty {
+      transition: none !important;
+    }
+
+    .lt-final {
+      animation: none !important;
     }
   }
 </style>
