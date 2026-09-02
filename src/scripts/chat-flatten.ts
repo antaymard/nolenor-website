@@ -19,13 +19,15 @@ interface Beat {
 }
 
 const TIMELINE: Beat[] = [
-  { phase: "thinking", duration: 1900, rows: 2 },
-  { phase: "collapse", duration: 800, rows: 2 },
-  { phase: "typing", duration: 1600, rows: 2 },
-  { phase: "sent", duration: 600, rows: 3 },
-  { phase: "answer", duration: 1000, rows: 4 },
-  { phase: "retry", duration: 1500, rows: 6 },
-  { phase: "reset", duration: 600, rows: 2 },
+  { phase: "thinking", duration: 2800, rows: 2 },
+  { phase: "collapse", duration: 1200, rows: 2 },
+  { phase: "typing", duration: 2200, rows: 2 },
+  { phase: "sent", duration: 800, rows: 3 },
+  { phase: "answer", duration: 1300, rows: 4 },
+  { phase: "retry", duration: 1100, rows: 6 },
+  { phase: "retry", duration: 1100, rows: 8 },
+  { phase: "retry", duration: 1100, rows: 9 },
+  { phase: "reset", duration: 800, rows: 2 },
 ];
 
 export function initChatFlatten(): void {

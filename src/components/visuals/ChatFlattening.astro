@@ -7,8 +7,8 @@ import { Icon } from "astro-icon/components";
  * A loose, connected cloud of half-formed thoughts hangs over a dimmed chat
  * UI, then gets funnelled into the input and flattened into one long line —
  * except the open question, which never fits and drifts away. The prompt is
- * sent, the answer comes back as an undifferentiated wall, and two shorter
- * retries pile on until the original idea has scrolled off the top.
+ * sent, the answer comes back as an undifferentiated wall, and each retry is
+ * shorter than the last until the original question has scrolled off the top.
  *
  * Geometry: every size is a multiple of --u, one container-query unit, so
  * the whole scene scales with the card and only --u changes on mobile.
@@ -33,20 +33,20 @@ interface Fragment {
 }
 
 const fragments: Fragment[] = [
-  { text: "3 weeks of work?", x: -25, y: -42, mx: -9.5, my: -41.5 },
-  { text: "budget: 4k?", x: 13, y: -45, mx: 9.5, my: -34.5 },
-  { text: "the old deck", x: 29, y: -33 },
-  { text: "ask Marie first?", x: -33, y: -30 },
-  { text: "who's actually free?", x: -5, y: -35, mx: -4.2, my: -26.5 },
-  { text: "do we even need it?", x: 16, y: -25, mx: 5.3, my: -18.5, drops: true },
+  { text: "runway: 8 months", x: -25, y: -42, mx: -9.5, my: -44 },
+  { text: "Marie's at 120%", x: 13, y: -45, mx: 9.5, my: -35.5 },
+  { text: "3 CVs waiting", x: 29, y: -33 },
+  { text: "freelance instead?", x: -30, y: -30 },
+  { text: "if the Q3 deal drops?", x: -2, y: -33, mx: -4.2, my: -28 },
+  { text: "do we actually need one?", x: -10, y: -22, mx: 0, my: -20, drops: true },
 ];
 
 const links: [number, number][] = [
-  [0, 4],
   [0, 3],
-  [4, 1],
+  [0, 4],
   [1, 2],
-  [2, 5],
+  [1, 4],
+  [3, 5],
   [4, 5],
 ];
 
@@ -72,7 +72,28 @@ const tallLinks = links
   .map(([a, b]) => line(fragments[a], fragments[b], ANCHOR_TALL, U_TALL, true));
 
 const PROMPT =
-  "Plan the June launch: work out the budget, check who's actually free, pull what we need from the old deck, and tell me if it's realistic.";
+  "Should we hire a second designer? We've got 8 months of runway, Marie is at 120%, three CVs waiting, and the Q3 deal still isn't signed \u2014 just tell me what to do.";
+
+/*
+ * The thread the prompt lands in. It keeps going after the answer: each
+ * retry is shorter and more resigned than the last, and every one of them
+ * pushes the original question further off the top of the screen.
+ */
+type ThreadRow =
+  | { kind: "user"; text: string; delay?: number }
+  | { kind: "ai"; bars: number[]; delay?: number };
+
+const thread: ThreadRow[] = [
+  { kind: "user", text: "Should we hire a second designer?" },
+  { kind: "ai", bars: [100, 92, 68] },
+  { kind: "user", text: PROMPT },
+  { kind: "ai", bars: [100, 97, 100, 88, 54], delay: 0.35 },
+  { kind: "user", text: "No, not like that. Shorter." },
+  { kind: "ai", bars: [100, 94, 61], delay: 0.5 },
+  { kind: "user", text: "Forget the runway part." },
+  { kind: "ai", bars: [100, 86], delay: 0.5 },
+  { kind: "user", text: "Actually, start over." },
+];
 ---
 
 <div
@@ -81,7 +102,7 @@ const PROMPT =
   data-phase="idle"
   data-cf-prompt={PROMPT}
   role="img"
-  aria-label="An AI chat: a cloud of connected half-formed thoughts collapses into the input, flattens into one long prompt, and the answer comes back as a wall of text followed by shorter and shorter retries."
+  aria-label="An AI chat: a cloud of connected half-formed thoughts about whether to hire a second designer collapses into the input, flattens into one long prompt, and the answers come back as walls of text, each followed by a shorter and more resigned retry."
 >
   <!-- The chat, waiting behind the thinking. -->
   <div class="cf-app" aria-hidden="true">
@@ -92,38 +113,27 @@ const PROMPT =
     </div>
 
     <div class="cf-thread">
-      <div class="cf-row cf-row--user" data-cf-row>
-        <div><p class="cf-bubble">Help me plan the June launch.</p></div>
-      </div>
-      <div class="cf-row cf-row--ai" data-cf-row>
-        <div>
-          <div class="cf-bars">
-            <span class="cf-bar" style="width: 100%"></span>
-            <span class="cf-bar" style="width: 92%"></span>
-            <span class="cf-bar" style="width: 68%"></span>
+      {
+        thread.map((row) => (
+          <div
+            class={`cf-row cf-row--${row.kind}`}
+            style={row.delay ? `--delay: ${row.delay}s` : undefined}
+            data-cf-row
+          >
+            <div>
+              {row.kind === "user" ? (
+                <p class="cf-bubble">{row.text}</p>
+              ) : (
+                <div class="cf-bars">
+                  {row.bars.map((width) => (
+                    <span class="cf-bar" style={`width: ${width}%`} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="cf-row cf-row--user" data-cf-row>
-        <div><p class="cf-bubble cf-bubble--long">{PROMPT}</p></div>
-      </div>
-      <div class="cf-row cf-row--ai" data-cf-row>
-        <div>
-          <div class="cf-bars">
-            <span class="cf-bar" style="width: 100%"></span>
-            <span class="cf-bar" style="width: 97%"></span>
-            <span class="cf-bar" style="width: 100%"></span>
-            <span class="cf-bar" style="width: 88%"></span>
-            <span class="cf-bar" style="width: 54%"></span>
-          </div>
-        </div>
-      </div>
-      <div class="cf-row cf-row--user" data-cf-row>
-        <div><p class="cf-bubble">No, not like that. Shorter.</p></div>
-      </div>
-      <div class="cf-row cf-row--user cf-row--last" data-cf-row>
-        <div><p class="cf-bubble">Actually, start over.</p></div>
-      </div>
+        ))
+      }
     </div>
 
     <div class="cf-input">
@@ -198,7 +208,7 @@ const PROMPT =
   /* The chat waits, greyed out, while the thinking happens in front of it. */
   .cf-frame[data-phase="thinking"] .cf-app,
   .cf-frame[data-phase="idle"] .cf-app {
-    opacity: 0.2;
+    opacity: 0.3;
   }
 
   .cf-topbar {
@@ -286,9 +296,9 @@ const PROMPT =
     max-width: 100%;
   }
 
-  /* The two retries land one after the other, not together. */
-  .cf-row--last {
-    transition-delay: 0.45s;
+  /* Answers land after the message they reply to, not alongside it. */
+  .cf-row {
+    transition-delay: var(--delay, 0s);
   }
 
   .cf-bubble {
@@ -461,9 +471,9 @@ const PROMPT =
     white-space: nowrap;
     color: var(--foreground);
     transition:
-      opacity 0.45s ease,
-      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--i) * 80ms);
+      opacity 0.6s ease,
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i) * 110ms);
   }
 
   .cf-frag[data-drops] {
@@ -492,8 +502,8 @@ const PROMPT =
   .cf-frame[data-phase="collapse"] .cf-frag {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.25);
-    transition-duration: 0.45s, 0.55s;
-    transition-delay: calc(var(--i) * 55ms);
+    transition-duration: 0.6s, 0.75s;
+    transition-delay: calc(var(--i) * 80ms);
   }
 
   /* ...except the open question, which just drifts off unsaid. */
@@ -503,7 +513,7 @@ const PROMPT =
         calc(-50% + var(--fy) - 9 * var(--u))
       )
       scale(0.96);
-    transition-duration: 0.8s;
+    transition-duration: 1.1s;
     transition-delay: 0.1s;
   }
 
