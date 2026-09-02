@@ -38,7 +38,7 @@ export function initChatFlatten(): void {
 
 function setupScene(root: HTMLElement): void {
   const field = root.querySelector<HTMLElement>("[data-cf-text]");
-  const rows = Array.from(root.querySelectorAll<HTMLElement>("[data-cf-row]"));
+  const rows = Array.from(root.querySelectorAll<HTMLElement>("[data-chat-row]"));
   const prompt = root.dataset.cfPrompt ?? "";
 
   const showRows = (count: number) =>

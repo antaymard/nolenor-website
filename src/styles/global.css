@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./chat-mock.css";
 
 /*
  * Brand palette, from the section-by-section design brief: exactly three

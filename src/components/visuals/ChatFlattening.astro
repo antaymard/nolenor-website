@@ -97,7 +97,7 @@ const thread: ThreadRow[] = [
 ---
 
 <div
-  class="cf-frame"
+  class="chat-frame"
   data-chat-flatten
   data-phase="idle"
   data-cf-prompt={PROMPT}
@@ -105,28 +105,28 @@ const thread: ThreadRow[] = [
   aria-label="An AI chat: a cloud of connected half-formed thoughts about whether to hire a second designer collapses into the input, flattens into one long prompt, and the answers come back as walls of text, each followed by a shorter and more resigned retry."
 >
   <!-- The chat, waiting behind the thinking. -->
-  <div class="cf-app" aria-hidden="true">
-    <div class="cf-topbar">
-      <span class="cf-dot"></span>
-      <span class="cf-tab">New chat</span>
-      <Icon name="lucide:plus" class="cf-topicon" />
+  <div class="chat-app" aria-hidden="true">
+    <div class="chat-topbar">
+      <span class="chat-dot"></span>
+      <span class="chat-tab">New chat</span>
+      <Icon name="lucide:plus" class="chat-topicon" />
     </div>
 
-    <div class="cf-thread">
+    <div class="chat-thread">
       {
         thread.map((row) => (
           <div
-            class={`cf-row cf-row--${row.kind}`}
+            class={`chat-row chat-row--${row.kind}`}
             style={row.delay ? `--delay: ${row.delay}s` : undefined}
-            data-cf-row
+            data-chat-row
           >
             <div>
               {row.kind === "user" ? (
-                <p class="cf-bubble">{row.text}</p>
+                <p class="chat-bubble">{row.text}</p>
               ) : (
-                <div class="cf-bars">
+                <div class="chat-bars">
                   {row.bars.map((width) => (
-                    <span class="cf-bar" style={`width: ${width}%`} />
+                    <span class="chat-bar" style={`width: ${width}%`} />
                   ))}
                 </div>
               )}
@@ -136,13 +136,13 @@ const thread: ThreadRow[] = [
       }
     </div>
 
-    <div class="cf-input">
-      <Icon name="lucide:paperclip" class="cf-icon" />
-      <div class="cf-field">
-        <span class="cf-placeholder">What should we get done?</span>
+    <div class="chat-input">
+      <Icon name="lucide:paperclip" class="chat-icon" />
+      <div class="chat-field">
+        <span class="chat-placeholder">What should we get done?</span>
         <span class="cf-typed" data-cf-text></span>
       </div>
-      <span class="cf-send"><Icon name="lucide:arrow-up" class="cf-sendicon" /></span>
+      <span class="chat-send"><Icon name="lucide:arrow-up" class="chat-sendicon" /></span>
     </div>
   </div>
 
@@ -183,194 +183,17 @@ const thread: ThreadRow[] = [
 </div>
 
 <style>
-  /* One container unit drives every size in the scene, so the whole thing
-     scales with the card and mobile only has to redefine --u. */
-  .cf-frame {
-    --u: 1cqw;
-    container-type: inline-size;
-    position: relative;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-2xl);
-    background: var(--surface);
-    box-shadow: 0 18px 50px -30px rgba(47, 54, 83, 0.45);
-  }
-
-  .cf-app {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
+  .chat-app {
     transition: opacity 0.6s ease;
   }
 
   /* The chat waits, greyed out, while the thinking happens in front of it. */
-  .cf-frame[data-phase="thinking"] .cf-app,
-  .cf-frame[data-phase="idle"] .cf-app {
+  .chat-frame[data-phase="thinking"] .chat-app,
+  .chat-frame[data-phase="idle"] .chat-app {
     opacity: 0.3;
   }
 
-  .cf-topbar {
-    display: flex;
-    align-items: center;
-    gap: calc(2 * var(--u));
-    padding: 0 calc(3.5 * var(--u));
-    height: calc(7 * var(--u));
-    border-bottom: 1px solid var(--border);
-    color: var(--muted-foreground);
-    flex: none;
-  }
-
-  .cf-dot {
-    width: calc(2.6 * var(--u));
-    height: calc(2.6 * var(--u));
-    border-radius: 999px;
-    background: var(--muted);
-    flex: none;
-  }
-
-  .cf-tab {
-    font-size: calc(1.9 * var(--u));
-    flex: 1;
-  }
-
-  .cf-topicon {
-    width: calc(2.6 * var(--u));
-    height: calc(2.6 * var(--u));
-  }
-
-  .cf-thread {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    overflow: hidden;
-    padding: 0 calc(9 * var(--u));
-    /* Once the thread outgrows the box the oldest messages leave through the
-       top, faded out, the way a real conversation scrolls away from you. */
-    mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
-  }
-
-  /* 0fr -> 1fr so a message can grow the thread from nothing and push the
-     earlier ones off the top, exactly like a real chat. */
-  .cf-row {
-    display: grid;
-    grid-template-rows: 0fr;
-    /* Never shrink: extra messages push the thread past the top edge instead
-       of squashing every bubble. */
-    flex: none;
-    /* Flex items default to min-height:auto, which would keep a collapsed
-       row's content height reserved in the thread. */
-    min-height: 0;
-    opacity: 0;
-    max-width: 82%;
-    transition:
-      grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 0.3s ease;
-  }
-
-  .cf-row > div {
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  /* Spacing on the child, not the clipped box: padding on the box itself
-     survives the 0fr collapse and leaves a phantom gap per hidden row. */
-  .cf-row > div > * {
-    margin-top: calc(2.2 * var(--u));
-  }
-
-  .cf-row.is-on {
-    opacity: 1;
-    grid-template-rows: 1fr;
-  }
-
-  .cf-row--user {
-    align-self: flex-end;
-  }
-
-  .cf-row--ai {
-    align-self: stretch;
-    max-width: 100%;
-  }
-
-  /* Answers land after the message they reply to, not alongside it. */
-  .cf-row {
-    transition-delay: var(--delay, 0s);
-  }
-
-  .cf-bubble {
-    margin: 0;
-    border-radius: calc(3 * var(--u)) calc(3 * var(--u)) calc(0.8 * var(--u))
-      calc(3 * var(--u));
-    background: var(--brand);
-    color: var(--brand-foreground);
-    padding: calc(1.6 * var(--u)) calc(2.4 * var(--u));
-    font-size: calc(2.1 * var(--u));
-    line-height: 1.45;
-  }
-
-  .cf-bars {
-    display: flex;
-    flex-direction: column;
-    gap: calc(1.4 * var(--u));
-  }
-
-  .cf-bar {
-    height: calc(1.5 * var(--u));
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--foreground) 13%, transparent);
-  }
-
-  .cf-input {
-    flex: none;
-    display: flex;
-    align-items: center;
-    gap: calc(2 * var(--u));
-    margin: calc(3 * var(--u)) calc(9 * var(--u)) calc(4 * var(--u));
-    padding: calc(1.6 * var(--u)) calc(1.6 * var(--u)) calc(1.6 * var(--u))
-      calc(2.6 * var(--u));
-    min-height: calc(9 * var(--u));
-    border: 1px solid var(--border);
-    border-radius: calc(4.5 * var(--u));
-    background: var(--surface);
-    box-shadow: 0 6px 18px -12px rgba(47, 54, 83, 0.5);
-  }
-
-  .cf-icon {
-    width: calc(2.8 * var(--u));
-    height: calc(2.8 * var(--u));
-    color: var(--muted-foreground);
-    flex: none;
-  }
-
-  /* Right-aligned and clipped: once the prompt outgrows the box, the start
-     of your own sentence scrolls out of sight. */
-  .cf-field {
-    position: relative;
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    overflow: hidden;
-    height: calc(3.4 * var(--u));
-    font-size: calc(2.2 * var(--u));
-  }
-
-  .cf-placeholder {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    white-space: nowrap;
-    color: var(--muted-foreground);
-    transition: opacity 0.2s ease;
-  }
-
-  .cf-frame[data-phase="typing"] .cf-placeholder {
+  .chat-frame[data-phase="typing"] .chat-placeholder {
     opacity: 0;
   }
 
@@ -379,30 +202,13 @@ const thread: ThreadRow[] = [
     color: var(--foreground);
   }
 
-  .cf-frame[data-phase="typing"] .cf-typed {
+  .chat-frame[data-phase="typing"] .cf-typed {
     border-right: 2px solid var(--brand);
     padding-right: calc(0.4 * var(--u));
   }
 
-  .cf-send {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: calc(5.8 * var(--u));
-    height: calc(5.8 * var(--u));
-    border-radius: 999px;
-    background: var(--brand);
-    color: var(--brand-foreground);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .cf-frame[data-phase="sent"] .cf-send {
+  .chat-frame[data-phase="sent"] .chat-send {
     transform: scale(0.86);
-  }
-
-  .cf-sendicon {
-    width: calc(3 * var(--u));
-    height: calc(3 * var(--u));
   }
 
   .cf-cloud {
@@ -432,16 +238,16 @@ const thread: ThreadRow[] = [
     display: none;
   }
 
-  .cf-frame[data-phase="thinking"] .cf-links {
+  .chat-frame[data-phase="thinking"] .cf-links {
     opacity: 0.4;
   }
 
-  .cf-frame[data-phase="thinking"] .cf-links line {
+  .chat-frame[data-phase="thinking"] .cf-links line {
     animation: cf-draw 0.9s ease forwards;
   }
 
   /* The links snap first — the connections are the first thing the box loses. */
-  .cf-frame[data-phase="collapse"] .cf-links {
+  .chat-frame[data-phase="collapse"] .cf-links {
     opacity: 0;
     transition-duration: 0.18s;
   }
@@ -483,13 +289,13 @@ const thread: ThreadRow[] = [
     font-style: italic;
   }
 
-  .cf-frame[data-phase="thinking"] .cf-frag {
+  .chat-frame[data-phase="thinking"] .cf-frag {
     opacity: 1;
     transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
       scale(1);
   }
 
-  .cf-frame[data-phase="thinking"] .cf-frag-inner {
+  .chat-frame[data-phase="thinking"] .cf-frag-inner {
     animation: cf-float 4.5s ease-in-out infinite alternate;
     animation-delay: calc(var(--i) * -700ms);
   }
@@ -499,7 +305,7 @@ const thread: ThreadRow[] = [
   }
 
   /* Everything funnels into the input and flattens... */
-  .cf-frame[data-phase="collapse"] .cf-frag {
+  .chat-frame[data-phase="collapse"] .cf-frag {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.25);
     transition-duration: 0.6s, 0.75s;
@@ -507,7 +313,7 @@ const thread: ThreadRow[] = [
   }
 
   /* ...except the open question, which just drifts off unsaid. */
-  .cf-frame[data-phase="collapse"] .cf-frag[data-drops] {
+  .chat-frame[data-phase="collapse"] .cf-frag[data-drops] {
     transform: translate(
         calc(-50% + var(--fx) + 3 * var(--u)),
         calc(-50% + var(--fy) - 9 * var(--u))
@@ -527,24 +333,6 @@ const thread: ThreadRow[] = [
   }
 
   @media (max-width: 639px) {
-    .cf-frame {
-      --u: 1.9cqw;
-      aspect-ratio: 4 / 5;
-    }
-
-    .cf-thread,
-    .cf-input {
-      padding-left: calc(4 * var(--u));
-      padding-right: calc(4 * var(--u));
-    }
-
-    .cf-input {
-      margin-left: calc(4 * var(--u));
-      margin-right: calc(4 * var(--u));
-      padding-left: calc(2.6 * var(--u));
-      padding-right: calc(1.6 * var(--u));
-    }
-
     .cf-links--wide {
       display: none;
     }
@@ -566,36 +354,36 @@ const thread: ThreadRow[] = [
   }
 
   /* Reduced motion: the scene is composed and readable, nothing moves. */
-  .cf-frame[data-phase="still"] .cf-app {
+  .chat-frame[data-phase="still"] .chat-app {
     opacity: 0.32;
   }
 
-  .cf-frame[data-phase="still"] .cf-links {
+  .chat-frame[data-phase="still"] .cf-links {
     opacity: 0.4;
   }
 
-  .cf-frame[data-phase="still"] .cf-links line {
+  .chat-frame[data-phase="still"] .cf-links line {
     stroke-dashoffset: 0;
   }
 
-  .cf-frame[data-phase="still"] .cf-frag {
+  .chat-frame[data-phase="still"] .cf-frag {
     opacity: 1;
     transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
       scale(1);
     transition: none;
   }
 
-  .cf-frame[data-phase="still"] .cf-placeholder {
+  .chat-frame[data-phase="still"] .chat-placeholder {
     opacity: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .cf-app,
-    .cf-row,
+    .chat-app,
+    .chat-row,
     .cf-links,
     .cf-frag,
-    .cf-send,
-    .cf-placeholder {
+    .chat-send,
+    .chat-placeholder {
       transition: none !important;
     }
 

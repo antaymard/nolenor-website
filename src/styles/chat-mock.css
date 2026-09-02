@@ -1,0 +1,227 @@
+/*
+ * The chat window the problem section keeps showing: same chrome for every
+ * illustration in that section, so the visuals read as one product being
+ * criticised rather than three unrelated mockups. Each illustration adds its
+ * own (component-scoped) animation on top of these classes.
+ *
+ * Every size is a multiple of --u, one container-query unit, so the whole
+ * scene scales with the card and only --u changes on narrow screens.
+ */
+
+.chat-frame {
+  --u: 1cqw;
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+  box-shadow: 0 18px 50px -30px rgba(47, 54, 83, 0.45);
+}
+
+.chat-app {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-topbar {
+  display: flex;
+  align-items: center;
+  gap: calc(2 * var(--u));
+  padding: 0 calc(3.5 * var(--u));
+  height: calc(7 * var(--u));
+  border-bottom: 1px solid var(--border);
+  color: var(--muted-foreground);
+  flex: none;
+}
+
+.chat-dot {
+  width: calc(2.6 * var(--u));
+  height: calc(2.6 * var(--u));
+  border-radius: 999px;
+  background: var(--muted);
+  flex: none;
+}
+
+.chat-tab {
+  font-size: calc(1.9 * var(--u));
+  flex: 1;
+}
+
+.chat-topicon {
+  width: calc(2.6 * var(--u));
+  height: calc(2.6 * var(--u));
+}
+
+.chat-thread {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: 0 calc(9 * var(--u));
+  /* Once the thread outgrows the box the oldest messages leave through the
+     top, faded out, the way a real conversation scrolls away from you. */
+  mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+}
+
+/* 0fr -> 1fr so a message can grow the thread from nothing and push the
+   earlier ones off the top, exactly like a real chat. */
+.chat-row {
+  display: grid;
+  grid-template-rows: 0fr;
+  /* Never shrink: extra messages push the thread past the top edge instead
+     of squashing every bubble. */
+  flex: none;
+  /* Flex items default to min-height:auto, which would keep a collapsed
+     row's content height reserved in the thread. */
+  min-height: 0;
+  opacity: 0;
+  max-width: 82%;
+  transition:
+    grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s ease;
+  transition-delay: var(--delay, 0s);
+}
+
+.chat-row > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Spacing on the child, not the clipped box: padding on the box itself
+   survives the 0fr collapse and leaves a phantom gap per hidden row. */
+.chat-row > div > * {
+  margin-top: calc(2.2 * var(--u));
+}
+
+.chat-row.is-on {
+  opacity: 1;
+  grid-template-rows: 1fr;
+}
+
+.chat-row--user {
+  align-self: flex-end;
+}
+
+.chat-row--ai {
+  align-self: stretch;
+  max-width: 100%;
+}
+
+.chat-bubble {
+  margin: 0;
+  border-radius: calc(3 * var(--u)) calc(3 * var(--u)) calc(0.8 * var(--u))
+    calc(3 * var(--u));
+  background: var(--brand);
+  color: var(--brand-foreground);
+  padding: calc(1.6 * var(--u)) calc(2.4 * var(--u));
+  font-size: calc(2.1 * var(--u));
+  line-height: 1.45;
+}
+
+.chat-bars {
+  display: flex;
+  flex-direction: column;
+  gap: calc(1.4 * var(--u));
+}
+
+.chat-bar {
+  height: calc(1.5 * var(--u));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 13%, transparent);
+}
+
+.chat-input {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: calc(2 * var(--u));
+  margin: calc(3 * var(--u)) calc(9 * var(--u)) calc(4 * var(--u));
+  padding: calc(1.6 * var(--u)) calc(1.6 * var(--u)) calc(1.6 * var(--u))
+    calc(2.6 * var(--u));
+  min-height: calc(9 * var(--u));
+  border: 1px solid var(--border);
+  border-radius: calc(4.5 * var(--u));
+  background: var(--surface);
+  box-shadow: 0 6px 18px -12px rgba(47, 54, 83, 0.5);
+}
+
+.chat-icon {
+  width: calc(2.8 * var(--u));
+  height: calc(2.8 * var(--u));
+  color: var(--muted-foreground);
+  flex: none;
+}
+
+/* Right-aligned and clipped: once a prompt outgrows the box, the start of
+   the sentence scrolls out of sight. */
+.chat-field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+  height: calc(3.4 * var(--u));
+  font-size: calc(2.2 * var(--u));
+}
+
+.chat-placeholder {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  color: var(--muted-foreground);
+  transition: opacity 0.2s ease;
+}
+
+.chat-send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: calc(5.8 * var(--u));
+  height: calc(5.8 * var(--u));
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--brand-foreground);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chat-sendicon {
+  width: calc(3 * var(--u));
+  height: calc(3 * var(--u));
+}
+
+@media (max-width: 639px) {
+  .chat-frame {
+    --u: 1.9cqw;
+    aspect-ratio: 4 / 5;
+  }
+
+  .chat-thread {
+    padding-left: calc(4 * var(--u));
+    padding-right: calc(4 * var(--u));
+  }
+
+  .chat-input {
+    margin-left: calc(4 * var(--u));
+    margin-right: calc(4 * var(--u));
+    padding-left: calc(2.6 * var(--u));
+    padding-right: calc(1.6 * var(--u));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-row,
+  .chat-send,
+  .chat-placeholder {
+    transition: none !important;
+  }
+}

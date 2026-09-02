@@ -2,6 +2,7 @@
 import Container from "@/components/ui/Container.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import ChatFlattening from "@/components/visuals/ChatFlattening.astro";
+import HiddenWork from "@/components/visuals/HiddenWork.astro";
 import { problemItems } from "@/data/problem";
 ---
 
@@ -35,6 +36,8 @@ import { problemItems } from "@/data/problem";
           <div class="w-full max-w-3xl">
             {item.visual === "chat-flattening" ? (
               <ChatFlattening />
+            ) : item.visual === "hidden-work" ? (
+              <HiddenWork />
             ) : (
               item.media && (
                 <MediaFrame
