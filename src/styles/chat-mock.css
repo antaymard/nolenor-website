@@ -166,9 +166,10 @@
   flex: none;
 }
 
-/* Wraps rather than scrolls. A composer that slides the start of your own
-   sentence out of view is unreadable at exactly the moment someone is
-   reading it, so a long message grows the box the way a real one does. */
+/* Wraps rather than scrolls, however long the message is. A composer that
+   slides the start of your own sentence out of view is unreadable at exactly
+   the moment someone is reading it; two or three lines are not. So a long
+   message grows the box, the way a real one does. */
 .chat-field {
   position: relative;
   flex: 1;

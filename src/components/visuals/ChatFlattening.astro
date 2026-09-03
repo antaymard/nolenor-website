@@ -29,8 +29,10 @@ type Row =
   | { kind: "ai"; text: string; chips: Chip[] };
 
 // Typed into the input before they are sent, so the hesitation is visible.
-// Short enough to sit on one line in the composer at every width down to
-// the mobile layout, where it wraps to two rather than scrolling away.
+// Length is free: the composer wraps, and a wrapped message stays readable.
+// What it must never do is scroll — a composer that slides the start of the
+// sentence out of view as you type is unreadable at exactly the wrong
+// moment, which is why .chat-field grows instead of clipping.
 const FIRST = "Let's think about the wording and structure of your landing page";
 const LAST = "…Ok, let's do it your way...";
 
