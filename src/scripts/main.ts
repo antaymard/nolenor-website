@@ -3,7 +3,7 @@ import { initChatFlatten } from "./chat-flatten";
 import { initProblemAccordion } from "./problem-accordion";
 import { initStatusStack } from "./status-stack";
 import { initLostThread } from "./lost-thread";
-import { initScrollVideos } from "./video-autoplay";
+import { initScrollVideos, initVideoWarmup } from "./video-autoplay";
 import { initStickyScroll } from "./sticky-scroll";
 import { initWishlistForm } from "./wishlist-form";
 
@@ -13,5 +13,6 @@ initChatFlatten();
 initStatusStack();
 initLostThread();
 initScrollVideos();
+initVideoWarmup();
 initStickyScroll();
 initWishlistForm();
