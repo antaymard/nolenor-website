@@ -1,10 +1,26 @@
 ---
+import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import ChatFlattening from "@/components/visuals/ChatFlattening.astro";
 import HiddenWork from "@/components/visuals/HiddenWork.astro";
 import LostThread from "@/components/visuals/LostThread.astro";
 import { problemItems } from "@/data/problem";
+
+/*
+ * The three problems, as one panel at a time.
+ *
+ * Wide: a rail of three panels, the open one taking every pixel the other
+ * two aren't using, those two collapsed to a strip with their title set on
+ * its side. Clicking a strip opens it and closes whichever was open.
+ * Narrow: the same thing as an ordinary stacked accordion.
+ *
+ * A collapsed panel's body is display:none rather than merely hidden, which
+ * is what makes each illustration's IntersectionObserver reset it — so a
+ * panel always opens on the first frame of its scene, never mid-run.
+ */
+
+const index = (i: number) => String(i + 1).padStart(2, "0");
 ---
 
 <section class="py-20 sm:py-28">
@@ -26,40 +42,302 @@ import { problemItems } from "@/data/problem";
     </p>
   </Container>
 
-  <Container class="mt-16 flex flex-col gap-20 sm:mt-24 sm:gap-28">
-    {
-      problemItems.map((item, index) => (
-        <div
-          class="flex flex-col items-center gap-6 text-center"
-          data-problem-item={index}
-          data-reveal
-        >
-          <div class="w-full max-w-3xl">
-            {item.visual === "chat-flattening" ? (
-              <ChatFlattening />
-            ) : item.visual === "hidden-work" ? (
-              <HiddenWork />
-            ) : item.visual === "lost-thread" ? (
-              <LostThread />
-            ) : (
-              item.media && (
-                <MediaFrame
-                  id={item.media.id}
-                  alt={item.media.alt}
-                  aspectRatio="16/10"
-                />
-              )
-            )}
-          </div>
+  <Container class="mt-14 sm:mt-16">
+    <div
+      class="pb-rail"
+      data-problem-rail
+      style={`--pb-n: ${problemItems.length}`}
+      data-reveal
+    >
+      {
+        problemItems.map((item, i) => (
+          <article class="pb-panel" data-panel data-open={i === 0 ? "" : undefined}>
+            <button
+              type="button"
+              class="pb-tab"
+              data-panel-tab
+              aria-expanded={i === 0 ? "true" : "false"}
+              aria-controls={`problem-body-${i}`}
+            >
+              <Icon name="lucide:chevron-right" class="pb-tabicon" />
+              <span class="pb-tabtitle">{item.title}</span>
+              <span class="pb-index">{index(i)}</span>
+            </button>
 
-          <div class="flex max-w-xl flex-col gap-2">
-            <h3 class="text-balance text-foreground">{item.title}</h3>
-            <p class="text-base text-pretty text-muted-foreground">
-              {item.subtitle}
-            </p>
-          </div>
-        </div>
-      ))
-    }
+            <div class="pb-body" id={`problem-body-${i}`}>
+              <div class="pb-text">
+                <span class="pb-num">{index(i)}</span>
+                <h3 class="text-balance text-foreground">{item.title}</h3>
+                <p class="pb-sub">{item.subtitle}</p>
+              </div>
+
+              <div class="pb-visual">
+                {item.visual === "chat-flattening" ? (
+                  <ChatFlattening />
+                ) : item.visual === "hidden-work" ? (
+                  <HiddenWork />
+                ) : item.visual === "lost-thread" ? (
+                  <LostThread />
+                ) : (
+                  item.media && (
+                    <MediaFrame
+                      id={item.media.id}
+                      alt={item.media.alt}
+                      aspectRatio="16/10"
+                    />
+                  )
+                )}
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
   </Container>
 </section>
+
+<style>
+  .pb-rail {
+    --pb-strip: 58px;
+    --pb-gap: 12px;
+    display: flex;
+    gap: var(--pb-gap);
+    /* Fixed by the rail rather than by its contents, so opening a panel
+       moves widths only — the section never changes height under you. */
+    aspect-ratio: 2.6;
+  }
+
+  .pb-panel {
+    position: relative;
+    flex: 0 0 var(--pb-strip);
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    background: var(--surface);
+    transition:
+      flex-basis 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.4s ease;
+  }
+
+  .pb-panel[data-open] {
+    /* JS publishes the measured width; the fallback is the same number,
+       so the layout is right before a single line of it has run. */
+    flex-basis: var(
+      --pb-open,
+      calc(100% - (var(--pb-n) - 1) * (var(--pb-strip) + var(--pb-gap)))
+    );
+    box-shadow: 0 24px 60px -40px rgba(47, 54, 83, 0.5);
+  }
+
+  /* --- collapsed: a strip with its title on its side ---------------- */
+
+  .pb-tab {
+    position: absolute;
+    inset: 0;
+    width: var(--pb-strip);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--pb-gap) * 0.75);
+    padding: 18px 0;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    color: var(--muted-foreground);
+    transition: background 0.3s ease;
+  }
+
+  .pb-tab:hover {
+    background: color-mix(in srgb, var(--muted) 45%, transparent);
+    color: var(--foreground);
+  }
+
+  .pb-panel[data-open] .pb-tab {
+    display: none;
+  }
+
+  .pb-tabicon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--brand);
+  }
+
+  .pb-tabtitle {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    /* Bottom-to-top, the way a spine reads. */
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    font-size: 0.875rem;
+    line-height: 1;
+    color: inherit;
+  }
+
+  .pb-index,
+  .pb-num {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    color: var(--brand);
+  }
+
+  /* --- open: text left, illustration right ------------------------- */
+
+  .pb-body {
+    position: absolute;
+    inset: 0;
+    /* Laid out at its final width from the start, so the text doesn't
+       re-wrap and the scene doesn't rescale while the panel is opening. */
+    width: var(--pb-open, 100%);
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    gap: 32px;
+    align-items: center;
+    padding: 28px;
+    text-align: left;
+  }
+
+  .pb-panel:not([data-open]) .pb-body {
+    display: none;
+  }
+
+  .pb-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .pb-num {
+    font-size: 1rem;
+  }
+
+  .pb-sub {
+    font-size: 1rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+    color: var(--muted-foreground);
+  }
+
+  .pb-visual {
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  /* The rail's ratio is set so the frame always fits by width with a little
+     height to spare, which is why it is centred rather than stretched. */
+  .pb-visual > :global(*) {
+    width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .pb-body {
+      animation: pb-open 0.5s ease 0.12s both;
+    }
+
+    @keyframes pb-open {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
+
+  /* --- narrow: an ordinary stacked accordion ----------------------- */
+
+  @media (max-width: 1023px) {
+    .pb-rail {
+      flex-direction: column;
+      aspect-ratio: auto;
+    }
+
+    .pb-panel,
+    .pb-panel[data-open] {
+      flex: none;
+    }
+
+    .pb-tab {
+      position: static;
+      display: flex;
+      width: 100%;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      text-align: left;
+    }
+
+    .pb-panel[data-open] .pb-tab {
+      display: flex;
+    }
+
+    .pb-tabtitle {
+      flex: 1;
+      writing-mode: horizontal-tb;
+      transform: none;
+      white-space: normal;
+      font-size: 1rem;
+      line-height: 1.35;
+      color: var(--foreground);
+    }
+
+    .pb-tabicon {
+      transform: none;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pb-panel[data-open] .pb-tabicon {
+      transform: rotate(90deg);
+    }
+
+    .pb-body {
+      position: static;
+      display: flex;
+      flex-direction: column;
+      /* The wide layout centres its two columns; stacked, they fill. */
+      align-items: stretch;
+      width: auto;
+      gap: 0;
+      padding: 0 20px 20px;
+    }
+
+    /* Illustration first here: it is what the row was opened for. */
+    .pb-visual {
+      order: -1;
+      height: auto;
+    }
+
+    /* The strip's title is the heading here — no need to say it twice. */
+    .pb-text h3,
+    .pb-num {
+      display: none;
+    }
+
+    .pb-sub {
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pb-panel,
+    .pb-tab,
+    .pb-tabicon {
+      transition: none !important;
+    }
+
+    .pb-body {
+      animation: none !important;
+    }
+  }
+</style>
