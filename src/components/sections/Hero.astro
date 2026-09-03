@@ -1,6 +1,7 @@
 ---
 import Container from "@/components/ui/Container.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
+import heroDemoSrc from "@/assets/img/main.png?url";
 ---
 
 <section class="pt-10 pb-20 sm:pt-16 sm:pb-28">
@@ -26,12 +27,14 @@ import MediaFrame from "@/components/ui/MediaFrame.astro";
 
     <div class="mt-4 w-full max-w-5xl" data-reveal data-reveal-variant="zoom">
       <!--
-        MEDIA: hero-demo — 16:9. Supplied directly, see MEDIA_BRIEF.md.
+        MEDIA: hero-demo — 16:9. Image temporaire (main.png) en attendant la vidéo, voir MEDIA_BRIEF.md.
       -->
       <MediaFrame
         id="hero-demo"
+        kind="image"
         aspectRatio="16/9"
         priority
+        src={heroDemoSrc}
         alt="Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards populate the board"
       />
     </div>
