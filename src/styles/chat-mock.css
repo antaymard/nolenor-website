@@ -166,18 +166,19 @@
   flex: none;
 }
 
-/* Right-aligned and clipped: once a prompt outgrows the box, the start of
-   the sentence scrolls out of sight. */
+/* Wraps rather than scrolls. A composer that slides the start of your own
+   sentence out of view is unreadable at exactly the moment someone is
+   reading it, so a long message grows the box the way a real one does. */
 .chat-field {
   position: relative;
   flex: 1;
   min-width: 0;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  overflow: hidden;
-  height: calc(3.4 * var(--u));
+  min-height: calc(3.4 * var(--u));
   font-size: calc(2.2 * var(--u));
+  line-height: 1.4;
+  text-align: left;
 }
 
 .chat-placeholder {
