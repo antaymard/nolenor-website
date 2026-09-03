@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/sections/Hero.astro";
 import Problem from "@/components/sections/Problem.astro";
+import NodeTypes from "@/components/sections/NodeTypes.astro";
 import StickyFeatureScroll from "@/components/sections/StickyFeatureScroll.astro";
 import { featureSteps } from "@/data/features";
 
@@ -13,5 +14,6 @@ import { featureSteps } from "@/data/features";
 <Layout>
   <Hero />
   <Problem />
+  <NodeTypes />
   <StickyFeatureScroll id="features" steps={featureSteps} />
 </Layout>

@@ -1,0 +1,156 @@
+---
+import { Icon } from "astro-icon/components";
+import Container from "@/components/ui/Container.astro";
+import { nodeTypes } from "@/data/nodeTypes";
+---
+
+<section class="py-20 sm:py-28">
+  <Container class="flex flex-col items-center gap-5 text-center">
+    <h2 class="text-balance text-foreground">
+      Everything your thinking is made of
+    </h2>
+
+    <div class="flex max-w-4xl flex-col gap-1 text-lg text-pretty text-muted-foreground">
+      <p>
+        Each node is readable, editable and searchable by you and by Nolë, your
+        visual assistant.
+      </p>
+      <p>
+        PDF, images, audio and video are transcribed as text and indexed for
+        better AI understanding and searchability.
+      </p>
+      <p>Version history for every edit made.</p>
+    </div>
+  </Container>
+
+  <Container class="mt-14 sm:mt-16">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        nodeTypes.map((node) => (
+          <article class="nt-card" data-reveal>
+            <div class="flex items-center gap-3">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-brand">
+                <Icon name={node.icon} class="h-4 w-4" />
+              </span>
+              <h3 class="text-foreground">{node.name}</h3>
+            </div>
+
+            <p class="nt-desc mt-3 text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">
+              {node.description}
+            </p>
+
+            {/*
+              The preview is deliberately cropped by the bottom of the card:
+              a peek into the node, not a framed screenshot.
+            */}
+            <div class="nt-slot" data-media-id={node.media?.id}>
+              {node.soon ? (
+                <span class="nt-soon">Soon</span>
+              ) : node.media?.src ? (
+                <img
+                  class="nt-shot"
+                  src={node.media.src}
+                  alt={node.media.alt}
+                  loading="lazy"
+                />
+              ) : (
+                <div class="nt-empty">
+                  <Icon name={node.icon} class="h-5 w-5" />
+                  <span class="text-[0.7rem] uppercase tracking-wide">
+                    Media placeholder
+                  </span>
+                  <span class="text-xs">{node.media?.id}</span>
+                </div>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  /* Nine cards of the same shape: header and copy sized by their content,
+     the preview taking whatever height is left. Because the grid stretches
+     every card in a row to the same height, a longer description simply
+     eats into its own preview instead of making one card taller. */
+  .nt-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 21rem;
+    overflow: hidden;
+    padding: 1.25rem 1.25rem 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    background: var(--surface);
+    box-shadow: 0 18px 50px -30px rgba(47, 54, 83, 0.45);
+    transition: border-color 0.25s ease;
+  }
+
+  .nt-card:hover {
+    border-color: color-mix(in oklab, var(--brand) 30%, transparent);
+  }
+
+  /* Three lines of room whether the copy needs them or not, so every
+     preview in a row starts at the same height. */
+  .nt-desc {
+    min-height: 4.7rem;
+  }
+
+  .nt-slot {
+    flex: 1;
+    /* Flex items default to min-height: auto, which would let a tall
+       screenshot push the card instead of being cropped by it. */
+    min-height: 0;
+    margin-top: 1rem;
+    overflow: hidden;
+  }
+
+  .nt-shot {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    border-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .nt-empty,
+  .nt-soon {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+  }
+
+  .nt-empty {
+    flex-direction: column;
+    gap: 0.375rem;
+    padding: 1rem;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-bottom: 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background: color-mix(in oklab, var(--muted) 45%, transparent);
+  }
+
+  .nt-soon {
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 640px) {
+    .nt-card {
+      min-height: 24rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .nt-card {
+      min-height: 25rem;
+    }
+  }
+</style>

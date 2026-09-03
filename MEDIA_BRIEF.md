@@ -1,6 +1,7 @@
 # Media production brief
 
-Every row below is one `<MediaFrame>` (or `<CodeBlock>`) call in the codebase.
+Every row below is one `<MediaFrame>` call in the codebase (or, for the
+`node-*` rows, one card slot in `NodeTypes.astro`).
 Each `id` matches a `data-media-id` attribute in the rendered HTML and a
 `MEDIA: <id>` comment directly above its call site in the `.astro` source —
 grep either to find the exact component.
@@ -35,7 +36,22 @@ once in the sticky desktop stack, once inline in the mobile layout.
 | feature-collaboration | unplugged (pending redesign) | video | 16/10 | 6-10s | Share modal: add a collaborator by email, set permission to "editor"; then a second cursor/edit appears live on the canvas as if from another user; toggle a canvas to public and copy the share link. | `feature-collaboration.mp4` + poster | ⬜ |
 | feature-export | unplugged (pending redesign) | video | 16/10 | 6-10s | Open the export panel, choose "export this canvas," watch the client-side zip progress indicator, then show the resulting folder structure (README.md, canvas.json, nodes/*.md) in a file browser or terminal. | `feature-export.mp4` + poster | ⬜ |
 | feature-mcp | unplugged (pending redesign) | — (CodeBlock, no media) | — | — | No media needed — this section renders a hand-written JSON config snippet instead of video. | — | n/a |
+| node-title | `NodeTypes.astro` (card: title) | image | see note | — | A Title node with its formatting toolbar (H1/H2/H3) open, linked to two smaller labelled nodes on the canvas. | `node-title.png` | ⬜ |
+| node-blocknote | `NodeTypes.astro` (card: blocknote) | image | see note | — | A Blocknote node with the slash-command menu open on the block list (divider, table, image, video, audio, file) over real written content. | `node-blocknote.png` | ⬜ |
+| node-link | `NodeTypes.astro` (card: link) | image | see note | — | A Link node showing a fetched page preview: thumbnail, page title, description, favicon and source URL. | `node-link.png` | ⬜ |
+| node-pdf | `NodeTypes.astro` (card: pdf) | image | see note | — | A PDF node rendering a real document in place on the canvas — text and charts visible, no download step. | `node-pdf.png` | ⬜ |
+| node-table | `NodeTypes.astro` (card: table) | image | see note | — | A Table node with typed columns (version, status select, date, text) and one select cell open on its options. | `node-table.png` | ⬜ |
+| node-app | `NodeTypes.astro` (card: app) | image | see note | — | An App node rendering a live dashboard built from canvas data: editable inputs on the left, a chart below. | `node-app.png` | ⬜ |
+| node-image | `NodeTypes.astro` (card: image) | image | see note | — | An Image node holding a 2×2 grid of generated logo variants, with the generation caption underneath. | `node-image.png` | ⬜ |
+| node-media | `NodeTypes.astro` (card: media) | image | see note | — | An Audio node with a waveform player and a loop region, above a Video node playing on the canvas. | `node-media.png` | ⬜ |
 | og-image | `BaseHead.astro` | image | 1200×630 | — | Static social share card: logo mark + "You need somewhere to think" + a clean canvas screenshot in the background, on the cream (#F6EDDF) brand background. | `og-image.png` | ⬜ |
+
+**`node-*` previews (NodeTypes section):** these are the only slots that are
+*cropped on purpose*. Each one sits at the bottom of its card and is clipped
+by the card's edge, so only the top of the screenshot is ever visible — a peek
+into the node, not a framed screenshot. Shoot them ~700px wide (2× the card)
+and at least ~420px tall so the crop never runs out of image; anything below
+the first ~260px will not be seen on any screen size.
 
 **Not currently in the manifest but referenced in code as static assets** (no
 placeholder rendering needed, already copied verbatim from the product repo):
