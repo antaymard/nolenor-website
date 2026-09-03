@@ -44,6 +44,9 @@ once in the sticky desktop stack, once inline in the mobile layout.
 | node-app | `NodeTypes.astro` (card: app) | image | see note | — | An App node rendering a live dashboard built from canvas data: editable inputs on the left, a chart below. | `node-app.png` | ⬜ |
 | node-image | `NodeTypes.astro` (card: image) | image | see note | — | An Image node holding a 2×2 grid of generated logo variants, with the generation caption underneath. | `node-image.png` | ⬜ |
 | node-media | `NodeTypes.astro` (card: media) | image | see note | — | An Audio node with a waveform player and a loop region, above a Video node playing on the canvas. | `node-media.png` | ⬜ |
+| more-version-control | `MoreFeatures.astro` | image | see note | — | A node's version history open: a timeline of edits with the agent's changes and the author's own listed separately, one older version selected and previewed. | `more-version-control.png` | ⬜ |
+| more-search | `MoreFeatures.astro` | image | see note | — | The search panel with one query matching three different node types at once — a PDF page, a transcript line with its timestamp, and a written note. | `more-search.png` | ⬜ |
+| more-slideshows | `MoreFeatures.astro` | image | see note | — | A canvas with numbered saved viewpoints marked on it, and one of them playing back full-screen as a slide. | `more-slideshows.png` | ⬜ |
 | og-image | `BaseHead.astro` | image | 1200×630 | — | Static social share card: logo mark + "You need somewhere to think" + a clean canvas screenshot in the background, on the cream (#F6EDDF) brand background. | `og-image.png` | ⬜ |
 
 **`node-*` previews (NodeTypes section):** these are the only slots that are
@@ -52,6 +55,15 @@ by the card's edge, so only the top of the screenshot is ever visible — a peek
 into the node, not a framed screenshot. Shoot them ~700px wide (2× the card)
 and at least ~420px tall so the crop never runs out of image; anything below
 the first ~260px will not be seen on any screen size.
+
+**`more-*` pictures (MoreFeatures section):** these run off the **left** edge of
+the page and are cropped by it, so nothing that has to be read may sit on the
+left. Above 1024px the visible width is roughly 520-980px depending on the
+screen, of which the leftmost ~180px is cut on a wide display and none of it on
+a narrow one — so keep the subject in the right two-thirds and let the left side
+be canvas, background, or the tail of a panel. Shoot 1800×1000 or larger, 16/9;
+below 1024px the same file is shown whole, edge to edge, at 16/10, so leave a
+little headroom top and bottom for that crop.
 
 **Not currently in the manifest but referenced in code as static assets** (no
 placeholder rendering needed, already copied verbatim from the product repo):

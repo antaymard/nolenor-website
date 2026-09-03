@@ -1,0 +1,132 @@
+---
+import Container from "@/components/ui/Container.astro";
+import MediaFrame from "@/components/ui/MediaFrame.astro";
+import { featureHighlights, featureNotes } from "@/data/moreFeatures";
+
+/*
+ * The depth section: proof there is a real product here, read at speed.
+ *
+ * Deliberately not another card grid — a grid gives every item the same
+ * weight, which is the opposite of what this section is for. It is a list:
+ * full-bleed rules, three entries with a picture running off the left edge
+ * of the page, then four one-liners with no picture at all. The hierarchy
+ * is the layout.
+ *
+ * The pictures bleed left rather than right, which is the one direction no
+ * other section on this page uses — by here the reader has seen text-left
+ * / media-right three times.
+ */
+---
+
+<section class="overflow-x-clip py-20 sm:py-28">
+  <Container class="flex flex-col items-center gap-6 text-center">
+    <h2 class="max-w-3xl text-balance text-foreground">
+      The rest of what's in here
+    </h2>
+
+    <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+      Less headline, more day-to-day — the things you end up relying on once a
+      real project lives on the canvas.
+    </p>
+  </Container>
+
+  <ul class="mt-14 border-t border-border sm:mt-16">
+    {
+      featureHighlights.map((feature) => (
+        <li class="border-b border-border">
+          <Container class="grid items-center gap-6 py-9 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-14 lg:py-12">
+            <div class="mf-media" data-reveal data-reveal-variant="fade">
+              <div class="mf-frame">
+                <MediaFrame
+                  id={feature.media.id}
+                  kind="image"
+                  src={feature.media.src}
+                  alt={feature.media.alt}
+                  aspectRatio="auto"
+                  class="h-full"
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3" data-reveal>
+              <h3 class="text-balance text-foreground">{feature.title}</h3>
+              <p class="text-base leading-[1.6] text-pretty text-muted-foreground">
+                {feature.description}
+              </p>
+            </div>
+          </Container>
+        </li>
+      ))
+    }
+  </ul>
+
+  <Container class="mt-12 sm:mt-14">
+    <p class="text-base text-muted-foreground">
+      And these, which don't need a picture:
+    </p>
+
+    <dl class="mt-5 border-t border-border" data-reveal>
+      {
+        featureNotes.map((note) => (
+          <div class="grid gap-1 border-b border-border py-4 sm:grid-cols-[13rem_minmax(0,1fr)] sm:items-baseline sm:gap-6">
+            <dt class="font-semibold text-foreground">{note.title}</dt>
+            <dd class="text-base text-pretty text-muted-foreground">
+              {note.description}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Container>
+</section>
+
+<style>
+  /*
+   * Only the three things that are genuinely awkward as utilities live
+   * here: the bleed arithmetic, the picture's shape across breakpoints,
+   * and a rounded corner on a child component's root. Everything else in
+   * this section is inline Tailwind.
+   */
+
+  .mf-media {
+    /* Edge to edge on both sides while the row is stacked. */
+    margin-inline: -1.5rem;
+  }
+
+  .mf-frame {
+    /* Definite, not auto: with an aspect-ratio and a max-height an auto
+       width feeds the capped height back through the ratio and narrows the
+       box, which would open a gap between the picture and the copy on a
+       wide screen. Stated as 100%, the width holds and the cap crops. */
+    width: 100%;
+    aspect-ratio: 16 / 10;
+  }
+
+  .mf-frame > :global(*) {
+    border-radius: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .mf-media {
+      /* Runs off the left edge of the page: the page margin either side of
+         the container (nothing once the viewport is narrower than it) plus
+         the container's own gutter. 100vw can include the scrollbar, which
+         only ever overshoots — hence overflow-x: clip on the section. */
+      margin-right: 0;
+      margin-left: calc(-1 * (max(0px, (100vw - 72rem) / 2) + 2rem));
+    }
+
+    .mf-frame {
+      /* Capped so the picture stops growing on very wide screens, where
+         the bleed alone would make a secondary feature twice the height of
+         the copy beside it. Past the cap the picture crops rather than
+         narrows — see the width above. */
+      aspect-ratio: 16 / 9;
+      max-height: 22rem;
+    }
+
+    .mf-frame > :global(*) {
+      border-radius: 0 var(--radius-2xl) var(--radius-2xl) 0;
+    }
+  }
+</style>
