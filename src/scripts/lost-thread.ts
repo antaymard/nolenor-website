@@ -1,24 +1,21 @@
 import { prefersReducedMotion } from "./reduced-motion";
 
-// Runs the "Which chat was it?" illustration: open on the conversation, mark
-// the one real idea in it, then abandon it for the sidebar and hunt. The
-// list's travel is measured rather than hard-coded, so the cursor comes to
-// rest on the same conversation whatever the list does at a given width.
-// Plays once per entrance, like the status stack.
-interface Beat {
-  phase: string;
-  duration: number;
-}
+/*
+ * Runs the "Which chat was it?" illustration. One motion only: the cursor
+ * rakes down the conversation list and back up, over and over, and each
+ * title lights up as it passes.
+ *
+ * Both the travel and the moment each row is passed are measured from the
+ * laid-out list rather than hard-coded, so the highlight stays under the
+ * cursor at any width. It loops for as long as the scene is on screen —
+ * there is no punchline to catch mid-replay here, the whole point is that
+ * the search doesn't end.
+ */
 
-const TIMELINE: Beat[] = [
-  { phase: "open", duration: 1100 },
-  { phase: "idea", duration: 1300 },
-  { phase: "search", duration: 900 },
-  { phase: "hunt", duration: 1900 },
-  { phase: "stuck", duration: 1500 },
-  // Holds here: the closing line runs its own fade in, hold and fade out.
-  { phase: "end", duration: 3600 },
-];
+const SWEEP_DOWN = 3400;
+const HOLD_BOTTOM = 600;
+const SWEEP_UP = 2900;
+const HOLD_TOP = 500;
 
 export function initLostThread(): void {
   document
@@ -28,23 +25,31 @@ export function initLostThread(): void {
 
 function setupThread(root: HTMLElement): void {
   const view = root.querySelector<HTMLElement>("[data-lt-listview]");
-  const list = root.querySelector<HTMLElement>("[data-lt-list]");
-  const mark = root.querySelector<HTMLElement>("[data-lt-mark]");
-  if (!view || !list || !mark) return;
+  const pointer = root.querySelector<HTMLElement>("[data-lt-pointer]");
+  const items = Array.from(root.querySelectorAll<HTMLElement>("[data-lt-item]"));
+  if (!view || !pointer || !items.length) return;
+  const note = pointer.querySelector<HTMLElement>(".lt-note");
 
-  // Where the cursor starts and settles inside the list, and how far the list
-  // has to travel for the marked conversation to end up under it.
-  const place = () => {
-    const start = view.offsetTop + view.clientHeight * 0.2;
-    const rest = view.offsetTop + view.clientHeight * 0.58;
-    root.style.setProperty("--lt-start", `${start}px`);
-    root.style.setProperty("--lt-rest", `${rest}px`);
-    return mark.offsetTop - view.clientHeight * 0.58;
+  // Sidebar coordinates: the list, the viewport clipping it and the cursor
+  // all share the sidebar as their offset parent. The bottom of the sweep is
+  // pulled up by however far the label hangs below the cursor, so the label
+  // never runs out of the frame.
+  const bounds = () => {
+    const tail = note ? note.offsetTop + note.offsetHeight + 6 : 0;
+    const from = view.offsetTop + view.clientHeight * 0.08;
+    return {
+      from,
+      to: Math.max(from, view.offsetTop + view.clientHeight - tail),
+    };
   };
 
+  const clearHover = () =>
+    items.forEach((item) => item.classList.remove("is-hover"));
+
   if (prefersReducedMotion()) {
-    root.dataset.phase = "stuck";
-    list.style.transform = `translateY(${-place()}px)`;
+    const { from, to } = bounds();
+    root.dataset.phase = "still";
+    pointer.style.transform = `translateY(${(from + to) / 2}px)`;
     return;
   }
 
@@ -55,41 +60,61 @@ function setupThread(root: HTMLElement): void {
     timers = [];
   };
 
-  const reset = () => {
-    root.dataset.phase = "idle";
-    list.style.transition = "none";
-    list.style.transform = "translateY(0)";
-  };
+  // One pass of the cursor, plus a timer per row for the moment the cursor
+  // reaches its middle. The move is linear, so that moment is just where the
+  // row sits along the travel.
+  const sweep = (from: number, to: number, duration: number) => {
+    const down = to > from;
+    pointer.style.transition = `transform ${duration}ms linear`;
+    pointer.style.transform = `translateY(${to}px)`;
 
-  const play = () => {
-    reset();
-    const travel = place();
-    // Read the layout back so the reset lands before the scroll starts,
-    // otherwise the browser collapses the two into a single jump.
-    void list.offsetHeight;
-
-    let at = 0;
-    for (const beat of TIMELINE) {
-      const start = at;
+    for (const item of items) {
+      // The tip of the cursor is its top-left corner, so a row lights up as
+      // the tip crosses into it — its top edge going down, its bottom edge
+      // coming back up.
+      const edge = down ? item.offsetTop : item.offsetTop + item.offsetHeight;
+      const progress = (edge - from) / (to - from);
+      if (progress < 0 || progress > 1) continue;
       timers.push(
         window.setTimeout(() => {
-          root.dataset.phase = beat.phase;
-          if (beat.phase === "hunt") {
-            list.style.transition = `transform ${beat.duration}ms cubic-bezier(0.16, 1, 0.3, 1)`;
-            list.style.transform = `translateY(${-travel}px)`;
-          }
-        }, start),
+          clearHover();
+          item.classList.add("is-hover");
+        }, progress * duration),
       );
-      at += beat.duration;
     }
+  };
+
+  const cycle = () => {
+    const { from, to } = bounds();
+
+    sweep(from, to, SWEEP_DOWN);
+    timers.push(
+      window.setTimeout(() => {
+        sweep(to, from, SWEEP_UP);
+        timers.push(window.setTimeout(cycle, SWEEP_UP + HOLD_TOP));
+      }, SWEEP_DOWN + HOLD_BOTTOM),
+    );
+  };
+
+  const park = () => {
+    stop();
+    clearHover();
+    root.dataset.phase = "idle";
+    pointer.style.transition = "none";
+    pointer.style.transform = `translateY(${bounds().from}px)`;
   };
 
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        stop();
-        if (entry.isIntersecting) play();
-        else reset();
+        park();
+        if (!entry.isIntersecting) continue;
+
+        // Read the layout back so parking lands before the first sweep,
+        // otherwise the browser collapses the two into one jump.
+        void pointer.offsetHeight;
+        root.dataset.phase = "hunt";
+        cycle();
       }
     },
     { threshold: 0.35 },
