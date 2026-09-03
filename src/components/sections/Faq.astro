@@ -1,36 +1,162 @@
 ---
 import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
-import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { faqEntries } from "@/data/faq";
+
+/*
+ * Native <details> rather than a scripted accordion: it works before any
+ * JavaScript runs, answers to the keyboard for free, and several answers can
+ * be open at once — which is what someone comparing tools actually wants.
+ *
+ * The open and close are animated through ::details-content where the
+ * browser has it, and snap open where it doesn't. Nothing depends on it.
+ */
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqEntries.map((entry) => ({
+    "@type": "Question",
+    name: entry.question,
+    acceptedAnswer: { "@type": "Answer", text: entry.answer },
+  })),
+};
 ---
 
-<section id="faq" class="scroll-mt-20 py-24 sm:py-32">
-  <Container class="flex flex-col gap-12">
-    <SectionHeading
-      align="center"
-      eyebrow="FAQ"
-      title="Questions, answered honestly."
-      class="mx-auto"
-    />
+<section id="faq" class="scroll-mt-24 py-20 sm:py-28">
+  <Container class="flex flex-col items-center gap-5 text-center">
+    <h2 class="text-foreground">FAQ</h2>
+  </Container>
 
-    <div class="mx-auto flex w-full max-w-2xl flex-col divide-y divide-border" data-reveal>
+  <Container class="mt-10 sm:mt-12">
+    <div class="faq-list" data-reveal>
       {
         faqEntries.map((entry) => (
-          <details class="group py-5">
-            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-medium marker:content-none">
-              {entry.question}
-              <Icon
-                name="lucide:chevron-down"
-                class="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
-              />
+          <details class="faq-item">
+            <summary class="faq-q">
+              <span>{entry.question}</span>
+              <span class="faq-mark">
+                <Icon name="lucide:plus" class="faq-icon" />
+              </span>
             </summary>
-            <p class="mt-3 text-sm text-muted-foreground text-pretty">
-              {entry.answer}
-            </p>
+            <div class="faq-a">
+              <p>{entry.answer}</p>
+            </div>
           </details>
         ))
       }
     </div>
   </Container>
 </section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline
+></script>
+
+<style>
+  .faq-list {
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-q {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 4px;
+    cursor: pointer;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.45;
+    text-align: left;
+    text-wrap: pretty;
+    color: var(--foreground);
+    list-style: none;
+    transition: color 0.2s ease;
+  }
+
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-q:hover {
+    color: var(--brand);
+  }
+
+  .faq-mark {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin-top: 1px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--muted) 55%, transparent);
+    color: var(--brand);
+    transition:
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.25s ease;
+  }
+
+  .faq-q:hover .faq-mark {
+    background: color-mix(in srgb, var(--brand) 14%, transparent);
+  }
+
+  /* A plus turned an eighth of a turn is a cross: open, without a second icon. */
+  .faq-item[open] .faq-mark {
+    transform: rotate(135deg);
+  }
+
+  .faq-icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  .faq-a p {
+    margin: 0;
+    padding: 0 4px 24px;
+    max-width: 42rem;
+    font-size: 1rem;
+    line-height: 1.65;
+    text-align: left;
+    text-wrap: pretty;
+    color: var(--muted-foreground);
+  }
+
+  /* Progressive enhancement: browsers with ::details-content can animate the
+     panel from nothing to its own height. The rest simply open. */
+  @supports selector(::details-content) {
+    .faq-list {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        content-visibility 0.4s allow-discrete;
+    }
+
+    .faq-item[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-mark,
+    .faq-q {
+      transition: none !important;
+    }
+
+    .faq-item::details-content {
+      transition: none !important;
+    }
+  }
+</style>

@@ -15,12 +15,15 @@ const { id, steps, aspectRatio = "16/10" } = Astro.props;
 
 <section id={id} class="py-18" data-sticky-scroll>
     <Container class="flex flex-col items-center gap-6 text-center -mb-8">
-      <h2
-        class="fit-lines text-foreground"
-        style="--fit-max: 2.25rem; --fit-ratio: 16.5"
-      >
-        <span class="block whitespace-nowrap">Nolënor gives your thinking a place to live — and gives AI a way to join it.
-</span>
+      <!--
+        Plain balanced wrapping, not .fit-lines: that class is for headings
+        whose line breaks are hand-set and must never move, and it sizes the
+        text off the longest nowrap line. One 76-character line with no break
+        in it overflowed a phone by 150px.
+      -->
+      <h2 class="max-w-3xl text-balance text-foreground">
+        Nolënor gives your thinking a place to live — and gives AI a way to
+        join it.
       </h2>
 
       <p class="max-w-2xl text-lg text-pretty text-muted-foreground">

@@ -3,6 +3,8 @@ import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/sections/Hero.astro";
 import Problem from "@/components/sections/Problem.astro";
 import NodeTypes from "@/components/sections/NodeTypes.astro";
+import Audience from "@/components/sections/Audience.astro";
+import Faq from "@/components/sections/Faq.astro";
 import StickyFeatureScroll from "@/components/sections/StickyFeatureScroll.astro";
 import { featureSteps } from "@/data/features";
 
@@ -16,4 +18,6 @@ import { featureSteps } from "@/data/features";
   <Problem />
   <StickyFeatureScroll id="features" steps={featureSteps} />
   <NodeTypes />
+  <Audience />
+  <Faq />
 </Layout>
