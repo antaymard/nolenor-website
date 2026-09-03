@@ -127,6 +127,9 @@
   padding: calc(1.6 * var(--u)) calc(2.4 * var(--u));
   font-size: calc(2.1 * var(--u));
   line-height: 1.45;
+  /* The section around these illustrations is centred; a chat bubble never
+     is, however many lines it runs to. */
+  text-align: left;
 }
 
 .chat-bars {

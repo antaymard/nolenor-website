@@ -2,97 +2,64 @@
 import { Icon } from "astro-icon/components";
 
 /*
- * Illustration for problem item 1: what the chat box does to a thought.
+ * Illustration for problem item 1: what the chat does to a thought that
+ * isn't finished yet.
  *
- * A loose, connected cloud of half-formed thoughts hangs over a dimmed chat
- * UI, then gets funnelled into the input and flattened into one long line —
- * except the open question, which never fits and drifts away. The prompt is
- * sent, the answer comes back as an undifferentiated wall, and each retry is
- * shorter than the last until the original question has scrolled off the top.
+ * Someone is still working out what they want to say. They type it the way
+ * you think — hesitantly, ending on a "but—". The assistant doesn't wait for
+ * the end of the sentence: it answers with a finished landing page and five
+ * artifacts, then answers the attempt to slow down with more output. Every
+ * exchange pushes the original thought further off the top of the thread,
+ * and the last thing left to type is that they no longer know.
  *
- * Geometry: every size is a multiple of --u, one container-query unit, so
- * the whole scene scales with the card and only --u changes on mobile.
- * Fragment positions are offsets in --u from the input's centre (the point
- * everything collapses into), which lets the connector SVG be generated
- * from the very same numbers below.
+ * The rhythm carries the meaning: the human beats are slow and typed, the
+ * machine beats land instantly and arrive three times bigger. One-shot, like
+ * problem item 2 — it plays on entering the viewport and resets on leaving,
+ * so the last line is never caught mid-replay.
  */
 
-const U_WIDE = 1;
-const U_TALL = 1.9;
-const ANCHOR_WIDE = { x: 50, y: 54 };
-const ANCHOR_TALL = { x: 50, y: 108.85 };
-
-interface Fragment {
-  text: string;
-  x: number;
-  y: number;
-  mx?: number;
-  my?: number;
-  /** The thought the input can't take: it drifts off instead of collapsing. */
-  drops?: boolean;
+interface Chip {
+  label: string;
+  /** Not a file — a thing the assistant already went and did. */
+  done?: boolean;
 }
 
-const fragments: Fragment[] = [
-  { text: "runway: 8 months", x: -25, y: -42, mx: -9.5, my: -44 },
-  { text: "Marie's at 120%", x: 13, y: -45, mx: 9.5, my: -35.5 },
-  { text: "3 CVs waiting", x: 29, y: -33 },
-  { text: "freelance instead?", x: -30, y: -30 },
-  { text: "if the Q3 deal drops?", x: -2, y: -33, mx: -4.2, my: -28 },
-  { text: "do we actually need one?", x: -10, y: -22, mx: 0, my: -20, drops: true },
-];
+type Row =
+  | { kind: "user"; text: string }
+  | { kind: "ai"; text: string; chips: Chip[] };
 
-const links: [number, number][] = [
-  [0, 3],
-  [0, 4],
-  [1, 2],
-  [1, 4],
-  [3, 5],
-  [4, 5],
-];
+// Typed into the input before they are sent, so the hesitation is visible.
+const FIRST =
+  "I'm trying to figure out what this landing page should say. I have a few rough ideas, but—";
+const LAST = "…I don't know anymore.";
 
-const line = (
-  a: Fragment,
-  b: Fragment,
-  anchor: { x: number; y: number },
-  unit: number,
-  narrow: boolean,
-) => ({
-  x1: anchor.x + (narrow ? a.mx! : a.x) * unit,
-  y1: anchor.y + (narrow ? a.my! : a.y) * unit,
-  x2: anchor.x + (narrow ? b.mx! : b.x) * unit,
-  y2: anchor.y + (narrow ? b.my! : b.y) * unit,
-});
-
-const wideLinks = links.map(([a, b]) =>
-  line(fragments[a], fragments[b], ANCHOR_WIDE, U_WIDE, false),
-);
-
-const tallLinks = links
-  .filter(([a, b]) => fragments[a].mx !== undefined && fragments[b].mx !== undefined)
-  .map(([a, b]) => line(fragments[a], fragments[b], ANCHOR_TALL, U_TALL, true));
-
-const PROMPT =
-  "Should we hire a second designer? We've got 8 months of runway, Marie is at 120%, three CVs waiting, and the Q3 deal still isn't signed \u2014 just tell me what to do.";
-
-/*
- * The thread the prompt lands in. It keeps going after the answer: each
- * retry is shorter and more resigned than the last, and every one of them
- * pushes the original question further off the top of the screen.
- */
-type ThreadRow =
-  | { kind: "user"; text: string; delay?: number }
-  | { kind: "ai"; bars: number[]; delay?: number };
-
-const thread: ThreadRow[] = [
-  { kind: "user", text: "Should we hire a second designer?" },
-  { kind: "ai", bars: [100, 92, 68] },
-  { kind: "user", text: PROMPT },
-  { kind: "ai", bars: [100, 97, 100, 88, 54], delay: 0.35 },
-  { kind: "user", text: "No, not like that. Shorter." },
-  { kind: "ai", bars: [100, 94, 61], delay: 0.5 },
-  { kind: "user", text: "Forget the runway part." },
-  { kind: "ai", bars: [100, 86], delay: 0.5 },
-  { kind: "user", text: "Actually, start over." },
+const thread: Row[] = [
+  { kind: "user", text: FIRST },
+  {
+    kind: "ai",
+    text: "I've got it. I created a complete landing page with a new structure, three headline options, competitor research, SEO copy, and a deployed version.",
+    chips: [
+      { label: "new structure" },
+      { label: "3 headlines" },
+      { label: "research" },
+      { label: "SEO copy" },
+      { label: "deployed", done: true },
+    ],
+  },
+  {
+    kind: "user",
+    text: "Wait… I was still trying to understand what I wanted to say.",
+  },
+  {
+    kind: "ai",
+    text: "No problem. Here are five alternative directions, twelve CTAs, and a comparison table.",
+    chips: [
+      { label: "5 directions" },
+      { label: "12 CTAs" },
+      { label: "comparison table" },
+    ],
+  },
+  { kind: "user", text: LAST },
 ];
 ---
 
@@ -100,11 +67,11 @@ const thread: ThreadRow[] = [
   class="chat-frame"
   data-chat-flatten
   data-phase="idle"
-  data-cf-prompt={PROMPT}
+  data-cf-first={FIRST}
+  data-cf-last={LAST}
   role="img"
-  aria-label="An AI chat: a cloud of connected half-formed thoughts about whether to hire a second designer collapses into the input, flattens into one long prompt, and the answers come back as walls of text, each followed by a shorter and more resigned retry."
+  aria-label="An AI chat: someone is still working out what their landing page should say and is barely mid-sentence when the assistant announces it has already built the whole thing — a new structure, three headlines, competitor research, SEO copy, deployed. They ask it to wait, they were still trying to understand what they wanted to say; it answers with five more directions, twelve CTAs and a comparison table. The last thing they type is that they don't know anymore."
 >
-  <!-- The chat, waiting behind the thinking. -->
   <div class="chat-app" aria-hidden="true">
     <div class="chat-topbar">
       <span class="chat-dot"></span>
@@ -115,19 +82,24 @@ const thread: ThreadRow[] = [
     <div class="chat-thread">
       {
         thread.map((row) => (
-          <div
-            class={`chat-row chat-row--${row.kind}`}
-            style={row.delay ? `--delay: ${row.delay}s` : undefined}
-            data-chat-row
-          >
+          <div class={`chat-row chat-row--${row.kind}`} data-chat-row>
             <div>
               {row.kind === "user" ? (
                 <p class="chat-bubble">{row.text}</p>
               ) : (
-                <div class="chat-bars">
-                  {row.bars.map((width) => (
-                    <span class="chat-bar" style={`width: ${width}%`} />
-                  ))}
+                <div class="cf-answer">
+                  <p class="cf-text">{row.text}</p>
+                  <div class="cf-chips">
+                    {row.chips.map((chip, index) => (
+                      <span class="cf-chip" style={`--i: ${index}`}>
+                        <Icon
+                          name={chip.done ? "lucide:check" : "lucide:file-text"}
+                          class="cf-chipicon"
+                        />
+                        {chip.label}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -142,253 +114,106 @@ const thread: ThreadRow[] = [
         <span class="chat-placeholder">What should we get done?</span>
         <span class="cf-typed" data-cf-text></span>
       </div>
-      <span class="chat-send"><Icon name="lucide:arrow-up" class="chat-sendicon" /></span>
+      <span class="chat-send"
+        ><Icon name="lucide:arrow-up" class="chat-sendicon" /></span
+      >
     </div>
-  </div>
-
-  <!-- What is actually in your head. -->
-  <div class="cf-cloud" aria-hidden="true">
-    <svg class="cf-links cf-links--wide" viewBox="0 0 100 62.5" fill="none">
-      {
-        wideLinks.map((l) => (
-          <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
-        ))
-      }
-    </svg>
-    <svg class="cf-links cf-links--tall" viewBox="0 0 100 125" fill="none">
-      {
-        tallLinks.map((l) => (
-          <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
-        ))
-      }
-    </svg>
-
-    {
-      fragments.map((fragment, index) => (
-        <span
-          class="cf-frag"
-          data-drops={fragment.drops ? "true" : undefined}
-          data-narrow={fragment.mx === undefined ? "hide" : undefined}
-          style={`--i: ${index}; --wfx: calc(${fragment.x} * var(--u)); --wfy: calc(${fragment.y} * var(--u)); ${
-            fragment.mx === undefined
-              ? ""
-              : `--nfx: calc(${fragment.mx} * var(--u)); --nfy: calc(${fragment.my} * var(--u));`
-          }`}
-        >
-          <span class="cf-frag-inner">{fragment.text}</span>
-        </span>
-      ))
-    }
   </div>
 </div>
 
 <style>
-  .chat-app {
-    transition: opacity 0.6s ease;
-  }
-
-  /* The chat waits, greyed out, while the thinking happens in front of it. */
-  .chat-frame[data-phase="thinking"] .chat-app,
-  .chat-frame[data-phase="idle"] .chat-app {
-    opacity: 0.3;
-  }
-
-  .chat-frame[data-phase="typing"] .chat-placeholder {
-    opacity: 0;
-  }
-
   .cf-typed {
     white-space: nowrap;
     color: var(--foreground);
   }
 
+  /* The caret only exists while a person is at the keyboard. */
+  .chat-frame[data-phase="typing"] .chat-placeholder {
+    opacity: 0;
+  }
+
   .chat-frame[data-phase="typing"] .cf-typed {
-    border-right: 2px solid var(--brand);
     padding-right: calc(0.4 * var(--u));
+    border-right: 2px solid var(--brand);
+    animation: cf-caret 1.1s step-end infinite;
+  }
+
+  @keyframes cf-caret {
+    50% {
+      border-right-color: transparent;
+    }
   }
 
   .chat-frame[data-phase="sent"] .chat-send {
     transform: scale(0.86);
   }
 
-  .cf-cloud {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+  .cf-text {
+    margin: 0;
+    font-size: calc(2.1 * var(--u));
+    line-height: 1.5;
+    text-align: left;
+    color: var(--foreground);
   }
 
-  .cf-links {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+  /* The output the answer came with, landing one piece at a time just after
+     the sentence that promised it — the whole reply is already finished
+     before the question was. */
+  .cf-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(1.2 * var(--u));
+    margin-top: calc(1.8 * var(--u));
   }
 
-  .cf-links line {
-    stroke: var(--brand);
-    stroke-width: 0.3;
-    stroke-linecap: round;
-    stroke-dasharray: 60;
-    stroke-dashoffset: 60;
-  }
-
-  .cf-links--tall {
-    display: none;
-  }
-
-  .chat-frame[data-phase="thinking"] .cf-links {
-    opacity: 0.4;
-  }
-
-  .chat-frame[data-phase="thinking"] .cf-links line {
-    animation: cf-draw 0.9s ease forwards;
-  }
-
-  /* The links snap first — the connections are the first thing the box loses. */
-  .chat-frame[data-phase="collapse"] .cf-links {
-    opacity: 0;
-    transition-duration: 0.18s;
-  }
-
-  @keyframes cf-draw {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
-  .cf-frag {
-    --fx: var(--wfx);
-    --fy: var(--wfy);
-    position: absolute;
-    left: 50%;
-    top: 86.4%;
-    opacity: 0;
-    transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
-      scale(0.92);
+  .cf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(0.9 * var(--u));
     border: 1px solid var(--border);
     border-radius: 999px;
     background: var(--surface);
-    box-shadow: 0 8px 20px -14px rgba(47, 54, 83, 0.6);
-    padding: calc(1.2 * var(--u)) calc(2.2 * var(--u));
-    font-size: calc(2.1 * var(--u));
-    line-height: 1.35;
+    padding: calc(0.9 * var(--u)) calc(1.8 * var(--u));
+    font-size: calc(1.8 * var(--u));
+    line-height: 1.3;
     white-space: nowrap;
-    color: var(--foreground);
-    transition:
-      opacity 0.6s ease,
-      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--i) * 110ms);
-  }
-
-  .cf-frag[data-drops] {
-    border-style: dashed;
-    border-color: color-mix(in srgb, var(--brand) 45%, transparent);
     color: var(--muted-foreground);
-    font-style: italic;
-  }
-
-  .chat-frame[data-phase="thinking"] .cf-frag {
-    opacity: 1;
-    transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
-      scale(1);
-  }
-
-  .chat-frame[data-phase="thinking"] .cf-frag-inner {
-    animation: cf-float 4.5s ease-in-out infinite alternate;
-    animation-delay: calc(var(--i) * -700ms);
-  }
-
-  .cf-frag-inner {
-    display: block;
-  }
-
-  /* Everything funnels into the input and flattens... */
-  .chat-frame[data-phase="collapse"] .cf-frag {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.25);
-    transition-duration: 0.6s, 0.75s;
-    transition-delay: calc(var(--i) * 80ms);
+    transform: translateY(calc(1.2 * var(--u))) scale(0.96);
+    transition:
+      opacity 0.28s ease,
+      transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Straight after the row has finished opening: any later and the space
+       they reserve reads as a hole at the bottom of the thread. */
+    transition-delay: calc(0.4s + var(--i) * 0.11s);
   }
 
-  /* ...except the open question, which just drifts off unsaid. */
-  .chat-frame[data-phase="collapse"] .cf-frag[data-drops] {
-    transform: translate(
-        calc(-50% + var(--fx) + 3 * var(--u)),
-        calc(-50% + var(--fy) - 9 * var(--u))
-      )
-      scale(0.96);
-    transition-duration: 1.1s;
-    transition-delay: 0.1s;
-  }
-
-  @keyframes cf-float {
-    from {
-      transform: translateY(calc(-0.7 * var(--u)));
-    }
-    to {
-      transform: translateY(calc(0.7 * var(--u)));
-    }
-  }
-
-  @media (max-width: 639px) {
-    .cf-links--wide {
-      display: none;
-    }
-
-    .cf-links--tall {
-      display: block;
-    }
-
-    /* Four fragments and a tighter spread: the wide scatter has nowhere to go. */
-    .cf-frag {
-      --fx: var(--nfx);
-      --fy: var(--nfy);
-      top: 87%;
-    }
-
-    .cf-frag[data-narrow="hide"] {
-      display: none;
-    }
-  }
-
-  /* Reduced motion: the scene is composed and readable, nothing moves. */
-  .chat-frame[data-phase="still"] .chat-app {
-    opacity: 0.32;
-  }
-
-  .chat-frame[data-phase="still"] .cf-links {
-    opacity: 0.4;
-  }
-
-  .chat-frame[data-phase="still"] .cf-links line {
-    stroke-dashoffset: 0;
-  }
-
-  .chat-frame[data-phase="still"] .cf-frag {
+  .chat-row.is-on .cf-chip {
     opacity: 1;
-    transform: translate(calc(-50% + var(--fx)), calc(-50% + var(--fy)))
-      scale(1);
+    transform: none;
+  }
+
+  .cf-chipicon {
+    flex: none;
+    width: calc(2 * var(--u));
+    height: calc(2 * var(--u));
+  }
+
+  /* Reduced motion: the whole exchange, composed and still. */
+  .chat-frame[data-phase="still"] .cf-chip {
+    opacity: 1;
+    transform: none;
     transition: none;
   }
 
-  .chat-frame[data-phase="still"] .chat-placeholder {
-    opacity: 0;
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .chat-app,
-    .chat-row,
-    .cf-links,
-    .cf-frag,
+    .cf-chip,
     .chat-send,
     .chat-placeholder {
       transition: none !important;
     }
 
-    .cf-frag-inner,
-    .cf-links line {
+    .cf-typed {
       animation: none !important;
     }
   }
