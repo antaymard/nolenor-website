@@ -13,7 +13,7 @@ export const problemItems: ProblemItem[] = [
   {
     title: "The chat turns thinking into prompting.",
     subtitle:
-      "Your thoughts become a sequence of requests instead of something you can develop.",
+      "When an answer arrives before your thoughts have taken shape, you stop developing an idea and start reacting to ones.",
     visual: "chat-flattening",
   },
   {
