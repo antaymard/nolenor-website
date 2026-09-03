@@ -1,3 +1,6 @@
+import addAttachmentsVid from "@/assets/vid/add-attachments.mp4?url";
+import addNodesVid from "@/assets/vid/add-nodes.mp4?url";
+
 export interface FeatureBullet {
   icon: string;
   text: string;
@@ -10,6 +13,7 @@ export interface FeatureStep {
   media: {
     id: string;
     alt: string;
+    src?: string;
   };
 }
 
@@ -18,37 +22,63 @@ export interface FeatureStep {
 // final copy for this section lands.
 export const featureSteps: FeatureStep[] = [
   {
-    title: "One canvas. Nothing hidden.",
-    subtitle: "Everything in view, always",
+    title: "Capture and connect.",
+    subtitle: "Start with whatever is on your mind.",
     bullets: [
-      { icon: "lucide:layout-grid", text: "Documents, tables, images, PDFs and KPIs, side by side" },
-      { icon: "lucide:move", text: "Infinite pan and zoom — drag, resize, connect" },
-      { icon: "lucide:search", text: "Search across everything, PDF pages included" },
+      {
+        icon: "lucide:layout-grid",
+        text: "Documents, tables, images, PDFs and KPIs, side by side",
+      },
+      {
+        icon: "lucide:move",
+        text: "Infinite pan and zoom — drag, resize, connect",
+      },
+      {
+        icon: "lucide:search",
+        text: "Search across everything, PDF pages included",
+      },
     ],
     media: {
       id: "feature-canvas-nodes",
       alt: "Canvas view with several node types arranged together, one expanding into a focused window",
+      src: addNodesVid,
     },
   },
   {
-    title: "Watch every step. Not just the answer.",
+    title: "Give AI the right context.",
     subtitle: "Meet Nolë, your agent on the canvas",
     bullets: [
-      { icon: "lucide:eye", text: "Every tool call and reasoning step, streamed live" },
-      { icon: "lucide:at-sign", text: "@mention any node to pull it into context" },
-      { icon: "lucide:users", text: "Sub-agents work in parallel, never blocking you" },
+      {
+        icon: "lucide:eye",
+        text: "Every tool call and reasoning step, streamed live",
+      },
+      {
+        icon: "lucide:at-sign",
+        text: "@mention any node or alt+clic on it to pull it into context",
+      },
+      {
+        icon: "lucide:sparkles",
+        text: "Close the chat, run multiple tasks in parallel, results appear live",
+      },
     ],
     media: {
       id: "feature-nole-agent",
       alt: "Nolë chat panel streaming a response with visible tool calls and a background sub-agent indicator",
+      src: addAttachmentsVid,
     },
   },
   {
-    title: "Don't describe the dashboard. Watch it get built.",
+    title: "Your thinking, augmented.",
     subtitle: "Live apps, generated on your canvas",
     bullets: [
-      { icon: "lucide:sparkles", text: "Interactive apps, wired to your own data" },
-      { icon: "lucide:wrench", text: "Self-healing — errors caught and fixed, visibly" },
+      {
+        icon: "lucide:sparkles",
+        text: "Interactive apps, wired to your own data",
+      },
+      {
+        icon: "lucide:wrench",
+        text: "Self-healing — errors caught and fixed, visibly",
+      },
       { icon: "lucide:chart-line", text: "Built-in charting, no setup" },
     ],
     media: {

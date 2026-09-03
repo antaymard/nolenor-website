@@ -1,3 +1,13 @@
+import type { ImageMetadata } from "astro";
+import TitleImg from "@/assets/img/Title.png";
+import BlocknoteImg from "@/assets/img/Blocknote.png";
+import LinkImg from "@/assets/img/Link.png";
+import PDFImg from "@/assets/img/PDF.png";
+import TableImg from "@/assets/img/Table.png";
+import AppImg from "@/assets/img/App.png";
+import ImageNodeImg from "@/assets/img/Image.png";
+import AudioImg from "@/assets/img/Audio.png";
+
 export interface NodeType {
   name: string;
   /** Lucide icon name for the badge in the card header. */
@@ -10,7 +20,7 @@ export interface NodeType {
   media?: {
     id: string;
     alt: string;
-    src?: string;
+    src?: ImageMetadata;
   };
   /** Node types that don't ship yet render an empty "Soon" slot instead. */
   soon?: boolean;
@@ -25,6 +35,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-title",
       alt: "A Title node with its formatting toolbar open, linked to two smaller labelled nodes on the canvas",
+      src: TitleImg,
     },
   },
   {
@@ -35,6 +46,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-blocknote",
       alt: "A Blocknote node with its slash-command menu open on the block types: divider, table, image, video, audio, file",
+      src: BlocknoteImg,
     },
   },
   {
@@ -45,6 +57,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-link",
       alt: "A Link node showing a fetched page preview — thumbnail, title, description and favicon — for an external URL",
+      src: LinkImg,
     },
   },
   {
@@ -55,6 +68,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-pdf",
       alt: "A PDF node rendering a market-study document in place on the canvas, charts included",
+      src: PDFImg,
     },
   },
   {
@@ -65,6 +79,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-table",
       alt: "A Table node with typed columns — version, status select, date, text — and one select cell open",
+      src: TableImg,
     },
   },
   {
@@ -75,6 +90,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-app",
       alt: "An App node rendering a live cost-comparison dashboard built from canvas data, with editable inputs and a chart",
+      src: AppImg,
     },
   },
   {
@@ -85,6 +101,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-image",
       alt: "An Image node holding a 2×2 grid of generated logo variants with the generation caption beneath",
+      src: ImageNodeImg,
     },
   },
   {
@@ -95,6 +112,7 @@ export const nodeTypes: NodeType[] = [
     media: {
       id: "node-media",
       alt: "An Audio node with a waveform player and a loop region, above a Video node playing on the canvas",
+      src: AudioImg,
     },
   },
   {
