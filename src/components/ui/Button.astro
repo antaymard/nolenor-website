@@ -1,7 +1,7 @@
 ---
 interface Props {
   href: string;
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "ghost" | "inverse";
   size?: "md" | "lg";
   class?: string;
 }
@@ -21,6 +21,9 @@ const variants = {
   secondary:
     "bg-foreground text-background hover:bg-foreground/85",
   ghost: "text-foreground hover:bg-muted",
+  // For the one place the brand colour is used as a large fill: the
+  // closing CTA. Cream on purple, the hero's palette turned inside out.
+  inverse: "bg-brand-foreground text-brand hover:bg-brand-foreground/90",
 };
 
 const sizes = {

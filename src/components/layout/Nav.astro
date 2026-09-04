@@ -2,7 +2,23 @@
 import Container from "@/components/ui/Container.astro";
 import Button from "@/components/ui/Button.astro";
 import Logo from "@/components/ui/Logo.astro";
+import { primaryNavLinks } from "@/data/nav";
 import { APP_URL, APP_SIGNIN_URL } from "@/lib/constants";
+
+/*
+ * On a phone the section anchors are hidden rather than folded into a
+ * burger menu. On a one-page site they are a convenience, not the
+ * navigation: the page reads top to bottom, and the footer carries the same
+ * four links for anyone who wants to jump. A drawer would cost a focus
+ * trap, an escape handler and a scroll lock, and would push the CTA — the
+ * one thing that has to stay reachable on a phone — off to the side.
+ *
+ * They appear from 768px, where the bar still has ~150px of slack with all
+ * four links, the logo, Login and the CTA in it.
+ *
+ * Which link is highlighted is set by nav-active.ts; without JS they are
+ * still ordinary working anchors, just never highlighted.
+ */
 ---
 
 <header class="sticky top-3 z-50 sm:top-4">
@@ -11,6 +27,23 @@ import { APP_URL, APP_SIGNIN_URL } from "@/lib/constants";
       class="flex items-center justify-between rounded-sm bg-surface/60 backdrop-blur-lg px-4 py-3 shadow-md"
     >
       <Logo iconClass="h-7 w-7 text-foreground" textClass="text-base sm:text-lg" />
+
+      <nav
+        aria-label="Page sections"
+        class="hidden items-center gap-6 md:flex"
+        data-nav-links
+      >
+        {
+          primaryNavLinks.map((link) => (
+            <a
+              href={link.href}
+              class="nav-link text-sm font-medium text-foreground/65 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
 
       <div class="flex items-center gap-4 sm:gap-6">
         <a
@@ -24,3 +57,16 @@ import { APP_URL, APP_SIGNIN_URL } from "@/lib/constants";
     </div>
   </Container>
 </header>
+
+<style>
+  /* The current section, marked by nav-active.ts. Colour alone would be
+     too quiet against a link row that is already low-contrast, hence the
+     rule underneath it. */
+  .nav-link[data-active] {
+    color: var(--foreground);
+    text-decoration: underline;
+    text-decoration-color: var(--brand);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+</style>

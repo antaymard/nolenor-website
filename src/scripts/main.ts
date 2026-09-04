@@ -1,4 +1,5 @@
 import { initScrollReveal } from "./reveal";
+import { initNavActive } from "./nav-active";
 import { initChatFlatten } from "./chat-flatten";
 import { initProblemAccordion } from "./problem-accordion";
 import { initStatusStack } from "./status-stack";
@@ -8,6 +9,7 @@ import { initStickyScroll } from "./sticky-scroll";
 import { initWishlistForm } from "./wishlist-form";
 
 initScrollReveal();
+initNavActive();
 initProblemAccordion();
 initChatFlatten();
 initStatusStack();

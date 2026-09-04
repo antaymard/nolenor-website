@@ -1,7 +1,9 @@
 ---
 import Container from "@/components/ui/Container.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
+import Button from "@/components/ui/Button.astro";
 import heroDemoSrc from "@/assets/img/main.png?url";
+import { APP_URL } from "@/lib/constants";
 ---
 
 <section class="pt-10 pb-20 sm:pt-16 sm:pb-28">
@@ -25,7 +27,30 @@ import heroDemoSrc from "@/assets/img/main.png?url";
       </span>
     </p>
 
-    <div class="mt-4 w-full max-w-5xl" data-reveal data-reveal-variant="zoom">
+    <!--
+      The page's first door. Everything above it argues; this is the only
+      thing on screen a convinced reader can act on, so it sits between the
+      promise and the picture rather than after the picture, where the fold
+      would have swallowed it on a phone.
+    -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+        <Button href={APP_URL} size="lg">Try it for free</Button>
+
+        <a
+          href="#features"
+          class="inline-flex items-center px-2 py-2 text-base font-medium text-foreground/80 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+        >
+          See what it does
+        </a>
+      </div>
+
+      <p class="text-sm text-muted-foreground">
+        Open beta — free while we build it.
+      </p>
+    </div>
+
+    <div class="w-full max-w-5xl" data-reveal data-reveal-variant="zoom">
       <!--
         MEDIA: hero-demo — 16:9. Image temporaire (main.png) en attendant la vidéo, voir MEDIA_BRIEF.md.
       -->
