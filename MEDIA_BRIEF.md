@@ -44,8 +44,8 @@ once in the sticky desktop stack, once inline in the mobile layout.
 | node-app | `NodeTypes.astro` (card: app) | image | see note | — | An App node rendering a live dashboard built from canvas data: editable inputs on the left, a chart below. | `node-app.png` | ⬜ |
 | node-image | `NodeTypes.astro` (card: image) | image | see note | — | An Image node holding a 2×2 grid of generated logo variants, with the generation caption underneath. | `node-image.png` | ⬜ |
 | node-media | `NodeTypes.astro` (card: media) | image | see note | — | An Audio node with a waveform player and a loop region, above a Video node playing on the canvas. | `node-media.png` | ⬜ |
-| more-version-control | `MoreFeatures.astro` | image | see note | — | A node's version history open: a timeline of edits with the agent's changes and the author's own listed separately, one older version selected and previewed. | `more-version-control.png` | ⬜ |
-| more-search | `MoreFeatures.astro` | image | see note | — | The search panel with one query matching three different node types at once — a PDF page, a transcript line with its timestamp, and a written note. | `more-search.png` | ⬜ |
+| more-version-control | `MoreFeatures.astro` | image | see note | — | A node's version history open: a timeline of edits with the agent's changes and the author's own listed separately, one older version selected and previewed. | `history.png` | ✅ live |
+| more-search | `MoreFeatures.astro` | image | see note | — | The search panel with one query matching three different node types at once — a PDF page, a transcript line with its timestamp, and a written note. | `search.png` | ✅ live |
 | more-shared-canvases | `MoreFeatures.astro` | image | see note | — | The share panel open over a canvas: two people listed at different permission levels, and behind it a second cursor editing a node. | `more-shared-canvases.png` | ⬜ |
 | og-image | `BaseHead.astro` | image | 1200×630 | — | Static social share card: logo mark + "You need somewhere to think" + a clean canvas screenshot in the background, on the cream (#F6EDDF) brand background. | `og-image.png` | ⬜ |
 

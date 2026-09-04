@@ -24,12 +24,12 @@ import { featureHighlights, featureNotes } from "@/data/moreFeatures";
 <section class="overflow-x-clip py-20 sm:py-28">
   <Container class="flex flex-col items-center gap-6 text-center">
     <h2 class="max-w-3xl text-balance text-foreground">
-      The rest of what's in here
+      Cutting-edge features for the agentic era
     </h2>
 
     <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-      Less headline, more day-to-day — the things you end up relying on once a
-      real project lives on the canvas.
+      The everyday tools that keep your work clear, searchable, and moving once
+      the canvas becomes part of the work.
     </p>
   </Container>
 
@@ -120,12 +120,14 @@ import { featureHighlights, featureNotes } from "@/data/moreFeatures";
     }
 
     .mf-frame {
-      /* Capped so the picture stops growing on very wide screens, where
-         the bleed alone would make a secondary feature twice the height of
-         the copy beside it. Past the cap the picture crops rather than
-         narrows — see the width above. */
+      /* The pictures are whole 16/9 compositions, so the ratio is theirs and
+         the cap is only a guard for ultra-wide screens, where the bleed
+         alone would otherwise make a secondary feature taller than a
+         laptop. Set above every height a common viewport produces — 491px
+         at 1920 — so nothing is cropped where anyone actually reads. Past
+         it the picture crops rather than narrows; see the width above. */
       aspect-ratio: 16 / 9;
-      max-height: 22rem;
+      max-height: 34rem;
     }
 
     .mf-frame > :global(*) {
