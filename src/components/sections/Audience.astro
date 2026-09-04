@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
 import { audienceFit, audienceMisfit } from "@/data/audience";
 
 /*
@@ -16,6 +17,8 @@ import { audienceFit, audienceMisfit } from "@/data/audience";
 
 <section id="who-its-for" class="py-20 sm:py-28">
   <Container class="flex flex-col items-center gap-5 text-center">
+    <SectionLabel>Is it for you?</SectionLabel>
+
     <h2 class="text-balance text-foreground">Who is Nolënor for?</h2>
     <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
       Nolënor is for people who want to stay involved in their thinking while

@@ -1,0 +1,38 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+/*
+ * The eyebrow above a section heading, and the page's table of contents
+ * read at a glance: problem, then solution, then what's in it.
+ *
+ * It exists because the headings alone weren't doing that job. "Every AI
+ * tool hands you a chat box. That's the problem." says so in its last
+ * three words — but nobody skimming a page reads the last three words of
+ * a serif sentence. A pill is scanned, so it can restate what the heading
+ * already says and still be the thing that lands.
+ */
+---
+
+<p
+  class={`section-label inline-flex w-fit items-center rounded-full px-3.5 py-1 text-sm font-medium ${className}`}
+>
+  <slot />
+</p>
+
+<style>
+  /*
+   * Mixed with white rather than with whatever is behind it: a translucent
+   * brand tint over the warm cream page comes out grey, which is the one
+   * thing an eyebrow must not be — it has to be spotted, not read. Opaque
+   * also means the same pill on the white node-types panel is the same
+   * colour, instead of two slightly different ones.
+   */
+  .section-label {
+    background: color-mix(in srgb, var(--brand) 14%, #ffffff);
+    color: var(--brand);
+  }
+</style>
