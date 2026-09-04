@@ -1,5 +1,6 @@
 import historySrc from "@/assets/img/history.png?url";
 import searchSrc from "@/assets/img/search.png?url";
+import sharedSrc from "@/assets/img/shared.png?url";
 
 export interface FeatureHighlight {
   title: string;
@@ -57,6 +58,7 @@ export const featureHighlights: FeatureHighlight[] = [
     media: {
       id: "more-shared-canvases",
       alt: "A share panel over a canvas: two people listed at different permission levels, with a second cursor editing a node behind it",
+      src: sharedSrc,
     },
   },
 ];
