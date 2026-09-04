@@ -1,3 +1,6 @@
+import historySrc from "@/assets/img/history.png?url";
+import searchSrc from "@/assets/img/search.png?url";
+
 export interface FeatureHighlight {
   title: string;
   description: string;
@@ -34,6 +37,7 @@ export const featureHighlights: FeatureHighlight[] = [
     media: {
       id: "more-version-control",
       alt: "A node's version history open, with the agent's edits and the author's own listed separately down the timeline",
+      src: historySrc,
     },
   },
   {
@@ -43,6 +47,7 @@ export const featureHighlights: FeatureHighlight[] = [
     media: {
       id: "more-search",
       alt: "Search results spanning a PDF page, a transcript timestamp and a written note, all matching the same phrase",
+      src: searchSrc,
     },
   },
   {
