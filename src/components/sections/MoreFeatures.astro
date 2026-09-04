@@ -8,9 +8,12 @@ import { featureHighlights, featureNotes } from "@/data/moreFeatures";
  *
  * Deliberately not another card grid — a grid gives every item the same
  * weight, which is the opposite of what this section is for. It is a list:
- * full-bleed rules, three entries with a picture running off the left edge
- * of the page, then four one-liners with no picture at all. The hierarchy
- * is the layout.
+ * three entries with a picture running off the left edge of the page, then
+ * four one-liners with no picture at all. The hierarchy is the layout.
+ *
+ * Nothing rules off the entries themselves. The page keeps its full-width
+ * hairlines for the seams between sections (index.astro), so using them
+ * here too would have said "new chapter" three times inside one.
  *
  * The pictures bleed left rather than right, which is the one direction no
  * other section on this page uses — by here the reader has seen text-left
@@ -30,10 +33,10 @@ import { featureHighlights, featureNotes } from "@/data/moreFeatures";
     </p>
   </Container>
 
-  <ul class="mt-14 border-t border-border sm:mt-16">
+  <ul class="mt-14 flex flex-col gap-4 sm:mt-16 lg:gap-8">
     {
       featureHighlights.map((feature) => (
-        <li class="border-b border-border">
+        <li>
           <Container class="grid items-center gap-6 py-9 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-14 lg:py-12">
             <div class="mf-media" data-reveal data-reveal-variant="fade">
               <div class="mf-frame">

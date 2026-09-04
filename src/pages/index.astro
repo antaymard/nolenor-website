@@ -12,14 +12,26 @@ import { featureSteps } from "@/data/features";
 // Rebuilding the landing page from scratch, section by section, per the new
 // brief — the rest of src/components/sections/* is old-positioning content,
 // intentionally unplugged (not deleted) until each section is redesigned.
+//
+// The full-width hairline is the page's chapter break, and it belongs here
+// rather than inside any one section: a section shouldn't have to know what
+// it sits between. Each rule lands in the gap the two sections' own padding
+// already leaves, so the rhythm needs no extra spacing. The footer draws the
+// last one itself.
 ---
 
 <Layout>
   <Hero />
+  <hr class="border-border" />
   <Problem />
+  <hr class="border-border" />
   <StickyFeatureScroll id="features" steps={featureSteps} />
+  <hr class="border-border" />
   <NodeTypes />
+  <hr class="border-border" />
   <MoreFeatures />
+  <hr class="border-border" />
   <Audience />
+  <hr class="border-border" />
   <Faq />
 </Layout>
