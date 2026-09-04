@@ -6,7 +6,9 @@ import NodeTypes from "@/components/sections/NodeTypes.astro";
 import MoreFeatures from "@/components/sections/MoreFeatures.astro";
 import Audience from "@/components/sections/Audience.astro";
 import Faq from "@/components/sections/Faq.astro";
+import FinalCta from "@/components/sections/FinalCta.astro";
 import StickyFeatureScroll from "@/components/sections/StickyFeatureScroll.astro";
+import InlineCta from "@/components/ui/InlineCta.astro";
 import { featureSteps } from "@/data/features";
 
 // Rebuilding the landing page from scratch, section by section, per the new
@@ -18,6 +20,16 @@ import { featureSteps } from "@/data/features";
 // it sits between. Each rule lands in the gap the two sections' own padding
 // already leaves, so the rhythm needs no extra spacing. The footer draws the
 // last one itself.
+//
+// Four places to act, spread out rather than repeated: the hero, two quiet
+// one-liners that take the place of a chapter break, and the closing block.
+// The two in the middle are deliberately a line of text and no button —
+// asking four times with a button would be nagging, and this page's whole
+// argument is that it doesn't push you.
+//
+// Anchors: #features, #nodes, #who-its-for and #faq are the four ids
+// src/data/nav.ts points at. Moving or renaming a section here means
+// updating that file.
 ---
 
 <Layout>
@@ -26,12 +38,24 @@ import { featureSteps } from "@/data/features";
   <Problem />
   <hr class="border-border" />
   <StickyFeatureScroll id="features" steps={featureSteps} />
+
   <hr class="border-border" />
+  <InlineCta text="Reading about a canvas only goes so far." action="Open one" />
+  <hr class="border-border" />
+
   <NodeTypes />
   <hr class="border-border" />
   <MoreFeatures />
+
   <hr class="border-border" />
+  <InlineCta
+    text="All of this is free while we're in beta."
+    action="Try it for free"
+  />
+  <hr class="border-border" />
+
   <Audience />
   <hr class="border-border" />
   <Faq />
+  <FinalCta />
 </Layout>

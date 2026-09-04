@@ -23,7 +23,10 @@ const faqSchema = {
 };
 ---
 
-<section id="faq" class="scroll-mt-24 py-20 sm:py-28">
+<!-- No scroll-mt here: html { scroll-padding-top } in global.css already
+     clears the sticky bar, and stacking the two landed this section 96px
+     lower than the other three anchors. -->
+<section id="faq" class="py-20 sm:py-28">
   <Container class="flex flex-col items-center gap-5 text-center">
     <h2 class="text-foreground">FAQ</h2>
   </Container>

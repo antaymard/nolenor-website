@@ -3,24 +3,34 @@ import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
 import Button from "@/components/ui/Button.astro";
 import { APP_URL } from "@/lib/constants";
+
+/*
+ * The one loud CTA on the page, and the only place the brand colour is
+ * used as a large fill — the hero's palette turned inside out, so the
+ * page opens on cream and closes on purple.
+ *
+ * The beta line is not a sales flourish: it is the same claim the FAQ
+ * makes ("open beta and free to use while we build it with early users"),
+ * kept in one voice so the two never contradict each other.
+ */
 ---
 
-<section class="py-24 sm:py-32">
+<section class="pb-20 sm:pb-28">
   <Container>
     <div
-      class="flex flex-col items-center gap-6 rounded-3xl border border-brand/20 bg-brand/5 px-6 py-16 text-center sm:px-16"
+      class="flex flex-col items-center gap-6 rounded-3xl bg-brand px-6 py-16 text-center text-brand-foreground sm:px-16 sm:py-20"
       data-reveal
       data-reveal-variant="zoom"
     >
-      <h2 class="max-w-xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-        Stop guessing what your AI is doing.
-      </h2>
-      <p class="max-w-lg text-lg text-muted-foreground text-pretty">
-        Every action visible. Every block editable. Nothing ever blocking
-        you. Start building on a canvas that shows its work.
+      <h2 class="max-w-2xl text-balance">Your thinking has somewhere to go.</h2>
+
+      <p class="max-w-xl text-lg text-pretty">
+        Nolënor is in open beta and free to use while we build it with early
+        users.
       </p>
-      <Button href={APP_URL} size="lg">
-        Start free trial
+
+      <Button href={APP_URL} variant="inverse" size="lg" class="mt-2">
+        Try it for free
         <Icon name="lucide:arrow-right" class="h-4 w-4" />
       </Button>
     </div>

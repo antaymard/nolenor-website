@@ -26,8 +26,8 @@ export interface FeatureNote {
  * one — giving every feature a visual is the fastest way to make none of
  * them look important.
  *
- * Claims to confirm before launch: whether shared canvases have shipped,
- * and whether version history really is kept without a time limit.
+ * Claim to confirm before launch: whether version history really is kept
+ * without a time limit.
  */
 export const featureHighlights: FeatureHighlight[] = [
   {
@@ -51,12 +51,12 @@ export const featureHighlights: FeatureHighlight[] = [
     },
   },
   {
-    title: "Present without leaving the canvas",
+    title: "Bring other people in",
     description:
-      "Save viewpoints as you work, then play them back in order. The canvas becomes the deck — nothing to export, and no second document quietly drifting out of sync.",
+      "Invite people onto a canvas and set what each of them can do. They land in the board you actually work in — nodes, threads and history — rather than in an export of it.",
     media: {
-      id: "more-slideshows",
-      alt: "A canvas with numbered saved viewpoints, one of them zoomed to full screen as a slide",
+      id: "more-shared-canvases",
+      alt: "A share panel over a canvas: two people listed at different permission levels, with a second cursor editing a node behind it",
     },
   },
 ];
@@ -68,10 +68,6 @@ export const featureNotes: FeatureNote[] = [
       "Teach Nolë a way of working once. It loads the skill when the task calls for it.",
   },
   {
-    title: "Shared canvases",
-    description: "Bring people onto a canvas, with permissions per person.",
-  },
-  {
     title: "Speech to text",
     description: "Talk to Nolë instead of typing. Language detected as you go.",
   },
@@ -79,5 +75,10 @@ export const featureNotes: FeatureNote[] = [
     title: "Image generation",
     description:
       "Generate images straight onto the canvas, across several models.",
+  },
+  {
+    title: "Slideshows",
+    description:
+      "Save viewpoints as you work and play them back — the canvas becomes the deck.",
   },
 ];
