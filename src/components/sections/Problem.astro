@@ -1,0 +1,201 @@
+---
+import { Icon } from "astro-icon/components";
+import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import MediaFrame from "@/components/ui/MediaFrame.astro";
+import ChatFlattening from "@/components/visuals/ChatFlattening.astro";
+import HiddenWork from "@/components/visuals/HiddenWork.astro";
+import LostThread from "@/components/visuals/LostThread.astro";
+import { problemItems } from "@/data/problem";
+
+/*
+ * The three problems, as one panel at a time.
+ *
+ * Wide: a rail of three panels, the open one taking every pixel the other
+ * two aren't using, those two collapsed to a strip with their title set on
+ * its side. Clicking a strip opens it and closes whichever was open.
+ * Narrow: the same thing as an ordinary stacked accordion.
+ *
+ * A collapsed panel's body is display:none rather than merely hidden, which
+ * is what makes each illustration's IntersectionObserver reset it — so a
+ * panel always opens on the first frame of its scene, never mid-run.
+ */
+
+const index = (i: number) => String(i + 1).padStart(2, "0");
+---
+
+<section class="py-20 sm:py-28">
+  <Container class="flex flex-col items-center gap-6 text-center">
+    <SectionLabel>The problem</SectionLabel>
+
+    <h2
+      class="fit-lines text-foreground"
+      style="--fit-max: 2.25rem; --fit-ratio: 16.5"
+    >
+      <span class="block whitespace-nowrap">Every AI tool hands you a chat box.</span>
+      <span class="block whitespace-nowrap">That's the problem.</span>
+    </h2>
+
+    <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+      A chat is built for conversation: one prompt, one answer, one thread at a
+      time.
+      <br />
+      But real thinking is messier. It moves between ideas, references,
+      questions, notes and half-formed connections.
+    </p>
+  </Container>
+
+  <Container class="mt-14 sm:mt-16">
+    <div
+      class="pb-rail flex flex-col gap-3 lg:flex-row lg:aspect-[2.6]"
+      data-problem-rail
+      style={`--pb-n: ${problemItems.length}`}
+      data-reveal
+    >
+      {
+        problemItems.map((item, i) => (
+          <article
+            class="pb-panel group relative min-w-0 overflow-hidden rounded-2xl border border-border bg-surface"
+            data-panel
+            data-open={i === 0 ? "" : undefined}
+          >
+            <button
+              type="button"
+              class="pb-tab absolute inset-0 flex w-[var(--pb-strip)] flex-col items-center justify-between gap-[calc(var(--pb-gap)*0.75)] py-[18px] cursor-pointer text-muted-foreground transition-colors duration-300 hover:bg-muted/45 hover:text-foreground max-lg:static max-lg:w-full max-lg:flex-row-reverse max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-5 max-lg:py-4 max-lg:text-left"
+              data-panel-tab
+              aria-expanded={i === 0 ? "true" : "false"}
+              aria-controls={`problem-body-${i}`}
+            >
+              <Icon
+                name="lucide:chevron-right"
+                class="pb-tabicon size-[18px] shrink-0 text-brand max-lg:transition-transform max-lg:duration-[350ms] max-lg:ease-[cubic-bezier(0.16,1,0.3,1)] max-lg:group-data-[open]:rotate-90"
+              />
+              <span class="flex min-h-0 flex-1 items-center font-serif [writing-mode:vertical-rl] rotate-180 whitespace-nowrap text-sm leading-none text-inherit max-lg:[writing-mode:horizontal-tb] max-lg:rotate-none max-lg:whitespace-normal max-lg:text-base max-lg:leading-[1.35] max-lg:text-foreground">
+                {item.title}
+              </span>
+              <span class="font-sans text-sm font-bold text-brand">{index(i)}</span>
+            </button>
+
+            <div
+              class="pb-body absolute inset-0 grid w-[var(--pb-open,100%)] grid-cols-[40%_1fr] items-center gap-8 p-7 text-left max-lg:static max-lg:flex max-lg:w-auto max-lg:flex-col max-lg:items-stretch max-lg:gap-0 max-lg:pt-0 max-lg:px-5 max-lg:pb-5"
+              id={`problem-body-${i}`}
+            >
+              <div class="flex flex-col items-start gap-2.5">
+                <span class="font-sans text-base font-bold text-brand max-lg:hidden">
+                  {index(i)}
+                </span>
+                <h3 class="text-balance text-foreground max-lg:hidden">{item.title}</h3>
+                <p class="text-base leading-[1.6] text-pretty text-muted-foreground max-lg:mt-4 max-lg:text-[0.95rem]">
+                  {item.subtitle}
+                </p>
+              </div>
+
+              <div class="pb-visual flex h-full min-w-0 items-center max-lg:order-first max-lg:h-auto">
+                {item.visual === "chat-flattening" ? (
+                  <ChatFlattening />
+                ) : item.visual === "hidden-work" ? (
+                  <HiddenWork />
+                ) : item.visual === "lost-thread" ? (
+                  <LostThread />
+                ) : (
+                  item.media && (
+                    <MediaFrame
+                      id={item.media.id}
+                      alt={item.media.alt}
+                      aspectRatio="16/10"
+                    />
+                  )
+                )}
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<style>
+  /*
+   * Kept in CSS on purpose: the accordion's width mechanics (state-driven
+   * flex-basis + transition), the open-panel animation, a child-selector
+   * rule, and the CSS vars problem-accordion.ts reads through
+   * getComputedStyle. Everything static lives inline as Tailwind.
+   */
+
+  .pb-rail {
+    --pb-strip: 58px;
+    --pb-gap: 12px;
+  }
+
+  .pb-panel {
+    flex: 0 0 var(--pb-strip);
+    /* Fixed by the rail rather than by its contents, so opening a panel
+       moves widths only — the section never changes height under you. */
+    transition:
+      flex-basis 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.4s ease;
+  }
+
+  .pb-panel[data-open] {
+    /* JS publishes the measured width; the fallback is the same number,
+       so the layout is right before a single line of it has run. */
+    flex-basis: var(
+      --pb-open,
+      calc(100% - (var(--pb-n) - 1) * (var(--pb-strip) + var(--pb-gap)))
+    );
+    box-shadow: 0 24px 60px -40px rgba(47, 54, 83, 0.5);
+  }
+
+  .pb-panel[data-open] .pb-tab {
+    display: none;
+  }
+
+  .pb-panel:not([data-open]) .pb-body {
+    display: none;
+  }
+
+  /* The rail's ratio is set so the frame always fits by width with a little
+     height to spare, which is why it is centred rather than stretched. */
+  .pb-visual > :global(*) {
+    width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .pb-body {
+      animation: pb-open 0.5s ease 0.12s both;
+    }
+
+    @keyframes pb-open {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .pb-panel,
+    .pb-panel[data-open] {
+      flex: none;
+    }
+
+    .pb-panel[data-open] .pb-tab {
+      display: flex;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pb-panel,
+    .pb-tab,
+    .pb-tabicon {
+      transition: none !important;
+    }
+
+    .pb-body {
+      animation: none !important;
+    }
+  }
+</style>

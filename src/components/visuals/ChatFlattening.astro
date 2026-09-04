@@ -1,0 +1,229 @@
+---
+import { Icon } from "astro-icon/components";
+
+/*
+ * Illustration for problem item 1: what the chat does to a thought that
+ * isn't finished yet.
+ *
+ * Someone is still working out what they want to say. They type it the way
+ * you think — hesitantly, ending on a "but—". The assistant doesn't wait for
+ * the end of the sentence: it answers with a finished landing page and five
+ * artifacts, then answers the attempt to slow down with more output. Every
+ * exchange pushes the original thought further off the top of the thread,
+ * and the last thing left to type is that they no longer know.
+ *
+ * The rhythm carries the meaning: the human beats are slow and typed, the
+ * machine beats land instantly and arrive three times bigger. One-shot, like
+ * problem item 2 — it plays on entering the viewport and resets on leaving,
+ * so the last line is never caught mid-replay.
+ */
+
+interface Chip {
+  label: string;
+  /** Not a file — a thing the assistant already went and did. */
+  done?: boolean;
+}
+
+type Row =
+  | { kind: "user"; text: string }
+  | { kind: "ai"; text: string; chips: Chip[] };
+
+// Typed into the input before they are sent, so the hesitation is visible.
+// Length is free: the composer wraps, and a wrapped message stays readable.
+// What it must never do is scroll — a composer that slides the start of the
+// sentence out of view as you type is unreadable at exactly the wrong
+// moment, which is why .chat-field grows instead of clipping.
+const FIRST = "Let's think about the wording and structure of your landing page";
+const LAST = "…Ok, let's do it your way...";
+
+const thread: Row[] = [
+  { kind: "user", text: FIRST },
+  {
+    kind: "ai",
+    text: "I've got it. I created a complete landing page with a new structure, three headline options, competitor research, SEO copy, and a deployed version.",
+    chips: [
+      { label: "new structure" },
+      { label: "3 headlines" },
+      { label: "research" },
+      { label: "SEO copy" },
+      { label: "deployed", done: true },
+    ],
+  },
+  {
+    kind: "user",
+    text: "Wait… I was still trying to define what I wanted to say.",
+  },
+  {
+    kind: "ai",
+    text: "No problem. Here are five alternative directions, twelve CTAs, and a comparison table.",
+    chips: [
+      { label: "5 directions" },
+      { label: "12 CTAs" },
+      { label: "comparison table" },
+    ],
+  },
+  { kind: "user", text: LAST },
+];
+---
+
+<div
+  class="chat-frame"
+  data-chat-flatten
+  data-phase="idle"
+  data-cf-first={FIRST}
+  data-cf-last={LAST}
+  role="img"
+  aria-label="An AI chat: someone is still working out what their landing page should say and is barely mid-sentence when the assistant announces it has already built the whole thing — a new structure, three headlines, competitor research, SEO copy, deployed. They ask it to wait, they were still trying to understand what they wanted to say; it answers with five more directions, twelve CTAs and a comparison table. The last thing they type is that they don't know anymore."
+>
+  <div class="chat-app" aria-hidden="true">
+    <div class="chat-topbar">
+      <span class="chat-dot"></span>
+      <span class="chat-tab">New chat</span>
+      <Icon name="lucide:plus" class="chat-topicon" />
+    </div>
+
+    <div class="chat-thread">
+      {
+        thread.map((row) => (
+          <div class={`chat-row chat-row--${row.kind}`} data-chat-row>
+            <div>
+              {row.kind === "user" ? (
+                <p class="chat-bubble">{row.text}</p>
+              ) : (
+                <div class="cf-answer">
+                  <p class="cf-text">{row.text}</p>
+                  <div class="cf-chips">
+                    {row.chips.map((chip, index) => (
+                      <span class="cf-chip" style={`--i: ${index}`}>
+                        <Icon
+                          name={chip.done ? "lucide:check" : "lucide:file-text"}
+                          class="cf-chipicon"
+                        />
+                        {chip.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="chat-input">
+      <Icon name="lucide:paperclip" class="chat-icon" />
+      <div class="chat-field">
+        <span class="chat-placeholder">What should we get done?</span>
+        <span class="cf-typed" data-cf-text></span>
+      </div>
+      <span class="chat-send"
+        ><Icon name="lucide:arrow-up" class="chat-sendicon" /></span
+      >
+    </div>
+  </div>
+</div>
+
+<style>
+  .cf-typed {
+    color: var(--foreground);
+  }
+
+  /* The caret only exists while a person is at the keyboard. */
+  .chat-frame[data-phase="typing"] .chat-placeholder {
+    opacity: 0;
+  }
+
+  /* An inline caret rather than a border on the box: it has to sit right
+     after the last character typed, including on a wrapped second line. */
+  .chat-frame[data-phase="typing"] .cf-typed::after {
+    content: "";
+    display: inline-block;
+    width: 2px;
+    height: calc(2.4 * var(--u));
+    margin-left: calc(0.4 * var(--u));
+    vertical-align: text-bottom;
+    background: var(--brand);
+    animation: cf-caret 1.1s step-end infinite;
+  }
+
+  @keyframes cf-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .chat-frame[data-phase="sent"] .chat-send {
+    transform: scale(0.86);
+  }
+
+  .cf-text {
+    margin: 0;
+    font-size: calc(2.1 * var(--u));
+    line-height: 1.5;
+    text-align: left;
+    color: var(--foreground);
+  }
+
+  /* The output the answer came with, landing one piece at a time just after
+     the sentence that promised it — the whole reply is already finished
+     before the question was. */
+  .cf-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(1.2 * var(--u));
+    margin-top: calc(1.8 * var(--u));
+  }
+
+  .cf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(0.9 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    padding: calc(0.9 * var(--u)) calc(1.8 * var(--u));
+    font-size: calc(1.8 * var(--u));
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+    opacity: 0;
+    transform: translateY(calc(1.2 * var(--u))) scale(0.96);
+    transition:
+      opacity 0.28s ease,
+      transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Straight after the row has finished opening: any later and the space
+       they reserve reads as a hole at the bottom of the thread. */
+    transition-delay: calc(0.4s + var(--i) * 0.11s);
+  }
+
+  .chat-row.is-on .cf-chip {
+    opacity: 1;
+    transform: none;
+  }
+
+  .cf-chipicon {
+    flex: none;
+    width: calc(2 * var(--u));
+    height: calc(2 * var(--u));
+  }
+
+  /* Reduced motion: the whole exchange, composed and still. */
+  .chat-frame[data-phase="still"] .cf-chip {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cf-chip,
+    .chat-send,
+    .chat-placeholder {
+      transition: none !important;
+    }
+
+    .cf-typed::after {
+      animation: none !important;
+    }
+  }
+</style>

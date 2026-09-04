@@ -1,77 +1,66 @@
 ---
-import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
-import Button from "@/components/ui/Button.astro";
-import Badge from "@/components/ui/Badge.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
+import Button from "@/components/ui/Button.astro";
+import heroDemoSrc from "@/assets/img/main.png?url";
 import { APP_URL } from "@/lib/constants";
-
-const proofStrip = [
-  { icon: "lucide:eye", label: "Every tool call, visible" },
-  { icon: "lucide:layout-grid", label: "11 node types" },
-  { icon: "lucide:users", label: "Real-time collaboration" },
-  { icon: "lucide:plug", label: "Native MCP server" },
-  { icon: "lucide:rotate-ccw-clock", label: "Full version history" },
-  { icon: "lucide:download", label: "No lock-in, ever" },
-];
 ---
 
-<section class="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
+<section class="pt-10 pb-20 sm:pt-28 sm:pb-28">
   <Container class="flex flex-col items-center gap-8 text-center">
-    <Badge tone="brand">
-      <Icon name="lucide:sparkles" class="h-3.5 w-3.5" />
-      Transparent by design
-    </Badge>
-
-    <h1 class="max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
-      Stop chatting with AI. Start watching it think.
+    <!--
+      nowrap and 6xl only from lg. At 60px the first line measures ~936px, so
+      between 640 and 1023 the sm: version was forcing a 911px line into a
+      768px screen and putting a horizontal scrollbar on the whole page.
+      Below lg the lines wrap, which is why they are a size smaller there.
+    -->
+    <h1 class="font-serif text-balance leading-[1.15] text-foreground text-3xl sm:text-5xl lg:text-6xl">
+      <span class="mb-4 block sm:mb-2 lg:whitespace-nowrap">You don't need another chat box.</span>
+      <span class="block text-2xl sm:text-5xl lg:text-6xl lg:whitespace-nowrap">You need somewhere to think.</span>
     </h1>
 
-    <p class="max-w-2xl text-lg text-muted-foreground text-pretty sm:text-xl">
-      Every action Nolë takes lands as a visible block on your canvas — not
-      a wall of chat text, not a black box. See it. Edit it. Redirect it.
-      Any time.
-    </p>
-
-    <div class="flex flex-col gap-3 sm:flex-row">
-      <Button href={APP_URL} size="lg">
-        Start free trial
-        <Icon name="lucide:arrow-right" class="h-4 w-4" />
-      </Button>
-      <Button href="#features" variant="ghost" size="lg">
-        See how it works
-      </Button>
+    <div class="max-w-2xl text-pretty sm:pt-12 space-y-3">
+      <p class="text-muted-foreground">
+        Nolënor is a visual thinking space where your ideas can grow, connect,
+        and take shape.
+      </p>
+      <p class="font-bold text-foreground">
+        Bring AI into your thinking. Don't move your thinking into a chat.
+      </p>
     </div>
 
     <!--
-      MEDIA: hero-demo — wide hero shot, 16:9, ~8-14s loop.
-      Content: cursor drags a Link node onto an already-populated canvas
-      (a Blocknote doc, a Table, an Image node visible), preview metadata
-      auto-fetches, then the Nolë side panel opens and streams a short
-      structured response. Should read as "calm, fast, in control" — this
-      is the very first impression of the product. See MEDIA_BRIEF.md.
+      The page's first door. Everything above it argues; this is the only
+      thing on screen a convinced reader can act on, so it sits between the
+      promise and the picture rather than after the picture, where the fold
+      would have swallowed it on a phone.
     -->
-    <div class="mt-6 w-full max-w-5xl" data-reveal data-reveal-variant="zoom">
-      <MediaFrame
-        id="hero-demo"
-        aspectRatio="16/9"
-        priority
-        alt="Nolenor canvas: dragging a node onto the board while Nolë responds in a structured side panel"
-      />
+    <div class="flex flex-col items-center gap-4">
+      <div class="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+        <Button href={APP_URL} size="lg">Try it for free</Button>
+
+        <a
+          href="#features"
+          class="inline-flex items-center px-2 py-2 text-base font-medium text-foreground/80 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+        >
+          See what it does
+        </a>
+      </div>
+
+      <p class="text-sm text-muted-foreground">
+        Open beta — free while we build it.
+      </p>
     </div>
 
-    <div
-      class="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3"
-      data-reveal
-    >
-      {
-        proofStrip.map((item) => (
-          <span class="inline-flex items-center gap-2 text-sm text-muted-foreground">
-            <Icon name={item.icon} class="h-4 w-4 text-brand" />
-            {item.label}
-          </span>
-        ))
-      }
+    <div class="mt-4 w-full max-w-5xl" data-reveal data-reveal-variant="zoom">
+      <MediaFrame
+        id="hero-demo"
+        kind="image"
+        aspectRatio="16/9"
+        priority
+        src={heroDemoSrc}
+        alt="Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards populate the board"
+      />
     </div>
   </Container>
 </section>

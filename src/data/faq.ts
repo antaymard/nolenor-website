@@ -5,38 +5,53 @@ export interface FaqEntry {
 
 export const faqEntries: FaqEntry[] = [
   {
-    question: "Can I get my data out?",
+    question: "Is Nolënor another AI chat tool?",
     answer:
-      "Yes, any time. Export a single canvas or your entire account as Markdown and JSON, zipped right in your browser — no lock-in, no waiting on a support ticket.",
+      "No. Nolënor is a visual thinking workspace with AI built into the canvas. Instead of keeping your ideas inside a linear chat, you can organize notes, links, images, PDFs, tables and tasks in one connected space — then ask AI to work with the context you choose.",
   },
   {
-    question: "Does Nolenor work with Claude or other AI tools?",
+    question: "What is Nolënor used for?",
     answer:
-      "Yes. Nolenor ships a native MCP server, so Claude Code, Claude Desktop, and any MCP-compatible client can read and edit your workspace directly, governed by scoped, revocable API tokens.",
+      "Nolënor helps you research, organize ideas and turn your thinking into action. You can use it to prepare a project, analyze documents, plan a launch, manage knowledge, explore a topic or collaborate with AI on complex tasks.",
   },
   {
-    question: "Who can see my canvases?",
+    question: "How is Nolënor different from Notion or other note-taking apps?",
     answer:
-      "You control it canvas by canvas: private by default, shareable by email with viewer, editor, or owner permissions, or public via a read-only link if you choose.",
+      "Nolënor combines a visual canvas, structured knowledge and AI execution. Your notes and resources are not just stored in folders: they can be connected, searched, analyzed and transformed into new content, tables, plans or actions.",
   },
   {
-    question: "What happens if Nolë makes a mistake?",
+    question: "Does the AI see my entire canvas?",
     answer:
-      "Every change is checkpointed automatically. Restore any node to any earlier version in one click, and see exactly which conversation caused the change.",
+      "No. You stay in control of the context. Select the nodes, documents or sources you want Nolë to use before asking a question. This makes the AI's work easier to understand, verify and correct.",
   },
   {
-    question: "Is this like Notion, or Miro, or just another chatbot?",
+    question: "What can I add to my Nolënor workspace?",
     answer:
-      "None of those, exactly — and unlike a lot of AI tools, nothing here is a black box. Nolenor is a visual canvas like a whiteboard, with document editing like Notion, and an AI agent that shows its work in every node — not a chat window bolted on the side.",
+      "You can add notes, ideas, links, images, PDFs, audio, videos, tables, tasks and interactive apps. Each item becomes a node that you can move, connect, search and reuse as your project evolves.",
   },
   {
-    question: "What does it cost?",
+    question: "Can I use Nolënor without AI?",
     answer:
-      "Nolenor is currently available as a free trial. Team pricing is on its way — reach out if you'd like to help shape it.",
+      "Yes. Nolënor works as a visual workspace even when you are not using AI. You can capture ideas, organize information, connect references and build your own system manually. AI is there when you need help — not in the way when you don't.",
   },
   {
-    question: "Can Nolë run fully autonomous workflows on its own?",
+    question: "Can Nolënor help me work with PDFs and other documents?",
     answer:
-      "That's what we're building next. Today, Nolë executes tasks with you in the loop, checkpointed and visible at every step; fully autonomous multi-step pipelines are on our roadmap.",
+      "Yes. You can bring documents and other resources into your workspace, connect them to your ideas and ask Nolë focused questions about the context you select. This is useful for research, analysis, synthesis and decision-making.",
+  },
+  {
+    question: "Is Nolënor free?",
+    answer:
+      "Nolënor is currently in open beta and free to use while we build it with early users. AI usage is included within generous fair-use limits. Pricing may evolve as the product develops.",
+  },
+  {
+    question: "Can I export my data from Nolënor?",
+    answer:
+      "Yes. Nolënor is designed to keep your thinking portable. You can export your work in open formats such as Markdown, JSON and CSV, so your ideas remain yours and are not locked inside the platform.",
+  },
+  {
+    question: "Who is Nolënor for?",
+    answer:
+      "Nolënor is for people who want to stay involved in their thinking while using AI. It is especially useful for researchers, creators, founders, students, consultants and anyone working on projects that involve scattered information and complex decisions.",
   },
 ];

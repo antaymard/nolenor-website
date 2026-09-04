@@ -1,0 +1,160 @@
+---
+import { Icon } from "astro-icon/components";
+
+/*
+ * Illustration for problem item 2: what the chat does with its own work.
+ *
+ * The assistant's turn arrives as a stack of status lines that say nothing
+ * you can act on. Each one lands after its own pause, pushing the previous
+ * ones up and eventually off the top, until the run ends on a limit rather
+ * than an answer. Deliberately one-shot: it plays on entering the viewport
+ * and resets on leaving, so the punchline is never caught mid-loop.
+ */
+
+interface Step {
+  text: string;
+  /** Pause before this line lands, in ms. */
+  delay: number;
+  /** The run ending, not a step: no spinner. */
+  alert?: boolean;
+}
+
+const QUESTION = "Should we hire a second designer?";
+
+const steps: Step[] = [
+  { text: "Thinking...", delay: 700 },
+  { text: "Reading your entire computer...", delay: 900 },
+  {
+    text: "Remembering something you said 8 months ago in an unrelated chat",
+    delay: 1100,
+  },
+  {
+    text: "Overcommitting in the wrong direction without telling you now",
+    delay: 1400,
+  },
+  { text: "Burning tokens you paid for...", delay: 900 },
+  { text: "Forgetting the constraint you gave three messages ago", delay: 1200 },
+  { text: "Preparing a very long answer you won't even read", delay: 1500 },
+  { text: "Session limit reached. Try again in 5 hours", delay: 2000, alert: true },
+];
+---
+
+<div
+  class="chat-frame"
+  data-status-stack
+  role="img"
+  aria-label="An AI chat answering a question with a growing stack of status lines — thinking, reading your entire computer, remembering an unrelated chat months ago, burning tokens — none of which say what it is actually using, and the run ends on a session limit instead of an answer."
+>
+  <div class="chat-app" aria-hidden="true">
+    <div class="chat-topbar">
+      <span class="chat-dot"></span>
+      <span class="chat-tab">New chat</span>
+      <Icon name="lucide:plus" class="chat-topicon" />
+    </div>
+
+    <div class="chat-thread">
+      <div class="chat-row chat-row--user" data-status-row data-delay="400">
+        <div><p class="chat-bubble">{QUESTION}</p></div>
+      </div>
+
+      {
+        steps.map((step) => (
+          <div class="chat-row hw-row" data-status-row data-delay={step.delay}>
+            <div>
+              <div class="hw-step" data-alert={step.alert ? "true" : undefined}>
+                <Icon
+                  name={step.alert ? "lucide:triangle-alert" : "lucide:loader-circle"}
+                  class="hw-icon"
+                />
+                <span>{step.text}</span>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="chat-input">
+      <Icon name="lucide:paperclip" class="chat-icon" />
+      <div class="chat-field">
+        <span class="chat-placeholder">What should we get done?</span>
+      </div>
+      <span class="chat-send"><Icon name="lucide:arrow-up" class="chat-sendicon" /></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Status lines hug their own text, so the stack has the ragged edge of a
+     real run rather than reading as a list. */
+  .hw-row {
+    align-self: flex-start;
+  }
+
+  /* Status lines run tighter than chat messages do. */
+  .hw-row > div > * {
+    margin-top: calc(1.5 * var(--u));
+  }
+
+  .hw-step {
+    display: flex;
+    align-items: flex-start;
+    gap: calc(1.8 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: calc(2.2 * var(--u));
+    background: var(--surface);
+    padding: calc(1.5 * var(--u)) calc(2.4 * var(--u));
+    font-size: calc(2.1 * var(--u));
+    line-height: 1.4;
+    text-align: left;
+    color: var(--foreground);
+    /* Lands from just below, as if pushed in by the one before it. */
+    transform: translateY(calc(1.6 * var(--u)));
+    opacity: 0;
+    transition:
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.35s ease;
+  }
+
+  .hw-row.is-on .hw-step {
+    transform: none;
+    opacity: 1;
+  }
+
+  .hw-step[data-alert] {
+    border-color: color-mix(in srgb, var(--foreground) 35%, transparent);
+  }
+
+  .hw-icon {
+    flex: none;
+    width: calc(2.6 * var(--u));
+    height: calc(2.6 * var(--u));
+    margin-top: calc(0.3 * var(--u));
+    color: var(--muted-foreground);
+    /* Nothing ever resolves: every line is still spinning. */
+    animation: hw-spin 1.1s linear infinite;
+  }
+
+  .hw-step[data-alert] .hw-icon {
+    color: var(--foreground);
+    animation: none;
+  }
+
+  @keyframes hw-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hw-step {
+      transform: none;
+      opacity: 1;
+      transition: none;
+    }
+
+    .hw-icon {
+      animation: none;
+    }
+  }
+</style>

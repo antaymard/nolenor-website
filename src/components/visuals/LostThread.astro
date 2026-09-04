@@ -1,0 +1,459 @@
+---
+import { Icon } from "astro-icon/components";
+
+/*
+ * Illustration for problem item 3: "Which chat was it?"
+ *
+ * Left, an archive nobody can browse: a search that came back with nothing
+ * and two hundred and forty-seven conversations whose titles all say
+ * roughly the same thing. Right, out of focus, a conversation that did
+ * produce something — a document, made inside the chat, and not the one
+ * being looked for.
+ *
+ * The only motion is the cursor raking up and down the list, lighting up
+ * one near-identical title after another. It loops: the point is that this
+ * doesn't end.
+ */
+
+const QUERY = "onboarding flow";
+const EMPTY = "No exact matches in 247 conversations";
+const NOTE = "Which chat was it?";
+const FILE = "product-direction-v3.md";
+
+/** Vague, near-identical, and several of them cut off mid-title. */
+const conversations = [
+  "Project ideas",
+  "Project research",
+  "Research — follow-up",
+  "Important discussion about…",
+  "AI workflow",
+  "New project",
+  "Notes",
+  "The thing we discussed yest…",
+  "Ideas for the new…",
+  "Final thoughts",
+  "Untitled conversation",
+  "Project ideas",
+  "New project — notes",
+  "Research — follow-up",
+  "Untitled conversation",
+  "Draft",
+  "Draft v2",
+  "Draft v2 final",
+  "Untitled conversation",
+  "Notes",
+  "Untitled conversation",
+];
+
+const hidden = ["Context used", "Missing information", "Work created"];
+---
+
+<div
+  class="chat-frame"
+  data-lost-thread
+  data-phase="idle"
+  role="img"
+  aria-label="A chat app. On the left, a search for an onboarding flow that found no exact matches in 247 conversations, and a list of near-identical titles — Project ideas, Notes, Draft, Draft v2, Draft v2 final, Untitled conversation — that a cursor rakes up and down, lighting one after another. On the right, out of focus, a conversation under a header reading Context used, Missing information and Work created, each answered with a question mark, ending on a document the assistant wrote inside the chat: product-direction-v3.md. It is not the one being looked for."
+>
+  <div class="lt-body">
+    <aside class="lt-sidebar">
+      <div class="lt-search">
+        <Icon name="lucide:search" class="lt-searchicon" />
+        <span class="lt-query">{QUERY}</span>
+      </div>
+      <span class="lt-empty">{EMPTY}</span>
+
+      <div class="lt-listview" data-lt-listview>
+        <div class="lt-list" data-lt-list>
+          {
+            conversations.map((title) => (
+              <span class="lt-item" data-lt-item>
+                {title}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Cursor and the thought attached to it move as one element. -->
+      <span class="lt-pointer" data-lt-pointer>
+        <Icon name="lucide:mouse-pointer-2" class="lt-cursoricon" />
+        <span class="lt-note">{NOTE}</span>
+      </span>
+    </aside>
+
+    <section class="lt-main">
+      <!-- Three things the chat never answers. Deliberately quiet. -->
+      <div class="lt-meta lt-blur">
+        {
+          hidden.map((label) => (
+            <span class="lt-metaitem">
+              {label}
+              <span class="lt-q">?</span>
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="lt-thread">
+        <span class="lt-more lt-blur">Show more</span>
+        <span class="lt-toolong lt-blur">
+          This conversation is too long to display
+        </span>
+
+        <div class="lt-bars lt-blur">
+          <span class="chat-bar" style="width: 100%"></span>
+          <span class="chat-bar" style="width: 84%"></span>
+        </div>
+        <p class="lt-user lt-blur">and that never really connects back</p>
+        <p class="lt-user lt-blur">
+          I think knowledge and execution should live together.
+        </p>
+        <p class="lt-ai lt-blur">
+          That could be a strong product direction — I've written it up.
+        </p>
+
+        <!-- What the chat produced: a real document, in a chat. -->
+        <div class="lt-file">
+          <Icon name="lucide:file-text" class="lt-fileicon" />
+          <span class="lt-filetext">
+            <span class="lt-filename">{FILE}</span>
+            <span class="lt-filemeta">Created in this chat</span>
+          </span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .lt-body {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+
+  /* --- the archive ------------------------------------------------ */
+
+  .lt-sidebar {
+    position: relative;
+    flex: none;
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    padding: calc(3 * var(--u));
+    border-right: 1px solid var(--border);
+    background: var(--background);
+    text-align: left;
+  }
+
+  .lt-search {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: calc(1.4 * var(--u));
+    height: calc(5 * var(--u));
+    padding: 0 calc(2 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: calc(1.7 * var(--u));
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .lt-searchicon {
+    flex: none;
+    width: calc(2.2 * var(--u));
+    height: calc(2.2 * var(--u));
+  }
+
+  .lt-query {
+    color: var(--foreground);
+  }
+
+  .lt-empty {
+    flex: none;
+    padding: calc(1.4 * var(--u)) calc(2 * var(--u)) calc(1.6 * var(--u));
+    font-size: calc(1.7 * var(--u));
+    color: var(--muted-foreground);
+  }
+
+  .lt-listview {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    /* The list runs off the bottom of the frame: there is always more of it. */
+    mask-image: linear-gradient(to bottom, #000 0, #000 84%, transparent 100%);
+  }
+
+  .lt-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(0.4 * var(--u));
+  }
+
+  .lt-item {
+    padding: calc(1.3 * var(--u)) calc(2 * var(--u));
+    border-radius: calc(1.8 * var(--u));
+    font-size: calc(2 * var(--u));
+    color: var(--muted-foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition:
+      background 0.25s ease,
+      color 0.25s ease;
+  }
+
+  /* Lights up as the cursor passes over it, and is no more use than the
+     one before it. */
+  .lt-item.is-hover {
+    background: var(--muted);
+    color: var(--foreground);
+  }
+
+  /* Spans the sidebar rather than sitting at a point, so the label it
+     carries can never reach across into the conversation. */
+  .lt-pointer {
+    position: absolute;
+    left: calc(3 * var(--u));
+    right: calc(3 * var(--u));
+    top: 0;
+    opacity: 0;
+    transform: translateY(var(--lt-from, 20%));
+    transition: opacity 0.5s ease;
+    will-change: transform;
+  }
+
+  .chat-frame:not([data-phase="idle"]) .lt-pointer {
+    opacity: 1;
+  }
+
+  .lt-cursoricon {
+    position: absolute;
+    left: 52%;
+    top: 0;
+    width: calc(3.4 * var(--u));
+    height: calc(3.4 * var(--u));
+    color: var(--foreground);
+    filter: drop-shadow(0 2px 4px rgba(47, 54, 83, 0.35));
+  }
+
+  /* Trails the cursor over the archive: it is the reader's thought, not
+     the app's. */
+  .lt-note {
+    position: absolute;
+    left: 0;
+    top: calc(3.2 * var(--u));
+    padding: calc(1.2 * var(--u)) calc(2.2 * var(--u));
+    border-radius: 999px;
+    background: var(--foreground);
+    color: var(--background);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: calc(2.1 * var(--u));
+    white-space: nowrap;
+    box-shadow: 0 10px 26px -14px rgba(47, 54, 83, 0.7);
+  }
+
+  /* --- the conversation, out of focus ----------------------------- */
+
+  .lt-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: calc(3 * var(--u)) calc(4 * var(--u));
+  }
+
+  /* You can't read a conversation from the sidebar. Everything here is out
+     of focus except the document, which is the one thing you can make out
+     — and the wrong one. */
+  .lt-blur {
+    opacity: 0.5;
+    filter: blur(calc(0.22 * var(--u)));
+  }
+
+  .lt-meta {
+    flex: none;
+    display: flex;
+    gap: calc(1.6 * var(--u));
+    padding-bottom: calc(2.4 * var(--u));
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lt-metaitem {
+    display: flex;
+    align-items: center;
+    gap: calc(0.8 * var(--u));
+    font-size: calc(1.6 * var(--u));
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+
+  .lt-q {
+    display: grid;
+    place-items: center;
+    width: calc(2.4 * var(--u));
+    height: calc(2.4 * var(--u));
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-weight: 700;
+  }
+
+  .lt-thread {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: calc(2.2 * var(--u));
+    padding-top: calc(3 * var(--u));
+    overflow: hidden;
+    text-align: left;
+    mask-image: linear-gradient(to bottom, transparent 0, #000 7%);
+  }
+
+  .lt-thread > * {
+    flex: none;
+  }
+
+  .lt-bars {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: calc(1.3 * var(--u));
+  }
+
+  .lt-user {
+    margin: 0;
+    align-self: flex-end;
+    max-width: 78%;
+    border-radius: calc(3 * var(--u)) calc(3 * var(--u)) calc(0.8 * var(--u))
+      calc(3 * var(--u));
+    background: var(--brand);
+    color: var(--brand-foreground);
+    padding: calc(1.5 * var(--u)) calc(2.4 * var(--u));
+    font-size: calc(2 * var(--u));
+    line-height: 1.45;
+  }
+
+  .lt-ai {
+    margin: 0;
+    max-width: 92%;
+    font-size: calc(2 * var(--u));
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+
+  .lt-more {
+    align-self: center;
+    padding: calc(1 * var(--u)) calc(2.4 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: calc(1.8 * var(--u));
+    color: var(--muted-foreground);
+  }
+
+  .lt-toolong {
+    align-self: center;
+    font-size: calc(1.7 * var(--u));
+    color: var(--muted-foreground);
+  }
+
+  .lt-file {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    gap: calc(2 * var(--u));
+    padding: calc(1.8 * var(--u)) calc(2.4 * var(--u));
+    border: 1px solid var(--border);
+    border-radius: calc(2.4 * var(--u));
+    background: var(--surface);
+    box-shadow: 0 10px 26px -18px rgba(47, 54, 83, 0.6);
+    /* Softer than the text around it, still not quite in reach. */
+    opacity: 0.82;
+    filter: blur(calc(0.07 * var(--u)));
+  }
+
+  .lt-fileicon {
+    flex: none;
+    width: calc(3.2 * var(--u));
+    height: calc(3.2 * var(--u));
+    color: var(--brand);
+  }
+
+  .lt-filetext {
+    display: flex;
+    flex-direction: column;
+    gap: calc(0.4 * var(--u));
+    min-width: 0;
+  }
+
+  .lt-filename {
+    font-size: calc(2 * var(--u));
+    color: var(--foreground);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lt-filemeta {
+    font-size: calc(1.6 * var(--u));
+    color: var(--muted-foreground);
+  }
+
+  @media (max-width: 639px) {
+    /* No room for two panels side by side: the archive takes the top, where
+       the search that failed and the raking both are, and the conversation
+       sits under it, out of focus, with the document it made. */
+    .lt-body {
+      flex-direction: column;
+    }
+
+    .lt-main {
+      flex: none;
+      height: 34%;
+      padding: calc(3 * var(--u));
+    }
+
+    .lt-sidebar {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      border-right: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .lt-meta {
+      gap: calc(1.2 * var(--u));
+    }
+
+    .lt-metaitem {
+      font-size: calc(1.5 * var(--u));
+    }
+
+    /* Full-width sidebar: the cursor rakes nearer its left edge, where the
+       titles actually are, and the label sits beside it rather than under
+       it — the list is only a few rows tall here, and every row counts. */
+    .lt-cursoricon {
+      left: 30%;
+    }
+
+    .lt-note {
+      left: 38%;
+      top: calc(0.4 * var(--u));
+      font-size: calc(2 * var(--u));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lt-pointer,
+    .lt-item {
+      transition: none !important;
+    }
+  }
+</style>
