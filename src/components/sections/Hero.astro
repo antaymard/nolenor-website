@@ -4,31 +4,26 @@ import MediaFrame from "@/components/ui/MediaFrame.astro";
 import heroDemoSrc from "@/assets/img/main.png?url";
 ---
 
-<section class="pt-10 pb-20 sm:pt-16 sm:pb-28">
+<section class="pt-10 pb-20 sm:pt-28 sm:pb-28">
   <Container class="flex flex-col items-center gap-8 text-center">
     <h1
-      class="fit-lines font-serif leading-[1.15] text-foreground"
-      style="--fit-max: 3.75rem; --fit-ratio: 15.6"
+      class="font-serif leading-[1.15] text-foreground text-3xl sm:text-6xl"
     >
-      <span class="block whitespace-nowrap">You don't need another chat box.</span>
-      <span class="block whitespace-nowrap">You need somewhere to think.</span>
+      <span class="block sm:whitespace-nowrap sm:mb-2 mb-4 ">You don't need another chat box.</span>
+      <span class="block sm:whitespace-nowrap text-2xl sm:text-6xl">You need somewhere to think.</span>
     </h1>
 
-    <p class="max-w-2xl text-lg text-pretty sm:text-xl">
-      <span class="text-muted-foreground">
+    <div class="max-w-2xl text-pretty sm:pt-12 space-y-3">
+      <p class="text-muted-foreground">
         Nolënor is a visual thinking space where your ideas can grow, connect,
         and take shape.
-      </span>
-      <br />
-      <span class="font-bold text-foreground">
+      </p>
+      <p class="font-bold text-foreground">
         Bring AI into your thinking. Don't move your thinking into a chat.
-      </span>
-    </p>
+      </p>
+    </div>
 
     <div class="mt-4 w-full max-w-5xl" data-reveal data-reveal-variant="zoom">
-      <!--
-        MEDIA: hero-demo — 16:9. Image temporaire (main.png) en attendant la vidéo, voir MEDIA_BRIEF.md.
-      -->
       <MediaFrame
         id="hero-demo"
         kind="image"
