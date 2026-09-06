@@ -58,14 +58,14 @@ const index = (i: number) => String(i + 1).padStart(2, "0");
           >
             <button
               type="button"
-              class="pb-tab absolute inset-0 flex w-[var(--pb-strip)] flex-col items-center justify-between gap-[calc(var(--pb-gap)*0.75)] py-[18px] cursor-pointer text-muted-foreground transition-colors duration-300 hover:bg-muted/45 hover:text-foreground max-lg:static max-lg:w-full max-lg:flex-row-reverse max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-5 max-lg:py-4 max-lg:text-left"
+              class="pb-tab absolute inset-0 flex w-(--pb-strip) flex-col items-center justify-between gap-[calc(var(--pb-gap)*0.75)] py-4.5 cursor-pointer text-muted-foreground transition-colors duration-300 hover:bg-muted/45 hover:text-foreground max-lg:static max-lg:w-full max-lg:flex-row-reverse max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-5 max-lg:py-4 max-lg:text-left"
               data-panel-tab
               aria-expanded={i === 0 ? "true" : "false"}
               aria-controls={`problem-body-${i}`}
             >
               <Icon
                 name="lucide:chevron-right"
-                class="pb-tabicon size-[18px] shrink-0 text-brand max-lg:transition-transform max-lg:duration-[350ms] max-lg:ease-[cubic-bezier(0.16,1,0.3,1)] max-lg:group-data-[open]:rotate-90"
+                class="pb-tabicon size-4.5 shrink-0 text-brand max-lg:transition-transform max-lg:duration-350 max-lg:ease-[cubic-bezier(0.16,1,0.3,1)] max-lg:group-data-open:rotate-90"
               />
               <span class="flex min-h-0 flex-1 items-center font-serif [writing-mode:vertical-rl] rotate-180 whitespace-nowrap text-sm leading-none text-inherit max-lg:[writing-mode:horizontal-tb] max-lg:rotate-none max-lg:whitespace-normal max-lg:text-base max-lg:leading-[1.35] max-lg:text-foreground">
                 {item.title}
@@ -74,12 +74,12 @@ const index = (i: number) => String(i + 1).padStart(2, "0");
             </button>
 
             <div
-              class="pb-body absolute inset-0 grid w-[var(--pb-open,100%)] grid-cols-[40%_1fr] items-center gap-8 p-7 text-left max-lg:static max-lg:flex max-lg:w-auto max-lg:flex-col max-lg:items-stretch max-lg:gap-0 max-lg:pt-0 max-lg:px-5 max-lg:pb-5"
+              class="pb-body absolute inset-0 grid w-(--pb-open,100%) grid-cols-[40%_1fr] items-center gap-8 p-7 text-left max-lg:static max-lg:flex max-lg:w-auto max-lg:flex-col max-lg:items-stretch max-lg:gap-0 max-lg:pt-0 max-lg:px-5 max-lg:pb-5"
               id={`problem-body-${i}`}
             >
               <div class="flex flex-col items-start gap-2.5">
-                <span class="font-sans text-base font-bold text-brand max-lg:hidden">
-                  {index(i)}
+                <span class="font-sans text-xs font-black text-brand max-lg:hidden">
+                  PROBLEM #{index(i)}
                 </span>
                 <h3 class="text-balance text-foreground max-lg:hidden">{item.title}</h3>
                 <p class="text-base leading-[1.6] text-pretty text-muted-foreground max-lg:mt-4 max-lg:text-[0.95rem]">
