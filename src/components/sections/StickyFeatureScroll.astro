@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import type { FeatureStep } from "@/data/features";
 
@@ -15,6 +16,8 @@ const { id, steps, aspectRatio = "16/10" } = Astro.props;
 
 <section id={id} class="py-18" data-sticky-scroll>
     <Container class="flex flex-col items-center gap-6 text-center -mb-8">
+    <SectionLabel>The solution</SectionLabel>
+
       <!--
         Plain balanced wrapping, not .fit-lines: that class is for headings
         whose line breaks are hand-set and must never move, and it sizes the

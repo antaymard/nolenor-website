@@ -83,4 +83,9 @@ export const featureNotes: FeatureNote[] = [
     description:
       "Save viewpoints as you work and play them back — the canvas becomes the deck.",
   },
+  {
+    title: "Your thinking stays yours.",
+    description:
+      "Export everything in open formats (markdown, JSON, CSV), whenever you want. No lock-in. No fear of losing the work you built.",
+  },
 ];

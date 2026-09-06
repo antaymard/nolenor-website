@@ -2,11 +2,14 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
 import { nodeTypes } from "@/data/nodeTypes";
 ---
 
 <section id="nodes" class="py-14">
   <Container class="flex flex-col items-center gap-5 text-center bg-surface py-10 sm:py-14 rounded-t-2xl">
+    <SectionLabel>The building blocks</SectionLabel>
+
     <h2 class="text-balance">
       Powerful nodes for powerful thinking
     </h2>
