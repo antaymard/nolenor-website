@@ -67,23 +67,23 @@ export const featureSteps: FeatureStep[] = [
       src: addAttachmentsVid,
     },
   },
-  {
-    title: "Your thinking, augmented.",
-    subtitle: "Live apps, generated on your canvas",
-    bullets: [
-      {
-        icon: "lucide:sparkles",
-        text: "Interactive apps, wired to your own data",
-      },
-      {
-        icon: "lucide:wrench",
-        text: "Self-healing errors caught and fixed, visibly",
-      },
-      { icon: "lucide:chart-line", text: "Built-in charting, no setup" },
-    ],
-    media: {
-      id: "feature-mini-apps",
-      alt: "An AI-generated mini-app rendering a live chart on the canvas, recovering automatically from an error",
-    },
-  },
+  // {
+  //   title: "Your thinking, augmented.",
+  //   subtitle: "Live apps, generated on your canvas",
+  //   bullets: [
+  //     {
+  //       icon: "lucide:sparkles",
+  //       text: "Interactive apps, wired to your own data",
+  //     },
+  //     {
+  //       icon: "lucide:wrench",
+  //       text: "Self-healing errors caught and fixed, visibly",
+  //     },
+  //     { icon: "lucide:chart-line", text: "Built-in charting, no setup" },
+  //   ],
+  //   media: {
+  //     id: "feature-mini-apps",
+  //     alt: "An AI-generated mini-app rendering a live chart on the canvas, recovering automatically from an error",
+  //   },
+  // },
 ];

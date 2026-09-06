@@ -42,7 +42,7 @@ export const featureHighlights: FeatureHighlight[] = [
     },
   },
   {
-    title: "Search what you can't retype",
+    title: "Search everything, from any format",
     description:
       "PDFs, audio and video are transcribed and indexed next to your own writing. Search a phrase you only remember hearing, and land on the node that holds it.",
     media: {
