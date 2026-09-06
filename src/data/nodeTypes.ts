@@ -56,7 +56,7 @@ export const nodeTypes: NodeType[] = [
       "Drop any URL onto the canvas and keep the source one click away, not buried in tabs.",
     media: {
       id: "node-link",
-      alt: "A Link node showing a fetched page preview — thumbnail, title, description and favicon — for an external URL",
+      alt: "A Link node showing a fetched page preview (thumbnail, title, description and favicon) for an external URL",
       src: LinkImg,
     },
   },
@@ -78,7 +78,7 @@ export const nodeTypes: NodeType[] = [
       "Structured data with typed columns (text, number, date, link, select, mentions…).",
     media: {
       id: "node-table",
-      alt: "A Table node with typed columns — version, status select, date, text — and one select cell open",
+      alt: "A Table node with typed columns (version, status select, date, text) and one select cell open",
       src: TableImg,
     },
   },
@@ -108,7 +108,7 @@ export const nodeTypes: NodeType[] = [
     name: "Audio & Video",
     icon: "lucide:play",
     description:
-      "Voice memos, interviews, talks — playable on the canvas, with loop regions to replay one passage.",
+      "Voice memos, interviews, talks, playable on the canvas, with loop regions to replay one passage.",
     media: {
       id: "node-media",
       alt: "An Audio node with a waveform player and a loop region, above a Video node playing on the canvas",

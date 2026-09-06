@@ -19,7 +19,7 @@ export const problemItems: ProblemItem[] = [
   {
     title: "The chat hides what matters.",
     subtitle:
-      "You can't see what the AI is using, missing, or remembering — making good results hard to understand and bad results hard to fix.",
+      "You can't see what the AI is using, missing, or remembering, making good results hard to understand and bad results hard to fix.",
     visual: "hidden-work",
   },
   {
@@ -28,7 +28,7 @@ export const problemItems: ProblemItem[] = [
     // anymore."). Replace once the wording is settled.
     title: "The chat buries your work.",
     subtitle:
-      "An idea, a decision, a document — all of it produced inside a conversation, and none of it anywhere you can go back to.",
+      "An idea, a decision, a document... All of it produced inside a conversation, and none of it anywhere you can go back to.",
     visual: "lost-thread",
   },
 ];

@@ -54,7 +54,7 @@ export const featureHighlights: FeatureHighlight[] = [
   {
     title: "Bring other people in",
     description:
-      "Invite people onto a canvas and set what each of them can do. They land in the board you actually work in — nodes, threads and history — rather than in an export of it.",
+      "Invite people onto a canvas and set what each of them can do. They land in the board you actually work in (nodes, threads and history) rather than in an export of it.",
     media: {
       id: "more-shared-canvases",
       alt: "A share panel over a canvas: two people listed at different permission levels, with a second cursor editing a node behind it",
@@ -81,7 +81,7 @@ export const featureNotes: FeatureNote[] = [
   {
     title: "Slideshows",
     description:
-      "Save viewpoints as you work and play them back — the canvas becomes the deck.",
+      "Save viewpoints as you work and play them back. The canvas becomes the deck.",
   },
   {
     title: "Your thinking stays yours.",

@@ -77,7 +77,7 @@ export const featureSteps: FeatureStep[] = [
       },
       {
         icon: "lucide:wrench",
-        text: "Self-healing — errors caught and fixed, visibly",
+        text: "Self-healing errors caught and fixed, visibly",
       },
       { icon: "lucide:chart-line", text: "Built-in charting, no setup" },
     ],

@@ -7,7 +7,7 @@ export const faqEntries: FaqEntry[] = [
   {
     question: "Is Nolënor another AI chat tool?",
     answer:
-      "No. Nolënor is a visual thinking workspace with AI built into the canvas. Instead of keeping your ideas inside a linear chat, you can organize notes, links, images, PDFs, tables and tasks in one connected space — then ask AI to work with the context you choose.",
+      "No. Nolënor is a visual thinking workspace with AI built into the canvas. Instead of keeping your ideas inside a linear chat, you can organize notes, links, images, PDFs, tables and tasks in one connected space. Then ask AI to work with the context you choose.",
   },
   {
     question: "What is Nolënor used for?",
@@ -32,7 +32,7 @@ export const faqEntries: FaqEntry[] = [
   {
     question: "Can I use Nolënor without AI?",
     answer:
-      "Yes. Nolënor works as a visual workspace even when you are not using AI. You can capture ideas, organize information, connect references and build your own system manually. AI is there when you need help — not in the way when you don't.",
+      "Yes. Nolënor works as a visual workspace even when you are not using AI. You can capture ideas, organize information, connect references and build your own system manually. AI is there when you need help, not in the way when you don't.",
   },
   {
     question: "Can Nolënor help me work with PDFs and other documents?",
