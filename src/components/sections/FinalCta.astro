@@ -2,7 +2,7 @@
 import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
 import Button from "@/components/ui/Button.astro";
-import { APP_URL } from "@/lib/constants";
+import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
 
 /*
  * The one loud CTA on the page, and the only place the brand colour is
@@ -29,7 +29,7 @@ import { APP_URL } from "@/lib/constants";
         users.
       </p>
 
-      <Button href={APP_URL} variant="inverse" size="lg" class="mt-2">
+      <Button href={APP_SIGNUP_URL} variant="inverse" size="lg" class="mt-2">
         Try it for free
         <Icon name="lucide:arrow-right" class="h-4 w-4" />
       </Button>

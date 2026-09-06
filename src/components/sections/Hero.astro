@@ -3,7 +3,7 @@ import Container from "@/components/ui/Container.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import Button from "@/components/ui/Button.astro";
 import heroDemoSrc from "@/assets/img/main.png?url";
-import { APP_URL } from "@/lib/constants";
+import { APP_SIGNUP_URL } from "@/lib/constants";
 ---
 
 <section class="pt-10 pb-20 sm:pt-28 sm:pb-28">
@@ -37,7 +37,7 @@ import { APP_URL } from "@/lib/constants";
     -->
     <div class="flex flex-col items-center gap-4">
       <div class="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-        <Button href={APP_URL} size="lg">Try it for free</Button>
+        <Button href={APP_SIGNUP_URL} size="lg">Try it for free</Button>
 
         <a
           href="#features"

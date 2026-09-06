@@ -3,7 +3,7 @@ import Container from "@/components/ui/Container.astro";
 import Button from "@/components/ui/Button.astro";
 import Logo from "@/components/ui/Logo.astro";
 import { primaryNavLinks } from "@/data/nav";
-import { APP_URL, APP_SIGNIN_URL } from "@/lib/constants";
+import { APP_URL, APP_SIGNIN_URL, APP_SIGNUP_URL } from "@/lib/constants";
 
 /*
  * On a phone the section anchors are hidden rather than folded into a
@@ -47,12 +47,12 @@ import { APP_URL, APP_SIGNIN_URL } from "@/lib/constants";
 
       <div class="flex items-center gap-4 sm:gap-6">
         <a
-          href={APP_SIGNIN_URL}
+          href={APP_URL}
           class="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-foreground sm:inline-flex"
         >
           Login
         </a>
-        <Button href={APP_URL} size="md">Try it for free</Button>
+        <Button href={APP_SIGNUP_URL} size="md">Try it for free</Button>
       </div>
     </div>
   </Container>

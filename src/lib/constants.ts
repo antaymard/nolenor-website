@@ -9,6 +9,7 @@ export const APP_URL = "https://app.nolenor.com";
 
 // Verified real route on the product app: src/routes/signin.tsx
 export const APP_SIGNIN_URL = `${APP_URL}/signin`;
+export const APP_SIGNUP_URL = `${APP_URL}/signin?mode=signup`;
 
 // PLACEHOLDER — must match astro.config.mjs `site` and the wishlist
 // CORS allow-list below once the final marketing domain is chosen.
