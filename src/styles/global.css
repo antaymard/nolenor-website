@@ -1,39 +1,37 @@
 @import "tailwindcss";
+@import "./chat-mock.css";
 
 /*
- * Design tokens ported verbatim (light-mode values only) from the product
- * app's src/index.css, so the marketing site and the real product feel
- * like the same brand. Deliberately NOT ported: the app's --text-base/sm/xs/lg
- * (9-17px) scale — that's a dense in-app UI density scale, wrong for a
- * marketing page. This site uses Tailwind's normal default type scale.
+ * Brand palette, from the section-by-section design brief: exactly three
+ * given colors (background, brand, foreground) reused everywhere; every
+ * other token below (surface, muted, border, muted-foreground) is derived
+ * from those three so nothing introduces an unrelated hue. Contrast
+ * verified by hand (WCAG formula, not eyeballed): foreground/background
+ * ~10.2:1, brand-foreground/brand ~5.95:1, muted-foreground/background
+ * ~5:1 — all clear of AA's 4.5:1 for body text.
  */
 @theme {
-  --font-sans: "Poppins", sans-serif;
+  --font-sans: "Nunito", sans-serif;
+  --font-serif: "Hedvig Letters Serif", serif;
   --radius: 15px;
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --border: oklch(0.929 0.013 255.508);
-  /*
-   * Darkened from the product app's oklch(0.623 0.214 259.815) — same hue
-   * and chroma, lower lightness. The app-native value only reaches 3.76:1
-   * against white (fails WCAG AA's 4.5:1 for normal text) both as button
-   * text-on-brand and as brand-colored text-on-white; this shade tests at
-   * ~5.3:1 in both directions. Verified via canvas pixel readback, not
-   * eyeballed — see the polish-pass verification notes.
-   */
-  --brand: oklch(0.54 0.214 259.815);
-  --brand-foreground: oklch(1 0 0);
-  --highlight: oklch(0.852 0.199 91.936);
+  --background: #f6eddf;
+  --surface: #ffffff;
+  --foreground: #2f3653;
+  --muted: #ede1cb;
+  --muted-foreground: #5f6389;
+  --border: #e5d9c4;
+  --brand: #505785;
+  --brand-foreground: #f6edde;
+  --highlight: #eac873;
   --destructive: oklch(0.577 0.245 27.325);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -98,10 +96,43 @@
   animation: appear 0.5s ease-out both;
 }
 
+/* Headings whose line breaks are hand-set and must never break anywhere
+   else. Size is capped for wide screens (--fit-max) and otherwise derived
+   from the viewport, divided by --fit-ratio: the measured width-to-font-size
+   ratio of the heading's longest line in Hedvig Letters Serif, plus a little
+   slack. The generic serif fallback measures ~11% narrower, so lines fit
+   there too while the webfont loads. 3rem is the Container's padding below
+   lg, where this branch applies. */
+.fit-lines {
+  font-size: min(var(--fit-max), calc((100vw - 3rem) / var(--fit-ratio)));
+}
+
+/* Stacked sticky media: all steps overlap in one grid cell, only the
+   active one is visible, so swapping between them crossfades. */
+[data-sticky-media] {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s linear 0.45s;
+}
+
+[data-sticky-media][data-active="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
     opacity: 1 !important;
     animation: none !important;
+  }
+
+  [data-sticky-media] {
+    transition: none;
   }
 }
 
@@ -119,5 +150,17 @@ html {
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+  }
+
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    line-height: 1.3;
   }
 }

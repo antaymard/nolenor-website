@@ -1,7 +1,7 @@
 ---
 interface Props {
   href: string;
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "ghost" | "inverse";
   size?: "md" | "lg";
   class?: string;
 }
@@ -14,13 +14,16 @@ const {
 } = Astro.props;
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
+  "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
 
 const variants = {
   primary: "bg-brand text-brand-foreground hover:bg-brand/90",
   secondary:
     "bg-foreground text-background hover:bg-foreground/85",
   ghost: "text-foreground hover:bg-muted",
+  // For the one place the brand colour is used as a large fill: the
+  // closing CTA. Cream on purple, the hero's palette turned inside out.
+  inverse: "bg-brand-foreground text-brand hover:bg-brand-foreground/90",
 };
 
 const sizes = {

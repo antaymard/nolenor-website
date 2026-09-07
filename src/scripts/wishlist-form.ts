@@ -15,9 +15,7 @@ interface WishlistResponse {
 // generic message rather than surfaced as a broken feature.
 export function initWishlistForm(): void {
   const form = document.querySelector<HTMLFormElement>("#wishlist-form");
-  const message = document.querySelector<HTMLElement>(
-    "#wishlist-form-message",
-  );
+  const message = document.querySelector<HTMLElement>("#wishlist-form-message");
   if (!form || !message) return;
 
   form.addEventListener("submit", async (event) => {
@@ -46,7 +44,7 @@ export function initWishlistForm(): void {
       if (data.success) {
         message.textContent = data.alreadySubscribed
           ? "You're already on the list."
-          : "You're in — thanks for subscribing.";
+          : "You're in! Thanks for subscribing.";
         form.reset();
       } else {
         message.textContent = "Something went wrong. Please try again later.";

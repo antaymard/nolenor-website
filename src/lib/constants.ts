@@ -1,7 +1,7 @@
 // Central place for every external / placeholder URL used across the site.
 // Update these once here instead of hunting through components.
 
-export const SITE_NAME = "Nolenor";
+export const SITE_NAME = "Nolënor";
 
 // PLACEHOLDER — the real app is a separate deployment; URL unknown to us.
 // Every "Start free trial" / "Log in" CTA points here.
@@ -9,6 +9,7 @@ export const APP_URL = "https://app.nolenor.com";
 
 // Verified real route on the product app: src/routes/signin.tsx
 export const APP_SIGNIN_URL = `${APP_URL}/signin`;
+export const APP_SIGNUP_URL = `${APP_URL}/signin?mode=signup`;
 
 // PLACEHOLDER — must match astro.config.mjs `site` and the wishlist
 // CORS allow-list below once the final marketing domain is chosen.
@@ -32,4 +33,4 @@ export const WISHLIST_ENDPOINT =
 // Verified public via the GitHub API.
 export const GITHUB_REPO_URL = "https://github.com/antaymard/nolenor";
 
-export const TAGLINE = "Your thinking deserves a canvas.";
+export const TAGLINE = "Somewhere to think, not another chat box.";

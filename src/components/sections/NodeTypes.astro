@@ -1,0 +1,70 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import { nodeTypes } from "@/data/nodeTypes";
+---
+
+<section id="nodes" class="py-14">
+  <Container class="flex flex-col items-center gap-5 text-center bg-surface py-10 sm:py-14 rounded-t-2xl">
+    <SectionLabel>The building blocks</SectionLabel>
+
+    <h2 class="text-balance">
+      Powerful nodes for powerful thinking
+    </h2>
+
+    <div class="flex max-w-4xl flex-col gap-1 text-lg text-pretty">
+      <p>
+        Each node is readable, editable and searchable by you and by Nolë, your
+        visual assistant.
+      </p>
+      <p>
+        PDF, images, audio and video are transcribed as text and indexed for
+        better AI understanding and searchability.
+      </p>
+      <p>Version history for every edit made.</p>
+    </div>
+  </Container>
+
+  <Container class="pt-6 pb-14 rounded-b-2xl bg-surface">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 px-12">
+      {
+        nodeTypes.map((node) => (
+          <article
+            class="flex flex-col overflow-hidden rounded-2xl border border-border px-5 pt-5 transition-colors duration-250 hover:border-brand/30 aspect-square bg-border/25"
+            data-reveal
+          >
+            <div class="flex items-center gap-3">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-brand">
+                <Icon name={node.icon} class="h-4 w-4" />
+              </span>
+              <h3 class="text-foreground">{node.name}</h3>
+            </div>
+
+            <p class="mt-3 min-h-[4.7rem] text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">
+              {node.description}
+            </p>
+
+            {/*
+              The preview is deliberately cropped by the bottom of the card:
+              a peek into the node, not a framed screenshot.
+            */}
+            <div class="mt-4 min-h-0 flex-1 overflow-hidden" data-media-id={node.media?.id}>
+              {node.soon ? (
+                <span class="flex h-full w-full items-center justify-center text-sm text-muted-foreground">Soon</span>
+              ) : node.media?.src ? (
+                <Image
+                  class="block w-full rounded-t-md border border-b-0 border-border"
+                  src={node.media.src}
+                  alt={node.media.alt}
+                  loading="lazy"
+                />
+              ) : null}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </Container>
+</section>

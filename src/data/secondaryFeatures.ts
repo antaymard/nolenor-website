@@ -11,7 +11,7 @@ export const secondaryFeatures: SecondaryFeature[] = [
     icon: "lucide:puzzle",
     title: "Custom node templates",
     description:
-      "Design your own node types with a visual field editor — full feature parity with built-ins.",
+      "Design your own node types with a visual field editor, full feature parity with built-ins.",
   },
   {
     icon: "lucide:presentation",
@@ -22,7 +22,8 @@ export const secondaryFeatures: SecondaryFeature[] = [
   {
     icon: "lucide:search",
     title: "Full-text search",
-    description: "Cmd+K search across every node — PDF pages included.",
+    description:
+      "Cmd+K search across every node (PDF pages and audio files included).",
   },
   {
     icon: "lucide:chrome",
@@ -40,7 +41,7 @@ export const secondaryFeatures: SecondaryFeature[] = [
     icon: "lucide:mic",
     title: "Speech-to-text",
     description:
-      "Talk instead of typing — word-level accurate, automatic language detection.",
+      "Talk instead of typing, with word-level accurate, automatic language detection.",
   },
   {
     icon: "lucide:graduation-cap",
