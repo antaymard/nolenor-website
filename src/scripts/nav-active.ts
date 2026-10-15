@@ -22,7 +22,8 @@ export function initNavActive(): void {
   const bar = document.querySelector("[data-nav-links]");
   if (!bar) return;
 
-  const pairs = Array.from(bar.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
+  const pairs = Array.from(bar.querySelectorAll<HTMLAnchorElement>('a[href*="#"]'))
+    .filter((link) => link.pathname === window.location.pathname)
     .map((link) => ({ link, section: document.querySelector<HTMLElement>(link.hash) }))
     .filter((pair): pair is Pair => pair.section !== null);
 
