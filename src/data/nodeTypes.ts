@@ -31,7 +31,7 @@ export const nodeTypes: NodeType[] = [
     name: "Title",
     icon: "lucide:heading",
     description:
-      "The skeleton of your canvas. Group ideas into sections so the board stays scannable the more you add.",
+      "Landmarks for your canvas. Mark out areas so you always find your way back, however much you lay down.",
     media: {
       id: "node-title",
       alt: "A Title node with its formatting toolbar open, linked to two smaller labelled nodes on the canvas",

@@ -9,26 +9,33 @@ export interface ProblemItem {
   };
 }
 
+/*
+ * The operator's escalation, in order: at each step the tool takes one more
+ * thing from you. The tree makes you file, the thread makes you type, the
+ * agent that replaces you makes you review.
+ *
+ * The illustrations were drawn for the previous, chat-only framing and are
+ * matched to the closest item: the endless conversation archive stands in
+ * for filing, the opaque status lines for the thread, and the assistant
+ * that finishes your thought for you for the agent.
+ */
 export const problemItems: ProblemItem[] = [
   {
-    title: "The chat turns thinking into prompting.",
+    title: "The tree makes you file.",
     subtitle:
-      "When an answer arrives before your thoughts have taken shape, you stop developing an idea and start reacting to ones.",
-    visual: "chat-flattening",
+      "Before you've understood something, you have to decide where it goes. You trim the idea to fit the structure, and lose the momentum on the way.",
+    visual: "lost-thread",
   },
   {
-    title: "The chat hides what matters.",
+    title: "The thread makes you type.",
     subtitle:
-      "You can't see what the AI is using, missing, or remembering, making good results hard to understand and bad results hard to fix.",
+      "Everything has to go through a text box. You can't point at a document, link what you saw earlier, or see what the AI is looking at. You describe instead of showing.",
     visual: "hidden-work",
   },
   {
-    // PLACEHOLDER COPY — written to the pattern of the first two items, from
-    // the brief's own line ("The work is there. You just can't find it
-    // anymore."). Replace once the wording is settled.
-    title: "The chat buries your work.",
+    title: "The agent makes you review.",
     subtitle:
-      "An idea, a decision, a document... All of it produced inside a conversation, and none of it anywhere you can go back to.",
-    visual: "lost-thread",
+      "It does the work before your thinking has taken shape. You no longer follow what was done, so you can't steer, so you hand over more. And you end up proofreading.",
+    visual: "chat-flattening",
   },
 ];
