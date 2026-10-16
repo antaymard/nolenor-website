@@ -17,25 +17,24 @@ export interface FeatureStep {
   };
 }
 
-// PLACEHOLDER COPY — carried over from the previous positioning so the
-// scroll mechanic can be reviewed with realistic content. Replace once the
-// final copy for this section lands.
+// Two of the three gestures Nolënor gives back (lay it down, show it); the
+// third, doing the work, is the reader's — it has no screen of its own.
 export const featureSteps: FeatureStep[] = [
   {
-    title: "Capture and connect.",
-    subtitle: "Start with whatever is on your mind.",
+    title: "Lay it down. Don't file it.",
+    subtitle: "Think in loose piles. The canvas keeps up.",
     bullets: [
       {
         icon: "lucide:layout-grid",
-        text: "Documents, tables, images, PDFs and KPIs, side by side",
+        text: "Notes, tables, PDFs, images and links, side by side",
       },
       {
         icon: "lucide:move",
-        text: "Infinite pan and zoom — drag, resize, connect",
+        text: "Place, move, link: no folder to pick first",
       },
       {
         icon: "lucide:search",
-        text: "Search across everything, PDF pages included",
+        text: "Everything is indexed, so the pile turns back into material",
       },
     ],
     media: {
@@ -45,20 +44,20 @@ export const featureSteps: FeatureStep[] = [
     },
   },
   {
-    title: "Give AI the right context.",
-    subtitle: "Meet Nolë, your agent on the canvas",
+    title: "Show it where to look.",
+    subtitle: "Meet Nolë, the apprentice on your canvas",
     bullets: [
       {
         icon: "lucide:eye",
-        text: "Every tool call and reasoning step, streamed live",
+        text: "See each step it takes, live: what it reads, what it touches",
       },
       {
         icon: "lucide:at-sign",
-        text: "@mention any node or alt+clic on it to pull it into context",
+        text: "@mention a node or alt+click it to hand it over",
       },
       {
         icon: "lucide:sparkles",
-        text: "Close the chat, run multiple tasks in parallel, results appear live",
+        text: "Close the chat and keep working; its results land next to yours",
       },
     ],
     media: {
