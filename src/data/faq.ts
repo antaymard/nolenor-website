@@ -12,7 +12,7 @@ export const faqEntries: FaqEntry[] = [
   {
     question: "What is Nolënor used for?",
     answer:
-      "Nolënor helps you research, organize ideas and turn your thinking into action. You can use it to prepare a project, analyze documents, plan a launch, manage knowledge, explore a topic or collaborate with AI on complex tasks.",
+      "Work where the sources pile up and the thinking matters. A consultant maps a new market for a client. A medical science liaison turns a clinical study into a presentation. A toxicologist checks a packaging against the regulations, substance by substance. A product designer goes from the competition to a working prototype. Each time, you set the frame, Nolë does the reading, searching and first drafts on the canvas, and you check what it made.",
   },
   {
     question: "How is Nolënor different from Notion or other note-taking apps?",
@@ -52,6 +52,6 @@ export const faqEntries: FaqEntry[] = [
   {
     question: "Who is Nolënor for?",
     answer:
-      "Nolënor is for people who want to stay involved in their thinking while using AI. It is especially useful for researchers, creators, founders, students, consultants and anyone working on projects that involve scattered information and complex decisions.",
+      "People with a trade (consultants, strategists, researchers, scientists, product people, designers, developers) who want AI to widen what they do, not do it in their place. It isn't for everyone: if you want an autopilot that hands you a finished result, other tools will suit you better.",
   },
 ];

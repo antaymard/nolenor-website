@@ -1,0 +1,188 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+
+/*
+ * The consultant's canvas at the end of the flagship scenario. The one
+ * thing it has to show is whose work is whose: your nodes (ink outline,
+ * named) carry the structure; Nolë's (tinted, badged) hang off it. A
+ * reader should see the split before reading the legend.
+ */
+const players = [80, 148, 216, 284];
+const themes = [
+  { y: 90, label: "Regulation" },
+  { y: 180, label: "Business models" },
+  { y: 270, label: "Risks" },
+];
+---
+
+<div class={`map-canvas overflow-hidden rounded-2xl border border-border ${className}`}>
+  <svg
+    viewBox="0 0 640 400"
+    role="img"
+    aria-label="A canvas mapping a market: four player nodes made by Nolë on the left, the consultant's own Regulation, Business models and Risks nodes on the right, links between them, a PDF report beside one player and a comparison table below"
+    class="block h-auto w-full"
+  >
+    <text class="title" x="320" y="46" text-anchor="middle">BNPL in Europe</text>
+
+    <g class="legend">
+      <rect class="mine" x="24" y="22" width="12" height="12" rx="3" />
+      <text class="legend-label" x="42" y="32">Yours</text>
+      <rect class="theirs" x="90" y="22" width="12" height="12" rx="3" />
+      <text class="legend-label" x="108" y="32">Nolë's</text>
+    </g>
+
+    <path class="edge" d="M164 105 C 300 105, 300 208, 440 208" />
+    <path class="edge" d="M164 241 C 300 241, 300 118, 440 118" />
+    <path class="edge" d="M164 309 C 300 309, 300 298, 440 298" />
+    <path class="edge" d="M164 173 H 178" />
+    <path class="edge edge-dashed" d="M340 316 C 340 262, 392 226, 440 226" />
+
+    {
+      players.map((y) => (
+        <g class="card">
+          <rect class="theirs" x="24" y={y} width="140" height="50" rx="10" />
+          <circle class="badge" cx="42" cy={y + 17} r="7" />
+          <text class="badge-label" x="42" y={y + 20.5} text-anchor="middle">N</text>
+          <rect class="t" x="56" y={y + 13} width="70" height="7" rx="3.5" />
+          <rect class="l-theirs" x="36" y={y + 32} width="104" height="5" rx="2.5" />
+        </g>
+      ))
+    }
+
+    <g class="card">
+      <rect class="pdf" x="178" y="140" width="80" height="64" rx="8" />
+      <rect class="pdf-head" x="178" y="140" width="80" height="16" rx="8" />
+      <text class="pdf-label" x="190" y="152">PDF</text>
+      <rect class="l" x="188" y="164" width="58" height="4" rx="2" />
+      <rect class="l" x="188" y="174" width="50" height="4" rx="2" />
+      <rect class="l" x="188" y="184" width="56" height="4" rx="2" />
+    </g>
+
+    {
+      themes.map((theme) => (
+        <g class="card">
+          <rect class="mine" x="440" y={theme.y} width="172" height="56" rx="10" />
+          <text class="label" x="458" y={theme.y + 24}>{theme.label}</text>
+          <rect class="l" x="458" y={theme.y + 36} width="96" height="5" rx="2.5" />
+        </g>
+      ))
+    }
+
+    <g class="card">
+      <rect class="theirs" x="250" y="316" width="160" height="66" rx="10" />
+      <circle class="badge" cx="266" cy="331" r="7" />
+      <text class="badge-label" x="266" y="334.5" text-anchor="middle">N</text>
+      <path class="grid" d="M262 348 H398 M262 362 H398 M262 374 H398 M306 342 V378 M352 342 V378" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .map-canvas {
+    background-color: color-mix(in srgb, var(--background) 45%, #ffffff);
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--foreground) 14%, transparent) 1px,
+      transparent 1.3px
+    );
+    background-size: 18px 18px;
+    background-position: 9px 9px;
+  }
+
+  svg {
+    font-family: var(--font-sans);
+  }
+
+  .card {
+    filter: drop-shadow(0 5px 12px rgb(47 54 83 / 0.07));
+  }
+
+  .title {
+    font-family: var(--font-serif);
+    font-size: 21px;
+    fill: var(--foreground);
+  }
+
+  .mine {
+    fill: var(--surface);
+    stroke: var(--foreground);
+    stroke-width: 1.8;
+  }
+
+  .theirs {
+    fill: color-mix(in srgb, var(--brand) 10%, #ffffff);
+    stroke: color-mix(in srgb, var(--brand) 35%, #ffffff);
+    stroke-width: 1.5;
+  }
+
+  .badge {
+    fill: var(--brand);
+  }
+
+  .badge-label {
+    font-size: 9px;
+    font-weight: 800;
+    fill: var(--brand-foreground);
+  }
+
+  .t {
+    fill: var(--foreground);
+    opacity: 0.7;
+  }
+
+  .l {
+    fill: var(--muted);
+  }
+
+  .l-theirs {
+    fill: color-mix(in srgb, var(--brand) 22%, #ffffff);
+  }
+
+  .label {
+    font-size: 13px;
+    font-weight: 700;
+    fill: var(--foreground);
+  }
+
+  .legend-label {
+    font-size: 11px;
+    font-weight: 600;
+    fill: var(--muted-foreground);
+  }
+
+  .pdf {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .pdf-head {
+    fill: var(--muted);
+  }
+
+  .pdf-label {
+    font-size: 9px;
+    font-weight: 800;
+    fill: var(--muted-foreground);
+  }
+
+  .grid {
+    fill: none;
+    stroke: color-mix(in srgb, var(--brand) 30%, #ffffff);
+    stroke-width: 1.2;
+  }
+
+  .edge {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 1.8;
+    opacity: 0.6;
+  }
+
+  .edge-dashed {
+    stroke-dasharray: 5 5;
+  }
+</style>

@@ -1,0 +1,239 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import Button from "@/components/ui/Button.astro";
+import MarketMap from "@/components/use-cases/MarketMap.astro";
+import { flagship, vignettes } from "@/data/useCases";
+import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
+
+/*
+ * Use cases: who Nolënor is for, shown rather than listed.
+ *
+ * One scenario told in full, then three short ones. Every step is split
+ * into three lanes — what you do, what Nolë does, what you check — because
+ * that split is the whole positioning: an apprentice, not a replacement.
+ * The scenarios are illustrative, and the page says so up front; see
+ * src/data/useCases.ts for where each one comes from and what was left out.
+ */
+---
+
+<Layout
+  title={`Use cases — ${SITE_NAME}`}
+  description="How people with a trade work with Nolënor: a consultant mapping a market, a medical science liaison, a toxicologist, a product designer. You lead, Nolë does the legwork, you check."
+>
+  <section class="pt-14 pb-14 sm:pt-24 sm:pb-20">
+    <Container class="flex flex-col items-center gap-6 text-center">
+      <SectionLabel>Use cases</SectionLabel>
+      <h1 class="max-w-4xl font-serif text-4xl leading-[1.15] text-balance text-foreground sm:text-5xl lg:text-6xl">
+        People with a trade, and the apprentice beside them.
+      </h1>
+      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+        Four trades, one way of working: you lead, Nolë does the legwork, you
+        check. The work stays yours.
+      </p>
+      <p class="max-w-xl text-sm text-pretty text-muted-foreground/80">
+        These are example scenarios built on what the product does today, not
+        customer testimonials.
+      </p>
+    </Container>
+  </section>
+
+  <hr class="border-border" />
+
+  <section class="py-16 sm:py-24" aria-labelledby="flagship-title">
+    <Container class="grid items-center gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
+      <div class="flex flex-col gap-4" data-reveal>
+        <p class="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-sm font-semibold text-foreground/80">
+          <Icon name="lucide:briefcase" class="h-4 w-4 text-brand" />
+          {flagship.trade}
+        </p>
+        <h2 id="flagship-title" class="text-balance text-foreground">{flagship.title}</h2>
+        <p class="text-lg leading-relaxed text-pretty text-muted-foreground">{flagship.brief}</p>
+      </div>
+      <div data-reveal data-reveal-variant="zoom">
+        <MarketMap />
+      </div>
+    </Container>
+
+    <Container class="mt-14 sm:mt-16">
+      <div class="lanes hidden md:grid" aria-hidden="true">
+        <span></span>
+        <span class="lane-head">You</span>
+        <span class="lane-head text-brand">Nolë</span>
+        <span class="lane-head">You check</span>
+      </div>
+
+      <ol class="flex flex-col">
+        {
+          flagship.steps.map((step, index) => (
+            <li class="lanes border-t border-border py-6" data-reveal>
+              <span class="font-serif text-2xl leading-none text-brand/50">{index + 1}</span>
+              <div>
+                <span class="lane-label">You</span>
+                <p class="text-foreground">{step.you}</p>
+              </div>
+              <div class="nole-lane">
+                <span class="lane-label text-brand">Nolë</span>
+                <p>{step.nole}</p>
+              </div>
+              <div>
+                {step.check ? (
+                  <>
+                    <span class="lane-label">You check</span>
+                    <p class="flex gap-2 text-muted-foreground">
+                      <Icon name="lucide:eye" class="mt-1 h-4 w-4 shrink-0 text-brand" />
+                      <span>{step.check}</span>
+                    </p>
+                  </>
+                ) : null}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <p
+        class="mt-6 rounded-2xl border border-border bg-surface px-6 py-6 text-lg leading-relaxed text-pretty text-foreground sm:px-8"
+        data-reveal
+      >
+        {flagship.outcome}
+      </p>
+    </Container>
+  </section>
+
+  <hr class="border-border" />
+
+  <section class="py-16 sm:py-24" aria-labelledby="trades-title">
+    <Container class="flex flex-col items-center gap-4 text-center">
+      <SectionLabel>Other trades</SectionLabel>
+      <h2 id="trades-title" class="max-w-2xl text-balance text-foreground">Same bench, different work.</h2>
+      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+        Nolë does the reading, the searching and the first draft. At every step,
+        the call is yours.
+      </p>
+    </Container>
+
+    <Container class="mt-12">
+      <ul class="grid gap-5 lg:grid-cols-3">
+        {
+          vignettes.map((vignette) => (
+            <li class="flex flex-col gap-5 rounded-2xl border border-border bg-surface p-6" data-reveal>
+              <div class="flex flex-col gap-3">
+                <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-brand">
+                  <Icon name={vignette.icon} class="h-5 w-5" />
+                </span>
+                <h3 class="text-foreground">{vignette.trade}</h3>
+                <p class="text-[0.95rem] text-pretty text-muted-foreground">{vignette.brief}</p>
+              </div>
+
+              <ol class="flex flex-1 flex-col gap-4 border-t border-border pt-5">
+                {vignette.steps.map((step) => (
+                  <li class="flex flex-col gap-1.5">
+                    <p class="flex gap-2 text-[0.95rem] leading-relaxed text-foreground/90">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand text-[0.65rem] font-extrabold text-brand-foreground">
+                        N
+                      </span>
+                      <span>{step.nole}</span>
+                    </p>
+                    <p class="flex gap-2 pl-0.5 text-sm text-muted-foreground">
+                      <Icon name="lucide:eye" class="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+                      <span>{step.check}</span>
+                    </p>
+                  </li>
+                ))}
+              </ol>
+
+              <p class="rounded-xl bg-muted/50 px-4 py-3 text-sm leading-relaxed text-pretty text-foreground/80">
+                {vignette.keeps}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </section>
+
+  <section class="pb-20 sm:pb-28">
+    <Container>
+      <div
+        class="flex flex-col items-center gap-6 rounded-3xl bg-brand px-6 py-16 text-center text-brand-foreground sm:px-16 sm:py-20"
+        data-reveal
+        data-reveal-variant="zoom"
+      >
+        <h2 class="max-w-2xl text-balance">Bring a real project.</h2>
+        <p class="max-w-xl text-lg text-pretty opacity-90">
+          Nolënor is in open beta and free while we build it. Try it on the work
+          you're doing this week, and tell us where it gets in the way.
+        </p>
+        <div class="mt-2 flex flex-col items-center gap-4 sm:flex-row">
+          <Button href={APP_SIGNUP_URL} variant="inverse" size="lg">
+            Try it for free
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </Button>
+          <a href="/manifesto" class="text-base font-medium underline-offset-4 opacity-90 hover:underline hover:opacity-100">
+            Read the manifesto
+          </a>
+        </div>
+      </div>
+    </Container>
+  </section>
+</Layout>
+
+<style>
+  .lanes {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .lanes {
+      grid-template-columns: 2.5rem minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.85fr);
+      gap: 1.75rem;
+      align-items: start;
+    }
+  }
+
+  .lane-head {
+    padding-bottom: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .lane-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  @media (min-width: 768px) {
+    .lane-label {
+      display: none;
+    }
+  }
+
+  .lanes p {
+    font-size: 0.98rem;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .nole-lane {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--brand) 9%, #ffffff);
+    color: var(--foreground);
+  }
+
+  .nole-lane .lane-label {
+    color: var(--brand);
+  }
+</style>
