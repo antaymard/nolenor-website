@@ -1,0 +1,196 @@
+---
+interface Props {
+  shape: "tree" | "thread" | "canvas";
+  class?: string;
+}
+
+const { shape, class: className = "" } = Astro.props;
+
+/*
+ * The three shapes the manifesto argues about, drawn with the same node
+ * vocabulary as the help page diagrams: the tree (pages in pages), the
+ * thread (a chat), and the canvas. Same content in all three — four ideas
+ * — so the only thing that changes is the shape the tool forces on them.
+ * The tree and the thread are drawn in muted ink; only the canvas gets the
+ * brand colour.
+ */
+const labels = {
+  tree: "The same four ideas filed in nested pages, each one a level deeper than the last",
+  thread: "The same four ideas as a column of chat messages, one under the other",
+  canvas: "The same four ideas laid out on a canvas, side by side and linked to each other",
+};
+---
+
+<div class={`shape-canvas overflow-hidden rounded-2xl border border-border ${className}`}>
+  <svg viewBox="0 0 300 220" role="img" aria-label={labels[shape]} class="block h-auto w-full">
+    {
+      shape === "tree" && (
+        <>
+          <path class="rail" d="M42 46 V186 M66 82 V186 M90 118 V186" />
+          {[
+            { x: 30, y: 30 },
+            { x: 54, y: 66 },
+            { x: 78, y: 102 },
+            { x: 102, y: 138 },
+            { x: 102, y: 172 },
+          ].map(({ x, y }, i) => (
+            <g>
+              {i > 0 && <path class="rail" d={`M${x - 12} ${y + 12} H${x}`} />}
+              <rect class="n" x={x} y={y} width={i === 4 ? 120 : 150} height="24" rx="6" />
+              <path class="folder" d={`M${x + 8} ${y + 8} h5 l2 2 h6 v6 h-13 z`} />
+              <rect class="t" x={x + 28} y={y + 9} width={i === 4 ? 56 : 74} height="6" rx="3" />
+            </g>
+          ))}
+        </>
+      )
+    }
+
+    {
+      shape === "thread" && (
+        <>
+          <rect class="bubble-you" x="130" y="22" width="140" height="28" rx="12" />
+          <rect class="t-light" x="144" y="33" width="96" height="6" rx="3" />
+          <rect class="bubble" x="30" y="60" width="190" height="44" rx="12" />
+          <rect class="l" x="44" y="72" width="150" height="6" rx="3" />
+          <rect class="l" x="44" y="86" width="120" height="6" rx="3" />
+          <rect class="bubble-you" x="150" y="114" width="120" height="28" rx="12" />
+          <rect class="t-light" x="164" y="125" width="80" height="6" rx="3" />
+          <rect class="bubble" x="30" y="152" width="200" height="44" rx="12" />
+          <rect class="l" x="44" y="164" width="160" height="6" rx="3" />
+          <rect class="l" x="44" y="178" width="110" height="6" rx="3" />
+          <path class="fade" d="M0 200 H300 V220 H0 Z" />
+        </>
+      )
+    }
+
+    {
+      shape === "canvas" && (
+        <>
+          <path class="edge" d="M112 62 C 140 62, 150 50, 178 50" />
+          <path class="edge" d="M70 84 C 70 120, 90 150, 112 150" />
+          <path class="edge edge-dashed" d="M226 74 C 226 110, 214 140, 196 150" />
+          <g class="card">
+            <rect class="n" x="26" y="38" width="86" height="46" rx="9" />
+            <rect class="ic" x="36" y="48" width="12" height="12" rx="3" />
+            <rect class="t" x="54" y="51" width="44" height="6" rx="3" />
+            <rect class="l" x="36" y="68" width="62" height="5" rx="2.5" />
+          </g>
+          <g class="card">
+            <rect class="n" x="178" y="26" width="96" height="48" rx="9" />
+            <rect class="ic" x="188" y="36" width="12" height="12" rx="3" />
+            <rect class="t" x="206" y="39" width="50" height="6" rx="3" />
+            <rect class="hl" x="188" y="56" width="74" height="9" rx="3" />
+          </g>
+          <g class="card">
+            <rect class="n sel" x="112" y="128" width="84" height="46" rx="9" />
+            <rect class="ic" x="122" y="138" width="12" height="12" rx="3" />
+            <rect class="t" x="140" y="141" width="42" height="6" rx="3" />
+            <rect class="l" x="122" y="158" width="58" height="5" rx="2.5" />
+          </g>
+          <g class="card">
+            <rect class="n" x="222" y="132" width="56" height="62" rx="9" />
+            <path class="grid" d="M230 150 H270 M230 164 H270 M230 178 H270 M250 144 V186" />
+          </g>
+          <circle class="handle" cx="112" cy="62" r="3.5" />
+          <circle class="handle" cx="178" cy="50" r="3.5" />
+        </>
+      )
+    }
+  </svg>
+</div>
+
+<style>
+  .shape-canvas {
+    background-color: color-mix(in srgb, var(--background) 45%, #ffffff);
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--foreground) 14%, transparent) 1px,
+      transparent 1.3px
+    );
+    background-size: 16px 16px;
+    background-position: 8px 8px;
+  }
+
+  .card {
+    filter: drop-shadow(0 4px 10px rgb(47 54 83 / 0.07));
+  }
+
+  .n {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .sel {
+    stroke: var(--brand);
+    stroke-width: 2;
+  }
+
+  .t {
+    fill: var(--foreground);
+    opacity: 0.7;
+  }
+
+  .t-light {
+    fill: var(--muted-foreground);
+    opacity: 0.55;
+  }
+
+  .l {
+    fill: var(--muted);
+  }
+
+  .ic {
+    fill: color-mix(in srgb, var(--brand) 16%, #ffffff);
+  }
+
+  .hl {
+    fill: color-mix(in srgb, var(--highlight) 45%, #ffffff);
+  }
+
+  .folder {
+    fill: var(--muted);
+    stroke: var(--muted-foreground);
+    stroke-width: 1;
+    stroke-linejoin: round;
+    opacity: 0.7;
+  }
+
+  .rail,
+  .grid {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .bubble {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .bubble-you {
+    fill: var(--muted);
+  }
+
+  .fade {
+    fill: color-mix(in srgb, var(--background) 45%, #ffffff);
+    opacity: 0.85;
+  }
+
+  .edge {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 1.8;
+    opacity: 0.7;
+  }
+
+  .edge-dashed {
+    stroke-dasharray: 5 5;
+  }
+
+  .handle {
+    fill: var(--surface);
+    stroke: var(--brand);
+    stroke-width: 1.8;
+  }
+</style>

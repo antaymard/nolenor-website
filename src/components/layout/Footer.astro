@@ -2,14 +2,14 @@
 import { Icon } from "astro-icon/components";
 import Container from "@/components/ui/Container.astro";
 import Logo from "@/components/ui/Logo.astro";
-import { footerProductLinks, footerLegalLinks } from "@/data/nav";
+import { footerProductLinks, footerAboutLinks, footerLegalLinks } from "@/data/nav";
 import { GITHUB_REPO_URL, SITE_NAME, TAGLINE } from "@/lib/constants";
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="border-t border-border">
-  <Container class="grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+  <Container class="grid gap-12 py-16 sm:grid-cols-3 md:grid-cols-[1.4fr_1fr_1fr_1fr_1.4fr]">
     <div class="flex flex-col gap-3">
       <Logo iconClass="h-6 w-6 text-foreground" textClass="text-base" />
       <p class="max-w-xs text-sm text-muted-foreground">{TAGLINE}</p>
@@ -40,6 +40,20 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="flex flex-col gap-3">
+      <span class="text-sm font-semibold">About</span>
+      {
+        footerAboutLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="flex flex-col gap-3">
       <span class="text-sm font-semibold">Legal</span>
       {
         footerLegalLinks.map((link) => (
@@ -58,7 +72,7 @@ const year = new Date().getFullYear();
       <p class="text-sm text-muted-foreground">
         Occasional news about new features. No spam.
       </p>
-      <form id="wishlist-form" class="flex flex-col gap-2 sm:flex-row" novalidate>
+      <form id="wishlist-form" class="flex flex-col gap-2" novalidate>
         <label for="wishlist-email" class="sr-only">Email address</label>
         <input
           id="wishlist-email"

@@ -1,0 +1,432 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import Button from "@/components/ui/Button.astro";
+import ThoughtShape from "@/components/manifesto/ThoughtShape.astro";
+import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
+
+/*
+ * The manifesto: the long form of the brand line "Let's not be operators.
+ * Let's stay artisans."
+ *
+ * Source: the "Vision, positionnement, brand tone" frame on the Nolënor
+ * canvas (Vision — L'atelier, pas l'usine / Positionnement — Ranger,
+ * taper, relire / Brand tone). The brand tone says the video shows the
+ * vision and says it in one sentence, and that "the full manifesto lives
+ * on the site". This is that page.
+ *
+ * Its rules, kept here on purpose:
+ * - Show, don't preach. One idea per section, short paragraphs, and the
+ *   claims set as pull quotes rather than repeated in the prose.
+ * - No trial of competitors. The tree, the thread and the factory are
+ *   shapes, not brands; nothing on this page names a product.
+ * - Complicity, not mockery: "it's not you, it's the view".
+ * - Honesty: every product claim here is something the app does today.
+ * - Lexicon: artisan, trade, work, workshop, bench, apprentice; never
+ *   productivity, efficiency, 10x, 24/7, autopilot.
+ *
+ * Reads as one narrow column, like a letter. The only full-width moments
+ * are the three shapes and the closing line.
+ */
+
+const escalation = [
+  {
+    shape: "tree" as const,
+    name: "The tree",
+    makes: "Tidy",
+    takes:
+      "Pages inside pages make you decide where things go before you know what they are. The mind doesn't file. It makes sense of the pile.",
+  },
+  {
+    shape: "thread" as const,
+    name: "The thread",
+    makes: "Type",
+    takes:
+      "A chat makes you write out what you'd rather point at. You can't show it the thing on your screen, or link two ideas you saw go by.",
+  },
+  {
+    shape: "canvas" as const,
+    name: "The canvas",
+    makes: "Show",
+    takes:
+      "Set things down loose, link them, point at them. Your thinking keeps the shape it already had, and the AI works where you can see it.",
+  },
+];
+
+const gestures = [
+  {
+    from: "Tidy",
+    to: "Think loose",
+    body: "You set things down, you don't file them. The AI reads, indexes and finds them again: the mess turns back into material.",
+  },
+  {
+    from: "Type",
+    to: "Show",
+    body: "You point at nodes, you link them, you see what the agent is looking at and turn its head when it looks in the wrong place.",
+  },
+  {
+    from: "Review",
+    to: "Do",
+    body: "You move the work forward. The agent fills the gaps you show it. The work stays yours.",
+  },
+];
+
+const contrast: [string, string][] = [
+  ["An army of agents running around the clock", "An apprentice beside you, when you show it where to look"],
+  ["Mass production, slop to review in the morning", "One piece of work on the bench, and you understand it"],
+  ["The human checks the quality", "The human does the work, the AI widens it"],
+  ["Credits burned by the hundred", "Sobriety: do less, but do it right"],
+  ["Producing", "Working"],
+];
+---
+
+<Layout
+  title={`Manifesto — ${SITE_NAME}`}
+  description="Let's not be operators. Let's stay artisans. Why Nolënor is a workshop, not a factory: an apprentice beside you, not an agent in your place."
+>
+  <article>
+    <header class="pt-14 pb-16 sm:pt-24 sm:pb-24">
+      <Container class="flex flex-col items-center gap-7 text-center">
+        <SectionLabel>Manifesto</SectionLabel>
+        <h1 class="max-w-4xl font-serif text-4xl leading-[1.12] text-balance text-foreground sm:text-6xl lg:text-7xl">
+          Let's not be operators.
+          <span class="block text-brand">Let's stay artisans.</span>
+        </h1>
+        <p class="max-w-xl text-lg text-pretty text-muted-foreground">
+          Why we're building a workshop, not a factory. And why the AI in it
+          is an apprentice, not a replacement.
+        </p>
+      </Container>
+    </header>
+
+    <hr class="border-border" />
+
+    <div class="prose-letter mx-auto max-w-2xl px-6 py-16 sm:py-24">
+      <section>
+        <p class="lead">
+          People are artisans at heart. Technicians. We grow by doing: we learn
+          the trade, and we learn something about ourselves on the way.
+        </p>
+        <p>
+          Even passionate managers are technicians of management. And bad
+          managers are often technicians who miss making things.
+        </p>
+        <p>
+          Nolënor starts there. The human should stay the artisan. The AI, even
+          an agent, should stay a tool. You keep the vision, and you understand
+          every step that got you there.
+        </p>
+      </section>
+
+      <section>
+        <h2>Working is not producing.</h2>
+        <p>
+          <strong>Working</strong> changes the one who works. You learn, you get
+          better, you take satisfaction from what went right and a lesson from
+          what didn't.
+        </p>
+        <p>
+          <strong>Producing</strong> is getting to a result. Filling in the
+          boxes.
+        </p>
+        <p>
+          Somewhere along the way, a lot of trades turned into production. People
+          became operators: the interface between real life and the interface
+          of the software.
+        </p>
+      </section>
+    </div>
+
+    <section class="pb-16 sm:pb-24" aria-labelledby="escalation">
+      <div class="prose-letter mx-auto max-w-2xl px-6">
+        <h2 id="escalation">Tidy, type, review.</h2>
+        <p>
+          Our tools flatten a thought that has a shape, and each one takes a
+          little more from you than the last. Here are the same four ideas,
+          three ways.
+        </p>
+      </div>
+
+      <Container class="mt-10 sm:mt-12">
+        <ol class="grid gap-6 md:grid-cols-3">
+          {
+            escalation.map((item) => (
+              <li class="flex flex-col gap-4" data-reveal>
+                <ThoughtShape shape={item.shape} />
+                <div class="flex items-baseline justify-between gap-3">
+                  <h3 class:list={["text-xl", item.shape === "canvas" ? "text-brand" : "text-foreground"]}>
+                    {item.name}
+                  </h3>
+                  <span class:list={[
+                    "text-sm font-semibold",
+                    item.shape === "canvas" ? "text-brand" : "text-muted-foreground",
+                  ]}>
+                    makes you {item.makes.toLowerCase()}
+                  </span>
+                </div>
+                <p class="text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">{item.takes}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </Container>
+
+      <div class="prose-letter mx-auto mt-14 max-w-2xl px-6">
+        <p>
+          The tree makes you tidy. The thread makes you type. And the agent that
+          does the work in your place makes you review: it takes the trade
+          itself, the pride in it, and everything you would have learned from
+          getting it wrong. What's left is reading what it made.
+        </p>
+        <p class="lead">
+          Archivist, then typist, then proofreader of slop. Three operator's
+          jobs. The tool no longer helps you think: you serve it.
+        </p>
+        <p>
+          None of this is your fault. It's the shape of the tools.
+        </p>
+      </div>
+    </section>
+
+    <hr class="mx-auto max-w-2xl border-border" />
+
+    <div class="prose-letter mx-auto max-w-2xl px-6 py-16 sm:py-24">
+      <section>
+        <h2>The artisan and the apprentice.</h2>
+        <p>
+          An agent is an apprentice. It does work the artisan knows how to do,
+          faster, sometimes better. It has the stamina and the reach a person
+          doesn't: it doesn't tire, and it goes down paths you wouldn't have had
+          the energy to explore.
+        </p>
+        <p>
+          But it has the flaw of a gifted apprentice. It builds cathedrals when
+          a beam would do. It doesn't know what to cut.
+        </p>
+        <blockquote>The AI has the hands. You keep the eye.</blockquote>
+        <p>
+          The eye is the view of the whole, the judgement, and above all knowing
+          what to cut.
+        </p>
+      </section>
+
+      <section>
+        <h2>Craft is knowing what you won't do.</h2>
+        <p>
+          It's true everywhere, and it's what experience looks like. A young
+          doctor orders a thousand tests. An experienced one rules things out,
+          aims, and doesn't lose sleep over it. A beginner athlete does too
+          much, tenses up, runs out of breath. Then they get the hang of it,
+          loosen up, and take control.
+        </p>
+        <p>
+          No autonomous agent will do the 80/20 for you. To know what to give
+          up, you have to hold the whole thing in view.
+        </p>
+      </section>
+
+      <section>
+        <h2>The carpenter's test.</h2>
+        <blockquote>If the AI goes off, can you still do the work?</blockquote>
+        <p>
+          Take the power away from a ship's carpenter and they go back to the
+          chisel and the hand saw. Slower, but they know how. That's the line
+          between a tool and a dependency.
+        </p>
+        <p>
+          Nolënor works without AI. What you put on the canvas can be made,
+          linked, searched and edited by hand. The day you switch the AI off, your work and your
+          understanding of it are still there, on the canvas.
+        </p>
+      </section>
+
+      <section>
+        <h2>The dependency spiral.</h2>
+        <p>
+          An agent that replaces you makes you lose the thread. You no longer
+          understand what was done, so you can't steer it, so you hand over even
+          more.
+        </p>
+        <p>
+          Staying an artisan takes effort: going round again, asking questions,
+          staying in touch with the work. The canvas is what keeps you in touch.
+          You see each step, what the agent touched, where it's looking, what it
+          set down.
+        </p>
+      </section>
+
+      <section>
+        <h2>Space is the bridge.</h2>
+        <blockquote>AI makes the space viable. The space makes AI legible.</blockquote>
+        <p>
+          Canvases used to die. They turned into graveyards of sticky notes the
+          moment there was too much on them to find anything. Search that
+          understands meaning, image reading, PDF and audio transcription change
+          that: the space can grow without rotting.
+        </p>
+        <p>
+          And the space is the right ground for AI. You see what it's looking
+          at, you show it where to look, and what it makes lands next to your
+          own work instead of being buried in a conversation. Like a colleague
+          who knows what you're talking about.
+        </p>
+      </section>
+    </div>
+
+    <section class="pb-16 sm:pb-24" aria-labelledby="gestures">
+      <div class="prose-letter mx-auto max-w-2xl px-6">
+        <h2 id="gestures">Three gestures, given back.</h2>
+      </div>
+      <Container class="mt-10">
+        <ol class="grid gap-4 md:grid-cols-3">
+          {
+            gestures.map((gesture, index) => (
+              <li class="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-6" data-reveal>
+                <p class="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                  <span class="font-serif text-brand">{index + 1}.</span>
+                  <span class="line-through decoration-muted-foreground/50">{gesture.from}</span>
+                  <Icon name="lucide:arrow-right" class="h-3.5 w-3.5 text-brand" />
+                </p>
+                <h3 class="text-2xl text-brand">{gesture.to}</h3>
+                <p class="text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">{gesture.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </Container>
+    </section>
+
+    <section class="pb-16 sm:pb-24" aria-labelledby="workshop">
+      <div class="prose-letter mx-auto max-w-2xl px-6">
+        <h2 id="workshop">A workshop, not a factory.</h2>
+        <p>
+          The current wave goes toward agents that run in the background all
+          night and a human who signs off in the morning. That's the factory,
+          in a clean version. It's the opposite of what we're making.
+        </p>
+      </div>
+
+      <div class="mx-auto mt-10 max-w-3xl px-6" data-reveal>
+        <table class="w-full border-collapse text-left">
+          <caption class="sr-only">The factory compared with the workshop</caption>
+          <thead>
+            <tr class="border-b border-border">
+              <th scope="col" class="w-1/2 pb-3 text-sm font-semibold text-muted-foreground">The factory</th>
+              <th scope="col" class="w-1/2 pb-3 pl-6 text-sm font-semibold text-brand">The workshop</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              contrast.map(([factory, workshop], index) => (
+                <tr class="border-b border-border">
+                  <td class:list={[
+                    "py-4 pr-6 align-top text-muted-foreground/80",
+                    index === contrast.length - 1 && "font-serif text-xl",
+                  ]}>
+                    {factory}
+                  </td>
+                  <td class:list={[
+                    "py-4 pl-6 align-top text-foreground",
+                    index === contrast.length - 1 && "font-serif text-xl text-brand",
+                  ]}>
+                    {workshop}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="prose-letter mx-auto max-w-2xl px-6 pb-16 sm:pb-24">
+      <section>
+        <h2>Not a revolution.</h2>
+        <p>
+          Nolënor isn't another agent, and it isn't trying to replace the tools
+          you already use for documents. It's another way of thinking, one many
+          people haven't met yet. Some won't like it. A few will love it.
+        </p>
+        <p>
+          It's made for people who have a trade (developers, designers,
+          researchers, consultants, strategists) and want to widen it, not hand
+          it off. It isn't for those waiting for AI to give them one.
+        </p>
+        <p>
+          The way we build it follows from all this.{" "}
+          <a href="/principles" class="font-semibold text-brand underline-offset-4 hover:underline">
+            Read our principles
+          </a>.
+        </p>
+      </section>
+    </div>
+
+    <section class="pb-20 sm:pb-28">
+      <Container>
+        <div
+          class="flex flex-col items-center gap-6 rounded-3xl bg-brand px-6 py-16 text-center text-brand-foreground sm:px-16 sm:py-20"
+          data-reveal
+          data-reveal-variant="zoom"
+        >
+          <p class="font-serif text-3xl leading-tight text-balance sm:text-5xl">
+            Cut the AI. Your work is still there.
+            <span class="block opacity-75">So are you.</span>
+          </p>
+          <Button href={APP_SIGNUP_URL} variant="inverse" size="lg" class="mt-4">
+            Open the workshop
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </Button>
+          <p class="text-sm opacity-75">Open beta, free while we build it.</p>
+        </div>
+      </Container>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  /* A letter, not a landing page: one column, the serif for the claims,
+     generous air between the sections and none of the page's card chrome. */
+  .prose-letter :global(section + section) {
+    margin-top: 4.5rem;
+  }
+
+  .prose-letter :global(h2) {
+    margin-bottom: 1.25rem;
+    color: var(--foreground);
+    text-wrap: balance;
+  }
+
+  .prose-letter :global(p) {
+    font-size: 1.075rem;
+    line-height: 1.75;
+    color: var(--muted-foreground);
+    text-wrap: pretty;
+  }
+
+  .prose-letter :global(p + p) {
+    margin-top: 1.1rem;
+  }
+
+  .prose-letter :global(p strong) {
+    color: var(--foreground);
+  }
+
+  .prose-letter :global(.lead) {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  .prose-letter :global(blockquote) {
+    margin: 2rem 0;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--brand);
+    font-family: var(--font-serif);
+    font-size: 1.65rem;
+    line-height: 1.3;
+    color: var(--brand);
+    text-wrap: balance;
+  }
+</style>
