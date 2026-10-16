@@ -23,7 +23,11 @@ export const primaryNavLinks: NavLink[] = [
 
 export const helpLink: NavLink = { label: "Help", href: "/help" };
 
-export const footerProductLinks: NavLink[] = [...primaryNavLinks, helpLink];
+export const footerProductLinks: NavLink[] = [
+  ...primaryNavLinks,
+  { label: "Use cases", href: "/use-cases" },
+  helpLink,
+];
 
 export const footerAboutLinks: NavLink[] = [
   { label: "Manifesto", href: "/manifesto" },

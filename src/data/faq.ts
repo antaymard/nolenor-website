@@ -12,7 +12,7 @@ export const faqEntries: FaqEntry[] = [
   {
     question: "What is Nolënor used for?",
     answer:
-      "Work that needs thinking before it needs output: preparing a project, digging through documents, planning a launch, exploring a topic. You do the work; Nolë fills the gaps you point it to.",
+      "Work that needs thinking before it needs output. A consultant maps a new market for a client. A medical science liaison turns a clinical study into a presentation. A toxicologist checks a packaging against the regulations, substance by substance. A product designer goes from the competition to a working prototype. You do the work; Nolë fills the gaps you point it to.",
   },
   {
     question: "How is Nolënor different from note-taking apps?",
