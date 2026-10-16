@@ -2,7 +2,7 @@
 import Container from "@/components/ui/Container.astro";
 import Button from "@/components/ui/Button.astro";
 import Logo from "@/components/ui/Logo.astro";
-import { primaryNavLinks } from "@/data/nav";
+import { primaryNavLinks, helpLink } from "@/data/nav";
 import { APP_URL, APP_SIGNIN_URL, APP_SIGNUP_URL } from "@/lib/constants";
 
 /*
@@ -46,6 +46,13 @@ import { APP_URL, APP_SIGNIN_URL, APP_SIGNUP_URL } from "@/lib/constants";
       </nav>
 
       <div class="flex items-center gap-4 sm:gap-6">
+        <a
+          href={helpLink.href}
+          class="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-foreground sm:inline-flex"
+          aria-current={Astro.url.pathname.startsWith(helpLink.href) ? "page" : undefined}
+        >
+          {helpLink.label}
+        </a>
         <a
           href={APP_URL}
           class="hidden text-sm font-medium text-foreground/80 transition-colors hover:text-foreground sm:inline-flex"

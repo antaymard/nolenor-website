@@ -1,0 +1,826 @@
+---
+import type { IllustrationName } from "@/data/help";
+
+interface Props {
+  name: IllustrationName;
+  alt: string;
+  class?: string;
+}
+
+const { name, alt, class: className = "" } = Astro.props;
+
+/*
+ * Hand-drawn diagrams of the gestures the help page teaches, in the site's
+ * own palette rather than screenshots.
+ *
+ * Screenshots go stale with every UI tweak and are unreadable at this size;
+ * a diagram only has to show the one thing the paragraph next to it says.
+ * Each one reuses the same vocabulary — a white card with an icon square, a
+ * title bar and grey lines is a node, the brand colour is "what you just
+ * did" — so after the first two, the reader stops decoding them.
+ *
+ * Everything draws from the CSS tokens, so a palette change reaches the
+ * diagrams too. Motion is decorative and only runs when the reader hasn't
+ * asked for reduced motion.
+ */
+---
+
+<div class={`help-canvas relative overflow-hidden rounded-2xl border border-border ${className}`}>
+  <svg viewBox="0 0 480 320" role="img" aria-label={alt} class="block h-auto w-full">
+    {
+      name === "navigate" && (
+        <>
+          <g class="drift">
+            <g class="card">
+              <rect class="n" x="36" y="40" width="140" height="92" rx="12" />
+              <rect class="ic" x="50" y="54" width="18" height="18" rx="5" />
+              <rect class="t" x="76" y="59" width="70" height="8" rx="4" />
+              <rect class="l" x="50" y="88" width="110" height="6" rx="3" />
+              <rect class="l" x="50" y="102" width="88" height="6" rx="3" />
+              <rect class="l" x="50" y="116" width="100" height="6" rx="3" />
+            </g>
+            <g class="card">
+              <rect class="n" x="306" y="30" width="146" height="100" rx="12" />
+              <rect class="ic" x="320" y="44" width="18" height="18" rx="5" />
+              <rect class="t" x="346" y="49" width="64" height="8" rx="4" />
+              <rect class="hl-soft" x="320" y="74" width="118" height="42" rx="7" />
+            </g>
+            <g class="card">
+              <rect class="n" x="58" y="204" width="132" height="82" rx="12" />
+              <rect class="ic" x="72" y="218" width="18" height="18" rx="5" />
+              <rect class="t" x="98" y="223" width="60" height="8" rx="4" />
+              <rect class="l" x="72" y="250" width="100" height="6" rx="3" />
+              <rect class="l" x="72" y="264" width="76" height="6" rx="3" />
+            </g>
+            <g class="card">
+              <rect class="n" x="316" y="192" width="134" height="92" rx="12" />
+              <rect class="ic" x="330" y="206" width="18" height="18" rx="5" />
+              <rect class="t" x="356" y="211" width="58" height="8" rx="4" />
+              <path class="grid" d="M330 238 H436 M330 254 H436 M330 270 H436 M366 232 V276 M402 232 V276" />
+            </g>
+          </g>
+
+          <circle class="orbit" cx="240" cy="152" r="62" />
+          <path class="arrow" d="M231 99 L240 90 L249 99" />
+          <path class="arrow" d="M231 205 L240 214 L249 205" />
+          <path class="arrow" d="M187 143 L178 152 L187 161" />
+          <path class="arrow" d="M293 143 L302 152 L293 161" />
+
+          <g class="card">
+            <rect class="mouse" x="221" y="122" width="38" height="60" rx="19" />
+            <path class="mouse-line" d="M240 122 V147" />
+            <rect class="b wheel" x="236" y="130" width="8" height="14" rx="4" />
+          </g>
+
+          <g class="card">
+            <rect class="n" x="388" y="264" width="68" height="32" rx="16" />
+            <path class="glyph" d="M403 280 H413 M439 275 V285 M434 280 H444" />
+            <path class="divider" d="M422 270 V290" />
+          </g>
+        </>
+      )
+    }
+
+    {
+      name === "create" && (
+        <>
+          <g class="card ghost">
+            <rect class="n" x="34" y="34" width="150" height="96" rx="12" />
+            <rect class="ic" x="48" y="48" width="18" height="18" rx="5" />
+            <rect class="t" x="74" y="53" width="70" height="8" rx="4" />
+            <rect class="l" x="48" y="82" width="116" height="6" rx="3" />
+            <rect class="l" x="48" y="96" width="90" height="6" rx="3" />
+            <rect class="l" x="48" y="110" width="104" height="6" rx="3" />
+          </g>
+
+          <g class="card pop">
+            <rect class="n sel" x="262" y="104" width="190" height="132" rx="12" />
+            <rect class="ic" x="278" y="120" width="20" height="20" rx="5" />
+            <path class="doc" d="M284 126 H292 M284 130 H292 M284 134 H289" />
+            <rect class="t" x="306" y="125" width="96" height="9" rx="4.5" />
+            <rect class="b caret" x="278" y="158" width="2" height="14" rx="1" />
+            <rect class="l" x="278" y="184" width="150" height="6" rx="3" />
+            <rect class="l" x="278" y="198" width="126" height="6" rx="3" />
+            <rect class="l" x="278" y="212" width="140" height="6" rx="3" />
+          </g>
+
+          <path
+            class="cursor"
+            transform="translate(256 96)"
+            d="M0 0 L0 19 L5 14.5 L8.6 22 L11.8 20.5 L8.3 13.2 L14.6 13.2 Z"
+          />
+
+          {[
+            ["T", "Title"],
+            ["D", "Doc"],
+            ["A", "Table"],
+            ["I", "Image"],
+            ["L", "Link"],
+          ].map(([key, label], i) => (
+            <g class={key === "D" ? "key key-active press" : "key"}>
+              <rect class="key-base" x={34 + i * 50} y="245" width="40" height="40" rx="9" />
+              <rect class="key-top" x={34 + i * 50} y="242" width="40" height="40" rx="9" />
+              <text class="key-label" x={54 + i * 50} y="268" text-anchor="middle">
+                {key}
+              </text>
+              <text class="caption" x={54 + i * 50} y="304" text-anchor="middle">
+                {label}
+              </text>
+            </g>
+          ))}
+        </>
+      )
+    }
+
+    {
+      name === "open" && (
+        <>
+          <path class="beam" d="M150 198 L178 32 M150 280 L178 286" />
+
+          <g class="card">
+            <rect class="n sel" x="30" y="198" width="120" height="82" rx="12" />
+            <rect class="ic" x="44" y="212" width="16" height="16" rx="4" />
+            <rect class="t" x="66" y="216" width="56" height="7" rx="3.5" />
+            <rect class="l" x="44" y="244" width="90" height="5" rx="2.5" />
+            <rect class="l" x="44" y="256" width="70" height="5" rx="2.5" />
+          </g>
+          <circle class="ripple" cx="90" cy="239" r="12" />
+          <circle class="ripple ripple-late" cx="90" cy="239" r="12" />
+
+          <g class="card">
+            <rect class="n" x="178" y="30" width="272" height="256" rx="14" />
+            <path class="divider" d="M178 66 H450" />
+            <rect class="ic" x="194" y="40" width="16" height="16" rx="4" />
+            <rect class="t" x="218" y="44" width="92" height="8" rx="4" />
+            <path class="glyph" d="M398 48 H406 M418 44 V52 M414 48 H422 M430 44 L438 52 M438 44 L430 52" />
+            <rect class="t" x="198" y="86" width="150" height="12" rx="6" />
+            <rect class="l" x="198" y="112" width="228" height="7" rx="3.5" />
+            <rect class="l" x="198" y="126" width="206" height="7" rx="3.5" />
+            <rect class="l" x="198" y="140" width="218" height="7" rx="3.5" />
+            <rect class="l" x="198" y="154" width="146" height="7" rx="3.5" />
+            <rect class="hl-soft" x="198" y="174" width="232" height="44" rx="8" />
+            <rect class="hl-line" x="212" y="188" width="150" height="6" rx="3" />
+            <rect class="hl-line" x="212" y="200" width="104" height="6" rx="3" />
+            <rect class="l" x="198" y="236" width="200" height="7" rx="3.5" />
+            <rect class="l" x="198" y="250" width="170" height="7" rx="3.5" />
+          </g>
+        </>
+      )
+    }
+
+    {
+      name === "connect" && (
+        <>
+          <path class="edge" d="M174 86 C 236 86, 240 80, 302 80" />
+          <path class="edge" d="M104 128 C 104 196, 128 248, 166 248" />
+          <path class="edge edge-dashed flow" d="M375 130 C 375 196, 352 248, 318 248" />
+          <path class="edge-head" d="M326 242 L316 248 L326 254" />
+
+          <g class="card">
+            <rect class="n" x="34" y="44" width="140" height="84" rx="12" />
+            <rect class="ic" x="48" y="58" width="18" height="18" rx="5" />
+            <rect class="t" x="74" y="63" width="66" height="8" rx="4" />
+            <rect class="l" x="48" y="92" width="106" height="6" rx="3" />
+            <rect class="l" x="48" y="106" width="80" height="6" rx="3" />
+          </g>
+          <g class="card">
+            <rect class="n" x="302" y="32" width="146" height="98" rx="12" />
+            <rect class="ic" x="316" y="46" width="18" height="18" rx="5" />
+            <rect class="t" x="342" y="51" width="70" height="8" rx="4" />
+            <rect class="l" x="316" y="80" width="114" height="6" rx="3" />
+            <rect class="l" x="316" y="94" width="96" height="6" rx="3" />
+            <rect class="l" x="316" y="108" width="104" height="6" rx="3" />
+          </g>
+          <g class="card">
+            <rect class="n sel" x="166" y="206" width="152" height="84" rx="12" />
+            <rect class="ic" x="180" y="220" width="18" height="18" rx="5" />
+            <rect class="t" x="206" y="225" width="70" height="8" rx="4" />
+            <rect class="l" x="180" y="254" width="118" height="6" rx="3" />
+            <rect class="l" x="180" y="268" width="86" height="6" rx="3" />
+          </g>
+
+          <circle class="handle" cx="174" cy="86" r="4.5" />
+          <circle class="handle" cx="302" cy="80" r="4.5" />
+          <circle class="handle" cx="104" cy="128" r="4.5" />
+          <circle class="handle" cx="375" cy="130" r="4.5" />
+
+          <g class="card">
+            <rect class="pill" x="204" y="71" width="70" height="24" rx="12" />
+            <text class="pill-label" x="239" y="87" text-anchor="middle">supports</text>
+          </g>
+        </>
+      )
+    }
+
+    {
+      name === "context" && (
+        <>
+          <path class="edge edge-dashed flow" d="M190 88 C 232 88, 234 236, 274 236" />
+
+          <rect class="halo" x="26" y="36" width="168" height="104" rx="15" />
+          <g class="card">
+            <rect class="n sel" x="30" y="40" width="160" height="96" rx="12" />
+            <rect class="ic" x="44" y="54" width="18" height="18" rx="5" />
+            <text class="label" x="70" y="67">Market study</text>
+            <rect class="l" x="44" y="88" width="124" height="6" rx="3" />
+            <rect class="l" x="44" y="102" width="100" height="6" rx="3" />
+            <rect class="l" x="44" y="116" width="112" height="6" rx="3" />
+          </g>
+          <g class="card">
+            <rect class="n" x="30" y="184" width="160" height="96" rx="12" />
+            <rect class="ic" x="44" y="198" width="18" height="18" rx="5" />
+            <text class="label" x="70" y="211">Interviews</text>
+            <rect class="l" x="44" y="232" width="118" height="6" rx="3" />
+            <rect class="l" x="44" y="246" width="96" height="6" rx="3" />
+          </g>
+
+          <path
+            class="cursor"
+            transform="translate(150 104)"
+            d="M0 0 L0 19 L5 14.5 L8.6 22 L11.8 20.5 L8.3 13.2 L14.6 13.2 Z"
+          />
+          <g>
+            <rect class="tag" x="168" y="126" width="72" height="22" rx="11" />
+            <text class="tag-label" x="204" y="141" text-anchor="middle">Alt + click</text>
+          </g>
+
+          <g class="card">
+            <rect class="n" x="250" y="24" width="206" height="272" rx="14" />
+            <circle class="b" cx="272" cy="46" r="8" />
+            <text class="label" x="288" y="50">Nolë</text>
+            <rect class="bubble" x="324" y="68" width="116" height="30" rx="12" />
+            <rect class="bubble-line" x="336" y="80" width="88" height="6" rx="3" />
+            <rect class="l" x="266" y="114" width="164" height="6" rx="3" />
+            <rect class="l" x="266" y="128" width="140" height="6" rx="3" />
+            <rect class="l" x="266" y="142" width="152" height="6" rx="3" />
+
+            <rect class="composer" x="262" y="214" width="182" height="70" rx="12" />
+            <rect class="chip" x="272" y="225" width="98" height="22" rx="11" />
+            <rect class="b" x="280" y="232" width="8" height="8" rx="2" />
+            <text class="chip-label" x="294" y="240">Market study</text>
+            <text class="label" x="274" y="270">@Inter</text>
+            <rect class="b caret" x="312" y="259" width="1.6" height="14" rx="0.8" />
+          </g>
+
+          <g class="card">
+            <rect class="n" x="292" y="160" width="140" height="46" rx="10" />
+            <rect class="chip" x="298" y="166" width="128" height="18" rx="6" />
+            <text class="chip-label" x="306" y="179">Interviews</text>
+            <rect class="l" x="306" y="192" width="82" height="5" rx="2.5" />
+          </g>
+        </>
+      )
+    }
+
+    {
+      name === "tasks" && (
+        <>
+          <g class="card ghost">
+            <rect class="n" x="34" y="28" width="132" height="80" rx="12" />
+            <rect class="ic" x="48" y="42" width="16" height="16" rx="4" />
+            <rect class="t" x="72" y="46" width="60" height="7" rx="3.5" />
+            <rect class="l" x="48" y="72" width="100" height="6" rx="3" />
+            <rect class="l" x="48" y="86" width="74" height="6" rx="3" />
+          </g>
+          <g class="card ghost">
+            <rect class="n" x="182" y="40" width="120" height="68" rx="12" />
+            <rect class="ic" x="196" y="54" width="16" height="16" rx="4" />
+            <rect class="t" x="220" y="58" width="54" height="7" rx="3.5" />
+            <rect class="l" x="196" y="84" width="88" height="6" rx="3" />
+          </g>
+          <g class="card pop pop-slow">
+            <rect class="n sel" x="322" y="26" width="128" height="88" rx="12" />
+            <rect class="ic" x="336" y="40" width="16" height="16" rx="4" />
+            <path class="spark" d="M344 43 L345.6 46.4 L349 48 L345.6 49.6 L344 53 L342.4 49.6 L339 48 L342.4 46.4 Z" />
+            <rect class="t" x="360" y="44" width="60" height="7" rx="3.5" />
+            <rect class="bar" x="336" y="84" width="14" height="18" rx="3" />
+            <rect class="bar" x="356" y="72" width="14" height="30" rx="3" />
+            <rect class="bar bar-strong" x="376" y="64" width="14" height="38" rx="3" />
+            <rect class="bar" x="396" y="78" width="14" height="24" rx="3" />
+          </g>
+
+          <g class="card">
+            <rect class="n" x="90" y="128" width="300" height="30" rx="15" />
+            <circle class="b" cx="108" cy="143" r="8" />
+            <path class="check" d="M104 143 L107 146 L112.5 140" />
+            <rect class="t" x="124" y="139" width="150" height="7" rx="3.5" />
+            <text class="caption" x="372" y="147" text-anchor="end">Done</text>
+          </g>
+          <g class="card">
+            <rect class="n" x="90" y="166" width="300" height="30" rx="15" />
+            <circle class="track" cx="108" cy="181" r="7" />
+            <path class="spin" d="M108 174 A 7 7 0 0 1 115 181" />
+            <rect class="t" x="124" y="177" width="120" height="7" rx="3.5" />
+            <text class="caption" x="372" y="185" text-anchor="end">Working</text>
+          </g>
+          <g class="card">
+            <rect class="n" x="90" y="204" width="300" height="30" rx="15" />
+            <circle class="dot" cx="102" cy="219" r="2.2" />
+            <circle class="dot" cx="108" cy="219" r="2.2" />
+            <circle class="dot" cx="114" cy="219" r="2.2" />
+            <rect class="t" x="124" y="215" width="96" height="7" rx="3.5" />
+            <text class="caption" x="372" y="223" text-anchor="end">Queued</text>
+          </g>
+
+          <g class="card">
+            <rect class="n omnibar" x="56" y="250" width="368" height="46" rx="23" />
+            <text class="placeholder" x="80" y="277">Ask Nolë anything, @ to mention a node</text>
+            <circle class="b" cx="400" cy="273" r="15" />
+            <path class="send" d="M400 280 V266 M394 272 L400 266 L406 272" />
+          </g>
+        </>
+      )
+    }
+
+    {
+      name === "history" && (
+        <>
+          <g class="card">
+            <rect class="n" x="56" y="22" width="368" height="276" rx="14" />
+            <text class="heading" x="80" y="54">Version history</text>
+            <path class="divider" d="M56 70 H424" />
+            <path class="rail" d="M96 96 V280" />
+
+            {[
+              { y: 96, who: "you", name: "You", what: "added a table", when: "Today, 16:20" },
+              { y: 146, who: "nole", name: "Nolë", what: "rewrote the intro", when: "Today, 15:02", active: true },
+              { y: 196, who: "you", name: "You", what: "edited 3 paragraphs", when: "Yesterday" },
+              { y: 246, who: "nole", name: "Nolë", what: "created the document", when: "Last week" },
+            ].map((entry) => (
+              <g>
+                {entry.active && <rect class="row-active" x="114" y={entry.y - 18} width="294" height="44" rx="10" />}
+                <circle class={entry.who === "nole" ? "b" : "avatar-you"} cx="96" cy={entry.y + 4} r="11" />
+                <text
+                  class={entry.who === "nole" ? "avatar-label" : "avatar-label avatar-label-you"}
+                  x="96"
+                  y={entry.y + 8}
+                  text-anchor="middle"
+                >
+                  {entry.name[0]}
+                </text>
+                <text class="label" x="126" y={entry.y + 1}>
+                  <tspan class="strong">{entry.name}</tspan> {entry.what}
+                </text>
+                <text class="caption" x="126" y={entry.y + 17}>{entry.when}</text>
+                {entry.active && (
+                  <g>
+                    <rect class="b" x="338" y={entry.y - 7} width="60" height="22" rx="11" />
+                    <text class="restore" x="368" y={entry.y + 8} text-anchor="middle">Restore</text>
+                  </g>
+                )}
+              </g>
+            ))}
+          </g>
+        </>
+      )
+    }
+  </svg>
+</div>
+
+<style>
+  .help-canvas {
+    background-color: color-mix(in srgb, var(--background) 45%, #ffffff);
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--foreground) 16%, transparent) 1px,
+      transparent 1.3px
+    );
+    background-size: 18px 18px;
+    background-position: 9px 9px;
+  }
+
+  svg {
+    font-family: var(--font-sans);
+  }
+
+  .card {
+    filter: drop-shadow(0 6px 14px rgb(47 54 83 / 0.07));
+  }
+
+  .ghost {
+    opacity: 0.45;
+  }
+
+  .n {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .sel {
+    stroke: var(--brand);
+    stroke-width: 2;
+  }
+
+  .halo {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 6;
+    opacity: 0.14;
+  }
+
+  .ic {
+    fill: color-mix(in srgb, var(--brand) 16%, #ffffff);
+  }
+
+  .t {
+    fill: var(--foreground);
+    opacity: 0.78;
+  }
+
+  .l {
+    fill: var(--muted);
+  }
+
+  .b {
+    fill: var(--brand);
+  }
+
+  .hl-soft {
+    fill: color-mix(in srgb, var(--highlight) 30%, #ffffff);
+  }
+
+  .hl-line {
+    fill: color-mix(in srgb, var(--highlight) 70%, #ffffff);
+  }
+
+  .grid,
+  .divider,
+  .rail {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .rail {
+    stroke-width: 2;
+  }
+
+  .glyph,
+  .doc {
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .doc {
+    stroke: var(--brand);
+    stroke-width: 1.5;
+  }
+
+  .orbit {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 6;
+    opacity: 0.35;
+  }
+
+  .arrow {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .mouse {
+    fill: var(--surface);
+    stroke: var(--foreground);
+    stroke-width: 2;
+  }
+
+  .mouse-line {
+    stroke: var(--foreground);
+    stroke-width: 1.5;
+  }
+
+  .cursor {
+    fill: var(--foreground);
+    stroke: #ffffff;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .key-base {
+    fill: var(--border);
+  }
+
+  .key-top {
+    fill: var(--surface);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .key-label {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    fill: var(--foreground);
+  }
+
+  .key-active .key-top {
+    fill: var(--brand);
+    stroke: var(--brand);
+  }
+
+  .key-active .key-label {
+    fill: var(--brand-foreground);
+  }
+
+  .caption {
+    font-size: 10.5px;
+    font-weight: 600;
+    fill: var(--muted-foreground);
+  }
+
+  .label {
+    font-size: 11.5px;
+    font-weight: 600;
+    fill: var(--foreground);
+  }
+
+  .strong {
+    font-weight: 800;
+  }
+
+  .heading {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    fill: var(--foreground);
+  }
+
+  .beam {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 5;
+    opacity: 0.45;
+  }
+
+  .ripple {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2;
+    opacity: 0;
+  }
+
+  .edge {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2;
+    opacity: 0.7;
+  }
+
+  .edge-dashed {
+    stroke-dasharray: 6 6;
+  }
+
+  .edge-head {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.7;
+  }
+
+  .handle {
+    fill: var(--surface);
+    stroke: var(--brand);
+    stroke-width: 2;
+  }
+
+  .pill {
+    fill: var(--surface);
+    stroke: var(--brand);
+    stroke-width: 1.5;
+  }
+
+  .pill-label,
+  .chip-label {
+    font-size: 11px;
+    font-weight: 700;
+    fill: var(--brand);
+  }
+
+  .chip-label {
+    font-size: 10px;
+  }
+
+  .chip,
+  .bubble,
+  .row-active {
+    fill: color-mix(in srgb, var(--brand) 14%, #ffffff);
+  }
+
+  .bubble-line {
+    fill: color-mix(in srgb, var(--brand) 35%, #ffffff);
+  }
+
+  .composer {
+    fill: var(--background);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+
+  .tag {
+    fill: var(--foreground);
+  }
+
+  .tag-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    fill: var(--brand-foreground);
+  }
+
+  .spark {
+    fill: var(--brand);
+  }
+
+  .bar {
+    fill: color-mix(in srgb, var(--brand) 30%, #ffffff);
+  }
+
+  .bar-strong {
+    fill: var(--brand);
+  }
+
+  .check,
+  .send {
+    fill: none;
+    stroke: var(--brand-foreground);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .track {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 2.5;
+  }
+
+  .spin {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    transform-box: view-box;
+    transform-origin: 108px 181px;
+  }
+
+  .dot {
+    fill: var(--muted-foreground);
+    opacity: 0.6;
+  }
+
+  .omnibar {
+    stroke-width: 1.5;
+  }
+
+  .placeholder {
+    font-size: 12.5px;
+    fill: var(--muted-foreground);
+  }
+
+  .avatar-you {
+    fill: var(--highlight);
+  }
+
+  .avatar-label {
+    font-size: 11px;
+    font-weight: 800;
+    fill: var(--brand-foreground);
+  }
+
+  .avatar-label-you {
+    fill: var(--foreground);
+  }
+
+  .restore {
+    font-size: 10.5px;
+    font-weight: 700;
+    fill: var(--brand-foreground);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .drift {
+      animation: drift 10s ease-in-out infinite alternate;
+    }
+
+    .wheel {
+      animation: blink 2.4s ease-in-out infinite;
+    }
+
+    .pop {
+      transform-box: fill-box;
+      transform-origin: 0 0;
+      animation: pop 3.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    .pop-slow {
+      animation-duration: 5s;
+    }
+
+    .press {
+      animation: press 3.6s ease-out infinite;
+    }
+
+    .caret {
+      animation: blink 1.1s steps(1) infinite;
+    }
+
+    .ripple {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: ripple 2.4s ease-out infinite;
+    }
+
+    .ripple-late {
+      animation-delay: 0.25s;
+    }
+
+    .flow {
+      animation: flow 1.4s linear infinite;
+    }
+
+    .spin {
+      animation: spin 0.9s linear infinite;
+    }
+  }
+
+  @keyframes drift {
+    from {
+      transform: translate(-7px, -4px);
+    }
+    to {
+      transform: translate(7px, 4px);
+    }
+  }
+
+  @keyframes pop {
+    0%,
+    8% {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    18%,
+    88% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes press {
+    0%,
+    2% {
+      transform: translateY(0);
+    }
+    5% {
+      transform: translateY(3px);
+    }
+    10%,
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    51%,
+    100% {
+      opacity: 0.25;
+    }
+  }
+
+  @keyframes ripple {
+    0% {
+      opacity: 0.6;
+      transform: scale(0.6);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(2.6);
+    }
+  }
+
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

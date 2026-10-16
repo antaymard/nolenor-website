@@ -1,0 +1,90 @@
+---
+import type { KeyCombo } from "@/data/help";
+
+interface Props {
+  combo: KeyCombo;
+  class?: string;
+}
+
+const { combo, class: className = "" } = Astro.props;
+
+/*
+ * One key combination, e.g. ["Mod", "K"].
+ *
+ * Platform keys render both labels and let CSS pick one from
+ * html[data-os] (set by the help page's OS switch): no JS means Windows
+ * labels, never a blank. Mouse gestures are words, not keycaps, so they
+ * get a quieter, borderless style — a keycap reading "double-click"
+ * would be pretending.
+ */
+const platformKeys: Record<string, { win: string; mac: string; label: string }> = {
+  Mod: { win: "Ctrl", mac: "⌘", label: "Control or Command" },
+  Alt: { win: "Alt", mac: "⌥", label: "Alt or Option" },
+  Ctrl: { win: "Ctrl", mac: "⌃", label: "Control" },
+  Shift: { win: "Shift", mac: "⇧", label: "Shift" },
+};
+
+const gestures: Record<string, string> = {
+  scroll: "scroll",
+  click: "click",
+  "double-click": "double-click",
+  "middle-drag": "middle-click + drag",
+};
+---
+
+<span class={`kbd-combo inline-flex items-center gap-1 align-middle ${className}`}>
+  {
+    combo.map((key, index) => (
+      <>
+        {index > 0 && <span class="text-xs text-muted-foreground/70" aria-hidden="true">+</span>}
+        {platformKeys[key] ? (
+          <kbd class="kbd" aria-label={platformKeys[key].label}>
+            <span data-key-win>{platformKeys[key].win}</span>
+            <span data-key-mac>{platformKeys[key].mac}</span>
+          </kbd>
+        ) : gestures[key] ? (
+          <span class="kbd-gesture">{gestures[key]}</span>
+        ) : (
+          <kbd class="kbd">{key}</kbd>
+        )}
+      </>
+    ))
+  }
+</span>
+
+<style>
+  .kbd {
+    display: inline-flex;
+    min-width: 1.75rem;
+    height: 1.75rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.45rem;
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  [data-key-mac],
+  :global(html[data-os="mac"]) [data-key-win] {
+    display: none;
+  }
+
+  :global(html[data-os="mac"]) [data-key-mac] {
+    display: inline;
+  }
+
+  .kbd-gesture {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+</style>
