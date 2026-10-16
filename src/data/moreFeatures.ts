@@ -84,8 +84,13 @@ export const featureNotes: FeatureNote[] = [
       "Save viewpoints as you work and play them back. The canvas becomes the deck.",
   },
   {
-    title: "Your thinking stays yours.",
+    title: "Works without AI",
     description:
-      "Export everything in open formats (markdown, JSON, CSV), whenever you want. No lock-in. No fear of losing the work you built.",
+      "Switch the AI off and the canvas still works. Your work is still there. So are you.",
+  },
+  {
+    title: "Your work stays yours.",
+    description:
+      "Export everything in open formats (Markdown, JSON, CSV), whenever you want. No lock-in.",
   },
 ];

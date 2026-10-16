@@ -15,19 +15,19 @@ export interface AudienceList {
 export const audienceFit: AudienceList = {
   title: "It's for you if you",
   items: [
-    "have a trade (consulting, strategy, research, science, product, design, engineering) and want AI to widen it, not do it for you",
-    "work on projects where sources pile up and ideas keep moving",
-    "want to see what the AI is looking at, and point it elsewhere when it's wrong",
-    "would rather understand every step than receive a black-box answer",
+    "have a craft and want AI to amplify it, not take it over",
+    "think in loose piles before you think in folders",
+    "want to show the AI what you mean, not just describe it",
+    "want to understand every step, and be able to take it back",
   ],
 };
 
 export const audienceMisfit: AudienceList = {
   title: "It may not be for you if you",
   items: [
-    "want AI to deliver a finished result without you in the loop",
-    "are looking for an autopilot that makes the decisions for you",
-    "mostly ask quick, one-off questions: a chat does that well",
-    "want everything filed in folders inside folders",
+    "want AI to hand you a finished result without you in the loop",
+    "are looking for an army of agents that works through the night",
+    "only need a quick chat for one-off questions",
+    "prefer to file everything in folders and sub-folders",
   ],
 };
