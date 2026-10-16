@@ -8,10 +8,10 @@ import { flagship, vignettes } from "@/data/useCases";
 /*
  * The home page's one concrete scene, right before "Is it for you?": a
  * reader deciding whether they're the audience gets to see a person at
- * work first. The full scenario and the other trades live on /use-cases;
+ * work first. The full scenario and the other crafts live on /use-cases;
  * this only has to make the split visible — your nodes, Nolë's nodes.
  */
-const trades = [flagship.trade, ...vignettes.map((vignette) => vignette.trade)];
+const crafts = [flagship.craft, ...vignettes.map((vignette) => vignette.craft)];
 ---
 
 <section id="use-cases" class="py-20 sm:py-28">
@@ -25,10 +25,10 @@ const trades = [flagship.trade, ...vignettes.map((vignette) => vignette.trade)];
         from its source. At the end, the map is theirs, and they can explain
         every part of it.
       </p>
-      <ul class="flex flex-wrap gap-2" aria-label="Trades shown in the use cases">
+      <ul class="flex flex-wrap gap-2" aria-label="Crafts shown in the use cases">
         {
-          trades.map((trade) => (
-            <li class="rounded-full border border-border bg-surface px-3 py-1 text-sm text-foreground/80">{trade}</li>
+          crafts.map((craft) => (
+            <li class="rounded-full border border-border bg-surface px-3 py-1 text-sm text-foreground/80">{craft}</li>
           ))
         }
       </ul>
@@ -36,7 +36,7 @@ const trades = [flagship.trade, ...vignettes.map((vignette) => vignette.trade)];
         href="/use-cases"
         class="group inline-flex w-fit items-center gap-1.5 font-semibold text-brand underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
       >
-        See how each trade works with Nolë
+        See how each craft works with Nolë
         <Icon name="lucide:arrow-right" class="h-4 w-4 transition-transform duration-200 motion-safe:group-hover:translate-x-0.5" />
       </a>
     </div>

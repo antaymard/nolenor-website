@@ -21,16 +21,16 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
 
 <Layout
   title={`Use cases — ${SITE_NAME}`}
-  description="How people with a trade work with Nolënor: a consultant mapping a market, a medical science liaison, a toxicologist, a product designer. You lead, Nolë does the legwork, you check."
+  description="How people with a craft work with Nolënor: a consultant mapping a market, a medical science liaison, a toxicologist, a product designer. You lead, Nolë does the legwork, you check."
 >
   <section class="pt-14 pb-14 sm:pt-24 sm:pb-20">
     <Container class="flex flex-col items-center gap-6 text-center">
       <SectionLabel>Use cases</SectionLabel>
       <h1 class="max-w-4xl font-serif text-4xl leading-[1.15] text-balance text-foreground sm:text-5xl lg:text-6xl">
-        People with a trade, and the apprentice beside them.
+        People with a craft, and the apprentice beside them.
       </h1>
       <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-        Four trades, one way of working: you lead, Nolë does the legwork, you
+        Four crafts, one way of working: you lead, Nolë does the legwork, you
         check. The work stays yours.
       </p>
       <p class="max-w-xl text-sm text-pretty text-muted-foreground/80">
@@ -47,7 +47,7 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
       <div class="flex flex-col gap-4" data-reveal>
         <p class="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-sm font-semibold text-foreground/80">
           <Icon name="lucide:briefcase" class="h-4 w-4 text-brand" />
-          {flagship.trade}
+          {flagship.craft}
         </p>
         <h2 id="flagship-title" class="text-balance text-foreground">{flagship.title}</h2>
         <p class="text-lg leading-relaxed text-pretty text-muted-foreground">{flagship.brief}</p>
@@ -105,10 +105,10 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
 
   <hr class="border-border" />
 
-  <section class="py-16 sm:py-24" aria-labelledby="trades-title">
+  <section class="py-16 sm:py-24" aria-labelledby="crafts-title">
     <Container class="flex flex-col items-center gap-4 text-center">
-      <SectionLabel>Other trades</SectionLabel>
-      <h2 id="trades-title" class="max-w-2xl text-balance text-foreground">Same bench, different work.</h2>
+      <SectionLabel>Other crafts</SectionLabel>
+      <h2 id="crafts-title" class="max-w-2xl text-balance text-foreground">Same bench, different work.</h2>
       <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
         Nolë does the reading, the searching and the first draft. At every step,
         the call is yours.
@@ -124,7 +124,7 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
                 <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-brand">
                   <Icon name={vignette.icon} class="h-5 w-5" />
                 </span>
-                <h3 class="text-foreground">{vignette.trade}</h3>
+                <h3 class="text-foreground">{vignette.craft}</h3>
                 <p class="text-[0.95rem] text-pretty text-muted-foreground">{vignette.brief}</p>
               </div>
 

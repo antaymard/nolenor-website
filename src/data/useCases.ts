@@ -30,7 +30,7 @@ export interface FlagshipStep {
 }
 
 export interface Vignette {
-  trade: string;
+  craft: string;
   icon: string;
   brief: string;
   steps: { nole: string; check: string }[];
@@ -38,7 +38,7 @@ export interface Vignette {
 }
 
 export const flagship = {
-  trade: "Independent consultant",
+  craft: "Independent consultant",
   title: "Getting to grips with a market in one sitting",
   brief:
     "A new client in fintech. Before the first workshop, you need to understand the Buy Now, Pay Later landscape in Europe: who the players are, how they make money, what regulation is coming.",
@@ -69,7 +69,7 @@ export const flagship = {
 
 export const vignettes: Vignette[] = [
   {
-    trade: "Medical science liaison",
+    craft: "Medical science liaison",
     icon: "lucide:flask-conical",
     brief: "Turning a new clinical study into a presentation for doctors.",
     steps: [
@@ -89,7 +89,7 @@ export const vignettes: Vignette[] = [
     keeps: "Next time a similar study comes out, the canvas is already there to start from.",
   },
   {
-    trade: "Packaging toxicologist",
+    craft: "Packaging toxicologist",
     icon: "lucide:shield-check",
     brief: "Assessing whether a food packaging is safe, substance by substance.",
     steps: [
@@ -109,7 +109,7 @@ export const vignettes: Vignette[] = [
     keeps: "Every status in the report points back to the source it came from.",
   },
   {
-    trade: "Product designer or founder",
+    craft: "Product designer or founder",
     icon: "lucide:pen-tool",
     brief: "Going from a look at the competition to a prototype you can click.",
     steps: [
