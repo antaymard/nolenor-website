@@ -18,12 +18,10 @@ export const APP_API_TOKENS_URL = `${APP_URL}/settings/api-tokens`;
 // CORS allow-list below once the final marketing domain is chosen.
 export const SITE_URL = "https://nolenor.com";
 
-// PLACEHOLDER — swap <deployment> for the real Convex deployment name.
-// Convex serves HTTP actions (the MCP server, the REST API, the wishlist)
-// on the deployment's .convex.site domain. The /developers page prints it
-// in every snippet, and tells readers the exact URL is also shown in the
-// app when they create a token.
-export const API_ORIGIN = "https://<deployment>.convex.site";
+// Production Convex deployment. Convex serves HTTP actions (the MCP
+// server, the REST API, the wishlist) on its .convex.site domain. The
+// /developers page prints it in every snippet.
+export const API_ORIGIN = "https://amicable-kudu-722.convex.site";
 export const MCP_ENDPOINT = `${API_ORIGIN}/mcp`;
 export const REST_API_BASE = `${API_ORIGIN}/api/v1`;
 
