@@ -27,6 +27,7 @@ export const footerProductLinks: NavLink[] = [
   ...primaryNavLinks,
   { label: "Use cases", href: "/use-cases" },
   helpLink,
+  { label: "Developers", href: "/developers" },
 ];
 
 export const footerAboutLinks: NavLink[] = [

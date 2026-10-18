@@ -11,11 +11,20 @@ export const APP_URL = "https://app.nolenor.com";
 export const APP_SIGNIN_URL = `${APP_URL}/signin`;
 export const APP_SIGNUP_URL = `${APP_URL}/signin?mode=signup`;
 
+// Verified real route on the product app: src/routes/settings/api-tokens.tsx
+export const APP_API_TOKENS_URL = `${APP_URL}/settings/api-tokens`;
+
 // PLACEHOLDER — must match astro.config.mjs `site` and the wishlist
 // CORS allow-list below once the final marketing domain is chosen.
 export const SITE_URL = "https://nolenor.com";
 
-// PLACEHOLDER — swap <deployment> for the real Convex deployment name.
+// Production Convex deployment. Convex serves HTTP actions (the MCP
+// server, the REST API, the wishlist) on its .convex.site domain. The
+// /developers page prints it in every snippet.
+export const API_ORIGIN = "https://amicable-kudu-722.convex.site";
+export const MCP_ENDPOINT = `${API_ORIGIN}/mcp`;
+export const REST_API_BASE = `${API_ORIGIN}/api/v1`;
+
 // Contract (verified from convex/wishlist.ts + convex/http.ts in the
 // product repo): POST only, JSON body { email: string; referral?: string }.
 //
@@ -27,8 +36,7 @@ export const SITE_URL = "https://nolenor.com";
 // expected, not a bug. It only works once deployed under an
 // allow-listed origin. See src/scripts/wishlist-form.ts for the
 // graceful-failure handling this requires.
-export const WISHLIST_ENDPOINT =
-  "https://<deployment>.convex.site/wishlist/subscribe";
+export const WISHLIST_ENDPOINT = `${API_ORIGIN}/wishlist/subscribe`;
 
 // Verified public via the GitHub API.
 export const GITHUB_REPO_URL = "https://github.com/antaymard/nolenor";
