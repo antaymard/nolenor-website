@@ -4,7 +4,8 @@
  * Every gesture and shortcut below was checked against the product repo
  * (antaymard/nolenor) rather than written from memory — the bindings live
  * in src/hooks/useCreateNodeHotkeys.ts, src/components/canvas/CanvasFlow.tsx,
- * src/components/windows/WindowsContainer.tsx and the welcome modal's
+ * src/components/windows/WindowsContainer.tsx,
+ * src/hooks/useToggleCanvasUiHotkey.ts and the welcome modal's
  * pointerSteps(). If a binding changes there, it changes here.
  *
  * Keys are written as tokens, not as labels: "Mod" and "Alt" are rendered
@@ -227,6 +228,8 @@ export const shortcutGroups: ShortcutGroup[] = [
       { action: "Copy and paste nodes", keys: [["Mod", "C"], ["Mod", "V"]], joiner: "then" },
       { action: "Draw a frame", keys: [["F"]] },
       { action: "Bookmarks", keys: [["B"]] },
+      // The key under Esc, whatever the layout: ² on AZERTY, ` on QWERTY.
+      { action: "Hide the interface", keys: [["²"], ["`"], ["Mod", "\\"]] },
     ],
   },
   {
