@@ -1,13 +1,10 @@
 ---
-import { Icon } from "astro-icon/components";
-import Container from "@/components/ui/Container.astro";
-import Button from "@/components/ui/Button.astro";
-import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
+import { APP_SIGNUP_URL } from "@/lib/constants";
 
 /*
- * The one loud CTA on the page, and the only place the brand colour is
- * used as a large fill — the hero's palette turned inside out, so the
- * page opens on cream and closes on purple.
+ * The close: the one place the brand colour is used as a field, edge to
+ * edge, so the page opens on cream and closes on indigo. The line on the
+ * left, the way in on the right.
  *
  * The beta line is not a sales flourish: it is the same claim the FAQ
  * makes ("open beta and free to use while we build it with early users"),
@@ -15,24 +12,64 @@ import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
  */
 ---
 
-<section class="pb-20 sm:pb-28">
-  <Container>
-    <div
-      class="flex flex-col items-center gap-6 rounded-3xl bg-brand px-6 py-16 text-center text-brand-foreground sm:px-16 sm:py-20"
-      data-reveal
-      data-reveal-variant="zoom"
-    >
-      <h2 class="max-w-2xl text-balance">Let's not be operators. Let's stay artisans.</h2>
+<section class="close" aria-labelledby="close-title">
+  <div class="wrap close__grid">
+    <h2 id="close-title">Let’s not be operators. Let’s stay artisans.</h2>
 
-      <p class="max-w-xl text-lg text-pretty">
+    <div class="close__act">
+      <p>
         Nolënor is in open beta and free to use while we build it with early
         users. The workshop is open.
       </p>
-
-      <Button href={APP_SIGNUP_URL} variant="inverse" size="lg" class="mt-2">
-        Try it for free
-        <Icon name="lucide:arrow-right" class="h-4 w-4" />
-      </Button>
+      <a href={APP_SIGNUP_URL} class="btn btn--inverse" rel="noopener noreferrer">Try it for free</a>
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .close {
+    padding-block: var(--section-gap-s);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  .close__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: end;
+  }
+
+  .close h2 {
+    max-width: 16ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-display-s);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-accent-ink);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .close__act {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-lg);
+  }
+
+  .close__act p {
+    max-width: 38ch;
+    font-size: var(--text-lg);
+    line-height: 1.55;
+    color: var(--color-accent-ink-2);
+  }
+
+  @media (min-width: 60rem) {
+    .close__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--gap-columns);
+    }
+  }
+</style>

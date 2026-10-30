@@ -1,7 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
-import Container from "@/components/ui/Container.astro";
-import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
+import { APP_URL } from "@/lib/constants";
 
 interface Props {
   text: string;
@@ -13,29 +11,44 @@ const { text, action, href = APP_URL } = Astro.props;
 const isExternal = href.startsWith("http");
 
 /*
- * The quiet CTA: one line, no box, no button.
+ * The quiet CTA: one line between two hairlines, no box, no button.
  *
- * It is placed between two of the page's hairlines so it reads as
- * punctuation in the existing rhythm rather than as an interruption —
- * a chapter break that happens to hold an open door. Anything heavier
- * this far from the end of the page would be nagging.
+ * It reads as punctuation in the page's rhythm rather than as an
+ * interruption: a chapter break that happens to hold an open door.
+ * Anything heavier this far from the end of the page would be nagging.
  */
 ---
 
-<aside>
-  <Container class="flex flex-col items-center justify-center gap-x-3 gap-y-1 py-7 text-center sm:flex-row">
-    <p class="text-base text-muted-foreground text-pretty">{text}</p>
-
+<aside class="aside-cta">
+  <div class="wrap aside-cta__inner">
+    <p>{text}</p>
     <a
       href={href + "/signin?mode=signup"}
-      class="group inline-flex items-center gap-1.5 text-base font-semibold text-brand underline-offset-4 transition-colors hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      class="text-link"
       {...isExternal ? { rel: "noopener noreferrer" } : {}}
     >
       {action}
-      <Icon
-        name="lucide:arrow-right"
-        class="h-4 w-4 transition-transform duration-200 motion-safe:group-hover:translate-x-0.5"
-      />
     </a>
-  </Container>
+  </div>
 </aside>
+
+<style>
+  .aside-cta {
+    border-block: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .aside-cta__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-lg);
+    padding-block: var(--space-lg);
+  }
+
+  .aside-cta p {
+    font-family: var(--font-display);
+    font-size: var(--text-lead);
+    color: var(--color-ink);
+  }
+</style>

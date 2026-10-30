@@ -1,67 +1,191 @@
 ---
-import Container from "@/components/ui/Container.astro";
-import MediaFrame from "@/components/ui/MediaFrame.astro";
-import Button from "@/components/ui/Button.astro";
-import heroDemoSrc from "@/assets/img/main.png?url";
+import { Image } from "astro:assets";
+import heroShot from "@/assets/img/main.png";
 import { APP_SIGNUP_URL } from "@/lib/constants";
+
+/*
+ * Stage: the promise on five columns, the canvas on seven, running on past
+ * the right edge of the page. The board is the product's whole argument
+ * (a space that keeps going), so it is not boxed in a frame that ends: the
+ * screen cuts it, the way a window cuts a workbench.
+ *
+ * The headline keeps both of its sentences, at two sizes: the factory is
+ * the foil, the workshop is the point. Everything else the old hero said
+ * now lives in the section that shows it.
+ */
 ---
 
-<section class="pt-10 pb-20 sm:pt-28 sm:pb-28">
-  <Container class="flex flex-col items-center gap-8 text-center">
-    <!--
-      nowrap and 6xl only from lg. At 60px the first line measures ~936px, so
-      between 640 and 1023 the sm: version was forcing a 911px line into a
-      768px screen and putting a horizontal scrollbar on the whole page.
-      Below lg the lines wrap, which is why they are a size smaller there.
-    -->
-    <h1 class="font-serif text-balance leading-[1.15] text-foreground text-3xl sm:text-5xl lg:text-6xl">
-      <span class="mb-4 block sm:mb-2 lg:whitespace-nowrap">You don't need an agent factory.</span>
-      <span class="block text-2xl sm:text-5xl lg:text-6xl lg:whitespace-nowrap">You need a workshop.</span>
-    </h1>
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__foil">You don’t need an agent factory.</span>
+        <span class="hero__point">You need a workshop.</span>
+      </h1>
 
-    <div class="max-w-2xl text-pretty sm:pt-12 space-y-3">
-      <p class="text-muted-foreground">
-        Nolënor is a canvas to think and work on, with an AI agent at your
-        side. You lay things down, show it where to look, and do the work. It
-        fills the gaps you point to.
+      <p class="hero__lede">
+        Nolënor is a canvas to think and work on, with an AI agent at your side.
       </p>
-      <p class="font-bold text-foreground">
-        An apprentice, not a replacement.
-      </p>
-    </div>
 
-    <!--
-      The page's first door. Everything above it argues; this is the only
-      thing on screen a convinced reader can act on, so it sits between the
-      promise and the picture rather than after the picture, where the fold
-      would have swallowed it on a phone.
-    -->
-    <div class="flex flex-col items-center gap-4">
-      <div class="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-        <Button href={APP_SIGNUP_URL} size="lg">Try it for free</Button>
-
-        <a
-          href="#features"
-          class="inline-flex items-center px-2 py-2 text-base font-medium text-foreground/80 underline-offset-4 transition-colors hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-        >
-          See what it does
-        </a>
+      <div class="hero__actions">
+        <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">Try it for free</a>
+        <a href="#features" class="hero__second">See what it does</a>
       </div>
 
-      <p class="text-sm text-muted-foreground">
-        Open beta — free while we build it.
-      </p>
+      <p class="hero__terms">Open beta, free while we build it.</p>
     </div>
 
-    <div class="mt-4 w-full" data-reveal data-reveal-variant="zoom">
-      <MediaFrame
-        id="hero-demo"
-        kind="image"
-        aspectRatio="16/8.3"
-        priority
-        src={heroDemoSrc}
-        alt="Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards populate the board"
+    <figure
+      class="hero__shot"
+      data-slot="hero"
+      data-kind="product"
+      data-media-id="hero-demo"
+      data-alt="The Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards fill the board"
+    >
+      <Image
+        src={heroShot}
+        widths={[960, 1440, 1916]}
+        sizes="(min-width: 60rem) 60vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        alt="The Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards fill the board"
       />
-    </div>
-  </Container>
+    </figure>
+  </div>
 </section>
+
+<style>
+  .hero {
+    container-type: inline-size;
+    display: grid;
+    align-items: center;
+    min-height: min(calc(100svh - var(--nav-height)), 58rem);
+    padding-block: var(--space-2xl) var(--space-3xl);
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-lg);
+  }
+
+  .hero__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-width: none;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-ink);
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .hero__foil {
+    font-size: var(--text-title);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .hero__point {
+    max-width: 10ch;
+    font-size: var(--text-display);
+    line-height: 1.02;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .hero__lede {
+    max-width: 30ch;
+    font-size: var(--text-lead);
+    line-height: 1.45;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md) var(--space-lg);
+    margin-top: var(--space-xs);
+  }
+
+  .hero__second {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    font-weight: 700;
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule-2);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color var(--dur-short) var(--ease-out);
+  }
+
+  .hero__second:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .hero__second:active {
+    color: var(--color-accent);
+  }
+
+  .hero__second:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+    transition: none;
+  }
+
+  .hero__terms {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .hero__shot {
+    margin: 0;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-card);
+    outline: 1px solid var(--color-shade);
+    outline-offset: -1px;
+  }
+
+  .hero__shot :global(img) {
+    object-position: left top;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-3xl);
+    }
+
+    /* Runs from its column to the edge of the screen: the container's own
+       gutter plus whatever the cap leaves at the side. */
+    .hero__shot {
+      width: calc(100% + max(var(--gutter), (100cqw - var(--container)) / 2 + var(--gutter)));
+      max-height: 70svh;
+      min-height: 30rem;
+      aspect-ratio: auto;
+      height: 36rem;
+      border-radius: var(--radius-card) 0 0 var(--radius-card);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__second {
+      transition: none;
+    }
+  }
+</style>

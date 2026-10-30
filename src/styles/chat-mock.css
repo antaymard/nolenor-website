@@ -17,7 +17,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-2xl);
   background: var(--surface);
-  box-shadow: 0 18px 50px -30px rgba(47, 54, 83, 0.45);
+  box-shadow: 0 18px 50px -30px var(--color-shadow);
   /* These scenes move content inside a fixed-size box for their whole run.
      Without this, Chrome picks one of those moving elements as the page's
      scroll anchor and shifts the page to "compensate", so scrolling past an
@@ -71,7 +71,7 @@
   padding: 0 calc(9 * var(--u));
   /* Once the thread outgrows the box the oldest messages leave through the
      top, faded out, the way a real conversation scrolls away from you. */
-  mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+  mask-image: linear-gradient(to bottom, transparent 0, var(--color-ink) 9%);
 }
 
 /* 0fr -> 1fr so a message can grow the thread from nothing and push the
@@ -156,7 +156,7 @@
   border: 1px solid var(--border);
   border-radius: calc(4.5 * var(--u));
   background: var(--surface);
-  box-shadow: 0 6px 18px -12px rgba(47, 54, 83, 0.5);
+  box-shadow: 0 6px 18px -12px var(--color-shadow);
 }
 
 .chat-icon {

@@ -12,19 +12,14 @@ import StickyFeatureScroll from "@/components/sections/StickyFeatureScroll.astro
 import InlineCta from "@/components/ui/InlineCta.astro";
 import { featureSteps } from "@/data/features";
 
-// Rebuilding the landing page from scratch, section by section, per the new
-// brief — the rest of src/components/sections/* is old-positioning content,
-// intentionally unplugged (not deleted) until each section is redesigned.
+// The landing page, in the order it argues: the promise and the canvas,
+// what our tools turned us into, the gestures Nolënor gives back, the
+// materials, the depth, a person at work, who it is for, the questions and
+// the close.
 //
-// The full-width hairline is the page's chapter break, and it belongs here
-// rather than inside any one section: a section shouldn't have to know what
-// it sits between. Each rule lands in the gap the two sections' own padding
-// already leaves, so the rhythm needs no extra spacing. The footer draws the
-// last one itself.
-//
-// Four places to act, spread out rather than repeated: the hero, two quiet
-// one-liners that take the place of a chapter break, and the closing block.
-// The two in the middle are deliberately a line of text and no button —
+// Each section draws its own seam (a hairline, a change of paper, or just
+// air) so the page does not part every chapter the same way. The two quiet
+// one-liners sit between hairlines of their own and carry no button:
 // asking four times with a button would be nagging, and this page's whole
 // argument is that it doesn't push you.
 //
@@ -35,28 +30,17 @@ import { featureSteps } from "@/data/features";
 
 <Layout>
   <Hero />
-  <hr class="border-border" />
   <Problem />
-  <hr class="border-border" />
   <StickyFeatureScroll id="features" steps={featureSteps} />
-
-  <hr class="border-border" />
   <InlineCta text="Reading about a canvas only goes so far." action="Open a canvas" />
-  <hr class="border-border" />
-
   <NodeTypes />
-  <hr class="border-border" />
   <MoreFeatures />
-
-  <hr class="border-border" />
   <InlineCta
     text="All of this is free while we're in beta."
     action="Try it for free"
   />
   <UseCasesTeaser />
-  <hr class="border-border" />
   <Audience />
-  <hr class="border-border" />
   <Faq />
   <FinalCta />
 </Layout>

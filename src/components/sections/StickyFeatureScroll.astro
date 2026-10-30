@@ -1,7 +1,5 @@
 ---
 import { Icon } from "astro-icon/components";
-import Container from "@/components/ui/Container.astro";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import type { FeatureStep } from "@/data/features";
 
@@ -12,56 +10,45 @@ interface Props {
 }
 
 const { id, steps, aspectRatio = "16/10" } = Astro.props;
+
+/*
+ * Pinned: the gestures scroll past on the left, the screen on the right
+ * holds still and changes with them (sticky-scroll.ts swaps it as each step
+ * crosses the middle of the viewport). The steps are a real sequence, so
+ * they are a real <ol> and the numerals come from its counter.
+ *
+ * Under 60rem the pin lets go and each step carries its own clip inline.
+ */
 ---
 
-<section id={id} class="py-18" data-sticky-scroll>
-    <Container class="flex flex-col items-center gap-6 text-center -mb-8">
-    <SectionLabel>The solution</SectionLabel>
-
-      <!--
-        Plain balanced wrapping, not .fit-lines: that class is for headings
-        whose line breaks are hand-set and must never move, and it sizes the
-        text off the longest nowrap line. One 76-character line with no break
-        in it overflowed a phone by 150px.
-      -->
-      <h2 class="max-w-3xl text-balance text-foreground">
-        Lay it down. Show it. Do the work.
-       <br/>
-       Nolënor gives you back the three gestures.
-      </h2>
-
-      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-          AI makes the space livable. The space makes AI legible. <b>The agent fills the gaps you show it; the work stays yours.</b>
-
+<section id={id} class="gestures" data-sticky-scroll aria-labelledby="gestures-title">
+  <div class="wrap">
+    <div class="gestures__head">
+      <h2 id="gestures-title">Lay it down. Show it.<br /> Do the work.</h2>
+      <p class="gestures__lead">
+        Nolënor gives you back the three gestures. The agent fills the gaps you
+        show it; the work stays yours.
       </p>
-    </Container>
-  <Container class="-mt-8">
-    <div class="grid gap-x-12 lg:grid-cols-3">
-      <div class="lg:col-span-1">
+    </div>
+
+    <div class="gestures__grid">
+      <ol class="gestures__steps">
         {
           steps.map((step, index) => (
-            <div
-              class="flex flex-col justify-center gap-6 py-12 lg:min-h-screen lg:py-24"
-              data-sticky-step={index}
-            >
-              <div class="flex flex-col gap-3">
-                <h2 class="text-balance text-foreground text-3xl">{step.title}</h2>
-                <p class="text-lg font-medium text-brand">{step.subtitle}</p>
-              </div>
+            <li class="step" data-sticky-step={index}>
+              <h3>{step.title}</h3>
+              <p class="step__sub">{step.subtitle}</p>
 
-              <ul class="flex flex-col gap-4">
+              <ul class="step__list">
                 {step.bullets.map((bullet) => (
-                  <li class="flex items-start gap-3 text-base text-foreground/80">
-                    <Icon
-                      name={bullet.icon}
-                      class="mt-1 h-4.5 w-4.5 shrink-0 text-brand"
-                    />
+                  <li>
+                    <Icon name={bullet.icon} class="step__icon" aria-hidden="true" />
                     <span>{bullet.text}</span>
                   </li>
                 ))}
               </ul>
 
-              <div class="mt-2 lg:hidden">
+              <div class="step__media">
                 <MediaFrame
                   id={step.media.id}
                   alt={step.media.alt}
@@ -69,18 +56,18 @@ const { id, steps, aspectRatio = "16/10" } = Astro.props;
                   aspectRatio={aspectRatio}
                 />
               </div>
-            </div>
+            </li>
           ))
         }
-      </div>
+      </ol>
 
-      <div class="hidden lg:col-span-2 lg:block">
-        <div class="sticky top-0 flex h-screen items-center py-24">
-          <div class="grid w-full" data-sticky-media-stack>
+      <div class="gestures__pin">
+        <div class="gestures__stage">
+          <div class="gestures__stack" data-sticky-media-stack>
             {
               steps.map((step, index) => (
                 <div
-                  class="col-start-1 row-start-1"
+                  class="gestures__layer"
                   data-sticky-media={index}
                   data-active={index === 0 ? "true" : "false"}
                   aria-hidden={index === 0 ? undefined : "true"}
@@ -99,5 +86,159 @@ const { id, steps, aspectRatio = "16/10" } = Astro.props;
         </div>
       </div>
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .gestures {
+    padding-block: var(--section-gap) var(--section-gap-s);
+  }
+
+  .gestures__head {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .gestures__head h2 {
+    max-width: 22ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-section);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .gestures__lead {
+    max-width: 44ch;
+    font-size: var(--text-lead);
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
+
+  .gestures__grid {
+    display: grid;
+    gap: var(--gap-columns);
+  }
+
+  .gestures__steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: gesture;
+  }
+
+  .step {
+    counter-increment: gesture;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding-block: var(--space-2xl);
+  }
+
+  .step::before {
+    content: counter(gesture);
+    font-family: var(--font-display);
+    font-size: var(--text-section);
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .step h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 1.2vw + 1.2rem, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .step__sub {
+    font-size: var(--text-lead);
+    color: var(--color-ink-2);
+  }
+
+  .step__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin: var(--space-xs) 0 0;
+    padding: var(--space-md) 0 0;
+    border-top: var(--rule-hair) solid var(--color-rule);
+    list-style: none;
+  }
+
+  .step__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .step__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    color: var(--color-accent);
+  }
+
+  .step__media {
+    margin-top: var(--space-md);
+  }
+
+  .gestures__pin {
+    display: none;
+  }
+
+  @media (min-width: 60rem) {
+    .gestures__head {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      gap: var(--gap-columns);
+      align-items: end;
+    }
+
+    .gestures__grid {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      gap: var(--space-3xl);
+    }
+
+    /* Each step holds the screen for most of a viewport, so the swap has
+       room to happen while its text is being read. */
+    .step {
+      justify-content: center;
+      min-height: 80svh;
+    }
+
+    .step__media {
+      display: none;
+    }
+
+    .gestures__pin {
+      display: block;
+    }
+
+    .gestures__stage {
+      position: sticky;
+      top: var(--nav-height);
+      display: flex;
+      align-items: center;
+      height: calc(100svh - var(--nav-height));
+    }
+
+    .gestures__stack {
+      display: grid;
+      width: 100%;
+    }
+
+    .gestures__layer {
+      grid-area: 1 / 1;
+    }
+  }
+</style>
