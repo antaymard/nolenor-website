@@ -1,13 +1,11 @@
 /*
- * The problem section's accordion: one panel open, the rest collapsed to a
- * strip. CSS owns the widths and the transition; this only moves the
- * data-open attribute and publishes one measurement.
- *
- * That measurement is the open panel's width in pixels. The panel's body is
- * laid out at that width from the moment it is shown, so the text doesn't
- * re-wrap and the illustration doesn't rescale while the panel is sliding
- * open — it is simply revealed by the panel growing past it.
+ * The problem section's switcher: one panel open at a time. CSS owns the
+ * layout (tabs side by side when wide, an accordion when narrow); this only
+ * moves the data-open attribute and keeps aria-expanded in step.
  */
+
+// Matches the breakpoint in Problem.astro where the tabs sit side by side.
+const WIDE = "(min-width: 60rem)";
 
 export function initProblemAccordion(): void {
   document
@@ -22,13 +20,7 @@ function setupRail(rail: HTMLElement): void {
   );
   if (panels.length !== tabs.length || !panels.length) return;
 
-  const px = (name: string) =>
-    parseFloat(getComputedStyle(rail).getPropertyValue(name)) || 0;
-
-  const measure = () => {
-    const aside = (panels.length - 1) * (px("--pb-strip") + px("--pb-gap"));
-    rail.style.setProperty("--pb-open", `${rail.clientWidth - aside}px`);
-  };
+  const wide = window.matchMedia(WIDE);
 
   const show = (index: number) => {
     panels.forEach((panel, i) => {
@@ -40,12 +32,16 @@ function setupRail(rail: HTMLElement): void {
 
   tabs.forEach((tab, i) => {
     tab.addEventListener("click", () => {
-      // Only reachable on the stacked layout, where the open panel keeps its
-      // row: tapping it again closes it. Wide, the open panel has no strip.
-      show(panels[i].hasAttribute("data-open") ? -1 : i);
+      const isOpen = panels[i].hasAttribute("data-open");
+      // Wide, a tab row always has one tab picked; tapping it again does
+      // nothing. Stacked, the open row closes on a second tap.
+      if (isOpen && wide.matches) return;
+      show(isOpen ? -1 : i);
     });
   });
 
-  measure();
-  new ResizeObserver(measure).observe(rail);
+  // Coming back to wide with every row closed would leave an empty stage.
+  wide.addEventListener("change", (event) => {
+    if (event.matches && !panels.some((p) => p.hasAttribute("data-open"))) show(0);
+  });
 }

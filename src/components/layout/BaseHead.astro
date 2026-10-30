@@ -7,7 +7,7 @@ interface Props {
 }
 
 const {
-  title = `${SITE_NAME} — ${TAGLINE}`,
+  title = `${SITE_NAME}. ${TAGLINE}`,
   description = "Nolënor is a canvas to think and work on, with an AI apprentice at your side. You keep the craft; the agent fills the gaps you show it. A workshop, not a factory.",
 } = Astro.props;
 
@@ -17,6 +17,7 @@ const ogImageURL = new URL("/og-image.png", SITE_URL);
 ---
 
 <meta charset="utf-8" />
+<script is:inline>document.documentElement.classList.add("js");</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
 <title>{title}</title>
@@ -25,7 +26,7 @@ const ogImageURL = new URL("/og-image.png", SITE_URL);
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<meta name="theme-color" content="#ffffff" />
+<meta name="theme-color" content="#f6eddf" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -1,0 +1,101 @@
+/*
+ * The system, by role. Colours are the brand's own three (cream, indigo
+ * ink, indigo) plus the highlight gold, converted to OKLCH from the hex
+ * values global.css used to hold; every neutral between them is derived
+ * on the same hues so nothing introduces a new one.
+ *
+ * Plain :root, not @theme: the scale below must not replace Tailwind's
+ * text-sm / text-lg steps, which the other pages still lean on.
+ */
+:root {
+  --color-paper: oklch(94.9% 0.021 79);
+  --color-paper-2: oklch(91.3% 0.032 83);
+  --color-paper-3: oklch(97.6% 0.012 80);
+  --color-ink: oklch(34% 0.052 273);
+  --color-ink-2: oklch(51.2% 0.06 279);
+  --color-muted: oklch(49% 0.05 279);
+  --color-rule: oklch(88.9% 0.031 82);
+  --color-rule-2: oklch(80% 0.035 82);
+  --color-accent: oklch(47.1% 0.075 277);
+  --color-accent-2: oklch(41% 0.075 277);
+  --color-accent-ink: oklch(94.9% 0.022 81);
+  --color-accent-ink-2: oklch(86% 0.03 279);
+  --color-highlight: oklch(84.4% 0.111 88);
+  --color-focus: oklch(50% 0.18 277);
+  --color-error: oklch(52% 0.19 27);
+  --color-success: oklch(50% 0.12 150);
+  --color-shade: oklch(34% 0.052 273 / 0.07);
+  --color-shadow: oklch(34% 0.052 273 / 0.45);
+
+  --font-display: "Hedvig Letters Serif", Georgia, ui-serif, serif;
+  --font-body: "Nunito", ui-rounded, system-ui, sans-serif;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem);
+  --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+  --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem);
+  --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem);
+  --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
+  --tracking-display: -0.02em;
+
+  --radius-card: 14px;
+  --radius-inner: 8px;
+  --radius-pill: 999px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 144px;
+
+  --container: 1360px;
+  --gutter: 64px;
+  --gap-columns: 32px;
+  --section-gap-s: 120px;
+  --section-gap: 144px;
+  --section-gap-l: 176px;
+  --nav-height: 72px;
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-sticky-nav: 300;
+  --z-modal: 400;
+  --rule-hair: 1px;
+}
+
+@media (max-width: 60rem) {
+  :root {
+    --gutter: 24px;
+    --section-gap-s: 80px;
+    --section-gap: 96px;
+    --section-gap-l: 120px;
+    --nav-height: 64px;
+  }
+}
+
+@media (max-width: 40rem) {
+  :root {
+    --gutter: 16px;
+    --section-gap-s: 56px;
+    --section-gap: 72px;
+    --section-gap-l: 96px;
+    --gap-columns: 16px;
+  }
+}

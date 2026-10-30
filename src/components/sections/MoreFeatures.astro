@@ -1,93 +1,199 @@
 ---
-import Container from "@/components/ui/Container.astro";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import { featureHighlights, featureNotes } from "@/data/moreFeatures";
 
 /*
  * The depth section: proof there is a real product here, read at speed.
  *
- * Deliberately not another card grid — a grid gives every item the same
- * weight, which is the opposite of what this section is for. It is a list:
- * three entries with a picture running off the left edge of the page, then
- * four one-liners with no picture at all. The hierarchy is the layout.
- *
- * Nothing rules off the entries themselves. The page keeps its full-width
- * hairlines for the seams between sections (index.astro), so using them
- * here too would have said "new chapter" three times inside one.
- *
- * The pictures bleed left rather than right, which is the one direction no
- * other section on this page uses — by here the reader has seen text-left
- * / media-right three times.
+ * Not another even grid, since a grid gives every item the same weight. The
+ * version history leads, large, beside its words; search and sharing sit
+ * under it as a pair; then the features that need no picture at all, as
+ * ruled rows. The hierarchy is the layout.
  */
+const [lead, ...pair] = featureHighlights;
 ---
 
-<section class="overflow-x-clip py-20 sm:py-28">
-  <Container class="flex flex-col items-center gap-6 text-center">
-    <SectionLabel>Going further</SectionLabel>
+<section class="depth" aria-labelledby="depth-title">
+  <div class="wrap">
+    <div class="depth__head">
+      <h2 id="depth-title">Built to keep you in step with the work</h2>
+      <p class="depth__lead">
+        The details that let you follow what the agent did, find what you laid
+        down, and keep your work your own.
+      </p>
+    </div>
 
-    <h2 class="max-w-3xl text-balance text-foreground">
-      Built to keep you in step with the work
-    </h2>
+    <div class="depth__feature depth__feature--lead">
+      <MediaFrame
+        id={lead.media.id}
+        kind="image"
+        src={lead.media.src}
+        alt={lead.media.alt}
+        aspectRatio="16/9"
+      />
+      <div class="depth__copy">
+        <h3>{lead.title}</h3>
+        <p>{lead.description}</p>
+      </div>
+    </div>
 
-    <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-      Less headline, more day-to-day. The details that let you follow what the
-      agent did, find what you laid down, and keep your work your own.
-    </p>
-  </Container>
-
-  <ul class="mt-14 flex flex-col gap-4 sm:mt-16 lg:gap-8">
-    {
-      featureHighlights.map((feature) => (
-        <li>
-          <Container class="grid items-center gap-6 py-9 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)] lg:gap-14 lg:py-12">
-            <div
-              class="-mx-6 lg:mr-0 lg:-ml-[(max(0px,(100vw-72rem)/2)+2rem)]"
-              data-reveal
-              data-reveal-variant="fade"
-            >
-              <div
-                class="aspect-video w-full *:rounded-none lg:*:rounded-r-2xl lg:*:rounded-l-none"
-              >
-                <MediaFrame
-                  id={feature.media.id}
-                  kind="image"
-                  src={feature.media.src}
-                  alt={feature.media.alt}
-                  aspectRatio="auto"
-                  class="h-full aspect-video!"
-                />
-              </div>
-            </div>
-
-            <div class="flex flex-col gap-3" data-reveal>
-              <h3 class="text-balance text-foreground">{feature.title}</h3>
-              <p class="text-base leading-[1.6] text-pretty text-muted-foreground">
-                {feature.description}
-              </p>
-            </div>
-          </Container>
-        </li>
-      ))
-    }
-  </ul>
-
-  <Container class="mt-12 sm:mt-14">
-    <p class="text-base text-muted-foreground">
-      And also:
-    </p>
-
-    <dl class="mt-5 border-t border-border" data-reveal>
+    <div class="depth__pair">
       {
-        featureNotes.map((note) => (
-          <div class="grid gap-1 border-b border-border py-4 sm:grid-cols-[13rem_minmax(0,1fr)] sm:items-baseline sm:gap-6">
-            <dt class="font-semibold text-foreground">{note.title}</dt>
-            <dd class="text-base text-pretty text-muted-foreground">
-              {note.description}
-            </dd>
+        pair.map((feature) => (
+          <div class="depth__feature">
+            <MediaFrame
+              id={feature.media.id}
+              kind="image"
+              src={feature.media.src}
+              alt={feature.media.alt}
+              aspectRatio="16/9"
+            />
+            <div class="depth__copy">
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </div>
           </div>
         ))
       }
-    </dl>
-  </Container>
+    </div>
+
+    <div class="depth__notes">
+      <h3>And also</h3>
+      <dl>
+        {
+          featureNotes.map((note) => (
+            <div class="depth__note">
+              <dt>{note.title}</dt>
+              <dd>{note.description}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
 </section>
+
+<style>
+  .depth {
+    padding-block: var(--section-gap-l) var(--section-gap);
+  }
+
+  .depth__head {
+    display: grid;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .depth__head h2 {
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-section);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .depth__lead {
+    max-width: 44ch;
+    font-size: var(--text-lead);
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
+
+  .depth__feature {
+    display: grid;
+    gap: var(--space-lg);
+    align-content: start;
+  }
+
+  .depth__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .depth__copy h3,
+  .depth__notes h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-title);
+    line-height: 1.2;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .depth__copy p {
+    max-width: 52ch;
+    line-height: 1.6;
+    color: var(--color-ink-2);
+  }
+
+  .depth__pair {
+    display: grid;
+    gap: var(--space-2xl) var(--gap-columns);
+    margin-top: var(--space-2xl);
+  }
+
+  .depth__notes {
+    display: grid;
+    gap: var(--space-lg);
+    margin-top: var(--space-3xl);
+  }
+
+  .depth__notes dl {
+    margin: 0;
+    border-top: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .depth__note {
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-md);
+    border-bottom: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .depth__note dt {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .depth__note dd {
+    margin: 0;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+  }
+
+  @media (min-width: 60rem) {
+    .depth__head {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      gap: var(--gap-columns);
+      align-items: end;
+    }
+
+    .depth__feature--lead {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      gap: var(--gap-columns);
+      align-items: end;
+    }
+
+    .depth__pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .depth__notes {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      gap: var(--gap-columns);
+    }
+
+    .depth__note {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 5fr);
+      gap: var(--gap-columns);
+      align-items: baseline;
+    }
+  }
+</style>

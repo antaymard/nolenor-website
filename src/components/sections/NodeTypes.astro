@@ -1,70 +1,181 @@
 ---
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
-import Container from "@/components/ui/Container.astro";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
 import { nodeTypes } from "@/data/nodeTypes";
+
+/*
+ * The nine materials as one grid of tinted wells on the page's own paper:
+ * no white sheet behind them, no card inside a card. Each well is a name,
+ * one line, and a peek into the node, cropped by the well's bottom edge on
+ * purpose (see MEDIA_BRIEF.md). The one type that does not ship yet is set
+ * in type alone, outlined rather than filled.
+ */
+const shipped = nodeTypes.filter((node) => !node.soon);
+const soon = nodeTypes.filter((node) => node.soon);
 ---
 
-<section id="nodes" class="py-14">
-  <Container class="flex flex-col items-center gap-5 text-center bg-surface py-10 sm:py-14 rounded-t-2xl">
-    <SectionLabel>The building blocks</SectionLabel>
-
-    <h2 class="text-balance">
-      Every material, on the same workbench
-    </h2>
-
-    <div class="flex max-w-4xl flex-col gap-1 text-lg text-pretty">
-      <p>
-        Each node can be read, edited and searched, by you and by Nolë, the
-        apprentice on your canvas.
+<section id="nodes" class="nodes" aria-labelledby="nodes-title">
+  <div class="wrap">
+    <div class="nodes__head">
+      <h2 id="nodes-title">Every material, on the same workbench</h2>
+      <p class="nodes__lead">
+        Each node can be read, edited and searched, by you and by Nolë. PDFs,
+        images, audio and video are transcribed and indexed, so nothing you lay
+        down gets lost in the pile.
       </p>
-      <p>
-        PDFs, images, audio and video are transcribed and indexed, so nothing
-        you lay down gets lost in the pile.
-      </p>
-      <p>And every edit is kept, yours and Nolë's.</p>
     </div>
-  </Container>
 
-  <Container class="pt-6 pb-14 rounded-b-2xl bg-surface">
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 px-12">
+    <ul class="nodes__grid">
       {
-        nodeTypes.map((node) => (
-          <article
-            class="flex flex-col overflow-hidden rounded-2xl border border-border px-5 pt-5 transition-colors duration-250 hover:border-brand/30 aspect-square bg-border/25"
-            data-reveal
-          >
-            <div class="flex items-center gap-3">
-              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-brand">
-                <Icon name={node.icon} class="h-4 w-4" />
-              </span>
-              <h3 class="text-foreground">{node.name}</h3>
+        shipped.map((node) => (
+          <li class="node">
+            <h3>
+              <Icon name={node.icon} class="node__icon" aria-hidden="true" />
+              {node.name}
+            </h3>
+            <p>{node.description}</p>
+            <div class="node__peek" data-media-id={node.media?.id}>
+              {node.media?.src && (
+                <Image src={node.media.src} alt={node.media.alt} loading="lazy" />
+              )}
             </div>
-
-            <p class="mt-3 min-h-[4.7rem] text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">
-              {node.description}
-            </p>
-
-            {/*
-              The preview is deliberately cropped by the bottom of the card:
-              a peek into the node, not a framed screenshot.
-            */}
-            <div class="mt-4 min-h-0 flex-1 overflow-hidden" data-media-id={node.media?.id}>
-              {node.soon ? (
-                <span class="flex h-full w-full items-center justify-center text-sm text-muted-foreground">Soon</span>
-              ) : node.media?.src ? (
-                <Image
-                  class="block w-full rounded-t-md border border-b-0 border-border"
-                  src={node.media.src}
-                  alt={node.media.alt}
-                  loading="lazy"
-                />
-              ) : null}
-            </div>
-          </article>
+          </li>
         ))
       }
-    </div>
-  </Container>
+      {
+        soon.map((node) => (
+          <li class="node node--soon">
+            <h3>
+              <Icon name={node.icon} class="node__icon" aria-hidden="true" />
+              {node.name}
+            </h3>
+            <p>{node.description}</p>
+            <p class="node__when">Coming soon</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>
+
+<style>
+  .nodes {
+    padding-block: var(--section-gap);
+  }
+
+  .nodes__head {
+    display: grid;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .nodes__head h2 {
+    max-width: 16ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-section);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .nodes__lead {
+    max-width: 48ch;
+    font-size: var(--text-lead);
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
+
+  .nodes__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-columns);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .node {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    min-height: 26rem;
+    padding: var(--space-xl) var(--space-xl) 0;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    background: var(--color-paper-2);
+  }
+
+  .node h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-title);
+    line-height: 1.2;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .node__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: var(--color-accent);
+  }
+
+  .node p {
+    line-height: 1.55;
+    color: var(--color-ink-2);
+  }
+
+  .node__peek {
+    flex: 1;
+    min-height: 0;
+    margin-top: var(--space-md);
+  }
+
+  .node__peek :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-inner) var(--radius-inner) 0 0;
+    outline: 1px solid var(--color-shade);
+    outline-offset: -1px;
+  }
+
+  .node--soon {
+    padding-bottom: var(--space-xl);
+    background: transparent;
+    outline: 1px dashed var(--color-rule-2);
+    outline-offset: -1px;
+  }
+
+  .node__when {
+    margin-top: auto;
+    font-size: var(--text-sm);
+  }
+
+  @media (min-width: 40rem) {
+    .nodes__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .nodes__head {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      gap: var(--gap-columns);
+      align-items: end;
+    }
+
+    .nodes__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

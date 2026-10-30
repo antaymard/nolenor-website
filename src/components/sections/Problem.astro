@@ -1,110 +1,70 @@
 ---
-import { Icon } from "astro-icon/components";
-import Container from "@/components/ui/Container.astro";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
-import MediaFrame from "@/components/ui/MediaFrame.astro";
 import ChatFlattening from "@/components/visuals/ChatFlattening.astro";
 import HiddenWork from "@/components/visuals/HiddenWork.astro";
 import LostThread from "@/components/visuals/LostThread.astro";
 import { problemItems } from "@/data/problem";
 
 /*
- * The three problems, as one panel at a time.
+ * The three problems as a switcher: the operator's three chores across the
+ * top (File it. Type it. Review it.), the one picked shown below with its
+ * scene. The tabs are the old headline taken apart, so the section says
+ * the escalation by its controls alone.
  *
- * Wide: a rail of three panels, the open one taking every pixel the other
- * two aren't using, those two collapsed to a strip with their title set on
- * its side. Clicking a strip opens it and closes whichever was open.
- * Narrow: the same thing as an ordinary stacked accordion.
+ * Every panel carries its own tab and body (problem-accordion.ts moves
+ * data-open between them). Wide, the panels dissolve into one grid: tabs on
+ * the first row, the open body across the second. Narrow, they stack as an
+ * accordion. Without scripting every body shows, in order.
  *
- * A collapsed panel's body is display:none rather than merely hidden, which
- * is what makes each illustration's IntersectionObserver reset it — so a
- * panel always opens on the first frame of its scene, never mid-run.
+ * A closed panel's body is display:none rather than merely hidden, which is
+ * what makes each illustration's IntersectionObserver reset it, so a panel
+ * always opens on the first frame of its scene, never mid-run.
  */
 
-const index = (i: number) => String(i + 1).padStart(2, "0");
+const chores = [
+  { verb: "File it.", role: "First, the archivist" },
+  { verb: "Type it.", role: "Then, the typist" },
+  { verb: "Review it.", role: "Then, the proofreader" },
+];
 ---
 
-<section class="py-20 sm:py-28">
-  <Container class="flex flex-col items-center gap-6 text-center">
-    <SectionLabel>The problem</SectionLabel>
+<section class="problem" aria-labelledby="problem-title">
+  <div class="wrap">
+    <div class="problem__head">
+      <h2 id="problem-title">Our tools made us operators.</h2>
+      <p class="problem__lead">
+        Thinking has a shape. Our tools flatten it into a line, and at every
+        step they take a little more of the work away from you.
+      </p>
+    </div>
 
-    <h2
-      class="fit-lines text-foreground"
-      style="--fit-max: 2.25rem; --fit-ratio: 16.5"
-    >
-      <span class="block whitespace-nowrap">File it. Type it. Review it.</span>
-      <span class="block whitespace-nowrap">Our tools made us operators.</span>
-    </h2>
-
-    <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-      Thinking has a shape. Our tools flatten it into a line, and at every step
-      they take a little more of the work away from you.
-      <br />
-      First archivist, then typist, then proofreader. It's not you, it's the
-      view: the tool stopped helping you think, and you started serving it.
-    </p>
-  </Container>
-
-  <Container class="mt-14 sm:mt-16">
-    <div
-      class="pb-rail flex flex-col gap-3 lg:flex-row lg:aspect-[2.6]"
-      data-problem-rail
-      style={`--pb-n: ${problemItems.length}`}
-      data-reveal
-    >
+    <div class="pb-rail" data-problem-rail>
       {
         problemItems.map((item, i) => (
-          <article
-            class="pb-panel group relative min-w-0 overflow-hidden rounded-2xl border border-border bg-surface"
-            data-panel
-            data-open={i === 0 ? "" : undefined}
-          >
+          <article class="pb-panel" data-panel data-open={i === 0 ? "" : undefined}>
             <button
               type="button"
-              class="pb-tab absolute inset-0 flex w-(--pb-strip) flex-col items-center justify-between gap-[calc(var(--pb-gap)*0.75)] py-4.5 cursor-pointer text-muted-foreground transition-colors duration-300 hover:bg-muted/45 hover:text-foreground max-lg:static max-lg:w-full max-lg:flex-row-reverse max-lg:items-center max-lg:justify-between max-lg:gap-4 max-lg:px-5 max-lg:py-4 max-lg:text-left"
+              class="pb-tab"
               data-panel-tab
               aria-expanded={i === 0 ? "true" : "false"}
               aria-controls={`problem-body-${i}`}
             >
-              <Icon
-                name="lucide:chevron-right"
-                class="pb-tabicon size-4.5 shrink-0 text-brand max-lg:transition-transform max-lg:duration-350 max-lg:ease-[cubic-bezier(0.16,1,0.3,1)] max-lg:group-data-open:rotate-90"
-              />
-              <span class="flex min-h-0 flex-1 items-center font-serif [writing-mode:vertical-rl] rotate-180 whitespace-nowrap text-sm leading-none text-inherit max-lg:[writing-mode:horizontal-tb] max-lg:rotate-none max-lg:whitespace-normal max-lg:text-base max-lg:leading-[1.35] max-lg:text-foreground">
-                {item.title}
-              </span>
-              <span class="font-sans text-sm font-bold text-brand">{index(i)}</span>
+              <span class="pb-tab__verb">{chores[i].verb}</span>
+              <span class="pb-tab__role">{chores[i].role}</span>
             </button>
 
-            <div
-              class="pb-body absolute inset-0 grid w-(--pb-open,100%) grid-cols-[40%_1fr] items-center gap-8 p-7 text-left max-lg:static max-lg:flex max-lg:w-auto max-lg:flex-col max-lg:items-stretch max-lg:gap-0 max-lg:pt-0 max-lg:px-5 max-lg:pb-5"
-              id={`problem-body-${i}`}
-            >
-              <div class="flex flex-col items-start gap-2.5">
-                <span class="font-sans text-xs font-black text-brand max-lg:hidden">
-                  PROBLEM #{index(i)}
-                </span>
-                <h3 class="text-balance text-foreground max-lg:hidden">{item.title}</h3>
-                <p class="text-base leading-[1.6] text-pretty text-muted-foreground max-lg:mt-4 max-lg:text-[0.95rem]">
-                  {item.subtitle}
-                </p>
+            <div class="pb-body" id={`problem-body-${i}`}>
+              <div class="pb-copy">
+                <h3>{item.title}</h3>
+                <p>{item.subtitle}</p>
               </div>
 
-              <div class="pb-visual flex h-full min-w-0 items-center max-lg:order-first max-lg:h-auto">
+              <div class="pb-visual">
                 {item.visual === "chat-flattening" ? (
                   <ChatFlattening />
                 ) : item.visual === "hidden-work" ? (
                   <HiddenWork />
-                ) : item.visual === "lost-thread" ? (
-                  <LostThread />
                 ) : (
-                  item.media && (
-                    <MediaFrame
-                      id={item.media.id}
-                      alt={item.media.alt}
-                      aspectRatio="16/10"
-                    />
-                  )
+                  <LostThread />
                 )}
               </div>
             </div>
@@ -112,90 +72,192 @@ const index = (i: number) => String(i + 1).padStart(2, "0");
         ))
       }
     </div>
-  </Container>
+  </div>
 </section>
 
 <style>
-  /*
-   * Kept in CSS on purpose: the accordion's width mechanics (state-driven
-   * flex-basis + transition), the open-panel animation, a child-selector
-   * rule, and the CSS vars problem-accordion.ts reads through
-   * getComputedStyle. Everything static lives inline as Tailwind.
-   */
+  .problem {
+    padding-block: var(--section-gap-s) var(--section-gap);
+    border-top: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .problem__head {
+    display: grid;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .problem__head h2 {
+    max-width: 14ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-section);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .problem__lead {
+    max-width: 44ch;
+    font-size: var(--text-lead);
+    line-height: 1.5;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
 
   .pb-rail {
-    --pb-strip: 58px;
-    --pb-gap: 12px;
+    display: flex;
+    flex-direction: column;
+    border-top: var(--rule-hair) solid var(--color-rule);
   }
 
   .pb-panel {
-    flex: 0 0 var(--pb-strip);
-    /* Fixed by the rail rather than by its contents, so opening a panel
-       moves widths only — the section never changes height under you. */
-    transition:
-      flex-basis 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 0.4s ease;
+    border-bottom: var(--rule-hair) solid var(--color-rule);
   }
 
-  .pb-panel[data-open] {
-    /* JS publishes the measured width; the fallback is the same number,
-       so the layout is right before a single line of it has run. */
-    flex-basis: var(
-      --pb-open,
-      calc(100% - (var(--pb-n) - 1) * (var(--pb-strip) + var(--pb-gap)))
-    );
-    box-shadow: 0 24px 60px -40px rgba(47, 54, 83, 0.5);
+  .pb-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2xs);
+    width: 100%;
+    min-height: 44px;
+    padding: var(--space-lg) 0;
+    border: 0;
+    background: none;
+    color: var(--color-ink-2);
+    text-align: left;
+    cursor: pointer;
+    transition: color var(--dur-short) var(--ease-out);
   }
 
-  .pb-panel[data-open] .pb-tab {
+  .pb-tab:hover,
+  .pb-tab[aria-expanded="true"] {
+    color: var(--color-ink);
+  }
+
+  .pb-tab:active {
+    color: var(--color-accent);
+  }
+
+  .pb-tab:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+    transition: none;
+  }
+
+  .pb-tab__verb {
+    font-family: var(--font-display);
+    font-size: var(--text-title);
+    line-height: 1.15;
+  }
+
+  .pb-tab__role {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .pb-body {
+    display: grid;
+    gap: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+
+  :global(.js) .pb-panel:not([data-open]) .pb-body {
     display: none;
   }
 
-  .pb-panel:not([data-open]) .pb-body {
-    display: none;
+  .pb-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
   }
 
-  /* The rail's ratio is set so the frame always fits by width with a little
-     height to spare, which is why it is centred rather than stretched. */
+  .pb-copy h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-title);
+    line-height: 1.2;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .pb-copy p {
+    max-width: 40ch;
+    line-height: 1.6;
+    color: var(--color-ink-2);
+  }
+
+  .pb-visual {
+    min-width: 0;
+  }
+
   .pb-visual > :global(*) {
     width: 100%;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 60rem) {
+    .problem__head {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+      gap: var(--gap-columns);
+      align-items: end;
+    }
+
+    /* One grid: the tabs share the first row, the open body takes the
+       second across all three columns. */
+    .pb-rail {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: var(--gap-columns);
+      border-top: 0;
+    }
+
+    .pb-panel {
+      display: contents;
+    }
+
+    .pb-tab {
+      grid-row: 1;
+      padding-top: var(--space-md);
+      border-top: 2px solid var(--color-rule);
+      transition:
+        color var(--dur-short) var(--ease-out),
+        border-color var(--dur-short) var(--ease-out);
+    }
+
+    .pb-panel:nth-child(1) .pb-tab { grid-column: 1; }
+    .pb-panel:nth-child(2) .pb-tab { grid-column: 2; }
+    .pb-panel:nth-child(3) .pb-tab { grid-column: 3; }
+
+    .pb-tab[aria-expanded="true"] {
+      border-top-color: var(--color-accent);
+      cursor: default;
+    }
+
+    .pb-tab__verb {
+      font-size: clamp(1.75rem, 1.2vw + 1.2rem, 2.5rem);
+    }
+
     .pb-body {
-      animation: pb-open 0.5s ease 0.12s both;
+      grid-column: 1 / -1;
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      gap: var(--gap-columns);
+      align-items: center;
+      min-height: 30rem;
+      padding-block: var(--space-2xl) 0;
     }
 
-    @keyframes pb-open {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-  }
-
-  @media (max-width: 1023px) {
-    .pb-panel,
-    .pb-panel[data-open] {
-      flex: none;
-    }
-
-    .pb-panel[data-open] .pb-tab {
-      display: flex;
+    .pb-copy {
+      padding-right: var(--space-xl);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .pb-panel,
-    .pb-tab,
-    .pb-tabicon {
-      transition: none !important;
-    }
-
-    .pb-body {
-      animation: none !important;
+    .pb-tab {
+      transition: none;
     }
   }
 </style>

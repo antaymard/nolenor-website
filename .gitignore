@@ -21,3 +21,6 @@ yarn-error.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Hallmark working files (screenshots, lint records)
+.hallmark/

@@ -27,7 +27,7 @@ const {
   class: className = "",
 } = Astro.props;
 
-// No real media exists yet (see MEDIA_BRIEF.md) — every MediaFrame renders
+// No real media exists yet (see MEDIA_BRIEF.md): every MediaFrame renders
 // a clearly-labelled placeholder state until `src` is supplied, so the
 // page looks intentional rather than broken while media is in production.
 const isPlaceholder = !src;
@@ -35,7 +35,7 @@ const isPlaceholder = !src;
 
 <div
   data-media-id={id}
-  class={`group relative overflow-hidden rounded-2xl border border-border bg-muted ${className}`}
+  class={`media-frame group relative overflow-hidden bg-muted ${className}`}
   style={`aspect-ratio: ${aspectRatio};`}
 >
   {
@@ -50,8 +50,8 @@ const isPlaceholder = !src;
         <p class="max-w-xs text-sm font-medium text-muted-foreground">
           {alt}
         </p>
-        <span class="text-xs uppercase tracking-wide text-muted-foreground/70">
-          Media placeholder — {id}
+        <span class="text-xs text-muted-foreground">
+          Media placeholder: {id}
         </span>
       </div>
     ) : kind === "video" ? (
@@ -78,3 +78,11 @@ const isPlaceholder = !src;
     )
   }
 </div>
+
+<style>
+  .media-frame {
+    border-radius: var(--radius-card);
+    outline: 1px solid var(--color-shade);
+    outline-offset: -1px;
+  }
+</style>

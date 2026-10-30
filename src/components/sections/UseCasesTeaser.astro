@@ -1,7 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
-import Container from "@/components/ui/Container.astro";
-import SectionLabel from "@/components/ui/SectionLabel.astro";
 import MarketMap from "@/components/use-cases/MarketMap.astro";
 import { flagship, vignettes } from "@/data/useCases";
 
@@ -9,40 +6,90 @@ import { flagship, vignettes } from "@/data/useCases";
  * The home page's one concrete scene, right before "Is it for you?": a
  * reader deciding whether they're the audience gets to see a person at
  * work first. The full scenario and the other crafts live on /use-cases;
- * this only has to make the split visible — your nodes, Nolë's nodes.
+ * this only has to make the split visible: your nodes, Nolë's nodes.
  */
 const crafts = [flagship.craft, ...vignettes.map((vignette) => vignette.craft)];
 ---
 
-<section id="use-cases" class="py-20 sm:py-28">
-  <Container class="grid items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
-    <div class="flex flex-col gap-5" data-reveal>
-      <SectionLabel>In practice</SectionLabel>
-      <h2 class="text-balance text-foreground">You lead. Nolë does the legwork. You check.</h2>
-      <p class="text-lg leading-relaxed text-pretty text-muted-foreground">
+<section id="use-cases" class="practice" aria-labelledby="practice-title">
+  <div class="wrap practice__grid">
+    <div class="practice__text">
+      <h2 id="practice-title">You lead. Nolë does the legwork. You check.</h2>
+      <p>
         A consultant meets a new market. They set out their own frame on the
         canvas, Nolë hangs the research on it, and every figure stays one click
         from its source. At the end, the map is theirs, and they can explain
         every part of it.
       </p>
-      <ul class="flex flex-wrap gap-2" aria-label="Crafts shown in the use cases">
-        {
-          crafts.map((craft) => (
-            <li class="rounded-full border border-border bg-surface px-3 py-1 text-sm text-foreground/80">{craft}</li>
-          ))
-        }
+      <ul class="practice__crafts" aria-label="Crafts shown in the use cases">
+        {crafts.map((craft) => <li>{craft}</li>)}
       </ul>
-      <a
-        href="/use-cases"
-        class="group inline-flex w-fit items-center gap-1.5 font-semibold text-brand underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-      >
-        See how each craft works with Nolë
-        <Icon name="lucide:arrow-right" class="h-4 w-4 transition-transform duration-200 motion-safe:group-hover:translate-x-0.5" />
-      </a>
+      <a href="/use-cases" class="text-link">See how each craft works with Nolë</a>
     </div>
 
-    <div data-reveal data-reveal-variant="zoom">
+    <div class="practice__map">
       <MarketMap />
     </div>
-  </Container>
+  </div>
 </section>
+
+<style>
+  .practice {
+    padding-block: var(--section-gap);
+  }
+
+  .practice__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .practice__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-lg);
+  }
+
+  .practice__text h2 {
+    max-width: 14ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-section);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .practice__text p {
+    max-width: 46ch;
+    font-size: var(--text-lg);
+    line-height: 1.6;
+    color: var(--color-ink-2);
+  }
+
+  .practice__crafts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-lg);
+    margin: 0;
+    padding: var(--space-md) 0 0;
+    border-top: var(--rule-hair) solid var(--color-rule);
+    list-style: none;
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+  }
+
+  .practice__map {
+    min-width: 0;
+  }
+
+  @media (min-width: 60rem) {
+    .practice__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-3xl);
+    }
+  }
+</style>

@@ -1,105 +1,255 @@
 ---
 import { Icon } from "astro-icon/components";
-import Container from "@/components/ui/Container.astro";
 import Logo from "@/components/ui/Logo.astro";
 import { footerProductLinks, footerAboutLinks, footerLegalLinks } from "@/data/nav";
 import { GITHUB_REPO_URL, SITE_NAME, TAGLINE } from "@/lib/constants";
 
 const year = new Date().getFullYear();
+
+/*
+ * Index columns, because the site has a real sitemap (thirteen links over
+ * three groups), under the tagline set large as the footer's one line. The
+ * product-updates form keeps its ids: wishlist-form.ts finds it by them.
+ */
+const groups = [
+  { title: "Product", links: footerProductLinks },
+  { title: "About", links: footerAboutLinks },
+  { title: "Legal", links: footerLegalLinks },
+];
 ---
 
-<footer class="border-t border-border">
-  <Container class="grid gap-12 py-16 sm:grid-cols-3 md:grid-cols-[1.4fr_1fr_1fr_1fr_1.4fr]">
-    <div class="flex flex-col gap-3">
-      <Logo iconClass="h-6 w-6 text-foreground" textClass="text-base" />
-      <p class="max-w-xs text-sm text-muted-foreground">{TAGLINE}</p>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <Logo iconClass="h-7 w-7 text-foreground" textClass="text-lg" />
+      <p class="foot__line">{TAGLINE}</p>
+    </div>
+
+    <div class="foot__grid">
+      {
+        groups.map((group) => (
+          <nav class="foot__group" aria-label={group.title}>
+            <h2>{group.title}</h2>
+            <ul>
+              {group.links.map((link) => (
+                <li>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+
+      <div class="foot__updates">
+        <h2>Get product updates</h2>
+        <p>Occasional news about new features. No spam.</p>
+        <form id="wishlist-form" class="foot__form" novalidate>
+          <label for="wishlist-email" class="sr-only">Email address</label>
+          <input
+            id="wishlist-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="you@company.com"
+          />
+          <button type="submit" class="btn btn--sm">Subscribe</button>
+        </form>
+        <p id="wishlist-form-message" class="foot__status" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="foot__legal">
+      <p>&copy; {year} {SITE_NAME}. All rights reserved.</p>
       <a
         href={GITHUB_REPO_URL}
         target="_blank"
         rel="noopener noreferrer"
-        class="mt-2 inline-flex w-fit items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+        class="foot__gh"
         aria-label="Nolenor on GitHub"
       >
-        <Icon name="lucide:github" class="h-4 w-4" />
+        <Icon name="lucide:github" class="foot__gh-icon" aria-hidden="true" />
         GitHub
       </a>
     </div>
-
-    <div class="flex flex-col gap-3">
-      <span class="text-sm font-semibold">Product</span>
-      {
-        footerProductLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </div>
-
-    <div class="flex flex-col gap-3">
-      <span class="text-sm font-semibold">About</span>
-      {
-        footerAboutLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </div>
-
-    <div class="flex flex-col gap-3">
-      <span class="text-sm font-semibold">Legal</span>
-      {
-        footerLegalLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </div>
-
-    <div class="flex flex-col gap-3">
-      <span class="text-sm font-semibold">Get product updates</span>
-      <p class="text-sm text-muted-foreground">
-        Occasional news about new features. No spam.
-      </p>
-      <form id="wishlist-form" class="flex flex-col gap-2" novalidate>
-        <label for="wishlist-email" class="sr-only">Email address</label>
-        <input
-          id="wishlist-email"
-          name="email"
-          type="email"
-          required
-          placeholder="you@company.com"
-          class="w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-        />
-        <button
-          type="submit"
-          class="inline-flex shrink-0 items-center justify-center rounded-xl bg-foreground px-4 py-2.5 text-sm font-medium text-background transition-colors hover:bg-foreground/85"
-        >
-          Subscribe
-        </button>
-      </form>
-      <p
-        id="wishlist-form-message"
-        class="min-h-[1.25rem] text-sm text-muted-foreground"
-        role="status"
-        aria-live="polite"
-      >
-      </p>
-    </div>
-  </Container>
-
-  <Container class="flex flex-col gap-2 border-t border-border py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-    <p>&copy; {year} {SITE_NAME}. All rights reserved.</p>
-  </Container>
+  </div>
 </footer>
+
+<style>
+  .foot {
+    padding-top: var(--space-3xl);
+    border-top: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .foot__top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding-bottom: var(--space-2xl);
+  }
+
+  .foot__line {
+    font-family: var(--font-display);
+    font-size: var(--text-display-s);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
+  }
+
+  .foot__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-xl) var(--gap-columns);
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-top: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .foot h2 {
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .foot ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .foot li a,
+  .foot__gh {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    font-size: var(--text-sm);
+    color: var(--color-ink-2);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.25em;
+    transition:
+      color var(--dur-short) var(--ease-out),
+      text-decoration-color var(--dur-short) var(--ease-out);
+  }
+
+  .foot li a:hover,
+  .foot__gh:hover {
+    color: var(--color-ink);
+    text-decoration-color: var(--color-rule-2);
+  }
+
+  .foot li a:active,
+  .foot__gh:active {
+    color: var(--color-accent);
+  }
+
+  .foot li a:focus-visible,
+  .foot__gh:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+    transition: none;
+  }
+
+  .foot__updates {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .foot__updates > p {
+    max-width: 32ch;
+    font-size: var(--text-sm);
+    color: var(--color-ink-2);
+  }
+
+  .foot__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    max-width: 24rem;
+  }
+
+  .foot__form input {
+    flex: 1 1 12rem;
+    min-width: 0;
+    min-height: 40px;
+    padding-inline: var(--space-sm);
+    border: 1px solid var(--color-muted);
+    border-radius: var(--radius-inner);
+    background: var(--color-paper-3);
+    color: var(--color-ink);
+    font-size: var(--text-md);
+  }
+
+  .foot__form input::placeholder {
+    color: var(--color-muted);
+  }
+
+  .foot__form input:hover {
+    border-color: var(--color-ink);
+  }
+
+  .foot__form input:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  .foot__form input[aria-invalid="true"] {
+    border-color: var(--color-error);
+  }
+
+  .foot__form input:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .foot__status {
+    min-height: 1lh;
+    font-size: var(--text-sm);
+    color: var(--color-ink-2);
+  }
+
+  .foot__legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm) var(--space-lg);
+    padding-block: var(--space-lg);
+    border-top: var(--rule-hair) solid var(--color-rule);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .foot__gh {
+    gap: var(--space-xs);
+  }
+
+  .foot__gh-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (min-width: 60rem) {
+    .foot__grid {
+      grid-template-columns: repeat(3, minmax(0, 2fr)) minmax(0, 4fr);
+    }
+
+    .foot__updates {
+      grid-column: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .foot li a,
+    .foot__gh {
+      transition: none;
+    }
+  }
+</style>
