@@ -7,10 +7,10 @@ import Button from "@/components/ui/Button.astro";
 import Badge from "@/components/ui/Badge.astro";
 import CodeBlock from "@/components/ui/CodeBlock.astro";
 import {
-  mcpReadTools,
-  mcpWriteTools,
-  nodeDataFields,
-  apiErrors,
+  mcpReadTools as mcpReadToolsByLang,
+  mcpWriteTools as mcpWriteToolsByLang,
+  nodeDataFields as nodeDataFieldsByLang,
+  apiErrors as apiErrorsByLang,
 } from "@/data/developers";
 import {
   APP_API_TOKENS_URL,
@@ -19,6 +19,7 @@ import {
   REST_API_BASE,
   SITE_NAME,
 } from "@/lib/constants";
+import { getLang } from "@/i18n";
 
 /*
  * Developers: connecting an AI tool over MCP, and calling the REST API.
@@ -30,13 +31,244 @@ import {
  * readers came for), then the REST API.
  */
 
-const toc = [
-  { id: "token", label: "Get a token" },
-  { id: "mcp", label: "Connect over MCP" },
-  { id: "tools", label: "MCP tools" },
-  { id: "rest", label: "REST API" },
-  { id: "errors", label: "Errors" },
-];
+const lang = getLang(Astro.currentLocale);
+
+// Strings that carry inline markup mark `code` with backticks and **bold**
+// with double stars; rich() splits them so the template renders real
+// <code>/<strong> elements, which (unlike set:html content) pick up this
+// file's scoped styles.
+function rich(text: string) {
+  return text
+    .split(/(`[^`]+`|\*\*[^*]+\*\*)/)
+    .filter(Boolean)
+    .map((part) =>
+      part.startsWith("`")
+        ? { tag: "code", text: part.slice(1, -1) }
+        : part.startsWith("**")
+          ? { tag: "strong", text: part.slice(2, -2) }
+          : { tag: "", text: part },
+    );
+}
+
+const en = {
+  title: "Developers",
+  description:
+    "Connect Claude, Cursor or any MCP client to your Nolënor canvases, and read their content over the REST API.",
+  label: "Developers",
+  headline: "Your canvases, from any tool.",
+  lede: "Plug Claude, Cursor or any MCP client into your canvases so it reads and edits them like Nolë does. Or call the REST API from your own scripts. One token, your rights, nothing more.",
+  pageSections: "Page sections",
+  onThisPage: "On this page",
+  toc: {
+    token: "Get a token",
+    mcp: "Connect over MCP",
+    tools: "MCP tools",
+    rest: "REST API",
+    errors: "Errors",
+  },
+  mcpCard: {
+    title: "MCP server",
+    body: "For AI assistants. List, read, search and edit blocks, with the same tools Nolë uses. Changes show up live on the canvas.",
+  },
+  restCard: {
+    title: "REST API",
+    bodyBefore: "For your own code. Plain HTTP and JSON, versioned under",
+    bodyAfter:
+      ". Read-only for now: it returns the content of the blocks you ask for.",
+  },
+  token: {
+    heading: "Start in Settings.",
+    lede: "The MCP server and the REST API take the same API token. It acts as you: it opens the canvases you can open, and no others.",
+    steps: [
+      "In the app, open **Settings → MCP & API tokens** and click **New token**.",
+      "Name it, then pick a permission. **Read** lists, reads and searches, and is all the REST API needs. **Write** also creates and edits blocks, on the canvases where you are editor or owner.",
+      "Copy the token (it starts with `nlnr_`). It is shown once: we only keep a digest of it. The same dialog gives you the exact endpoint URL and a ready-to-paste Claude Code command.",
+    ],
+    warning:
+      "Treat a token like a password. If one leaks, revoke it from the same page: every tool using it loses access at once. The list shows when each token was last used.",
+    cta: "Create a token",
+  },
+  mcp: {
+    heading: "A second Nolë, in the tool you already use.",
+    lede: "Nolënor speaks the Model Context Protocol over streamable HTTP. Give your client the endpoint and the token, and it can work on your canvases.",
+    endpoint: "Endpoint",
+    transport: "Transport",
+    transportValue: "Streamable HTTP, stateless, `POST` only",
+    authHeader: "Auth header",
+    authValue: "`Authorization: Bearer nlnr_...`, or `x-api-key: nlnr_...`",
+    oneLine: "One line",
+    claudeCode:
+      "Paste this in a terminal. The token dialog in Settings prints the same command with your token already in it.",
+    claudeDesktop:
+      "Add a custom connector with the endpoint URL. Claude Desktop only offers preset header names, with no `Authorization`: pick `x-api-key` and paste the raw token as its value.",
+    customConnector: "Custom connector",
+    otherClientsTitle: "Cursor and other clients",
+    otherClients:
+      "Any client that reads an `mcpServers` JSON file (Cursor's `mcp.json`, a project `.mcp.json`…) takes this:",
+    pointTitle: "Point it at a block",
+    point:
+      "Right-click a block on the canvas, then **Copy ID → Canvas & node ID**. Paste the reference into your conversation, and the assistant knows exactly which canvas and block you mean.",
+    clipboard: "clipboard",
+  },
+  tools: {
+    heading: "The same hands as Nolë.",
+    lede: "A read token sees the first two tools, a write token sees them all. Every tool but `list_canvases` takes a `canvasId`, and every edit goes through your rights on that canvas.",
+    read: "Read",
+    readBadge: "Read or write token",
+    write: "Write",
+    writeBadge: "Write token",
+    limits:
+      "What it can't do: browse the web, generate images, transcribe audio, use Nolë's memory or skills, or touch your settings and sharing. Its edits appear as “Agent” in a block's **Versions**, so you can always take one back.",
+  },
+  rest: {
+    heading: "Read blocks from your own code.",
+    lede: "One endpoint for now: the content of up to 100 blocks of a canvas, in one call. Send the token with every request.",
+    baseUrl: "Base URL",
+    authHeader: "Auth header",
+    authValue: "`Authorization: Bearer nlnr_...` (or `x-api-key`)",
+    permission: "Permission",
+    permissionValue: "A read token is enough",
+    parameter: "Parameter",
+    paramDescription: "Description",
+    canvasIdParam: "Required. The canvas id.",
+    nodeIdsParam:
+      "Required. 1 to 100 node ids, comma-separated (`nodeIds=a,b`) or repeated (`nodeIds=a&nodeIds=b`).",
+    idsSource:
+      "Both ids come from **Copy ID → Canvas & node ID** in the app. Node ids are the short ids of that reference.",
+    post: "The same read, with the parameters in a JSON body, for lists too long for a URL. Nothing is written.",
+    response: "Response",
+    responseBody:
+      "`200 OK`, with the blocks found and the ids that weren't: unknown, on another canvas, or in the trash. Those don't fail the request. An id asked twice comes back once.",
+  },
+  errors: {
+    heading: "One shape for every error.",
+    lede: "A status code, a stable `code` to branch on, and a message meant for a human.",
+    mcpNote:
+      "The MCP endpoint answers `401` to a missing or revoked token too, and `405` to anything but `POST`.",
+  },
+  cta: {
+    heading: "Building something?",
+    body: "Missing an endpoint, or a tool your agent needs? Nolënor is open source: open an issue, or read how it works.",
+    issue: "Open an issue",
+    token: "Create a token",
+  },
+};
+
+const fr: typeof en = {
+  title: "Développeurs",
+  description:
+    "Connectez Claude, Cursor ou n’importe quel client MCP à vos canevas Nolënor, et lisez leur contenu via la REST API.",
+  label: "Développeurs",
+  headline: "Vos canevas, depuis n’importe quel outil.",
+  lede: "Branchez Claude, Cursor ou n’importe quel client MCP sur vos canevas : il les lit et les modifie comme le fait Nolë. Ou appelez la REST API depuis vos propres scripts. Un seul token, vos droits, rien de plus.",
+  pageSections: "Sections de la page",
+  onThisPage: "Sur cette page",
+  toc: {
+    token: "Obtenir un token",
+    mcp: "Se connecter via MCP",
+    tools: "Outils MCP",
+    rest: "REST API",
+    errors: "Erreurs",
+  },
+  mcpCard: {
+    title: "Serveur MCP",
+    body: "Pour les assistants IA. Lister, lire, chercher et modifier des blocs, avec les mêmes outils que Nolë. Les changements apparaissent en direct sur le canevas.",
+  },
+  restCard: {
+    title: "REST API",
+    bodyBefore: "Pour votre propre code. Du HTTP et du JSON, tout simplement, versionnés sous",
+    bodyAfter:
+      ". En lecture seule pour l’instant : elle renvoie le contenu des blocs que vous demandez.",
+  },
+  token: {
+    heading: "Tout commence dans les Paramètres.",
+    lede: "Le serveur MCP et la REST API acceptent le même token d’API. Il agit en votre nom : il ouvre les canevas que vous pouvez ouvrir, et aucun autre.",
+    steps: [
+      "Dans l’app, ouvrez **Paramètres → Tokens MCP & API** et cliquez sur **Nouveau token**.",
+      "Donnez-lui un nom, puis choisissez une permission. **Lecture** liste, lit et cherche, et suffit à la REST API. **Écriture** permet en plus de créer et de modifier des blocs, sur les canevas dont vous êtes éditeur ou propriétaire.",
+      "Copiez le token (il commence par `nlnr_`). Il ne s’affiche qu’une seule fois : nous n’en conservons qu’une empreinte. La même fenêtre vous donne l’URL exacte de l’endpoint et une commande Claude Code prête à coller.",
+    ],
+    warning:
+      "Traitez un token comme un mot de passe. S’il fuite, révoquez-le depuis la même page : tous les outils qui l’utilisent perdent aussitôt l’accès. La liste indique quand chaque token a servi pour la dernière fois.",
+    cta: "Créer un token",
+  },
+  mcp: {
+    heading: "Un second Nolë, dans l’outil que vous utilisez déjà.",
+    lede: "Nolënor parle le Model Context Protocol en streamable HTTP. Donnez à votre client l’endpoint et le token, et il peut travailler sur vos canevas.",
+    endpoint: "Endpoint",
+    transport: "Transport",
+    transportValue: "Streamable HTTP, sans état, `POST` uniquement",
+    authHeader: "Header d’auth",
+    authValue: "`Authorization: Bearer nlnr_...`, ou `x-api-key: nlnr_...`",
+    oneLine: "Une ligne",
+    claudeCode:
+      "Collez ceci dans un terminal. La fenêtre du token, dans les Paramètres, affiche la même commande avec votre token déjà inséré.",
+    claudeDesktop:
+      "Ajoutez un connecteur personnalisé avec l’URL de l’endpoint. Claude Desktop ne propose que des noms de header prédéfinis, sans `Authorization` : choisissez `x-api-key` et collez le token brut comme valeur.",
+    customConnector: "Connecteur personnalisé",
+    otherClientsTitle: "Cursor et les autres clients",
+    otherClients:
+      "Tout client qui lit un fichier JSON `mcpServers` (le `mcp.json` de Cursor, le `.mcp.json` d’un projet…) accepte ceci :",
+    pointTitle: "Désignez-lui un bloc",
+    point:
+      "Faites un clic droit sur un bloc du canevas, puis **Copier l’ID → ID du canevas et du nœud**. Collez la référence dans votre conversation : l’assistant sait exactement de quel canevas et de quel bloc vous parlez.",
+    clipboard: "presse-papiers",
+  },
+  tools: {
+    heading: "Les mêmes mains que Nolë.",
+    lede: "Un token en lecture voit les deux premiers outils, un token en écriture les voit tous. Tous les outils sauf `list_canvases` prennent un `canvasId`, et chaque modification passe par vos droits sur ce canevas.",
+    read: "Lecture",
+    readBadge: "Token lecture ou écriture",
+    write: "Écriture",
+    writeBadge: "Token écriture",
+    limits:
+      "Ce qu’il ne sait pas faire : naviguer sur le web, générer des images, transcrire de l’audio, utiliser la mémoire ou les skills de Nolë, ni toucher à vos paramètres et à vos partages. Ses modifications apparaissent sous le nom « Agent » dans les **Versions** d’un bloc : vous pouvez toujours revenir en arrière.",
+  },
+  rest: {
+    heading: "Lisez vos blocs depuis votre propre code.",
+    lede: "Un seul endpoint pour l’instant : le contenu de 100 blocs d’un canevas au plus, en un seul appel. Envoyez le token avec chaque requête.",
+    baseUrl: "URL de base",
+    authHeader: "Header d’auth",
+    authValue: "`Authorization: Bearer nlnr_...` (ou `x-api-key`)",
+    permission: "Permission",
+    permissionValue: "Un token en lecture suffit",
+    parameter: "Paramètre",
+    paramDescription: "Description",
+    canvasIdParam: "Obligatoire. L’id du canevas.",
+    nodeIdsParam:
+      "Obligatoire. De 1 à 100 ids de nœuds, séparés par des virgules (`nodeIds=a,b`) ou répétés (`nodeIds=a&nodeIds=b`).",
+    idsSource:
+      "Les deux ids viennent de **Copier l’ID → ID du canevas et du nœud** dans l’app. Les ids de nœuds sont les ids courts de cette référence.",
+    post: "La même lecture, avec les paramètres dans un corps JSON, pour les listes trop longues pour une URL. Rien n’est écrit.",
+    response: "Réponse",
+    responseBody:
+      "`200 OK`, avec les blocs trouvés et les ids qui ne l’ont pas été : inconnus, sur un autre canevas ou dans la corbeille. Ils ne font pas échouer la requête. Un id demandé deux fois ne revient qu’une fois.",
+  },
+  errors: {
+    heading: "Une seule forme pour toutes les erreurs.",
+    lede: "Un code de statut, un `code` stable sur lequel brancher votre logique, et un message pensé pour un humain.",
+    mcpNote:
+      "L’endpoint MCP répond lui aussi `401` à un token absent ou révoqué, et `405` à tout ce qui n’est pas un `POST`.",
+  },
+  cta: {
+    heading: "Vous construisez quelque chose ?",
+    body: "Il vous manque un endpoint, ou un outil dont votre agent a besoin ? Nolënor est open source : ouvrez une issue, ou découvrez comment il fonctionne.",
+    issue: "Ouvrir une issue",
+    token: "Créer un token",
+  },
+};
+
+const copy = { en, fr }[lang];
+
+const mcpReadTools = mcpReadToolsByLang[lang];
+const mcpWriteTools = mcpWriteToolsByLang[lang];
+const nodeDataFields = nodeDataFieldsByLang[lang];
+const apiErrors = apiErrorsByLang[lang];
+
+const toc = (["token", "mcp", "tools", "rest", "errors"] as const).map((id) => ({
+  id,
+  label: copy.toc[id],
+}));
 
 const claudeCodeCommand = `claude mcp add --transport http nolenor \\
   ${MCP_ENDPOINT} \\
@@ -94,22 +326,20 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
 ---
 
 <Layout
-  title={`Developers — ${SITE_NAME}`}
-  description="Connect Claude, Cursor or any MCP client to your Nolënor canvases, and read their content over the REST API."
+  title={`${copy.title} — ${SITE_NAME}`}
+  description={copy.description}
 >
   <section class="pt-14 pb-14 sm:pt-24 sm:pb-20">
     <Container class="flex flex-col items-center gap-6 text-center">
-      <SectionLabel>Developers</SectionLabel>
+      <SectionLabel>{copy.label}</SectionLabel>
       <h1 class="max-w-3xl font-serif text-4xl leading-[1.15] text-balance text-foreground sm:text-5xl lg:text-6xl">
-        Your canvases, from any tool.
+        {copy.headline}
       </h1>
       <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-        Plug Claude, Cursor or any MCP client into your canvases so it reads
-        and edits them like Nolë does. Or call the REST API from your own
-        scripts. One token, your rights, nothing more.
+        {copy.lede}
       </p>
 
-      <nav aria-label="Page sections" class="mt-2 flex flex-wrap justify-center gap-2">
+      <nav aria-label={copy.pageSections} class="mt-2 flex flex-wrap justify-center gap-2">
         {
           toc.map((item, index) => (
             <a
@@ -135,10 +365,9 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-brand">
           <Icon name="lucide:plug" class="h-5 w-5" />
         </span>
-        <h2 class="font-sans text-lg font-bold text-foreground">MCP server</h2>
+        <h2 class="font-sans text-lg font-bold text-foreground">{copy.mcpCard.title}</h2>
         <p class="text-pretty text-muted-foreground">
-          For AI assistants. List, read, search and edit blocks, with the same
-          tools Nolë uses. Changes show up live on the canvas.
+          {copy.mcpCard.body}
         </p>
         <code class="mt-auto w-fit rounded-md bg-muted px-2 py-1 text-xs text-foreground/80">POST /mcp</code>
       </a>
@@ -150,11 +379,10 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-brand">
           <Icon name="lucide:braces" class="h-5 w-5" />
         </span>
-        <h2 class="font-sans text-lg font-bold text-foreground">REST API</h2>
+        <h2 class="font-sans text-lg font-bold text-foreground">{copy.restCard.title}</h2>
         <p class="text-pretty text-muted-foreground">
-          For your own code. Plain HTTP and JSON, versioned under{" "}
-          <code class="text-sm">/api/v1</code>. Read-only for now: it returns
-          the content of the blocks you ask for.
+          {copy.restCard.bodyBefore}{" "}
+          <code class="text-sm">/api/v1</code>{copy.restCard.bodyAfter}
         </p>
         <code class="mt-auto w-fit rounded-md bg-muted px-2 py-1 text-xs text-foreground/80">GET /api/v1/node-datas</code>
       </a>
@@ -166,9 +394,9 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
   <Container class="grid gap-12 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-16">
     <aside class="hidden lg:block">
       <div class="sticky top-28 py-20">
-        <nav aria-label="On this page" data-help-toc>
+        <nav aria-label={copy.onThisPage} data-help-toc>
           <p class="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-            On this page
+            {copy.onThisPage}
           </p>
           <ul class="flex flex-col gap-0.5 border-l border-border">
             {
@@ -191,54 +419,37 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           <p class="text-sm font-semibold text-brand">
             <span class="font-serif">01</span>
             <span class="mx-1.5 text-brand/40">/</span>
-            Get a token
+            {copy.toc.token}
           </p>
-          <h2 class="text-balance text-foreground">Start in Settings.</h2>
+          <h2 class="text-balance text-foreground">{copy.token.heading}</h2>
           <p class="text-lg text-pretty text-muted-foreground">
-            The MCP server and the REST API take the same API token. It acts as
-            you: it opens the canvases you can open, and no others.
+            {copy.token.lede}
           </p>
         </header>
 
         <ol class="mt-10 flex max-w-2xl flex-col gap-5">
-          <li class="flex gap-4">
-            <span class="font-serif text-lg text-brand/60">1.</span>
-            <p>
-              In the app, open <strong>Settings → MCP & API tokens</strong>{" "}
-              and click <strong>New token</strong>.
-            </p>
-          </li>
-          <li class="flex gap-4">
-            <span class="font-serif text-lg text-brand/60">2.</span>
-            <p>
-              Name it, then pick a permission. <strong>Read</strong> lists,
-              reads and searches, and is all the REST API needs.{" "}
-              <strong>Write</strong> also creates and edits blocks, on the
-              canvases where you are editor or owner.
-            </p>
-          </li>
-          <li class="flex gap-4">
-            <span class="font-serif text-lg text-brand/60">3.</span>
-            <p>
-              Copy the token (it starts with <code>nlnr_</code>). It is shown
-              once: we only keep a digest of it. The same dialog gives you the
-              exact endpoint URL and a ready-to-paste Claude Code command.
-            </p>
-          </li>
+          {
+            copy.token.steps.map((step, index) => (
+              <li class="flex gap-4">
+                <span class="font-serif text-lg text-brand/60">{index + 1}.</span>
+                <p>
+                  {rich(step).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
+                </p>
+              </li>
+            ))
+          }
         </ol>
 
         <div class="mt-8 flex max-w-2xl gap-3 rounded-2xl border border-border bg-surface p-5">
           <Icon name="lucide:shield" class="mt-0.5 h-5 w-5 shrink-0 text-brand" />
           <p class="text-[0.95rem] text-pretty text-muted-foreground">
-            Treat a token like a password. If one leaks, revoke it from the same
-            page: every tool using it loses access at once. The list shows when
-            each token was last used.
+            {copy.token.warning}
           </p>
         </div>
 
         <div class="mt-8">
           <Button href={APP_API_TOKENS_URL}>
-            Create a token
+            {copy.token.cta}
             <Icon name="lucide:arrow-right" class="h-4 w-4" />
           </Button>
         </div>
@@ -249,30 +460,27 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           <p class="text-sm font-semibold text-brand">
             <span class="font-serif">02</span>
             <span class="mx-1.5 text-brand/40">/</span>
-            Connect over MCP
+            {copy.toc.mcp}
           </p>
-          <h2 class="text-balance text-foreground">A second Nolë, in the tool you already use.</h2>
+          <h2 class="text-balance text-foreground">{copy.mcp.heading}</h2>
           <p class="text-lg text-pretty text-muted-foreground">
-            Nolënor speaks the Model Context Protocol over streamable HTTP. Give
-            your client the endpoint and the token, and it can work on your
-            canvases.
+            {copy.mcp.lede}
           </p>
         </header>
 
         <dl class="mt-10 max-w-2xl border-t border-border">
           <div class="grid gap-x-6 gap-y-1 border-b border-border py-4 sm:grid-cols-[9rem_minmax(0,1fr)]">
-            <dt class="font-semibold text-foreground">Endpoint</dt>
+            <dt class="font-semibold text-foreground">{copy.mcp.endpoint}</dt>
             <dd class="min-w-0 break-all"><code>{MCP_ENDPOINT}</code></dd>
           </div>
           <div class="grid gap-x-6 gap-y-1 border-b border-border py-4 sm:grid-cols-[9rem_minmax(0,1fr)]">
-            <dt class="font-semibold text-foreground">Transport</dt>
-            <dd class="text-muted-foreground">Streamable HTTP, stateless, <code>POST</code> only</dd>
+            <dt class="font-semibold text-foreground">{copy.mcp.transport}</dt>
+            <dd class="text-muted-foreground">{rich(copy.mcp.transportValue).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}</dd>
           </div>
           <div class="grid gap-x-6 gap-y-1 border-b border-border py-4 sm:grid-cols-[9rem_minmax(0,1fr)]">
-            <dt class="font-semibold text-foreground">Auth header</dt>
+            <dt class="font-semibold text-foreground">{copy.mcp.authHeader}</dt>
             <dd class="text-muted-foreground">
-              <code>Authorization: Bearer nlnr_...</code>, or{" "}
-              <code>x-api-key: nlnr_...</code>
+              {rich(copy.mcp.authValue).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
             </dd>
           </div>
         </dl>
@@ -281,11 +489,10 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           <div class="flex flex-col gap-4">
             <div class="flex items-center gap-3">
               <h3 class="text-foreground">Claude Code</h3>
-              <Badge tone="brand">One line</Badge>
+              <Badge tone="brand">{copy.mcp.oneLine}</Badge>
             </div>
             <p class="max-w-2xl text-pretty text-muted-foreground">
-              Paste this in a terminal. The token dialog in Settings prints the
-              same command with your token already in it.
+              {copy.mcp.claudeCode}
             </p>
             <CodeBlock code={claudeCodeCommand} filename="terminal" />
           </div>
@@ -293,31 +500,25 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           <div class="flex flex-col gap-4">
             <h3 class="text-foreground">Claude Desktop</h3>
             <p class="max-w-2xl text-pretty text-muted-foreground">
-              Add a custom connector with the endpoint URL. Claude Desktop only
-              offers preset header names, with no <code>Authorization</code>:
-              pick <code>x-api-key</code> and paste the raw token as its value.
+              {rich(copy.mcp.claudeDesktop).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
             </p>
-            <CodeBlock code={claudeDesktopConfig} filename="Custom connector" />
+            <CodeBlock code={claudeDesktopConfig} filename={copy.mcp.customConnector} />
           </div>
 
           <div class="flex flex-col gap-4">
-            <h3 class="text-foreground">Cursor and other clients</h3>
+            <h3 class="text-foreground">{copy.mcp.otherClientsTitle}</h3>
             <p class="max-w-2xl text-pretty text-muted-foreground">
-              Any client that reads an <code>mcpServers</code> JSON file (Cursor's{" "}
-              <code>mcp.json</code>, a project <code>.mcp.json</code>…) takes
-              this:
+              {rich(copy.mcp.otherClients).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
             </p>
             <CodeBlock code={mcpJsonConfig} filename="mcp.json" />
           </div>
 
           <div class="flex flex-col gap-4">
-            <h3 class="text-foreground">Point it at a block</h3>
+            <h3 class="text-foreground">{copy.mcp.pointTitle}</h3>
             <p class="max-w-2xl text-pretty text-muted-foreground">
-              Right-click a block on the canvas, then <strong>Copy ID → Canvas &
-              node ID</strong>. Paste the reference into your conversation, and
-              the assistant knows exactly which canvas and block you mean.
+              {rich(copy.mcp.point).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
             </p>
-            <CodeBlock code={idReference} filename="clipboard" />
+            <CodeBlock code={idReference} filename={copy.mcp.clipboard} />
           </div>
         </div>
       </section>
@@ -327,22 +528,19 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           <p class="text-sm font-semibold text-brand">
             <span class="font-serif">03</span>
             <span class="mx-1.5 text-brand/40">/</span>
-            MCP tools
+            {copy.toc.tools}
           </p>
-          <h2 class="text-balance text-foreground">The same hands as Nolë.</h2>
+          <h2 class="text-balance text-foreground">{copy.tools.heading}</h2>
           <p class="text-lg text-pretty text-muted-foreground">
-            A read token sees the first two tools, a write token sees them all.
-            Every tool but <code>list_canvases</code> takes a{" "}
-            <code>canvasId</code>, and every edit goes through your rights on
-            that canvas.
+            {rich(copy.tools.lede).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
           </p>
         </header>
 
         <div class="mt-12 grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)]">
           <div class="rounded-2xl border border-border bg-surface px-5 pt-4 pb-2" data-reveal>
             <div class="mb-1 flex items-center justify-between gap-3">
-              <h3 class="font-sans text-sm font-bold tracking-wide text-brand uppercase">Read</h3>
-              <Badge>Read or write token</Badge>
+              <h3 class="font-sans text-sm font-bold tracking-wide text-brand uppercase">{copy.tools.read}</h3>
+              <Badge>{copy.tools.readBadge}</Badge>
             </div>
             <dl>
               {
@@ -358,8 +556,8 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
 
           <div class="rounded-2xl border border-border bg-surface px-5 pt-4 pb-2" data-reveal>
             <div class="mb-1 flex items-center justify-between gap-3">
-              <h3 class="font-sans text-sm font-bold tracking-wide text-brand uppercase">Write</h3>
-              <Badge tone="highlight">Write token</Badge>
+              <h3 class="font-sans text-sm font-bold tracking-wide text-brand uppercase">{copy.tools.write}</h3>
+              <Badge tone="highlight">{copy.tools.writeBadge}</Badge>
             </div>
             <dl class="grid sm:grid-cols-2 sm:gap-x-6">
               {
@@ -375,10 +573,7 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
         </div>
 
         <p class="mt-8 max-w-2xl text-pretty text-muted-foreground">
-          What it can't do: browse the web, generate images, transcribe audio,
-          use Nolë's memory or skills, or touch your settings and sharing.
-          Its edits appear as “Agent” in a block's <strong>Versions</strong>, so
-          you can always take one back.
+          {rich(copy.tools.limits).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
         </p>
       </section>
 
@@ -387,29 +582,28 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           <p class="text-sm font-semibold text-brand">
             <span class="font-serif">04</span>
             <span class="mx-1.5 text-brand/40">/</span>
-            REST API
+            {copy.toc.rest}
           </p>
-          <h2 class="text-balance text-foreground">Read blocks from your own code.</h2>
+          <h2 class="text-balance text-foreground">{copy.rest.heading}</h2>
           <p class="text-lg text-pretty text-muted-foreground">
-            One endpoint for now: the content of up to 100 blocks of a canvas,
-            in one call. Send the token with every request.
+            {copy.rest.lede}
           </p>
         </header>
 
         <dl class="mt-10 max-w-2xl border-t border-border">
           <div class="grid gap-x-6 gap-y-1 border-b border-border py-4 sm:grid-cols-[9rem_minmax(0,1fr)]">
-            <dt class="font-semibold text-foreground">Base URL</dt>
+            <dt class="font-semibold text-foreground">{copy.rest.baseUrl}</dt>
             <dd class="min-w-0 break-all"><code>{REST_API_BASE}</code></dd>
           </div>
           <div class="grid gap-x-6 gap-y-1 border-b border-border py-4 sm:grid-cols-[9rem_minmax(0,1fr)]">
-            <dt class="font-semibold text-foreground">Auth header</dt>
+            <dt class="font-semibold text-foreground">{copy.rest.authHeader}</dt>
             <dd class="text-muted-foreground">
-              <code>Authorization: Bearer nlnr_...</code> (or <code>x-api-key</code>)
+              {rich(copy.rest.authValue).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
             </dd>
           </div>
           <div class="grid gap-x-6 gap-y-1 border-b border-border py-4 sm:grid-cols-[9rem_minmax(0,1fr)]">
-            <dt class="font-semibold text-foreground">Permission</dt>
-            <dd class="text-muted-foreground">A read token is enough</dd>
+            <dt class="font-semibold text-foreground">{copy.rest.permission}</dt>
+            <dd class="text-muted-foreground">{copy.rest.permissionValue}</dd>
           </div>
         </dl>
 
@@ -423,29 +617,26 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
               <table class="w-full text-left text-[0.95rem]">
                 <thead>
                   <tr class="border-b border-border text-sm text-muted-foreground">
-                    <th class="py-2 pr-4 font-semibold">Parameter</th>
-                    <th class="py-2 font-semibold">Description</th>
+                    <th class="py-2 pr-4 font-semibold">{copy.rest.parameter}</th>
+                    <th class="py-2 font-semibold">{copy.rest.paramDescription}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="border-b border-border/70">
                     <td class="py-3 pr-4 align-top"><code>canvasId</code></td>
-                    <td class="py-3 text-pretty text-muted-foreground">Required. The canvas id.</td>
+                    <td class="py-3 text-pretty text-muted-foreground">{copy.rest.canvasIdParam}</td>
                   </tr>
                   <tr class="border-b border-border/70">
                     <td class="py-3 pr-4 align-top"><code>nodeIds</code></td>
                     <td class="py-3 text-pretty text-muted-foreground">
-                      Required. 1 to 100 node ids, comma-separated
-                      (<code>nodeIds=a,b</code>) or repeated
-                      (<code>nodeIds=a&nodeIds=b</code>).
+                      {rich(copy.rest.nodeIdsParam).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <p class="max-w-2xl text-pretty text-muted-foreground">
-              Both ids come from <strong>Copy ID → Canvas & node ID</strong> in
-              the app. Node ids are the short ids of that reference.
+              {rich(copy.rest.idsSource).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
             </p>
             <CodeBlock code={curlGet} filename="terminal" />
           </div>
@@ -456,19 +647,16 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
               <h3 class="font-mono text-lg text-foreground">/api/v1/node-datas</h3>
             </div>
             <p class="max-w-2xl text-pretty text-muted-foreground">
-              The same read, with the parameters in a JSON body, for lists too
-              long for a URL. Nothing is written.
+              {copy.rest.post}
             </p>
             <CodeBlock code={curlPost} filename="terminal" />
             <CodeBlock code={fetchExample} filename="read-blocks.js" />
           </div>
 
           <div class="flex flex-col gap-4">
-            <h3 class="text-foreground">Response</h3>
+            <h3 class="text-foreground">{copy.rest.response}</h3>
             <p class="max-w-2xl text-pretty text-muted-foreground">
-              <code>200 OK</code>, with the blocks found and the ids that
-              weren't: unknown, on another canvas, or in the trash. Those don't
-              fail the request. An id asked twice comes back once.
+              {rich(copy.rest.responseBody).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
             </p>
             <CodeBlock code={responseExample} filename="200 OK" />
             <dl class="max-w-2xl border-t border-border">
@@ -490,12 +678,11 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           <p class="text-sm font-semibold text-brand">
             <span class="font-serif">05</span>
             <span class="mx-1.5 text-brand/40">/</span>
-            Errors
+            {copy.toc.errors}
           </p>
-          <h2 class="text-balance text-foreground">One shape for every error.</h2>
+          <h2 class="text-balance text-foreground">{copy.errors.heading}</h2>
           <p class="text-lg text-pretty text-muted-foreground">
-            A status code, a stable <code>code</code> to branch on, and a
-            message meant for a human.
+            {rich(copy.errors.lede).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
           </p>
         </header>
 
@@ -513,8 +700,7 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
             }
           </dl>
           <p class="max-w-2xl text-pretty text-muted-foreground">
-            The MCP endpoint answers <code>401</code> to a missing or revoked
-            token too, and <code>405</code> to anything but <code>POST</code>.
+            {rich(copy.errors.mcpNote).map((s) => s.tag === "code" ? <code>{s.text}</code> : s.tag === "strong" ? <strong>{s.text}</strong> : s.text)}
           </p>
         </div>
       </section>
@@ -529,19 +715,18 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
         data-reveal-variant="zoom"
       >
         <div class="flex max-w-xl flex-col gap-2">
-          <h2 class="text-balance text-foreground">Building something?</h2>
+          <h2 class="text-balance text-foreground">{copy.cta.heading}</h2>
           <p class="text-pretty text-muted-foreground">
-            Missing an endpoint, or a tool your agent needs? Nolënor is open
-            source: open an issue, or read how it works.
+            {copy.cta.body}
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
           <Button href={`${GITHUB_REPO_URL}/issues`} variant="ghost" class="border border-border">
             <Icon name="lucide:github" class="h-4 w-4" />
-            Open an issue
+            {copy.cta.issue}
           </Button>
           <Button href={APP_API_TOKENS_URL}>
-            Create a token
+            {copy.cta.token}
             <Icon name="lucide:arrow-right" class="h-4 w-4" />
           </Button>
         </div>
