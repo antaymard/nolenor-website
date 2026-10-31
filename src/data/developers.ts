@@ -30,11 +30,11 @@ export const mcpReadTools: Record<Lang, McpTool[]> = {
   fr: [
     {
       name: "list_canvases",
-      body: "Tous les canevas que vous pouvez ouvrir, avec leur id, leur nom et leur description. Cet id est le canvasId qu’attendent tous les autres outils.",
+      body: "Les canevas auxquels vous avez accès, avec leur id, leur nom et leur description. Cet id est le canvasId que demandent tous les autres outils.",
     },
     {
       name: "bash",
-      body: "Un shell en lecture seule sur un canevas, isolé dans un bac à sable. La commande nole liste (nole ls), lit (nole read), cherche (nole search) et extrait les tableaux (nole table) ; grep, jq, awk et consorts font le reste.",
+      body: "Un shell en lecture seule, isolé en sandbox, ouvert sur un seul canevas. La commande nole liste (nole ls), lit (nole read), cherche (nole search) et extrait les tableaux (nole table) ; grep, jq, awk et consorts font le reste.",
     },
   ],
 };
@@ -59,22 +59,22 @@ export const mcpWriteTools: Record<Lang, McpTool[]> = {
     { name: "patch_app_node_code", body: "Edit the code of an App block." },
   ],
   fr: [
-    { name: "create_node", body: "Ajouter des blocs : documents, tableaux, liens, valeurs, titres, apps…" },
-    { name: "set_node_data", body: "Définir les valeurs d’un bloc (les tableaux ont leurs propres outils)." },
-    { name: "create_connection", body: "Relier deux blocs." },
-    { name: "group_nodes", body: "Rassembler des blocs dans un cadre." },
-    { name: "move_and_style_nodes", body: "Déplacer des blocs, ou changer leur couleur ou leur variante d’affichage." },
-    { name: "delete_elements", body: "Envoyer blocs et connexions à la corbeille, où ils restent 30 jours." },
+    { name: "create_node", body: "Ajouter des nœuds : documents, tableaux, liens, valeurs, titres, apps…" },
+    { name: "set_node_data", body: "Définir les valeurs d’un nœud (les tableaux ont leurs propres outils)." },
+    { name: "create_connection", body: "Relier deux nœuds." },
+    { name: "group_nodes", body: "Regrouper des nœuds dans un cadre." },
+    { name: "move_and_style_nodes", body: "Déplacer des nœuds, changer leur couleur ou leur variante d’affichage." },
+    { name: "delete_elements", body: "Mettre nœuds et connexions à la corbeille, où ils restent 30 jours." },
     { name: "insert_blocks", body: "Insérer paragraphes, titres, listes… dans un document." },
     { name: "replace_block", body: "Réécrire un bloc d’un document." },
     { name: "patch_block_text", body: "Modifier un passage de texte sur place." },
     { name: "update_block_props", body: "Changer les propriétés d’un bloc de document." },
     { name: "delete_blocks", body: "Retirer des blocs d’un document." },
     { name: "table_update_schema", body: "Ajouter, renommer ou supprimer les colonnes d’un tableau." },
-    { name: "table_insert_rows", body: "Ajouter des lignes à la fin d’un tableau." },
+    { name: "table_insert_rows", body: "Ajouter des lignes en fin de tableau." },
     { name: "table_update_rows", body: "Modifier des lignes d’un tableau." },
     { name: "table_delete_rows", body: "Supprimer des lignes d’un tableau." },
-    { name: "patch_app_node_code", body: "Modifier le code d’un bloc App." },
+    { name: "patch_app_node_code", body: "Modifier le code d’un nœud App." },
   ],
 };
 
@@ -105,7 +105,7 @@ export const nodeDataFields: Record<Lang, ApiField[]> = {
     { name: "nodeId", body: "L’id du nœud demandé." },
     {
       name: "nodeDataId",
-      body: "Id du contenu derrière le bloc. Plusieurs blocs peuvent partager le même, quand un contenu s’affiche sur plusieurs canevas.",
+      body: "Id du contenu affiché par le nœud. Plusieurs nœuds peuvent partager le même, quand un contenu apparaît sur plusieurs canevas.",
     },
     {
       name: "type",
@@ -113,10 +113,10 @@ export const nodeDataFields: Record<Lang, ApiField[]> = {
     },
     {
       name: "templateId",
-      body: "Blocs personnalisés uniquement : le modèle qui définit la forme de values.",
+      body: "Nœuds personnalisés uniquement : le modèle qui définit la forme de values.",
     },
-    { name: "values", body: "Le contenu du bloc. Ses champs dépendent de type." },
-    { name: "updatedAt", body: "Dernière modification, en millisecondes depuis l’epoch Unix." },
+    { name: "values", body: "Le contenu du nœud. Ses champs dépendent de type." },
+    { name: "updatedAt", body: "Date de dernière modification, en timestamp Unix (millisecondes)." },
   ],
 };
 
@@ -148,17 +148,17 @@ export const apiErrors: Record<Lang, ApiError[]> = {
     {
       status: 400,
       code: "bad_request",
-      body: "canvasId absent, nodeIds absent ou vide, plus de 100 nodeIds, ou un corps de POST qui n’est pas un objet JSON.",
+      body: "canvasId absent, nodeIds absent ou vide, plus de 100 nodeIds, ou corps de POST qui n’est pas un objet JSON.",
     },
     {
       status: 401,
       code: "unauthorized",
-      body: "Aucun token, ou un token invalide ou révoqué.",
+      body: "Token absent, invalide ou révoqué.",
     },
     {
       status: 404,
       code: "canvas_not_found",
-      body: "Le canevas n’existe pas, ou votre token ne peut pas l’ouvrir. La réponse est la même dans les deux cas : l’API ne révèle jamais qu’un canevas privé existe.",
+      body: "Le canevas n’existe pas, ou votre token n’y a pas accès. Les deux cas reçoivent la même réponse : l’API ne révèle jamais l’existence d’un canevas privé.",
     },
   ],
 };
