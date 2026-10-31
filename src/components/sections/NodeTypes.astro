@@ -2,6 +2,21 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import { nodeTypes } from "@/data/nodeTypes";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  title: "Every material, on the same workbench",
+  lead: "Each node can be read, edited and searched, by you and by Nolë. PDFs, images, audio and video are transcribed and indexed, so nothing you lay down gets lost in the pile.",
+  soon: "Coming soon",
+};
+const fr: typeof en = {
+  title: "Toutes les matières, sur le même établi",
+  lead: "Chaque nœud se lit, se modifie et se retrouve, par vous comme par Nolë. PDF, images, audio et vidéo sont transcrits et indexés : rien de ce que vous posez ne se perd dans la pile.",
+  soon: "Bientôt disponible",
+};
+const copy = { en, fr }[lang];
 
 /*
  * The nine materials as one grid of tinted wells on the page's own paper:
@@ -10,19 +25,15 @@ import { nodeTypes } from "@/data/nodeTypes";
  * purpose (see MEDIA_BRIEF.md). The one type that does not ship yet is set
  * in type alone, outlined rather than filled.
  */
-const shipped = nodeTypes.filter((node) => !node.soon);
-const soon = nodeTypes.filter((node) => node.soon);
+const shipped = nodeTypes[lang].filter((node) => !node.soon);
+const soon = nodeTypes[lang].filter((node) => node.soon);
 ---
 
 <section id="nodes" class="nodes" aria-labelledby="nodes-title">
   <div class="wrap">
     <div class="nodes__head">
-      <h2 id="nodes-title">Every material, on the same workbench</h2>
-      <p class="nodes__lead">
-        Each node can be read, edited and searched, by you and by Nolë. PDFs,
-        images, audio and video are transcribed and indexed, so nothing you lay
-        down gets lost in the pile.
-      </p>
+      <h2 id="nodes-title">{copy.title}</h2>
+      <p class="nodes__lead">{copy.lead}</p>
     </div>
 
     <ul class="nodes__grid">
@@ -50,7 +61,7 @@ const soon = nodeTypes.filter((node) => node.soon);
               {node.name}
             </h3>
             <p>{node.description}</p>
-            <p class="node__when">Coming soon</p>
+            <p class="node__when">{copy.soon}</p>
           </li>
         ))
       }

@@ -1,5 +1,20 @@
 ---
 import { APP_SIGNUP_URL } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  title: "Let’s not be operators. Let’s stay artisans.",
+  body: "Nolënor is in open beta and free to use while we build it with early users. The workshop is open.",
+  cta: "Try it for free",
+};
+const fr: typeof en = {
+  title: "Ne soyons pas des opérateurs. Restons des artisans.",
+  body: "Nolënor est en bêta ouverte, et gratuit pendant que nous le construisons avec ses premiers utilisateurs. L’atelier est ouvert.",
+  cta: "Essayer gratuitement",
+};
+const copy = { en, fr }[lang];
 
 /*
  * The close: the one place the brand colour is used as a field, edge to
@@ -14,14 +29,11 @@ import { APP_SIGNUP_URL } from "@/lib/constants";
 
 <section class="close" aria-labelledby="close-title">
   <div class="wrap close__grid">
-    <h2 id="close-title">Let’s not be operators. Let’s stay artisans.</h2>
+    <h2 id="close-title">{copy.title}</h2>
 
     <div class="close__act">
-      <p>
-        Nolënor is in open beta and free to use while we build it with early
-        users. The workshop is open.
-      </p>
-      <a href={APP_SIGNUP_URL} class="btn btn--inverse" rel="noopener noreferrer">Try it for free</a>
+      <p>{copy.body}</p>
+      <a href={APP_SIGNUP_URL} class="btn btn--inverse" rel="noopener noreferrer">{copy.cta}</a>
     </div>
   </div>
 </section>

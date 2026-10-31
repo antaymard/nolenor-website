@@ -1,6 +1,21 @@
 ---
 import MediaFrame from "@/components/ui/MediaFrame.astro";
 import { featureHighlights, featureNotes } from "@/data/moreFeatures";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  title: "Built to keep you in step with the work",
+  lead: "The details that let you follow what the agent did, find what you laid down, and keep your work your own.",
+  notes: "And also",
+};
+const fr: typeof en = {
+  title: "Pensé pour que vous gardiez le fil",
+  lead: "Les détails qui vous permettent de suivre ce qu’a fait l’agent, de retrouver ce que vous avez posé, et de garder votre travail à vous.",
+  notes: "Et aussi",
+};
+const copy = { en, fr }[lang];
 
 /*
  * The depth section: proof there is a real product here, read at speed.
@@ -10,17 +25,14 @@ import { featureHighlights, featureNotes } from "@/data/moreFeatures";
  * under it as a pair; then the features that need no picture at all, as
  * ruled rows. The hierarchy is the layout.
  */
-const [lead, ...pair] = featureHighlights;
+const [lead, ...pair] = featureHighlights[lang];
 ---
 
 <section class="depth" aria-labelledby="depth-title">
   <div class="wrap">
     <div class="depth__head">
-      <h2 id="depth-title">Built to keep you in step with the work</h2>
-      <p class="depth__lead">
-        The details that let you follow what the agent did, find what you laid
-        down, and keep your work your own.
-      </p>
+      <h2 id="depth-title">{copy.title}</h2>
+      <p class="depth__lead">{copy.lead}</p>
     </div>
 
     <div class="depth__feature depth__feature--lead">
@@ -58,10 +70,10 @@ const [lead, ...pair] = featureHighlights;
     </div>
 
     <div class="depth__notes">
-      <h3>And also</h3>
+      <h3>{copy.notes}</h3>
       <dl>
         {
-          featureNotes.map((note) => (
+          featureNotes[lang].map((note) => (
             <div class="depth__note">
               <dt>{note.title}</dt>
               <dd>{note.description}</dd>

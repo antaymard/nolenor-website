@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
 
 interface Props {
   id: string;
@@ -31,6 +32,10 @@ const {
 // a clearly-labelled placeholder state until `src` is supplied, so the
 // page looks intentional rather than broken while media is in production.
 const isPlaceholder = !src;
+const placeholderLabel = {
+  en: "Media placeholder:",
+  fr: "Média provisoire :",
+}[getLang(Astro.currentLocale)];
 ---
 
 <div
@@ -51,7 +56,7 @@ const isPlaceholder = !src;
           {alt}
         </p>
         <span class="text-xs text-muted-foreground">
-          Media placeholder: {id}
+          {placeholderLabel} {id}
         </span>
       </div>
     ) : kind === "video" ? (

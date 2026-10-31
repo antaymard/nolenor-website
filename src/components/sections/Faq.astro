@@ -1,6 +1,11 @@
 ---
 import { Icon } from "astro-icon/components";
 import { faqEntries } from "@/data/faq";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const entries = faqEntries[lang];
+const title = { en: "Questions", fr: "Questions" }[lang];
 
 /*
  * Native <details> rather than a scripted accordion: it works before any
@@ -14,7 +19,7 @@ import { faqEntries } from "@/data/faq";
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: faqEntries.map((entry) => ({
+  mainEntity: entries.map((entry) => ({
     "@type": "Question",
     name: entry.question,
     acceptedAnswer: { "@type": "Answer", text: entry.answer },
@@ -27,12 +32,12 @@ const faqSchema = {
 <section id="faq" class="faq" aria-labelledby="faq-title">
   <div class="wrap faq__grid">
     <div class="faq__head">
-      <h2 id="faq-title">Questions</h2>
+      <h2 id="faq-title">{title}</h2>
     </div>
 
     <div class="faq-list">
       {
-        faqEntries.map((entry) => (
+        entries.map((entry) => (
           <details class="faq-item">
             <summary class="faq-q">
               <span>{entry.question}</span>
