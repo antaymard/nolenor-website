@@ -79,32 +79,32 @@ export const flagship: Record<Lang, Flagship> = {
   },
   fr: {
     craft: "Consultant indépendant",
-    title: "Prendre la mesure d’un marché en une seule séance",
+    title: "Monter en compétence sur un marché, d’une traite",
     brief:
-      "Un nouveau client dans la fintech. Avant le premier atelier, vous devez comprendre le paysage du paiement fractionné (BNPL) en Europe : qui sont les acteurs, comment ils gagnent leur argent, quelle réglementation se prépare.",
+      "Nouvelle mission, pour un client de la fintech. Avant l’atelier de cadrage, il vous faut y voir clair sur le paiement fractionné (BNPL) en Europe : qui sont les acteurs, comment ils se rémunèrent, quelle réglementation se prépare.",
     steps: [
       {
-        you: "Vous ouvrez un canevas et le dites en une ligne : « Je dois comprendre le paysage du BNPL en Europe. »",
-        nole: "Nolë cherche sur le web et pose un nœud pour chacun des principaux acteurs, avec les liens vers ses sources.",
-        check: "Vous parcourez la liste et retirez celui qui n’a rien à y faire.",
+        you: "Vous ouvrez un canevas et posez le sujet en une ligne : « J’ai besoin de comprendre le BNPL en Europe. »",
+        nole: "Nolë fait ses recherches sur le web et pose un nœud par acteur majeur, sources en lien.",
+        check: "Vous parcourez la liste et écartez celui qui n’a rien à faire là.",
       },
       {
-        you: "Pendant ce temps, vous posez votre propre cadre : Réglementation, Modèles économiques, Risques. Trois nœuds, encore vides.",
-        nole: "Rien. Ce sont vos nœuds, et la forme de votre pensée.",
+        you: "En parallèle, vous posez votre propre grille de lecture : Réglementation, Modèles économiques, Risques. Trois nœuds, vides pour l’instant.",
+        nole: "Rien. Ces nœuds sont à vous : ils dessinent votre raisonnement.",
       },
       {
-        you: "Un acteur se détache. Vous déposez son dernier rapport annuel sur le canevas et faites un Alt-clic dessus.",
+        you: "Un acteur sort du lot. Vous glissez son dernier rapport annuel sur le canevas et faites Alt-clic dessus.",
         nole: "Nolë lit le PDF et remplit le nœud de l’acteur avec les chiffres qui comptent.",
-        check: "Vous ouvrez le rapport et vérifiez les chiffres vous-même.",
+        check: "Vous ouvrez le rapport et contrôlez les chiffres vous-même.",
       },
       {
-        you: "À mesure que des motifs se dessinent, vous reliez les acteurs à vos thèmes. Deux d’entre eux partagent un modèle ; un autre est exposé à une règle à venir.",
-        nole: "À votre demande, Nolë compare les modèles économiques des nœuds que vous avez reliés et en tire un tableau.",
-        check: "Vous supprimez les colonnes inutiles. Le tableau reste modifiable.",
+        you: "Des recoupements apparaissent, et vous reliez les acteurs à vos thèmes au fur et à mesure. Deux d’entre eux ont le même modèle ; un autre est exposé à une règle en préparation.",
+        nole: "Si vous le lui demandez, Nolë compare les modèles économiques des nœuds que vous avez reliés et met le tout dans un tableau.",
+        check: "Vous supprimez les colonnes en trop. Le tableau reste modifiable.",
       },
     ],
     outcome:
-      "À la fin, le canevas est la carte du marché : votre structure, les recherches de l’agent accrochées dessus, chaque chiffre à un clic de sa source. C’est la base de votre livrable, et vous pouvez en expliquer chaque partie, puisque c’est vous qui l’avez bâti.",
+      "En fin de séance, le canevas est devenu la cartographie du marché : votre grille, les recherches de l’agent accrochées dessus, chaque chiffre à un clic de sa source. Votre livrable part de là, et vous pouvez en justifier chaque élément, puisque c’est vous qui l’avez construit.",
   },
 };
 
@@ -175,61 +175,61 @@ const vignettesEn: VignetteCopy[] = [
 
 const vignettesFr: VignetteCopy[] = [
   {
-    craft: "Responsable scientifique médical (MSL)",
-    brief: "Transformer une nouvelle étude clinique en présentation pour des médecins.",
+    craft: "MSL en laboratoire pharmaceutique",
+    brief: "Faire d’une étude clinique qui vient de paraître un support de présentation pour des médecins.",
     steps: [
       {
-        nole: "Lit le PDF de l’étude et en extrait les chiffres et tableaux clés dans une synthèse structurée.",
-        check: "Vous choisissez les chiffres qui seront retenus.",
+        nole: "Lit le PDF de l’étude et reprend les résultats et les tableaux clés dans une synthèse structurée.",
+        check: "Vous choisissez les données à retenir.",
       },
       {
-        nole: "Cherche les études apparentées et les recommandations en vigueur, et les pose en contexte.",
-        check: "Vous ajoutez les sources qui font foi pour vous.",
+        nole: "Cherche les études proches et les recommandations en vigueur, et les pose à côté pour le contexte.",
+        check: "Vous ajoutez vos références de confiance.",
       },
       {
-        nole: "Rédige la présentation diapositive par diapositive dans un document : titres, points, chiffres.",
-        check: "Vous reformulez le tout avec vos propres mots.",
+        nole: "Rédige le support diapo par diapo dans un document : titres, messages clés, chiffres.",
+        check: "Vous réécrivez le texte avec vos mots.",
       },
     ],
-    keeps: "À la prochaine étude du même genre, le canevas est déjà là pour repartir.",
+    keeps: "À la prochaine étude du même type, vous ne partez pas de zéro : le canevas est déjà là.",
   },
   {
-    craft: "Toxicologue des emballages",
-    brief: "Évaluer si un emballage alimentaire est sûr, substance par substance.",
+    craft: "Toxicologue réglementaire (emballages)",
+    brief: "Évaluer l’aptitude au contact alimentaire d’un emballage, substance par substance.",
     steps: [
       {
-        nole: "Dresse la liste des matériaux, additifs et traitements à partir de la composition que vous lui confiez.",
-        check: "Vous corrigez et complétez la liste.",
+        nole: "Dresse l’inventaire des matériaux, additifs et traitements à partir de la composition que vous lui fournissez.",
+        check: "Vous corrigez et complétez l’inventaire.",
       },
       {
-        nole: "Recherche chaque substance dans les sources officielles et construit un tableau : substance, statut réglementaire, lien vers la source.",
-        check: "Vous ouvrez les sources et vérifiez.",
+        nole: "Cherche chaque substance dans les sources officielles et monte un tableau : substance, statut réglementaire, lien vers la source.",
+        check: "Vous ouvrez les sources et contrôlez.",
       },
       {
-        nole: "Rédige le rapport dans un document, selon les sections qu’exige votre évaluation.",
-        check: "Vous retouchez les conclusions et les validez.",
+        nole: "Rédige le rapport dans un document, selon le plan qu’exige votre évaluation.",
+        check: "Vous reprenez les conclusions et les signez.",
       },
     ],
-    keeps: "Chaque statut du rapport renvoie à la source dont il provient.",
+    keeps: "Chaque statut cité dans le rapport renvoie à sa source.",
   },
   {
     craft: "Designer produit ou fondateur",
-    brief: "Passer d’un tour d’horizon de la concurrence à un prototype cliquable.",
+    brief: "Passer du benchmark concurrentiel à un prototype cliquable.",
     steps: [
       {
         nole: "Rassemble les produits concurrents dans un tableau que vous pouvez trier et annoter.",
-        check: "Vous marquez ce qui mérite d’être gardé, et ce qui ne le mérite pas.",
+        check: "Vous marquez ce qui est à garder et ce qui est à laisser.",
       },
       {
-        nole: "Rédige la spécification avec vous dans un document, à partir des décisions prises sur le canevas.",
-        check: "Vous fixez le périmètre.",
+        nole: "Rédige les specs avec vous dans un document, à partir des décisions prises sur le canevas.",
+        check: "Vous arrêtez le périmètre.",
       },
       {
-        nole: "Construit un prototype fonctionnel sous forme de nœud App, relié à la spécification dont il découle.",
-        check: "Vous l’essayez et pointez ce qui ne va pas.",
+        nole: "Construit un prototype fonctionnel dans un nœud App, relié aux specs dont il découle.",
+        check: "Vous le testez et pointez ce qui cloche.",
       },
     ],
-    keeps: "Recherche, spécification et prototype côte à côte, reliés : chacun peut voir pourquoi le produit a été construit ainsi.",
+    keeps: "Recherche, specs et prototype restent côte à côte, reliés : n’importe qui peut retrouver pourquoi le produit a été conçu ainsi.",
   },
 ];
 
