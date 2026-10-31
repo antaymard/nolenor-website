@@ -1,0 +1,24 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/ui/Container.astro";
+import { SITE_NAME } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const copy = {
+  en: {
+    title: "Privacy Policy",
+    body: "Placeholder — full privacy policy content is coming before launch. This page exists so the link in the footer resolves to something real rather than a dead end.",
+  },
+  fr: {
+    title: "Politique de confidentialité",
+    body: "Page provisoire : la politique de confidentialité complète arrive avant le lancement. Cette page existe pour que le lien du pied de page mène quelque part plutôt que nulle part.",
+  },
+}[getLang(Astro.currentLocale)];
+---
+
+<Layout title={`${copy.title} — ${SITE_NAME}`}>
+  <Container class="flex flex-col gap-6 py-24">
+    <h1 class="text-3xl font-semibold tracking-tight">{copy.title}</h1>
+    <p class="max-w-2xl text-muted-foreground">{copy.body}</p>
+  </Container>
+</Layout>

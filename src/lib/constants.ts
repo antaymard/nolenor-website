@@ -41,4 +41,7 @@ export const WISHLIST_ENDPOINT = `${API_ORIGIN}/wishlist/subscribe`;
 // Verified public via the GitHub API.
 export const GITHUB_REPO_URL = "https://github.com/antaymard/nolenor";
 
-export const TAGLINE = "A workshop, not a factory.";
+export const TAGLINE = {
+  en: "A workshop, not a factory.",
+  fr: "Un atelier, pas une usine.",
+} as const;

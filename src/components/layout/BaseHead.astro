@@ -1,17 +1,32 @@
 ---
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/constants";
+import { getLang, langs, ogLocale, translatePath, defaultLang } from "@/i18n";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
+const lang = getLang(Astro.currentLocale);
+
+const defaultDescription = {
+  en: "Nolënor is a canvas to think and work on, with an AI apprentice at your side. You keep the craft; the agent fills the gaps you show it. A workshop, not a factory.",
+  fr: "Nolënor est un canevas pour penser et travailler, avec un apprenti IA à vos côtés. Vous gardez le métier ; l’agent comble les manques que vous lui montrez. Un atelier, pas une usine.",
+};
+
 const {
-  title = `${SITE_NAME}. ${TAGLINE}`,
-  description = "Nolënor is a canvas to think and work on, with an AI apprentice at your side. You keep the craft; the agent fills the gaps you show it. A workshop, not a factory.",
+  title = `${SITE_NAME}. ${TAGLINE[lang]}`,
+  description = defaultDescription[lang],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
+// Every language version of this page, so search engines serve the right
+// one and treat them as translations rather than duplicates.
+const alternates = langs.map((l) => ({
+  hreflang: l,
+  href: new URL(translatePath(Astro.url.pathname, l), SITE_URL),
+}));
+const xDefault = new URL(translatePath(Astro.url.pathname, defaultLang), SITE_URL);
 // PLACEHOLDER — replace with a real designed 1200x630 social card once produced.
 const ogImageURL = new URL("/og-image.png", SITE_URL);
 ---
@@ -23,6 +38,8 @@ const ogImageURL = new URL("/og-image.png", SITE_URL);
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalURL} />
+{alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
+<link rel="alternate" hreflang="x-default" href={xDefault} />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -41,6 +58,12 @@ const ogImageURL = new URL("/og-image.png", SITE_URL);
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:locale" content={ogLocale[lang]} />
+{
+  langs
+    .filter((l) => l !== lang)
+    .map((l) => <meta property="og:locale:alternate" content={ogLocale[l]} />)
+}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

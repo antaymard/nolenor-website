@@ -1,4 +1,6 @@
 ---
+import { getLang, localizePath, useTranslations } from "@/i18n";
+
 // Placeholder brand mark — swap the <svg> below for the real logo PNG once
 // it comes through (the one referenced in chat never actually attached).
 interface Props {
@@ -12,9 +14,12 @@ const {
   iconClass = "h-7 w-7 text-foreground",
   textClass = "text-lg",
 } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
-<a href="/" class={`flex items-center gap-2 ${className}`} aria-label="Nolënor home">
+<a href={localizePath("/", lang)} class={`flex items-center gap-2 ${className}`} aria-label={t("logo.home")}>
     <svg width="30" height="30" viewBox="0 0 75 75" fill="none" xmlns="http://www.w3.org/2000/svg">
     <mask id="mask0_2134_82" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="75" height="75">
     <circle cx="37.2305" cy="37.2305" r="36.2565" fill="#D9D9D9" stroke="#BA5252" stroke-width="1.94794"/>
