@@ -53,17 +53,17 @@ const text: Record<Lang, ProblemText[]> = {
     {
       title: "L’arborescence vous oblige à classer.",
       subtitle:
-        "Avant même d’avoir compris quelque chose, il faut décider où le ranger. Vous taillez l’idée pour qu’elle entre dans la structure, et vous perdez l’élan en chemin.",
+        "Avant même de comprendre ce que vous tenez, il faut décider où le ranger. Vous rognez l’idée pour la faire entrer dans la case, et l’élan se perd en route.",
     },
     {
-      title: "Le fil vous oblige à taper.",
+      title: "Le fil vous rive au clavier.",
       subtitle:
-        "Tout doit passer par une zone de texte. Impossible de désigner un document, de relier ce que vous avez vu plus tôt, ou de voir ce que l’IA regarde. Vous décrivez au lieu de montrer.",
+        "Tout passe par une zone de texte. Impossible de pointer un document, de rattacher ce que vous avez vu plus tôt ou de savoir ce que l’IA a sous les yeux. Vous décrivez, faute de pouvoir montrer.",
     },
     {
-      title: "L’agent vous oblige à relire.",
+      title: "L’agent vous réduit à relire.",
       subtitle:
-        "Il fait le travail avant que votre pensée n’ait pris forme. Vous ne suivez plus ce qui a été fait, donc vous ne pouvez plus orienter, donc vous lui en confiez davantage. Et vous finissez par corriger ses copies.",
+        "Il se met à l’ouvrage avant même que votre pensée ait pris forme. Vous ne savez plus ce qu’il a fait, donc vous ne pouvez plus le guider, donc vous lui en laissez davantage. Et vous voilà à corriger ses copies.",
     },
   ],
 };

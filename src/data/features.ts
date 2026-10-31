@@ -86,24 +86,24 @@ const text: Record<Lang, StepText[]> = {
   ],
   fr: [
     {
-      title: "Posez. Ne classez pas.",
-      subtitle: "Pensez en piles éparses. Le canevas suit le rythme.",
+      title: "Posez. Ne classez rien.",
+      subtitle: "Pensez en vrac, le canevas suit.",
       bullets: [
         "Notes, tableaux, PDF, images et liens, côte à côte",
-        "Placez, déplacez, reliez : aucun dossier à choisir d’abord",
-        "Tout est indexé, si bien que la pile redevient matière",
+        "Placez, déplacez, reliez, sans passer par la case dossier",
+        "Tout est indexé : le vrac redevient matière à travailler",
       ],
-      alt: "Vue du canevas où plusieurs types de nœuds sont disposés ensemble, l’un s’ouvrant dans une fenêtre dédiée",
+      alt: "Le canevas, avec plusieurs types de nœuds disposés côte à côte, dont l’un s’ouvre en grand dans une fenêtre à part",
     },
     {
       title: "Montrez-lui où regarder.",
-      subtitle: "Voici Nolë, l’apprenti de votre canevas",
+      subtitle: "Voici Nolë, l’apprenti qui partage votre canevas",
       bullets: [
-        "Suivez chacune de ses étapes en direct : ce qu’il lit, ce qu’il touche",
-        "@mentionnez un nœud ou faites Alt+clic dessus pour le lui confier",
-        "Fermez la conversation et continuez à travailler ; ses résultats arrivent à côté des vôtres",
+        "Chaque étape en direct : ce qu’il lit, ce qu’il touche",
+        "Pour lui confier un nœud, @mentionnez-le ou faites Alt+clic dessus",
+        "Fermez la conversation, poursuivez : ses résultats se posent à côté des vôtres",
       ],
-      alt: "Panneau de conversation de Nolë affichant une réponse en direct, avec ses appels d’outils visibles et un indicateur de sous-agent en arrière-plan",
+      alt: "Le panneau de conversation de Nolë : une réponse s’écrit en direct, les appels d’outils sont visibles, un sous-agent tourne en arrière-plan",
     },
   ],
 };
