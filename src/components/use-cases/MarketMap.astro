@@ -1,9 +1,12 @@
 ---
+import { getLang } from "@/i18n";
+
 interface Props {
   class?: string;
 }
 
 const { class: className = "" } = Astro.props;
+const lang = getLang(Astro.currentLocale);
 
 /*
  * The consultant's canvas at the end of the flagship scenario. The one
@@ -11,28 +14,43 @@ const { class: className = "" } = Astro.props;
  * named) carry the structure; Nolë's (tinted, badged) hang off it. A
  * reader should see the split before reading the legend.
  */
+const en = {
+  ariaLabel:
+    "A canvas mapping a market: four player nodes made by Nolë on the left, the consultant's own Regulation, Business models and Risks nodes on the right, links between them, a PDF report beside one player and a comparison table below",
+  title: "BNPL in Europe",
+  // Legend labels sit 48px apart in the SVG: keep them short.
+  yours: "Yours",
+  theirs: "Nolë's",
+  themes: ["Regulation", "Business models", "Risks"],
+};
+const fr: typeof en = {
+  ariaLabel:
+    "Un canevas qui cartographie un marché : à gauche, quatre nœuds d’acteurs créés par Nolë ; à droite, les nœuds Réglementation, Modèles économiques et Risques posés par le consultant ; des liens entre eux, un rapport PDF à côté d’un acteur et un tableau comparatif en dessous",
+  title: "Le BNPL en Europe",
+  yours: "À vous",
+  theirs: "À Nolë",
+  themes: ["Réglementation", "Modèles économiques", "Risques"],
+};
+const copy = { en, fr }[lang];
+
 const players = [80, 148, 216, 284];
-const themes = [
-  { y: 90, label: "Regulation" },
-  { y: 180, label: "Business models" },
-  { y: 270, label: "Risks" },
-];
+const themes = [90, 180, 270].map((y, index) => ({ y, label: copy.themes[index] }));
 ---
 
 <div class={`map-canvas overflow-hidden rounded-2xl border border-border ${className}`}>
   <svg
     viewBox="0 0 640 400"
     role="img"
-    aria-label="A canvas mapping a market: four player nodes made by Nolë on the left, the consultant's own Regulation, Business models and Risks nodes on the right, links between them, a PDF report beside one player and a comparison table below"
+    aria-label={copy.ariaLabel}
     class="block h-auto w-full"
   >
-    <text class="title" x="320" y="46" text-anchor="middle">BNPL in Europe</text>
+    <text class="title" x="320" y="46" text-anchor="middle">{copy.title}</text>
 
     <g class="legend">
       <rect class="mine" x="24" y="22" width="12" height="12" rx="3" />
-      <text class="legend-label" x="42" y="32">Yours</text>
+      <text class="legend-label" x="42" y="32">{copy.yours}</text>
       <rect class="theirs" x="90" y="22" width="12" height="12" rx="3" />
-      <text class="legend-label" x="108" y="32">Nolë's</text>
+      <text class="legend-label" x="108" y="32">{copy.theirs}</text>
     </g>
 
     <path class="edge" d="M164 105 C 300 105, 300 208, 440 208" />

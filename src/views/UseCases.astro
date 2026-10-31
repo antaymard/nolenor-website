@@ -5,8 +5,9 @@ import Container from "@/components/ui/Container.astro";
 import SectionLabel from "@/components/ui/SectionLabel.astro";
 import Button from "@/components/ui/Button.astro";
 import MarketMap from "@/components/use-cases/MarketMap.astro";
-import { flagship, vignettes } from "@/data/useCases";
+import { flagship as flagshipByLang, vignettes as vignettesByLang } from "@/data/useCases";
 import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
+import { getLang, localizePath } from "@/i18n";
 
 /*
  * Use cases: who Nolënor is for, shown rather than listed.
@@ -17,26 +18,69 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
  * The scenarios are illustrative, and the page says so up front; see
  * src/data/useCases.ts for where each one comes from and what was left out.
  */
+const lang = getLang(Astro.currentLocale);
+const flagship = flagshipByLang[lang];
+const vignettes = vignettesByLang[lang];
+
+const en = {
+  metaTitle: "Use cases",
+  metaDescription:
+    "How people with a craft work with Nolënor: a consultant mapping a market, a medical science liaison, a toxicologist, a product designer. You lead, Nolë does the legwork, you check.",
+  label: "Use cases",
+  title: "People with a craft, and the apprentice beside them.",
+  lede: "Four crafts, one way of working: you lead, Nolë does the legwork, you check. The work stays yours.",
+  disclaimer:
+    "These are example scenarios built on what the product does today, not customer testimonials.",
+  laneYou: "You",
+  laneNole: "Nolë",
+  laneCheck: "You check",
+  craftsLabel: "Other crafts",
+  craftsTitle: "Same bench, different work.",
+  craftsLede:
+    "Nolë does the reading, the searching and the first draft. At every step, the call is yours.",
+  ctaTitle: "Bring a real project.",
+  ctaBody:
+    "Nolënor is in open beta and free while we build it. Try it on the work you're doing this week, and tell us where it gets in the way.",
+  ctaButton: "Try it for free",
+  ctaManifesto: "Read the manifesto",
+};
+const fr: typeof en = {
+  metaTitle: "Cas d’usage",
+  metaDescription:
+    "Comment des gens de métier travaillent avec Nolënor : un consultant qui cartographie un marché, une responsable scientifique médicale, un toxicologue, un designer produit. Vous menez, Nolë défriche, vous vérifiez.",
+  label: "Cas d’usage",
+  title: "Des gens de métier, et l’apprenti à leurs côtés.",
+  lede: "Quatre métiers, une même façon de travailler : vous menez, Nolë défriche, vous vérifiez. Le travail reste le vôtre.",
+  disclaimer:
+    "Ce sont des scénarios d’exemple, fondés sur ce que le produit sait faire aujourd’hui, et non des témoignages de clients.",
+  laneYou: "Vous",
+  laneNole: "Nolë",
+  laneCheck: "Vous vérifiez",
+  craftsLabel: "Autres métiers",
+  craftsTitle: "Même établi, autre ouvrage.",
+  craftsLede:
+    "Nolë se charge de la lecture, des recherches et du premier jet. À chaque étape, la décision vous revient.",
+  ctaTitle: "Venez avec un vrai projet.",
+  ctaBody:
+    "Nolënor est en bêta ouverte, et gratuit pendant que nous le construisons. Essayez-le sur le travail de cette semaine, et dites-nous où il vous gêne.",
+  ctaButton: "Essayer gratuitement",
+  ctaManifesto: "Lire le manifeste",
+};
+const copy = { en, fr }[lang];
 ---
 
 <Layout
-  title={`Use cases — ${SITE_NAME}`}
-  description="How people with a craft work with Nolënor: a consultant mapping a market, a medical science liaison, a toxicologist, a product designer. You lead, Nolë does the legwork, you check."
+  title={`${copy.metaTitle} — ${SITE_NAME}`}
+  description={copy.metaDescription}
 >
   <section class="pt-14 pb-14 sm:pt-24 sm:pb-20">
     <Container class="flex flex-col items-center gap-6 text-center">
-      <SectionLabel>Use cases</SectionLabel>
+      <SectionLabel>{copy.label}</SectionLabel>
       <h1 class="max-w-4xl font-serif text-4xl leading-[1.15] text-balance text-foreground sm:text-5xl lg:text-6xl">
-        People with a craft, and the apprentice beside them.
+        {copy.title}
       </h1>
-      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-        Four crafts, one way of working: you lead, Nolë does the legwork, you
-        check. The work stays yours.
-      </p>
-      <p class="max-w-xl text-sm text-pretty text-muted-foreground/80">
-        These are example scenarios built on what the product does today, not
-        customer testimonials.
-      </p>
+      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">{copy.lede}</p>
+      <p class="max-w-xl text-sm text-pretty text-muted-foreground/80">{copy.disclaimer}</p>
     </Container>
   </section>
 
@@ -60,9 +104,9 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
     <Container class="mt-14 sm:mt-16">
       <div class="lanes hidden md:grid" aria-hidden="true">
         <span></span>
-        <span class="lane-head">You</span>
-        <span class="lane-head text-brand">Nolë</span>
-        <span class="lane-head">You check</span>
+        <span class="lane-head">{copy.laneYou}</span>
+        <span class="lane-head text-brand">{copy.laneNole}</span>
+        <span class="lane-head">{copy.laneCheck}</span>
       </div>
 
       <ol class="flex flex-col">
@@ -71,17 +115,17 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
             <li class="lanes border-t border-border py-6" data-reveal>
               <span class="font-serif text-2xl leading-none text-brand/50">{index + 1}</span>
               <div>
-                <span class="lane-label">You</span>
+                <span class="lane-label">{copy.laneYou}</span>
                 <p class="text-foreground">{step.you}</p>
               </div>
               <div class="nole-lane">
-                <span class="lane-label text-brand">Nolë</span>
+                <span class="lane-label text-brand">{copy.laneNole}</span>
                 <p>{step.nole}</p>
               </div>
               <div>
                 {step.check ? (
                   <>
-                    <span class="lane-label">You check</span>
+                    <span class="lane-label">{copy.laneCheck}</span>
                     <p class="flex gap-2 text-muted-foreground">
                       <Icon name="lucide:eye" class="mt-1 h-4 w-4 shrink-0 text-brand" />
                       <span>{step.check}</span>
@@ -107,12 +151,9 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
 
   <section class="py-16 sm:py-24" aria-labelledby="crafts-title">
     <Container class="flex flex-col items-center gap-4 text-center">
-      <SectionLabel>Other crafts</SectionLabel>
-      <h2 id="crafts-title" class="max-w-2xl text-balance text-foreground">Same bench, different work.</h2>
-      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
-        Nolë does the reading, the searching and the first draft. At every step,
-        the call is yours.
-      </p>
+      <SectionLabel>{copy.craftsLabel}</SectionLabel>
+      <h2 id="crafts-title" class="max-w-2xl text-balance text-foreground">{copy.craftsTitle}</h2>
+      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">{copy.craftsLede}</p>
     </Container>
 
     <Container class="mt-12">
@@ -162,18 +203,18 @@ import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
         data-reveal
         data-reveal-variant="zoom"
       >
-        <h2 class="max-w-2xl text-balance">Bring a real project.</h2>
-        <p class="max-w-xl text-lg text-pretty opacity-90">
-          Nolënor is in open beta and free while we build it. Try it on the work
-          you're doing this week, and tell us where it gets in the way.
-        </p>
+        <h2 class="max-w-2xl text-balance">{copy.ctaTitle}</h2>
+        <p class="max-w-xl text-lg text-pretty opacity-90">{copy.ctaBody}</p>
         <div class="mt-2 flex flex-col items-center gap-4 sm:flex-row">
           <Button href={APP_SIGNUP_URL} variant="inverse" size="lg">
-            Try it for free
+            {copy.ctaButton}
             <Icon name="lucide:arrow-right" class="h-4 w-4" />
           </Button>
-          <a href="/manifesto" class="text-base font-medium underline-offset-4 opacity-90 hover:underline hover:opacity-100">
-            Read the manifesto
+          <a
+            href={localizePath("/manifesto", lang)}
+            class="text-base font-medium underline-offset-4 opacity-90 hover:underline hover:opacity-100"
+          >
+            {copy.ctaManifesto}
           </a>
         </div>
       </div>
