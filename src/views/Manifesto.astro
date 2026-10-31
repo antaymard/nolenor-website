@@ -114,32 +114,32 @@ const en = {
 const fr: typeof en = {
   pageTitle: "Manifeste",
   description:
-    "Ne soyons pas des opérateurs. Restons des artisans. Pourquoi Nolënor est un atelier, pas une usine : un apprenti à vos côtés, pas un agent à votre place.",
+    "Ne devenons pas des exécutants. Restons des artisans. Pourquoi Nolënor est un atelier et pas une usine, et pourquoi son IA travaille à côté de vous plutôt qu’à votre place.",
   label: "Manifeste",
-  headline: "Ne soyons pas des opérateurs.",
+  headline: "Ne devenons pas des exécutants.",
   headlineAccent: "Restons des artisans.",
-  lede: "Pourquoi nous construisons un atelier, et non une usine. Et pourquoi l’IA qu’on y trouve est un apprenti, pas un remplaçant.",
+  lede: "Pourquoi nous construisons un atelier, pas une usine. Et pourquoi l’IA y travaille en apprenti, pas en remplaçant.",
   escalationHeading: "Ranger, taper, relire.",
   escalationIntro:
-    "Nos outils aplatissent une pensée qui a une forme, et chacun vous prend un peu plus que le précédent. Voici les quatre mêmes idées, de trois façons.",
+    "Une pensée a une forme. Nos outils l’aplatissent, et chacun vous en prend un peu plus que le précédent. Prenons quatre idées et passons-les dans trois outils.",
   escalation: [
     {
       name: "L’arbre",
       makes: "vous fait ranger",
       takes:
-        "Des pages dans des pages vous obligent à décider où vont les choses avant de savoir ce qu’elles sont. L’esprit ne classe pas. Il trouve du sens dans le tas.",
+        "Des pages dans des pages, et il faut décider où va chaque chose avant même de savoir ce que c’est. L’esprit ne classe pas. Il fait son miel du vrac.",
     },
     {
       name: "Le fil",
       makes: "vous fait taper",
       takes:
-        "Un chat vous oblige à écrire ce que vous préféreriez montrer du doigt. Impossible de lui montrer ce qui est sur votre écran, ou de relier deux idées vues passer.",
+        "Le chat vous fait écrire ce que vous auriez préféré montrer du doigt. Impossible de lui désigner ce que vous avez à l’écran, ou de relier deux idées vues passer.",
     },
     {
       name: "Le canevas",
       makes: "vous fait montrer",
       takes:
-        "Posez les choses en vrac, reliez-les, désignez-les. Votre pensée garde la forme qu’elle avait déjà, et l’IA travaille là où vous la voyez.",
+        "Posez les choses en vrac, reliez-les, pointez-les. Votre pensée garde la forme qu’elle avait déjà, et l’IA travaille sous vos yeux.",
     },
   ],
   gesturesHeading: "Trois gestes qu’on vous rend.",
@@ -147,36 +147,36 @@ const fr: typeof en = {
     {
       from: "Ranger",
       to: "Penser en vrac",
-      body: "Vous posez les choses, vous ne les classez pas. L’IA les lit, les indexe et les retrouve : le désordre redevient matière.",
+      body: "Vous posez les choses sans les classer. L’IA les lit, les indexe et sait les retrouver : le fouillis redevient matière.",
     },
     {
       from: "Taper",
       to: "Montrer",
-      body: "Vous désignez des nœuds, vous les reliez, vous voyez ce que l’agent regarde, et vous lui tournez la tête quand il regarde au mauvais endroit.",
+      body: "Vous pointez des nœuds, vous les reliez. Vous voyez ce que l’agent regarde, et s’il regarde ailleurs, vous le ramenez où il faut.",
     },
     {
       from: "Relire",
       to: "Faire",
-      body: "C’est vous qui faites avancer le travail. L’agent comble les vides que vous lui montrez. Le travail reste le vôtre.",
+      body: "C’est vous qui faites avancer l’ouvrage. L’agent comble les trous que vous lui montrez. L’ouvrage reste le vôtre.",
     },
   ],
   workshopHeading: "Un atelier, pas une usine.",
   workshopIntro:
-    "La vague actuelle va vers des agents qui tournent en arrière-plan toute la nuit, et un humain qui valide au matin. C’est l’usine, en version propre. C’est l’inverse de ce que nous fabriquons.",
-  tableCaption: "L’usine comparée à l’atelier",
+    "La mode est aux agents qui tournent toute la nuit en arrière-plan, avec un humain qui valide le matin. C’est l’usine, en plus propre. Nous faisons l’inverse.",
+  tableCaption: "L’usine et l’atelier, point par point",
   factory: "L’usine",
   workshop: "L’atelier",
   contrast: [
-    ["Une armée d’agents qui tournent jour et nuit", "Un apprenti à vos côtés, quand vous lui montrez où regarder"],
-    ["La production de masse, de la bouillie à relire au matin", "Une seule pièce sur l’établi, et vous la comprenez"],
-    ["L’humain contrôle la qualité", "L’humain fait le travail, l’IA l’élargit"],
-    ["Des crédits brûlés par centaines", "La sobriété : faire moins, mais faire juste"],
+    ["Une armée d’agents qui tournent jour et nuit", "Un apprenti à côté de vous, qui regarde là où vous lui montrez"],
+    ["La production à la chaîne, et du remplissage à relire au réveil", "Une pièce à la fois sur l’établi, et vous savez comment elle est faite"],
+    ["L’humain contrôle la qualité en bout de chaîne", "L’humain fait le travail, l’IA en élargit la portée"],
+    ["Des centaines de crédits partis en fumée", "La sobriété : faire moins, mais faire juste"],
     ["Produire", "Travailler"],
   ],
   closing: "Coupez l’IA. Votre travail est toujours là.",
   closingAccent: "Vous aussi.",
-  cta: "Ouvrir l’atelier",
-  ctaNote: "Bêta ouverte, gratuite tant que dure le chantier.",
+  cta: "Entrer dans l’atelier",
+  ctaNote: "Bêta ouverte, gratuite le temps du chantier.",
 };
 
 const copy = { en, fr }[lang];
@@ -208,19 +208,19 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
           <Fragment>
             <section>
               <p class="lead">
-                Nous sommes des artisans dans l’âme. Des techniciens. On grandit
-                en faisant : on apprend le métier et, en chemin, on apprend
-                quelque chose sur soi-même.
+                Au fond, nous sommes tous des artisans. Des techniciens. On
+                grandit en faisant : on apprend un métier, et le métier, en
+                retour, nous apprend quelque chose sur nous-mêmes.
               </p>
               <p>
-                Même les managers passionnés sont des techniciens du management.
-                Et les mauvais managers sont souvent des techniciens à qui
-                l’établi manque.
+                Même les managers passionnés sont des techniciens : leur
+                matière, c’est le management. Et le mauvais manager est souvent
+                un technicien qui regrette l’établi.
               </p>
               <p>
                 Nolënor part de là. L’humain doit rester l’artisan. L’IA, même
-                sous la forme d’un agent, doit rester un outil. Vous gardez la
-                vision, et vous comprenez chaque étape qui vous y a mené.
+                quand c’est un agent, doit rester un outil. Vous savez où vous
+                allez, et vous savez par où vous êtes passé.
               </p>
             </section>
 
@@ -228,17 +228,17 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
               <h2>Travailler n’est pas produire.</h2>
               <p>
                 <strong>Travailler</strong> transforme celui qui travaille. On
-                apprend, on progresse, on tire une satisfaction de ce qui a
-                réussi et une leçon de ce qui a échoué.
+                apprend, on progresse, on est fier de ce qui a marché et on tire
+                la leçon de ce qui a raté.
               </p>
               <p>
-                <strong>Produire</strong>, c’est arriver à un résultat. Remplir
-                les cases.
+                <strong>Produire</strong>, c’est sortir un résultat. Cocher
+                des cases.
               </p>
               <p>
-                Quelque part en chemin, bien des métiers sont devenus de la
-                production. Les gens sont devenus des opérateurs : l’interface
-                entre la vie réelle et l’interface du logiciel.
+                En route, bien des métiers ont glissé vers la production. Et
+                les gens sont devenus des exécutants : une interface entre la
+                vraie vie et l’interface du logiciel.
               </p>
             </section>
           </Fragment>
@@ -318,17 +318,18 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
             <Fragment>
               <p>
                 L’arbre vous fait ranger. Le fil vous fait taper. Et l’agent qui
-                fait le travail à votre place vous fait relire : il vous prend le
-                métier lui-même, la fierté qui va avec, et tout ce que vos erreurs
-                vous auraient appris. Il ne vous reste qu’à lire ce qu’il a fait.
+                travaille à votre place vous fait relire. Celui-là vous prend
+                plus qu’un geste : le métier lui-même, la fierté qui va avec,
+                tout ce que vos erreurs vous auraient appris. Il ne vous reste
+                qu’à lire sa copie.
               </p>
               <p class="lead">
-                Archiviste, puis dactylo, puis relecteur de bouillie. Trois métiers
-                d’opérateur. L’outil ne vous aide plus à penser : c’est vous qui
-                le servez.
+                Archiviste, puis scribe, puis correcteur de texte au kilomètre.
+                Trois métiers d’exécutant. L’outil ne vous aide plus à penser :
+                vous êtes à son service.
               </p>
               <p>
-                Rien de tout cela n’est votre faute. C’est la forme des outils.
+                Vous n’y êtes pour rien. C’est la forme des outils qui veut ça.
               </p>
             </Fragment>
           ) : (
@@ -361,50 +362,52 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
             <section>
               <h2>L’artisan et l’apprenti.</h2>
               <p>
-                Un agent est un apprenti. Il fait un travail que l’artisan sait
-                faire, plus vite, parfois mieux. Il a une endurance et une portée
-                qu’aucune personne n’a : il ne se fatigue pas, et il s’aventure
-                sur des chemins que vous n’auriez pas eu l’énergie d’explorer.
+                Un agent, c’est un apprenti. Il fait ce que l’artisan sait
+                faire, plus vite, parfois mieux. Il a une endurance et une
+                portée qu’aucun humain n’a : il ne se fatigue pas, et il part
+                sur des pistes que vous n’auriez pas eu le courage de suivre.
               </p>
               <p>
-                Mais il a le défaut de l’apprenti doué. Il bâtit des cathédrales
-                quand une poutre suffirait. Il ne sait pas ce qu’il faut couper.
+                Mais il a le défaut des apprentis doués. Il bâtit une cathédrale
+                là où une poutre suffirait. Il ne sait pas quoi couper.
               </p>
               <blockquote>L’IA a la main. Vous gardez l’œil.</blockquote>
               <p>
-                L’œil, c’est la vue d’ensemble, le jugement, et surtout savoir ce
-                qu’il faut couper.
+                L’œil, c’est voir l’ensemble, juger, et surtout savoir quoi
+                couper.
               </p>
             </section>
 
             <section>
               <h2>Le métier, c’est savoir ce qu’on ne fera pas.</h2>
               <p>
-                C’est vrai partout, et c’est le visage même de l’expérience. Un
-                jeune médecin prescrit mille examens. Un médecin chevronné écarte,
-                vise juste, et n’en perd pas le sommeil. Un sportif débutant en
-                fait trop, se crispe, s’essouffle. Puis le geste vient : il se
-                relâche, et il prend la main.
+                C’est vrai partout, et c’est même à ça qu’on
+                reconnaît l’expérience. Un jeune médecin prescrit mille examens.
+                Un médecin qui a de la bouteille élimine, vise juste, et dort
+                sur ses deux oreilles. Le sportif débutant en fait trop, se
+                crispe, s’essouffle. Puis le geste vient : il se relâche, et il
+                prend la main.
               </p>
               <p>
-                Aucun agent autonome ne fera le 80/20 à votre place. Pour savoir
-                à quoi renoncer, il faut tenir l’ensemble sous les yeux.
+                Aucun agent autonome ne fera le 80/20 à votre place. Pour
+                savoir à quoi renoncer, il faut avoir l’ensemble sous les yeux.
               </p>
             </section>
 
             <section>
               <h2>Le test du charpentier.</h2>
-              <blockquote>Si l’IA s’éteint, pouvez-vous encore faire le travail ?</blockquote>
+              <blockquote>Si on coupe l’IA, savez-vous encore faire ?</blockquote>
               <p>
-                Coupez le courant à un charpentier de marine : il reprend le
-                ciseau et la scie à main. Plus lentement, mais il sait faire.
-                C’est là que passe la frontière entre un outil et une dépendance.
+                Coupez le courant dans l’atelier d’un charpentier de marine :
+                il reprend le ciseau et la scie à main. Il ira moins vite, mais
+                il sait faire. Toute la différence entre un outil et une
+                dépendance est là.
               </p>
               <p>
-                Nolënor fonctionne sans IA. Ce que vous posez sur le canevas peut
-                être créé, relié, retrouvé et modifié à la main. Le jour où vous
-                éteignez l’IA, votre travail et la compréhension que vous en avez
-                sont toujours là, sur le canevas.
+                Nolënor fonctionne sans IA. Tout ce qui est sur le canevas, vous
+                pouvez le créer, le relier, le retrouver et le modifier à la
+                main. Le jour où vous coupez l’IA, votre travail est toujours
+                là, sur le canevas, et vous le comprenez toujours.
               </p>
             </section>
 
@@ -412,32 +415,34 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
               <h2>La spirale de la dépendance.</h2>
               <p>
                 Un agent qui vous remplace vous fait perdre le fil. Vous ne
-                comprenez plus ce qui a été fait, donc vous ne pouvez plus le
-                diriger, donc vous lui en confiez davantage encore.
+                comprenez plus ce qu’il a fait, donc vous ne savez plus le
+                diriger, donc vous lui en laissez encore plus.
               </p>
               <p>
                 Rester artisan demande un effort : remettre l’ouvrage sur le
-                métier, poser des questions, garder le contact avec le travail.
-                Le canevas est ce qui maintient ce contact. Vous voyez chaque
-                étape, ce que l’agent a touché, où il regarde, ce qu’il a posé.
+                métier, poser des questions, garder les mains dans la matière.
+                Le canevas sert à ça. Vous voyez chaque étape, ce que l’agent a
+                touché, où il regarde, ce qu’il a posé.
               </p>
             </section>
 
             <section>
-              <h2>L’espace est le pont.</h2>
+              <h2>L’espace fait le lien.</h2>
               <blockquote>L’IA rend l’espace viable. L’espace rend l’IA lisible.</blockquote>
               <p>
-                Les canevas finissaient par mourir. Ils devenaient des cimetières
-                de post-it dès qu’il y avait trop de choses dessus pour y
-                retrouver quoi que ce soit. Une recherche qui comprend le sens,
-                la lecture des images, la transcription des PDF et de l’audio
-                changent la donne : l’espace peut grandir sans pourrir.
+                Jusqu’ici, les canevas finissaient par mourir. Passé un certain
+                nombre de choses posées dessus, on n’y retrouvait plus rien, et
+                ils tournaient au cimetière de post-it. Avec une recherche qui
+                comprend le sens, la lecture des images, la transcription des
+                PDF et de l’audio, ce n’est plus le cas : l’espace peut grandir
+                sans pourrir.
               </p>
               <p>
-                Et l’espace est le bon terrain pour l’IA. Vous voyez ce qu’elle
-                regarde, vous lui montrez où regarder, et ce qu’elle produit vient
-                se poser à côté de votre propre travail au lieu de s’enfouir dans
-                une conversation. Comme un collègue qui sait de quoi vous parlez.
+                Dans l’autre sens, l’espace est le bon terrain pour l’IA. Vous
+                voyez ce qu’elle regarde, vous lui montrez où regarder, et ce
+                qu’elle fait vient se poser à côté de votre travail au lieu de
+                se perdre au fond d’une conversation. Comme un collègue qui sait
+                de quoi vous parlez.
               </p>
             </section>
           </Fragment>
@@ -596,19 +601,19 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
           <section>
             <h2>Pas une révolution.</h2>
             <p>
-              Nolënor n’est pas un agent de plus, et ne cherche pas à remplacer
-              les outils que vous utilisez déjà pour vos documents. C’est une
-              autre façon de penser, que beaucoup n’ont pas encore rencontrée.
-              Certains ne l’aimeront pas. Quelques-uns l’adoreront.
+              Nolënor n’est pas un agent de plus. Il ne cherche pas non plus à
+              remplacer l’outil où vous écrivez déjà vos documents. C’est une
+              autre façon de penser, que beaucoup n’ont encore jamais essayée.
+              Certains n’aimeront pas. Quelques-uns adoreront.
             </p>
             <p>
               Il est fait pour ceux qui ont un métier (développeurs, designers,
-              chercheurs, consultants, stratèges) et veulent l’élargir, pas s’en
-              décharger. Il n’est pas pour ceux qui attendent que l’IA leur en
-              donne un.
+              chercheurs, consultants, stratèges) et qui veulent le pousser plus
+              loin, pas s’en décharger. Pas pour ceux qui attendent que l’IA
+              leur en donne un.
             </p>
             <p>
-              Notre façon de le construire découle de tout cela.{" "}
+              La façon dont nous le construisons en découle.{" "}
               <a href={localizePath("/principles", lang)} class={linkClass}>
                 Lire nos principes
               </a>.
