@@ -1,5 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
 
 /*
  * Illustration for problem item 1: "Which chat was it?"
@@ -15,37 +18,87 @@ import { Icon } from "astro-icon/components";
  * doesn't end.
  */
 
-const QUERY = "onboarding flow";
-const EMPTY = "No exact matches in 247 conversations";
-const NOTE = "Which chat was it?";
-const FILE = "product-direction-v3.md";
+const en = {
+  label:
+    "A chat app. On the left, a search for an onboarding flow that found no exact matches in 247 conversations, and a list of near-identical titles — Project ideas, Notes, Draft, Draft v2, Draft v2 final, Untitled conversation — that a cursor rakes up and down, lighting one after another. On the right, out of focus, a conversation under a header reading Context used, Missing information and Work created, each answered with a question mark, ending on a document the assistant wrote inside the chat: product-direction-v3.md. It is not the one being looked for.",
+  query: "onboarding flow",
+  empty: "No exact matches in 247 conversations",
+  note: "Which chat was it?",
+  file: "product-direction-v3.md",
+  fileMeta: "Created in this chat",
+  /** Vague, near-identical, and several of them cut off mid-title. */
+  conversations: [
+    "Project ideas",
+    "Project research",
+    "Research — follow-up",
+    "Important discussion about…",
+    "AI workflow",
+    "New project",
+    "Notes",
+    "The thing we discussed yest…",
+    "Ideas for the new…",
+    "Final thoughts",
+    "Untitled conversation",
+    "Project ideas",
+    "New project — notes",
+    "Research — follow-up",
+    "Untitled conversation",
+    "Draft",
+    "Draft v2",
+    "Draft v2 final",
+    "Untitled conversation",
+    "Notes",
+    "Untitled conversation",
+  ],
+  hidden: ["Context used", "Missing information", "Work created"],
+  more: "Show more",
+  tooLong: "This conversation is too long to display",
+  user1: "and that never really connects back",
+  user2: "I think knowledge and execution should live together.",
+  ai: "That could be a strong product direction — I've written it up.",
+};
 
-/** Vague, near-identical, and several of them cut off mid-title. */
-const conversations = [
-  "Project ideas",
-  "Project research",
-  "Research — follow-up",
-  "Important discussion about…",
-  "AI workflow",
-  "New project",
-  "Notes",
-  "The thing we discussed yest…",
-  "Ideas for the new…",
-  "Final thoughts",
-  "Untitled conversation",
-  "Project ideas",
-  "New project — notes",
-  "Research — follow-up",
-  "Untitled conversation",
-  "Draft",
-  "Draft v2",
-  "Draft v2 final",
-  "Untitled conversation",
-  "Notes",
-  "Untitled conversation",
-];
+const fr: typeof en = {
+  label:
+    "Une application de chat. À gauche, la recherche « parcours d’onboarding » ne donne aucun résultat exact parmi 247 conversations, et un curseur monte et descend le long d’une liste de titres presque identiques (Idées de projet, Notes, Brouillon, Brouillon v2, Brouillon v2 définitif, Conversation sans titre), qu’il éclaire l’un après l’autre. À droite, floue, une conversation surmontée de trois mentions, Contexte utilisé, Infos manquantes et Travail produit, chacune suivie d’un point d’interrogation. Elle se termine sur un document que l’assistant a rédigé dans le chat : orientation-produit-v3.md. Ce n’est pas celui qu’on cherche.",
+  query: "parcours d’onboarding",
+  empty: "Aucun résultat exact parmi 247 conversations",
+  note: "C’était où, déjà ?",
+  file: "orientation-produit-v3.md",
+  fileMeta: "Créé dans cette conversation",
+  conversations: [
+    "Idées de projet",
+    "Recherche projet",
+    "Recherche (suite)",
+    "Discussion importante sur…",
+    "Workflow IA",
+    "Nouveau projet",
+    "Notes",
+    "Le truc dont on a parlé hi…",
+    "Idées pour le nouveau…",
+    "Réflexions finales",
+    "Conversation sans titre",
+    "Idées de projet",
+    "Nouveau projet (notes)",
+    "Recherche (suite)",
+    "Conversation sans titre",
+    "Brouillon",
+    "Brouillon v2",
+    "Brouillon v2 définitif",
+    "Conversation sans titre",
+    "Notes",
+    "Conversation sans titre",
+  ],
+  hidden: ["Contexte utilisé", "Infos manquantes", "Travail produit"],
+  more: "Afficher plus",
+  tooLong: "Cette conversation est trop longue pour s’afficher",
+  user1: "et ça ne se rattache jamais vraiment au reste",
+  user2: "Pour moi, la connaissance et l’exécution devraient vivre au même endroit.",
+  ai: "Ça pourrait faire une belle orientation produit. Je l’ai mise par écrit.",
+};
 
-const hidden = ["Context used", "Missing information", "Work created"];
+const copy = { en, fr }[lang];
+const { conversations, hidden } = copy;
 ---
 
 <div
@@ -53,15 +106,15 @@ const hidden = ["Context used", "Missing information", "Work created"];
   data-lost-thread
   data-phase="idle"
   role="img"
-  aria-label="A chat app. On the left, a search for an onboarding flow that found no exact matches in 247 conversations, and a list of near-identical titles — Project ideas, Notes, Draft, Draft v2, Draft v2 final, Untitled conversation — that a cursor rakes up and down, lighting one after another. On the right, out of focus, a conversation under a header reading Context used, Missing information and Work created, each answered with a question mark, ending on a document the assistant wrote inside the chat: product-direction-v3.md. It is not the one being looked for."
+  aria-label={copy.label}
 >
   <div class="lt-body">
     <aside class="lt-sidebar">
       <div class="lt-search">
         <Icon name="lucide:search" class="lt-searchicon" />
-        <span class="lt-query">{QUERY}</span>
+        <span class="lt-query">{copy.query}</span>
       </div>
-      <span class="lt-empty">{EMPTY}</span>
+      <span class="lt-empty">{copy.empty}</span>
 
       <div class="lt-listview" data-lt-listview>
         <div class="lt-list" data-lt-list>
@@ -78,7 +131,7 @@ const hidden = ["Context used", "Missing information", "Work created"];
       <!-- Cursor and the thought attached to it move as one element. -->
       <span class="lt-pointer" data-lt-pointer>
         <Icon name="lucide:mouse-pointer-2" class="lt-cursoricon" />
-        <span class="lt-note">{NOTE}</span>
+        <span class="lt-note">{copy.note}</span>
       </span>
     </aside>
 
@@ -96,29 +149,23 @@ const hidden = ["Context used", "Missing information", "Work created"];
       </div>
 
       <div class="lt-thread">
-        <span class="lt-more lt-blur">Show more</span>
-        <span class="lt-toolong lt-blur">
-          This conversation is too long to display
-        </span>
+        <span class="lt-more lt-blur">{copy.more}</span>
+        <span class="lt-toolong lt-blur">{copy.tooLong}</span>
 
         <div class="lt-bars lt-blur">
           <span class="chat-bar" style="width: 100%"></span>
           <span class="chat-bar" style="width: 84%"></span>
         </div>
-        <p class="lt-user lt-blur">and that never really connects back</p>
-        <p class="lt-user lt-blur">
-          I think knowledge and execution should live together.
-        </p>
-        <p class="lt-ai lt-blur">
-          That could be a strong product direction — I've written it up.
-        </p>
+        <p class="lt-user lt-blur">{copy.user1}</p>
+        <p class="lt-user lt-blur">{copy.user2}</p>
+        <p class="lt-ai lt-blur">{copy.ai}</p>
 
         <!-- What the chat produced: a real document, in a chat. -->
         <div class="lt-file">
           <Icon name="lucide:file-text" class="lt-fileicon" />
           <span class="lt-filetext">
-            <span class="lt-filename">{FILE}</span>
-            <span class="lt-filemeta">Created in this chat</span>
+            <span class="lt-filename">{copy.file}</span>
+            <span class="lt-filemeta">{copy.fileMeta}</span>
           </span>
         </div>
       </div>

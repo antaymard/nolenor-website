@@ -3,6 +3,9 @@ import ChatFlattening from "@/components/visuals/ChatFlattening.astro";
 import HiddenWork from "@/components/visuals/HiddenWork.astro";
 import LostThread from "@/components/visuals/LostThread.astro";
 import { problemItems } from "@/data/problem";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
 
 /*
  * The three problems as a switcher: the operator's three chores across the
@@ -20,26 +23,40 @@ import { problemItems } from "@/data/problem";
  * always opens on the first frame of its scene, never mid-run.
  */
 
-const chores = [
-  { verb: "File it.", role: "First, the archivist" },
-  { verb: "Type it.", role: "Then, the typist" },
-  { verb: "Review it.", role: "Then, the proofreader" },
-];
+const en = {
+  title: "Our tools made us operators.",
+  lead: "Thinking has a shape. Our tools flatten it into a line, and at every step they take a little more of the work away from you.",
+  chores: [
+    { verb: "File it.", role: "First, the archivist" },
+    { verb: "Type it.", role: "Then, the typist" },
+    { verb: "Review it.", role: "Then, the proofreader" },
+  ],
+};
+
+const fr: typeof en = {
+  title: "Nos outils ont fait de nous des exécutants.",
+  lead: "La pensée a du relief. Nos outils l’aplatissent en une seule ligne, et à chaque étape, le travail vous échappe un peu plus.",
+  chores: [
+    { verb: "Classer.", role: "D’abord l’archiviste" },
+    { verb: "Taper.", role: "Puis le scribe" },
+    { verb: "Relire.", role: "Enfin le correcteur" },
+  ],
+};
+
+const copy = { en, fr }[lang];
+const { chores } = copy;
 ---
 
 <section class="problem" aria-labelledby="problem-title">
   <div class="wrap">
     <div class="problem__head">
-      <h2 id="problem-title">Our tools made us operators.</h2>
-      <p class="problem__lead">
-        Thinking has a shape. Our tools flatten it into a line, and at every
-        step they take a little more of the work away from you.
-      </p>
+      <h2 id="problem-title">{copy.title}</h2>
+      <p class="problem__lead">{copy.lead}</p>
     </div>
 
     <div class="pb-rail" data-problem-rail>
       {
-        problemItems.map((item, i) => (
+        problemItems[lang].map((item, i) => (
           <article class="pb-panel" data-panel data-open={i === 0 ? "" : undefined}>
             <button
               type="button"

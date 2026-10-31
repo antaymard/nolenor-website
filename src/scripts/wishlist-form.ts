@@ -18,6 +18,14 @@ export function initWishlistForm(): void {
   const message = document.querySelector<HTMLElement>("#wishlist-form-message");
   if (!form || !message) return;
 
+  // The messages are rendered into the form in the page's language.
+  const text = {
+    sending: form.dataset.msgSending ?? "Sending…",
+    already: form.dataset.msgAlready ?? "You're already on the list.",
+    success: form.dataset.msgSuccess ?? "You're in! Thanks for subscribing.",
+    error: form.dataset.msgError ?? "Something went wrong. Please try again later.",
+  };
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -31,7 +39,7 @@ export function initWishlistForm(): void {
       'button[type="submit"]',
     );
     submitButton?.setAttribute("disabled", "true");
-    message.textContent = "Sending…";
+    message.textContent = text.sending;
 
     try {
       const response = await fetch(WISHLIST_ENDPOINT, {
@@ -43,14 +51,14 @@ export function initWishlistForm(): void {
 
       if (data.success) {
         message.textContent = data.alreadySubscribed
-          ? "You're already on the list."
-          : "You're in! Thanks for subscribing.";
+          ? text.already
+          : text.success;
         form.reset();
       } else {
-        message.textContent = "Something went wrong. Please try again later.";
+        message.textContent = text.error;
       }
     } catch {
-      message.textContent = "Something went wrong. Please try again later.";
+      message.textContent = text.error;
     } finally {
       submitButton?.removeAttribute("disabled");
     }

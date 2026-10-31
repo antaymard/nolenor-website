@@ -1,6 +1,27 @@
 ---
 import { Icon } from "astro-icon/components";
 import { audienceFit, audienceMisfit } from "@/data/audience";
+import { getLang, localizePath } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const fit = audienceFit[lang];
+const misfit = audienceMisfit[lang];
+
+const en = {
+  title: "For people with a craft",
+  lead: "Developers, designers, researchers, consultants, strategists: people who want AI to amplify their craft, not do it for them. A precise tool for precise people, so here is who it isn’t for, too.",
+  statement: "An apprentice to work beside you, not a replacement whose work you review after.",
+  moreLead: "Not sure?",
+  moreLink: "See it at work in four crafts",
+};
+const fr: typeof en = {
+  title: "Pour les gens de métier",
+  lead: "Développeurs, designers, chercheurs, consultants, stratèges : des gens qui veulent que l’IA amplifie leur savoir-faire, pas qu’elle l’exerce à leur place. Un outil de précision ne convient pas à tout le monde, alors voici aussi pour qui il n’est pas fait.",
+  statement: "Un apprenti à l’établi avec vous, pas un remplaçant dont vous corrigez la copie après coup.",
+  moreLead: "Vous hésitez ?",
+  moreLink: "Voyez-le à l’ouvrage dans quatre métiers",
+};
+const copy = { en, fr }[lang];
 
 /*
  * Who this is for, and (the part that gives the first list its weight) who
@@ -16,20 +37,16 @@ import { audienceFit, audienceMisfit } from "@/data/audience";
 <section id="who-its-for" class="audience" aria-labelledby="audience-title">
   <div class="wrap">
     <div class="audience__head">
-      <h2 id="audience-title">For people with a craft</h2>
-      <p class="audience__lead">
-        Developers, designers, researchers, consultants, strategists: people who
-        want AI to amplify their craft, not do it for them. A precise tool for
-        precise people, so here is who it isn’t for, too.
-      </p>
+      <h2 id="audience-title">{copy.title}</h2>
+      <p class="audience__lead">{copy.lead}</p>
     </div>
 
     <div class="audience__lists">
       <div class="audience__col">
-        <h3>{audienceFit.title}</h3>
+        <h3>{fit.title}</h3>
         <ul>
           {
-            audienceFit.items.map((item) => (
+            fit.items.map((item) => (
               <li>
                 <Icon name="lucide:check" class="audience__icon" aria-hidden="true" />
                 <span>{item}</span>
@@ -40,10 +57,10 @@ import { audienceFit, audienceMisfit } from "@/data/audience";
       </div>
 
       <div class="audience__col audience__col--misfit">
-        <h3>{audienceMisfit.title}</h3>
+        <h3>{misfit.title}</h3>
         <ul>
           {
-            audienceMisfit.items.map((item) => (
+            misfit.items.map((item) => (
               <li>
                 <Icon name="lucide:minus" class="audience__icon" aria-hidden="true" />
                 <span>{item}</span>
@@ -55,12 +72,9 @@ import { audienceFit, audienceMisfit } from "@/data/audience";
     </div>
 
     <div class="audience__close">
-      <p class="audience__statement">
-        An apprentice to work beside you, not a replacement whose work you
-        review after.
-      </p>
+      <p class="audience__statement">{copy.statement}</p>
       <p class="audience__more">
-        Not sure? <a href="/use-cases" class="text-link">See it at work in four crafts</a>.
+        {copy.moreLead} <a href={localizePath("/use-cases", lang)} class="text-link">{copy.moreLink}</a>.
       </p>
     </div>
   </div>

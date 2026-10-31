@@ -1,4 +1,6 @@
 ---
+import { getLang } from "@/i18n";
+
 interface Props {
   shape: "tree" | "thread" | "canvas";
   class?: string;
@@ -14,11 +16,17 @@ const { shape, class: className = "" } = Astro.props;
  * The tree and the thread are drawn in muted ink; only the canvas gets the
  * brand colour.
  */
-const labels = {
+const en: Record<Props["shape"], string> = {
   tree: "The same four ideas filed in nested pages, each one a level deeper than the last",
   thread: "The same four ideas as a column of chat messages, one under the other",
   canvas: "The same four ideas laid out on a canvas, side by side and linked to each other",
 };
+const fr: typeof en = {
+  tree: "Les quatre mêmes idées rangées dans des pages imbriquées, chacune un cran plus bas que la précédente",
+  thread: "Les quatre mêmes idées en colonne de messages de chat, les unes sous les autres",
+  canvas: "Les quatre mêmes idées posées sur un canevas, côte à côte et reliées entre elles",
+};
+const labels = { en, fr }[getLang(Astro.currentLocale)];
 ---
 
 <div class={`shape-canvas overflow-hidden rounded-2xl border border-border ${className}`}>

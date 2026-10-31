@@ -1,7 +1,17 @@
 ---
 import Logo from "@/components/ui/Logo.astro";
-import { primaryNavLinks, helpLink } from "@/data/nav";
+import { getNav } from "@/data/nav";
 import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
+import { getLang, translatePath, useTranslations } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const { primaryNavLinks, helpLink } = getNav(lang);
+
+// The switcher names the other language in its own tongue: a reader who
+// can't read this page can still find the way out of it.
+const otherLang = lang === "fr" ? "en" : "fr";
+const switchHref = translatePath(Astro.url.pathname, otherLang);
 
 /*
  * An edge-aligned bar on the page's own paper, not a floating glass pill:
@@ -25,7 +35,7 @@ import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
     <div class="bar__left">
       <Logo iconClass="h-7 w-7 text-foreground" textClass="text-lg" />
 
-      <nav aria-label="Page sections" class="bar__links" data-nav-links>
+      <nav aria-label={t("nav.sections")} class="bar__links" data-nav-links>
         {
           primaryNavLinks.map((link) => (
             <a href={link.href} class="nav-link">
@@ -44,8 +54,19 @@ import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
       >
         {helpLink.label}
       </a>
-      <a href={APP_URL} class="nav-link nav-link--wide">Login</a>
-      <a href={APP_SIGNUP_URL} class="btn btn--sm" rel="noopener noreferrer">Try it for free</a>
+      <a href={APP_URL} class="nav-link nav-link--wide">{t("nav.login")}</a>
+      <a
+        href={switchHref}
+        class="nav-link nav-link--lang"
+        hreflang={otherLang}
+        lang={otherLang}
+        aria-label={t("nav.switchTo")}
+        title={t("nav.switchTo")}
+        data-lang-switch={otherLang}
+      >
+        {otherLang.toUpperCase()}
+      </a>
+      <a href={APP_SIGNUP_URL} class="btn btn--sm" rel="noopener noreferrer">{t("nav.cta")}</a>
     </div>
   </div>
 </header>
@@ -123,6 +144,11 @@ import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
 
   .nav-link--wide {
     display: none;
+  }
+
+  .nav-link--lang {
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
 
   @media (min-width: 40rem) {

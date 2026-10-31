@@ -1,0 +1,712 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import Button from "@/components/ui/Button.astro";
+import ThoughtShape from "@/components/manifesto/ThoughtShape.astro";
+import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
+import { getLang, localizePath } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+/*
+ * The manifesto: the long form of the brand line "Let's not be operators.
+ * Let's stay artisans."
+ *
+ * Source: the "Vision, positionnement, brand tone" frame on the Nolënor
+ * canvas (Vision — L'atelier, pas l'usine / Positionnement — Ranger,
+ * taper, relire / Brand tone). The brand tone says the video shows the
+ * vision and says it in one sentence, and that "the full manifesto lives
+ * on the site". This is that page.
+ *
+ * Its rules, kept here on purpose:
+ * - Show, don't preach. One idea per section, short paragraphs, and the
+ *   claims set as pull quotes rather than repeated in the prose.
+ * - No trial of competitors. The tree, the thread and the factory are
+ *   shapes, not brands; nothing on this page names a product.
+ * - Complicity, not mockery: "it's not you, it's the view".
+ * - Honesty: every product claim here is something the app does today.
+ * - Lexicon: artisan, craft, work, workshop, bench, apprentice; never
+ *   productivity, efficiency, 10x, 24/7, autopilot.
+ *
+ * Reads as one narrow column, like a letter. The only full-width moments
+ * are the three shapes and the closing line.
+ *
+ * Translation: short strings and the lists live in `en` / `fr` below; the
+ * long prose passages, where markup and text interleave, branch on `lang`
+ * in the template, one block per prose column.
+ */
+
+type Shape = "tree" | "thread" | "canvas";
+
+// Non-text fields shared by both languages.
+const shapes: Shape[] = ["tree", "thread", "canvas"];
+
+const en = {
+  pageTitle: "Manifesto",
+  description:
+    "Let's not be operators. Let's stay artisans. Why Nolënor is a workshop, not a factory: an apprentice beside you, not an agent in your place.",
+  label: "Manifesto",
+  headline: "Let's not be operators.",
+  headlineAccent: "Let's stay artisans.",
+  lede: "Why we're building a workshop, not a factory. And why the AI in it is an apprentice, not a replacement.",
+  escalationHeading: "Tidy, type, review.",
+  escalationIntro:
+    "Our tools flatten a thought that has a shape, and each one takes a little more from you than the last. Here are the same four ideas, three ways.",
+  escalation: [
+    {
+      name: "The tree",
+      makes: "makes you tidy",
+      takes:
+        "Pages inside pages make you decide where things go before you know what they are. The mind doesn't file. It makes sense of the pile.",
+    },
+    {
+      name: "The thread",
+      makes: "makes you type",
+      takes:
+        "A chat makes you write out what you'd rather point at. You can't show it the thing on your screen, or link two ideas you saw go by.",
+    },
+    {
+      name: "The canvas",
+      makes: "makes you show",
+      takes:
+        "Set things down loose, link them, point at them. Your thinking keeps the shape it already had, and the AI works where you can see it.",
+    },
+  ],
+  gesturesHeading: "Three gestures, given back.",
+  gestures: [
+    {
+      from: "Tidy",
+      to: "Think loose",
+      body: "You set things down, you don't file them. The AI reads, indexes and finds them again: the mess turns back into material.",
+    },
+    {
+      from: "Type",
+      to: "Show",
+      body: "You point at nodes, you link them, you see what the agent is looking at and turn its head when it looks in the wrong place.",
+    },
+    {
+      from: "Review",
+      to: "Do",
+      body: "You move the work forward. The agent fills the gaps you show it. The work stays yours.",
+    },
+  ],
+  workshopHeading: "A workshop, not a factory.",
+  workshopIntro:
+    "The current wave goes toward agents that run in the background all night and a human who signs off in the morning. That's the factory, in a clean version. It's the opposite of what we're making.",
+  tableCaption: "The factory compared with the workshop",
+  factory: "The factory",
+  workshop: "The workshop",
+  contrast: [
+    ["An army of agents running around the clock", "An apprentice beside you, when you show it where to look"],
+    ["Mass production, slop to review in the morning", "One piece of work on the bench, and you understand it"],
+    ["The human checks the quality", "The human does the work, the AI widens it"],
+    ["Credits burned by the hundred", "Sobriety: do less, but do it right"],
+    ["Producing", "Working"],
+  ] as [string, string][],
+  closing: "Cut the AI. Your work is still there.",
+  closingAccent: "So are you.",
+  cta: "Open the workshop",
+  ctaNote: "Open beta, free while we build it.",
+};
+
+const fr: typeof en = {
+  pageTitle: "Manifeste",
+  description:
+    "Ne devenons pas des exécutants. Restons des artisans. Pourquoi Nolënor est un atelier et pas une usine, et pourquoi son IA travaille à côté de vous plutôt qu’à votre place.",
+  label: "Manifeste",
+  headline: "Ne devenons pas des exécutants.",
+  headlineAccent: "Restons des artisans.",
+  lede: "Pourquoi nous construisons un atelier, pas une usine. Et pourquoi l’IA y travaille en apprenti, pas en remplaçant.",
+  escalationHeading: "Ranger, taper, relire.",
+  escalationIntro:
+    "Une pensée a une forme. Nos outils l’aplatissent, et chacun vous en prend un peu plus que le précédent. Prenons quatre idées et passons-les dans trois outils.",
+  escalation: [
+    {
+      name: "L’arbre",
+      makes: "vous fait ranger",
+      takes:
+        "Des pages dans des pages, et il faut décider où va chaque chose avant même de savoir ce que c’est. L’esprit ne classe pas. Il fait son miel du vrac.",
+    },
+    {
+      name: "Le fil",
+      makes: "vous fait taper",
+      takes:
+        "Le chat vous fait écrire ce que vous auriez préféré montrer du doigt. Impossible de lui désigner ce que vous avez à l’écran, ou de relier deux idées vues passer.",
+    },
+    {
+      name: "Le canevas",
+      makes: "vous fait montrer",
+      takes:
+        "Posez les choses en vrac, reliez-les, pointez-les. Votre pensée garde la forme qu’elle avait déjà, et l’IA travaille sous vos yeux.",
+    },
+  ],
+  gesturesHeading: "Trois gestes qu’on vous rend.",
+  gestures: [
+    {
+      from: "Ranger",
+      to: "Penser en vrac",
+      body: "Vous posez les choses sans les classer. L’IA les lit, les indexe et sait les retrouver : le fouillis redevient matière.",
+    },
+    {
+      from: "Taper",
+      to: "Montrer",
+      body: "Vous pointez des nœuds, vous les reliez. Vous voyez ce que l’agent regarde, et s’il regarde ailleurs, vous le ramenez où il faut.",
+    },
+    {
+      from: "Relire",
+      to: "Faire",
+      body: "C’est vous qui faites avancer l’ouvrage. L’agent comble les trous que vous lui montrez. L’ouvrage reste le vôtre.",
+    },
+  ],
+  workshopHeading: "Un atelier, pas une usine.",
+  workshopIntro:
+    "La mode est aux agents qui tournent toute la nuit en arrière-plan, avec un humain qui valide le matin. C’est l’usine, en plus propre. Nous faisons l’inverse.",
+  tableCaption: "L’usine et l’atelier, point par point",
+  factory: "L’usine",
+  workshop: "L’atelier",
+  contrast: [
+    ["Une armée d’agents qui tournent jour et nuit", "Un apprenti à côté de vous, qui regarde là où vous lui montrez"],
+    ["La production à la chaîne, et du remplissage à relire au réveil", "Une pièce à la fois sur l’établi, et vous savez comment elle est faite"],
+    ["L’humain contrôle la qualité en bout de chaîne", "L’humain fait le travail, l’IA en élargit la portée"],
+    ["Des centaines de crédits partis en fumée", "La sobriété : faire moins, mais faire juste"],
+    ["Produire", "Travailler"],
+  ],
+  closing: "Coupez l’IA. Votre travail est toujours là.",
+  closingAccent: "Vous aussi.",
+  cta: "Entrer dans l’atelier",
+  ctaNote: "Bêta ouverte, gratuite le temps du chantier.",
+};
+
+const copy = { en, fr }[lang];
+const escalation = copy.escalation.map((item, index) => ({ ...item, shape: shapes[index] }));
+const { gestures, contrast } = copy;
+const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
+---
+
+<Layout title={`${copy.pageTitle} — ${SITE_NAME}`} description={copy.description}>
+  <article>
+    <header class="pt-14 pb-16 sm:pt-24 sm:pb-24">
+      <Container class="flex flex-col items-center gap-7 text-center">
+        <SectionLabel>{copy.label}</SectionLabel>
+        <h1 class="max-w-4xl font-serif text-4xl leading-[1.12] text-balance text-foreground sm:text-6xl lg:text-7xl">
+          {copy.headline}
+          <span class="block text-brand">{copy.headlineAccent}</span>
+        </h1>
+        <p class="max-w-xl text-lg text-pretty text-muted-foreground">
+          {copy.lede}
+        </p>
+      </Container>
+    </header>
+
+    <hr class="border-border" />
+
+    <div class="prose-letter mx-auto max-w-2xl px-6 py-16 sm:py-24">
+      {
+        lang === "fr" ? (
+          <Fragment>
+            <section>
+              <p class="lead">
+                Au fond, nous sommes tous des artisans. Des techniciens. On
+                grandit en faisant : on apprend un métier, et le métier, en
+                retour, nous apprend quelque chose sur nous-mêmes.
+              </p>
+              <p>
+                Même les managers passionnés sont des techniciens : leur
+                matière, c’est le management. Et le mauvais manager est souvent
+                un technicien qui regrette l’établi.
+              </p>
+              <p>
+                Nolënor part de là. L’humain doit rester l’artisan. L’IA, même
+                quand c’est un agent, doit rester un outil. Vous savez où vous
+                allez, et vous savez par où vous êtes passé.
+              </p>
+            </section>
+
+            <section>
+              <h2>Travailler n’est pas produire.</h2>
+              <p>
+                <strong>Travailler</strong> transforme celui qui travaille. On
+                apprend, on progresse, on est fier de ce qui a marché et on tire
+                la leçon de ce qui a raté.
+              </p>
+              <p>
+                <strong>Produire</strong>, c’est sortir un résultat. Cocher
+                des cases.
+              </p>
+              <p>
+                En route, bien des métiers ont glissé vers la production. Et
+                les gens sont devenus des exécutants : une interface entre la
+                vraie vie et l’interface du logiciel.
+              </p>
+            </section>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <section>
+              <p class="lead">
+                People are artisans at heart. Technicians. We grow by doing: we learn
+                the craft, and we learn something about ourselves on the way.
+              </p>
+              <p>
+                Even passionate managers are technicians of management. And bad
+                managers are often technicians who miss making things.
+              </p>
+              <p>
+                Nolënor starts there. The human should stay the artisan. The AI, even
+                an agent, should stay a tool. You keep the vision, and you understand
+                every step that got you there.
+              </p>
+            </section>
+
+            <section>
+              <h2>Working is not producing.</h2>
+              <p>
+                <strong>Working</strong> changes the one who works. You learn, you get
+                better, you take satisfaction from what went right and a lesson from
+                what didn't.
+              </p>
+              <p>
+                <strong>Producing</strong> is getting to a result. Filling in the
+                boxes.
+              </p>
+              <p>
+                Somewhere along the way, a lot of crafts turned into production. People
+                became operators: the interface between real life and the interface
+                of the software.
+              </p>
+            </section>
+          </Fragment>
+        )
+      }
+    </div>
+
+    <section class="pb-16 sm:pb-24" aria-labelledby="escalation">
+      <div class="prose-letter mx-auto max-w-2xl px-6">
+        <h2 id="escalation">{copy.escalationHeading}</h2>
+        <p>{copy.escalationIntro}</p>
+      </div>
+
+      <Container class="mt-10 sm:mt-12">
+        <ol class="grid gap-6 md:grid-cols-3">
+          {
+            escalation.map((item) => (
+              <li class="flex flex-col gap-4" data-reveal>
+                <ThoughtShape shape={item.shape} />
+                <div class="flex items-baseline justify-between gap-3">
+                  <h3 class:list={["text-xl", item.shape === "canvas" ? "text-brand" : "text-foreground"]}>
+                    {item.name}
+                  </h3>
+                  <span class:list={[
+                    "text-sm font-semibold",
+                    item.shape === "canvas" ? "text-brand" : "text-muted-foreground",
+                  ]}>
+                    {item.makes}
+                  </span>
+                </div>
+                <p class="text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">{item.takes}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </Container>
+
+      <div class="prose-letter mx-auto mt-14 max-w-2xl px-6">
+        {
+          lang === "fr" ? (
+            <Fragment>
+              <p>
+                L’arbre vous fait ranger. Le fil vous fait taper. Et l’agent qui
+                travaille à votre place vous fait relire. Celui-là vous prend
+                plus qu’un geste : le métier lui-même, la fierté qui va avec,
+                tout ce que vos erreurs vous auraient appris. Il ne vous reste
+                qu’à lire sa copie.
+              </p>
+              <p class="lead">
+                Archiviste, puis scribe, puis correcteur de texte au kilomètre.
+                Trois métiers d’exécutant. L’outil ne vous aide plus à penser :
+                vous êtes à son service.
+              </p>
+              <p>
+                Vous n’y êtes pour rien. C’est la forme des outils qui veut ça.
+              </p>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <p>
+                The tree makes you tidy. The thread makes you type. And the agent that
+                does the work in your place makes you review: it takes the craft
+                itself, the pride in it, and everything you would have learned from
+                getting it wrong. What's left is reading what it made.
+              </p>
+              <p class="lead">
+                Archivist, then typist, then proofreader of slop. Three operator's
+                jobs. The tool no longer helps you think: you serve it.
+              </p>
+              <p>
+                None of this is your fault. It's the shape of the tools.
+              </p>
+            </Fragment>
+          )
+        }
+      </div>
+    </section>
+
+    <hr class="mx-auto max-w-2xl border-border" />
+
+    <div class="prose-letter mx-auto max-w-2xl px-6 py-16 sm:py-24">
+      {
+        lang === "fr" ? (
+          <Fragment>
+            <section>
+              <h2>L’artisan et l’apprenti.</h2>
+              <p>
+                Un agent, c’est un apprenti. Il fait ce que l’artisan sait
+                faire, plus vite, parfois mieux. Il a une endurance et une
+                portée qu’aucun humain n’a : il ne se fatigue pas, et il part
+                sur des pistes que vous n’auriez pas eu le courage de suivre.
+              </p>
+              <p>
+                Mais il a le défaut des apprentis doués. Il bâtit une cathédrale
+                là où une poutre suffirait. Il ne sait pas quoi couper.
+              </p>
+              <blockquote>L’IA a la main. Vous gardez l’œil.</blockquote>
+              <p>
+                L’œil, c’est voir l’ensemble, juger, et surtout savoir quoi
+                couper.
+              </p>
+            </section>
+
+            <section>
+              <h2>Le métier, c’est savoir ce qu’on ne fera pas.</h2>
+              <p>
+                C’est vrai partout, et c’est même à ça qu’on
+                reconnaît l’expérience. Un jeune médecin prescrit mille examens.
+                Un médecin qui a de la bouteille élimine, vise juste, et dort
+                sur ses deux oreilles. Le sportif débutant en fait trop, se
+                crispe, s’essouffle. Puis le geste vient : il se relâche, et il
+                prend la main.
+              </p>
+              <p>
+                Aucun agent autonome ne fera le 80/20 à votre place. Pour
+                savoir à quoi renoncer, il faut avoir l’ensemble sous les yeux.
+              </p>
+            </section>
+
+            <section>
+              <h2>Le test du charpentier.</h2>
+              <blockquote>Si on coupe l’IA, savez-vous encore faire ?</blockquote>
+              <p>
+                Coupez le courant dans l’atelier d’un charpentier de marine :
+                il reprend le ciseau et la scie à main. Il ira moins vite, mais
+                il sait faire. Toute la différence entre un outil et une
+                dépendance est là.
+              </p>
+              <p>
+                Nolënor fonctionne sans IA. Tout ce qui est sur le canevas, vous
+                pouvez le créer, le relier, le retrouver et le modifier à la
+                main. Le jour où vous coupez l’IA, votre travail est toujours
+                là, sur le canevas, et vous le comprenez toujours.
+              </p>
+            </section>
+
+            <section>
+              <h2>La spirale de la dépendance.</h2>
+              <p>
+                Un agent qui vous remplace vous fait perdre le fil. Vous ne
+                comprenez plus ce qu’il a fait, donc vous ne savez plus le
+                diriger, donc vous lui en laissez encore plus.
+              </p>
+              <p>
+                Rester artisan demande un effort : remettre l’ouvrage sur le
+                métier, poser des questions, garder les mains dans la matière.
+                Le canevas sert à ça. Vous voyez chaque étape, ce que l’agent a
+                touché, où il regarde, ce qu’il a posé.
+              </p>
+            </section>
+
+            <section>
+              <h2>L’espace fait le lien.</h2>
+              <blockquote>L’IA rend l’espace viable. L’espace rend l’IA lisible.</blockquote>
+              <p>
+                Jusqu’ici, les canevas finissaient par mourir. Passé un certain
+                nombre de choses posées dessus, on n’y retrouvait plus rien, et
+                ils tournaient au cimetière de post-it. Avec une recherche qui
+                comprend le sens, la lecture des images, la transcription des
+                PDF et de l’audio, ce n’est plus le cas : l’espace peut grandir
+                sans pourrir.
+              </p>
+              <p>
+                Dans l’autre sens, l’espace est le bon terrain pour l’IA. Vous
+                voyez ce qu’elle regarde, vous lui montrez où regarder, et ce
+                qu’elle fait vient se poser à côté de votre travail au lieu de
+                se perdre au fond d’une conversation. Comme un collègue qui sait
+                de quoi vous parlez.
+              </p>
+            </section>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <section>
+              <h2>The artisan and the apprentice.</h2>
+              <p>
+                An agent is an apprentice. It does work the artisan knows how to do,
+                faster, sometimes better. It has the stamina and the reach a person
+                doesn't: it doesn't tire, and it goes down paths you wouldn't have had
+                the energy to explore.
+              </p>
+              <p>
+                But it has the flaw of a gifted apprentice. It builds cathedrals when
+                a beam would do. It doesn't know what to cut.
+              </p>
+              <blockquote>The AI has the hands. You keep the eye.</blockquote>
+              <p>
+                The eye is the view of the whole, the judgement, and above all knowing
+                what to cut.
+              </p>
+            </section>
+
+            <section>
+              <h2>Craft is knowing what you won't do.</h2>
+              <p>
+                It's true everywhere, and it's what experience looks like. A young
+                doctor orders a thousand tests. An experienced one rules things out,
+                aims, and doesn't lose sleep over it. A beginner athlete does too
+                much, tenses up, runs out of breath. Then they get the hang of it,
+                loosen up, and take control.
+              </p>
+              <p>
+                No autonomous agent will do the 80/20 for you. To know what to give
+                up, you have to hold the whole thing in view.
+              </p>
+            </section>
+
+            <section>
+              <h2>The carpenter's test.</h2>
+              <blockquote>If the AI goes off, can you still do the work?</blockquote>
+              <p>
+                Take the power away from a ship's carpenter and they go back to the
+                chisel and the hand saw. Slower, but they know how. That's the line
+                between a tool and a dependency.
+              </p>
+              <p>
+                Nolënor works without AI. What you put on the canvas can be made,
+                linked, searched and edited by hand. The day you switch the AI off, your work and your
+                understanding of it are still there, on the canvas.
+              </p>
+            </section>
+
+            <section>
+              <h2>The dependency spiral.</h2>
+              <p>
+                An agent that replaces you makes you lose the thread. You no longer
+                understand what was done, so you can't steer it, so you hand over even
+                more.
+              </p>
+              <p>
+                Staying an artisan takes effort: going round again, asking questions,
+                staying in touch with the work. The canvas is what keeps you in touch.
+                You see each step, what the agent touched, where it's looking, what it
+                set down.
+              </p>
+            </section>
+
+            <section>
+              <h2>Space is the bridge.</h2>
+              <blockquote>AI makes the space viable. The space makes AI legible.</blockquote>
+              <p>
+                Canvases used to die. They turned into graveyards of sticky notes the
+                moment there was too much on them to find anything. Search that
+                understands meaning, image reading, PDF and audio transcription change
+                that: the space can grow without rotting.
+              </p>
+              <p>
+                And the space is the right ground for AI. You see what it's looking
+                at, you show it where to look, and what it makes lands next to your
+                own work instead of being buried in a conversation. Like a colleague
+                who knows what you're talking about.
+              </p>
+            </section>
+          </Fragment>
+        )
+      }
+    </div>
+
+    <section class="pb-16 sm:pb-24" aria-labelledby="gestures">
+      <div class="prose-letter mx-auto max-w-2xl px-6">
+        <h2 id="gestures">{copy.gesturesHeading}</h2>
+      </div>
+      <Container class="mt-10">
+        <ol class="grid gap-4 md:grid-cols-3">
+          {
+            gestures.map((gesture, index) => (
+              <li class="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-6" data-reveal>
+                <p class="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                  <span class="font-serif text-brand">{index + 1}.</span>
+                  <span class="line-through decoration-muted-foreground/50">{gesture.from}</span>
+                  <Icon name="lucide:arrow-right" class="h-3.5 w-3.5 text-brand" />
+                </p>
+                <h3 class="text-2xl text-brand">{gesture.to}</h3>
+                <p class="text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">{gesture.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </Container>
+    </section>
+
+    <section class="pb-16 sm:pb-24" aria-labelledby="workshop">
+      <div class="prose-letter mx-auto max-w-2xl px-6">
+        <h2 id="workshop">{copy.workshopHeading}</h2>
+        <p>{copy.workshopIntro}</p>
+      </div>
+
+      <div class="mx-auto mt-10 max-w-3xl px-6" data-reveal>
+        <table class="w-full border-collapse text-left">
+          <caption class="sr-only">{copy.tableCaption}</caption>
+          <thead>
+            <tr class="border-b border-border">
+              <th scope="col" class="w-1/2 pb-3 text-sm font-semibold text-muted-foreground">{copy.factory}</th>
+              <th scope="col" class="w-1/2 pb-3 pl-6 text-sm font-semibold text-brand">{copy.workshop}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              contrast.map(([factory, workshop], index) => (
+                <tr class="border-b border-border">
+                  <td class:list={[
+                    "py-4 pr-6 align-top text-muted-foreground/80",
+                    index === contrast.length - 1 && "font-serif text-xl",
+                  ]}>
+                    {factory}
+                  </td>
+                  <td class:list={[
+                    "py-4 pl-6 align-top text-foreground",
+                    index === contrast.length - 1 && "font-serif text-xl text-brand",
+                  ]}>
+                    {workshop}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="prose-letter mx-auto max-w-2xl px-6 pb-16 sm:pb-24">
+      {
+        lang === "fr" ? (
+          <section>
+            <h2>Pas une révolution.</h2>
+            <p>
+              Nolënor n’est pas un agent de plus. Il ne cherche pas non plus à
+              remplacer l’outil où vous écrivez déjà vos documents. C’est une
+              autre façon de penser, que beaucoup n’ont encore jamais essayée.
+              Certains n’aimeront pas. Quelques-uns adoreront.
+            </p>
+            <p>
+              Il est fait pour ceux qui ont un métier (développeurs, designers,
+              chercheurs, consultants, stratèges) et qui veulent le pousser plus
+              loin, pas s’en décharger. Pas pour ceux qui attendent que l’IA
+              leur en donne un.
+            </p>
+            <p>
+              La façon dont nous le construisons en découle.{" "}
+              <a href={localizePath("/principles", lang)} class={linkClass}>
+                Lire nos principes
+              </a>.
+            </p>
+          </section>
+        ) : (
+          <section>
+            <h2>Not a revolution.</h2>
+            <p>
+              Nolënor isn't another agent, and it isn't trying to replace the tools
+              you already use for documents. It's another way of thinking, one many
+              people haven't met yet. Some won't like it. A few will love it.
+            </p>
+            <p>
+              It's made for people who have a craft (developers, designers,
+              researchers, consultants, strategists) and want to widen it, not hand
+              it off. It isn't for those waiting for AI to give them one.
+            </p>
+            <p>
+              The way we build it follows from all this.{" "}
+              <a href={localizePath("/principles", lang)} class={linkClass}>
+                Read our principles
+              </a>.
+            </p>
+          </section>
+        )
+      }
+    </div>
+
+    <section class="pb-20 sm:pb-28">
+      <Container>
+        <div
+          class="flex flex-col items-center gap-6 rounded-3xl bg-brand px-6 py-16 text-center text-brand-foreground sm:px-16 sm:py-20"
+          data-reveal
+          data-reveal-variant="zoom"
+        >
+          <p class="font-serif text-3xl leading-tight text-balance sm:text-5xl">
+            {copy.closing}
+            <span class="block opacity-75">{copy.closingAccent}</span>
+          </p>
+          <Button href={APP_SIGNUP_URL} variant="inverse" size="lg" class="mt-4">
+            {copy.cta}
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </Button>
+          <p class="text-sm opacity-75">{copy.ctaNote}</p>
+        </div>
+      </Container>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  /* A letter, not a landing page: one column, the serif for the claims,
+     generous air between the sections and none of the page's card chrome. */
+  .prose-letter :global(section + section) {
+    margin-top: 4.5rem;
+  }
+
+  .prose-letter :global(h2) {
+    margin-bottom: 1.25rem;
+    color: var(--foreground);
+    text-wrap: balance;
+  }
+
+  .prose-letter :global(p) {
+    font-size: 1.075rem;
+    line-height: 1.75;
+    color: var(--muted-foreground);
+    text-wrap: pretty;
+  }
+
+  .prose-letter :global(p + p) {
+    margin-top: 1.1rem;
+  }
+
+  .prose-letter :global(p strong) {
+    color: var(--foreground);
+  }
+
+  .prose-letter :global(.lead) {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+
+  .prose-letter :global(blockquote) {
+    margin: 2rem 0;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--brand);
+    font-family: var(--font-serif);
+    font-size: 1.65rem;
+    line-height: 1.3;
+    color: var(--brand);
+    text-wrap: balance;
+  }
+</style>

@@ -1,0 +1,454 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import Button from "@/components/ui/Button.astro";
+import Kbd from "@/components/help/Kbd.astro";
+import HelpIllustration from "@/components/help/HelpIllustration.astro";
+import {
+  basics,
+  withNole,
+  proTips,
+  shortcutGroups,
+  goingFurther,
+  type HelpStep,
+} from "@/data/help";
+import { APP_URL, GITHUB_REPO_URL, SITE_NAME } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+/*
+ * The user guide: what a first session needs, then what the tenth one does.
+ *
+ * One page rather than a docs site. The product teaches itself on the
+ * canvas (welcome modal, tooltips with their key); what's missing is the
+ * place where all of it is written down at once, and the habits nobody
+ * finds by clicking around — Alt-click, letter keys, Shift to snap.
+ *
+ * Order is the order of need: the four gestures, then Nolë, then the
+ * tips, then the full shortcut sheet for whoever wants to print it in
+ * their head, then the settings pages worth knowing exist.
+ */
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  title: "Help",
+  description:
+    "Learn the Nolënor canvas in five minutes: the basic gestures, working with Nolë, pro tips and every keyboard shortcut.",
+  label: "Help & guides",
+  heading: "Find your way around the canvas.",
+  lede: "The basics to get going, then the small habits of a practised hand. Everything here works on any canvas, right now.",
+  chaptersNav: "Guide chapters",
+  onThisPage: "On this page",
+  keysShownFor: "Keys shown for",
+  platform: "Keyboard platform",
+  toc: {
+    basics: "The basics",
+    nole: "Working with Nolë",
+    tips: "Pro tips",
+    shortcuts: "Shortcuts",
+    further: "Going further",
+  },
+  basics: {
+    title: "Four gestures, and you know the canvas.",
+    intro:
+      "Everything in Nolënor is a node on an infinite canvas. Moving around, adding, opening and connecting is all there is to learn before you start.",
+  },
+  nole: {
+    title: "An agent that works where you do.",
+    intro:
+      "Nolë reads and edits the same nodes you do. You decide what it looks at, it shows what it changed, and you can always take it back.",
+  },
+  tips: {
+    title: "The habits of a practised hand.",
+    intro:
+      "None of these are hidden, but none of them announce themselves either. Pick two, use them for a day, and they'll stick.",
+  },
+  shortcuts: {
+    eyebrow: "Keyboard shortcuts",
+    title: "The whole sheet.",
+    intro:
+      "Single letters work when the canvas has focus, never while you're typing in a node. A sentence typed by mistake creates nothing.",
+    or: "or",
+  },
+  further: {
+    title: "Make it yours.",
+    intro: "A few settings pages worth knowing about once a real project lives on your canvas.",
+  },
+  stuck: {
+    title: "Still stuck?",
+    body: "Something unclear, broken, or missing from this page? Tell us on GitHub, we read everything. Or just ask Nolë, from any canvas.",
+    github: "Ask on GitHub",
+    app: "Open Nolënor",
+  },
+};
+
+const fr: typeof en = {
+  title: "Aide",
+  description:
+    "Prenez en main le canevas Nolënor en cinq minutes : les gestes de base, le travail avec Nolë, les astuces et tous les raccourcis clavier.",
+  label: "Aide et prise en main",
+  heading: "Prenez vos marques sur le canevas.",
+  lede: "Les bases pour démarrer, puis les tours de main qui viennent avec l’habitude. Tout ce qui suit marche dès maintenant, sur n’importe quel canevas.",
+  chaptersNav: "Chapitres du guide",
+  onThisPage: "Sur cette page",
+  keysShownFor: "Touches affichées pour",
+  platform: "Type de clavier",
+  toc: {
+    basics: "Les bases",
+    nole: "Travailler avec Nolë",
+    tips: "Astuces",
+    shortcuts: "Raccourcis",
+    further: "Aller plus loin",
+  },
+  basics: {
+    title: "Quatre gestes, et le canevas n’a plus de secret.",
+    intro:
+      "Dans Nolënor, tout est nœud, posé sur un canevas infini. Se déplacer, ajouter, ouvrir, relier : vous n’avez rien d’autre à apprendre pour commencer.",
+  },
+  nole: {
+    title: "Un agent sur le même établi que vous.",
+    intro:
+      "Nolë lit et modifie les mêmes nœuds que vous. Vous choisissez ce qu’il regarde, il vous montre ce qu’il a changé, et tout peut s’annuler.",
+  },
+  tips: {
+    title: "Les tours de main de l’habitué.",
+    intro:
+      "Rien de tout ça n’est caché, mais rien ne saute aux yeux non plus. Prenez-en deux, pratiquez-les une journée : le geste vous restera.",
+  },
+  shortcuts: {
+    eyebrow: "Raccourcis clavier",
+    title: "L’antisèche au complet.",
+    intro:
+      "Les raccourcis à une lettre ne marchent que sur le canevas, jamais pendant que vous écrivez dans un nœud. Une phrase tapée par mégarde ne crée rien.",
+    or: "ou",
+  },
+  further: {
+    title: "À votre main.",
+    intro: "Quelques pages de paramètres à connaître, dès qu’un vrai projet s’installe sur votre canevas.",
+  },
+  stuck: {
+    title: "Besoin d’un coup de main ?",
+    body: "Une explication floue, un bug, une info qui manque ? Dites-le-nous sur GitHub, nous lisons tout. Ou demandez directement à Nolë, depuis n’importe quel canevas.",
+    github: "Écrire sur GitHub",
+    app: "Ouvrir Nolënor",
+  },
+};
+
+const copy = { en, fr }[lang];
+
+const toc = [
+  { id: "basics", label: copy.toc.basics },
+  { id: "nole", label: copy.toc.nole },
+  { id: "tips", label: copy.toc.tips },
+  { id: "shortcuts", label: copy.toc.shortcuts },
+  { id: "further", label: copy.toc.further },
+];
+
+const chapters: { id: string; eyebrow: string; title: string; intro: string; steps: HelpStep[] }[] = [
+  {
+    id: "basics",
+    eyebrow: copy.toc.basics,
+    title: copy.basics.title,
+    intro: copy.basics.intro,
+    steps: basics[lang],
+  },
+  {
+    id: "nole",
+    eyebrow: copy.toc.nole,
+    title: copy.nole.title,
+    intro: copy.nole.intro,
+    steps: withNole[lang],
+  },
+];
+---
+
+<Layout title={`${copy.title} — ${SITE_NAME}`} description={copy.description}>
+  <section class="pt-14 pb-14 sm:pt-24 sm:pb-20">
+    <Container class="flex flex-col items-center gap-6 text-center">
+      <SectionLabel>{copy.label}</SectionLabel>
+      <h1 class="max-w-3xl font-serif text-4xl leading-[1.15] text-balance text-foreground sm:text-5xl lg:text-6xl">
+        {copy.heading}
+      </h1>
+      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+        {copy.lede}
+      </p>
+
+      <nav aria-label={copy.chaptersNav} class="mt-2 flex flex-wrap justify-center gap-2">
+        {
+          toc.map((item, index) => (
+            <a
+              href={`#${item.id}`}
+              class="group inline-flex items-center gap-2 rounded-full border border-border bg-surface/70 px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:border-brand/40 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            >
+              <span class="font-serif text-brand">{String(index + 1).padStart(2, "0")}</span>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </Container>
+  </section>
+
+  <hr class="border-border" />
+
+  <Container class="grid gap-12 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-16">
+    <aside class="hidden lg:block">
+      <div class="sticky top-28 flex flex-col gap-8 py-20">
+        <nav aria-label={copy.onThisPage} data-help-toc>
+          <p class="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+            {copy.onThisPage}
+          </p>
+          <ul class="flex flex-col gap-0.5 border-l border-border">
+            {
+              toc.map((item) => (
+                <li>
+                  <a href={`#${item.id}`} class="toc-link -ml-px block border-l-2 border-transparent py-1.5 pl-4 text-sm text-muted-foreground transition-colors hover:text-foreground">
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div>
+          <p class="mb-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+            {copy.keysShownFor}
+          </p>
+          <div class="os-switch" role="group" aria-label={copy.platform}>
+            <button type="button" data-os-option="mac" aria-pressed="false">Mac</button>
+            <button type="button" data-os-option="win" aria-pressed="true">Windows</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="min-w-0">
+      {
+        chapters.map((chapter, chapterIndex) => (
+          <section id={chapter.id} class:list={["py-16 sm:py-20", chapterIndex > 0 && "border-t border-border"]}>
+            <header class="flex max-w-2xl flex-col gap-4">
+              <p class="text-sm font-semibold text-brand">
+                <span class="font-serif">{String(chapterIndex + 1).padStart(2, "0")}</span>
+                <span class="mx-1.5 text-brand/40">/</span>
+                {chapter.eyebrow}
+              </p>
+              <h2 class="text-balance text-foreground">{chapter.title}</h2>
+              <p class="text-lg text-pretty text-muted-foreground">{chapter.intro}</p>
+            </header>
+
+            <ol class="mt-12 flex flex-col gap-14 sm:mt-14 sm:gap-20">
+              {chapter.steps.map((step, index) => (
+                <li id={step.id} class="grid items-center gap-7 md:grid-cols-2 md:gap-12">
+                  <div class:list={["flex flex-col gap-4", index % 2 === 1 && "md:order-2"]} data-reveal>
+                    <div class="flex items-baseline gap-3">
+                      <span class="font-serif text-lg text-brand/60">{index + 1}.</span>
+                      <h3 class="text-balance text-foreground">{step.title}</h3>
+                    </div>
+                    {step.body.map((paragraph) => (
+                      <p class="text-base leading-[1.65] text-pretty text-muted-foreground">{paragraph}</p>
+                    ))}
+                    {step.tryIt && (
+                      <dl class="mt-1 flex flex-wrap gap-x-5 gap-y-2.5">
+                        {step.tryIt.map((item) => (
+                          <div class="flex items-center gap-2">
+                            <dt class="text-sm font-semibold text-foreground/80">{item.label}</dt>
+                            <dd>
+                              {item.keys.map((combo) => (
+                                <Kbd combo={combo} />
+                              ))}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
+                  </div>
+                  <div data-reveal data-reveal-variant="zoom">
+                    <HelpIllustration name={step.illustration} alt={step.alt} />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))
+      }
+
+      <section id="tips" class="border-t border-border py-16 sm:py-20">
+        <header class="flex max-w-2xl flex-col gap-4">
+          <p class="text-sm font-semibold text-brand">
+            <span class="font-serif">03</span>
+            <span class="mx-1.5 text-brand/40">/</span>
+            {copy.toc.tips}
+          </p>
+          <h2 class="text-balance text-foreground">{copy.tips.title}</h2>
+          <p class="text-lg text-pretty text-muted-foreground">{copy.tips.intro}</p>
+        </header>
+
+        <ul class="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {
+            proTips[lang].map((tip) => (
+              <li
+                class="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-5 transition-colors duration-200 hover:border-brand/30"
+                data-reveal
+              >
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-brand">
+                  <Icon name={tip.icon} class="h-[1.1rem] w-[1.1rem]" />
+                </span>
+                <h3 class="font-sans text-base font-bold text-foreground">{tip.title}</h3>
+                <p class="flex-1 text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">{tip.body}</p>
+                {tip.keys && (
+                  <div class="flex flex-wrap gap-2 pt-1">
+                    {tip.keys.map((combo) => (
+                      <Kbd combo={combo} />
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section id="shortcuts" class="border-t border-border py-16 sm:py-20">
+        <header class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div class="flex max-w-2xl flex-col gap-4">
+            <p class="text-sm font-semibold text-brand">
+              <span class="font-serif">04</span>
+              <span class="mx-1.5 text-brand/40">/</span>
+              {copy.shortcuts.eyebrow}
+            </p>
+            <h2 class="text-balance text-foreground">{copy.shortcuts.title}</h2>
+            <p class="text-lg text-pretty text-muted-foreground">{copy.shortcuts.intro}</p>
+          </div>
+          <div class="os-switch shrink-0 self-start lg:hidden" role="group" aria-label={copy.platform}>
+            <button type="button" data-os-option="mac" aria-pressed="false">Mac</button>
+            <button type="button" data-os-option="win" aria-pressed="true">Windows</button>
+          </div>
+        </header>
+
+        <div class="mt-12 grid gap-4 md:grid-cols-2">
+          {
+            shortcutGroups[lang].map((group) => (
+              <div class="rounded-2xl border border-border bg-surface px-5 pt-4 pb-2" data-reveal>
+                <h3 class="mb-1 font-sans text-sm font-bold tracking-wide text-brand uppercase">{group.title}</h3>
+                <dl>
+                  {group.rows.map((row) => (
+                    <div class="flex items-center justify-between gap-4 border-t border-border/70 py-2.5 first:border-t-0">
+                      <dt class="text-[0.95rem] text-foreground/85">{row.action}</dt>
+                      <dd class="flex shrink-0 items-center gap-2">
+                        {row.keys.map((combo, index) => (
+                          <>
+                            {index > 0 && (
+                              <span class="text-xs text-muted-foreground">{row.joiner ?? copy.shortcuts.or}</span>
+                            )}
+                            <Kbd combo={combo} />
+                          </>
+                        ))}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="further" class="border-t border-border py-16 sm:py-20">
+        <header class="flex max-w-2xl flex-col gap-4">
+          <p class="text-sm font-semibold text-brand">
+            <span class="font-serif">05</span>
+            <span class="mx-1.5 text-brand/40">/</span>
+            {copy.toc.further}
+          </p>
+          <h2 class="text-balance text-foreground">{copy.further.title}</h2>
+          <p class="text-lg text-pretty text-muted-foreground">{copy.further.intro}</p>
+        </header>
+
+        <dl class="mt-10 border-t border-border" data-reveal>
+          {
+            goingFurther[lang].map((entry) => (
+              <div class="grid gap-x-6 gap-y-1.5 border-b border-border py-5 sm:grid-cols-[13rem_minmax(0,1fr)_auto] sm:items-baseline">
+                <dt class="flex items-center gap-2.5 font-semibold text-foreground">
+                  <Icon name={entry.icon} class="h-4 w-4 shrink-0 translate-y-px text-brand" />
+                  {entry.title}
+                </dt>
+                <dd class="text-base text-pretty text-muted-foreground">{entry.body}</dd>
+                <dd class="text-sm font-medium whitespace-nowrap text-foreground/60">{entry.where}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+    </div>
+  </Container>
+
+  <section class="pb-20 sm:pb-28">
+    <Container>
+      <div
+        class="flex flex-col items-start gap-6 rounded-3xl border border-border bg-surface px-6 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-12 sm:py-12"
+        data-reveal
+        data-reveal-variant="zoom"
+      >
+        <div class="flex max-w-xl flex-col gap-2">
+          <h2 class="text-balance text-foreground">{copy.stuck.title}</h2>
+          <p class="text-pretty text-muted-foreground">{copy.stuck.body}</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <Button href={`${GITHUB_REPO_URL}/issues`} variant="ghost" class="border border-border">
+            <Icon name="lucide:github" class="h-4 w-4" />
+            {copy.stuck.github}
+          </Button>
+          <Button href={APP_URL}>
+            {copy.stuck.app}
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </Container>
+  </section>
+</Layout>
+
+<script>
+  import "@/scripts/help";
+</script>
+
+<style>
+  .toc-link[data-active] {
+    border-color: var(--brand);
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .os-switch {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+  }
+
+  .os-switch button {
+    padding: 0.35rem 0.8rem;
+    border-radius: 7px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .os-switch button[aria-pressed="true"] {
+    background: var(--brand);
+    color: var(--brand-foreground);
+  }
+
+  .os-switch button:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+</style>

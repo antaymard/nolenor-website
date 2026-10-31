@@ -1,0 +1,296 @@
+---
+import { Icon } from "astro-icon/components";
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/ui/Container.astro";
+import SectionLabel from "@/components/ui/SectionLabel.astro";
+import { GITHUB_REPO_URL, SITE_NAME } from "@/lib/constants";
+import { getLang, localizePath } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+/*
+ * "How we build Nolënor": the manifesto turned into decisions.
+ *
+ * The audit of Capacities' site on the Nolënor canvas recommends a short
+ * principles page made only of principles that are really held, each one
+ * checkable. So every principle here comes with its proof: a thing the
+ * product does today (verified in the app repo), never a promise. The
+ * positioning note's own rule applies: never announce what isn't ready.
+ *
+ * The second half is "what Nolënor isn't", taken from the positioning
+ * note's "Ce qu'on n'est pas". Shapes, not brands: no competitor is named.
+ */
+
+interface Principle {
+  title: string;
+  body: string;
+  proof: string;
+}
+
+interface NotThis {
+  title: string;
+  body: string;
+}
+
+const en = {
+  pageTitle: "Principles",
+  description:
+    "How we build Nolënor: seven principles, each with the proof that it's held in the product today, and what Nolënor deliberately isn't.",
+  label: "Principles",
+  heading: "How we build Nolënor.",
+  introBefore: "The",
+  introLink: "manifesto",
+  introAfter:
+    "says what we believe. These are the decisions that follow from it, each with the proof that it holds in the product today.",
+  proofLabel: "In the product",
+  notLabel: "What it isn't",
+  notHeading: "Saying no is part of the craft.",
+  notIntro:
+    "A precise tool for precise people. Here's what Nolënor deliberately isn't, so you can tell quickly whether it's for you.",
+  closing: "Think we're not living up to one of these? Tell us.",
+  closingBody: "Principles are only worth something if someone can hold us to them.",
+  closingLink: "Open an issue on GitHub",
+  principles: [
+    {
+      title: "The canvas is the interface.",
+      body: "A thought has a shape. Pages inside pages and a scrolling chat both flatten it. We give it a space where things can sit side by side, be linked, and be pointed at.",
+      proof: "Every kind of content is a node on the same canvas: documents, tables, PDFs, images, audio, video, links, apps.",
+    },
+    {
+      title: "It works without AI.",
+      body: "The carpenter's test: if the AI goes off, you can still do the work. Nolënor has to be a good place to think on its own, before it's a good place to think with an agent.",
+      proof: "Documents, tables, links, files: everything you put on the canvas can be created, edited, linked and searched by hand.",
+    },
+    {
+      title: "You choose what the apprentice sees.",
+      body: "Context is the most important thing you give an agent, so it should be a gesture, not a paragraph. You show; it looks where you point.",
+      proof: "Nolë doesn't read the whole canvas by default. You mention a node with @, or Alt-click a node or a spot to hand it over.",
+    },
+    {
+      title: "The work is shown, not reported.",
+      body: "An agent that disappears and comes back with a result asks you to trust it. One you can watch lets you steer it before it builds the cathedral.",
+      proof: "Each step and each tool call streams live, and what Nolë makes lands as nodes on the canvas, next to yours.",
+    },
+    {
+      title: "Every change can be traced and undone.",
+      body: "Staying in touch with the work means knowing who touched what. That matters most when one of the hands isn't yours.",
+      proof: "Each node keeps its versions, with Nolë's edits set apart from yours, and any earlier version restores in one click.",
+    },
+    {
+      title: "Your thinking leaves with you.",
+      body: "A tool you can't leave isn't a tool, it's a dependency. Your work has to stay readable outside of Nolënor.",
+      proof: "Export in open formats (Markdown, JSON, CSV), canvases open to other assistants over MCP, and the source code is public.",
+    },
+    {
+      title: "Do less, but do it right.",
+      body: "Craft is knowing what you won't do. That goes for the product as much as for the work: we'd rather ship a few things that hold than a wall of buttons.",
+      proof: "If this site says Nolënor does something, it does it today. What isn't ready yet is marked as such.",
+    },
+  ] as Principle[],
+  notThis: [
+    {
+      title: "Not another chat box.",
+      body: "The chat is a fine way to ask a question and a poor place to work. In Nolënor the conversation serves the canvas, not the other way round.",
+    },
+    {
+      title: "Not an agent factory.",
+      body: "No army of agents churning out work for you to review in the morning. Nolë works on what you show it, and everything it does stays on the canvas where you can read it.",
+    },
+    {
+      title: "Not a filing cabinet.",
+      body: "We won't make you decide where something goes before you know what it is. Set it down; search and links find it again.",
+    },
+    {
+      title: "Not a whiteboard you throw away.",
+      body: "A canvas for work that lasts: real documents, real data, history on every node. Not a pretty board that dies after the meeting.",
+    },
+    {
+      title: "Not for everyone.",
+      body: "It's for people with a craft who want to widen it, not hand it off. If you're looking for AI to do the job in your place, other tools will suit you better.",
+    },
+  ] as NotThis[],
+};
+
+const fr: typeof en = {
+  pageTitle: "Principes",
+  description:
+    "Comment nous construisons Nolënor : sept principes, et pour chacun ce qui le prouve dans le produit aujourd’hui. Plus ce que Nolënor a choisi de ne pas être.",
+  label: "Principes",
+  heading: "Comment nous construisons Nolënor.",
+  introBefore: "Le",
+  introLink: "manifeste",
+  introAfter:
+    "dit ce que nous pensons. Voici ce que nous en avons fait : des décisions, chacune avec sa preuve dans le produit tel qu’il est aujourd’hui.",
+  proofLabel: "Dans le produit",
+  notLabel: "Ce qu’il n’est pas",
+  notHeading: "Dire non, c’est aussi le métier.",
+  notIntro:
+    "Un outil précis, pour des gens précis. Voici ce que Nolënor a choisi de ne pas être. Vous saurez vite s’il est fait pour vous.",
+  closing: "Vous nous prenez en défaut sur l’un de ces principes ? Dites-le-nous.",
+  closingBody: "Des principes ne valent rien si personne ne peut nous en demander compte.",
+  closingLink: "Ouvrir une issue sur GitHub",
+  principles: [
+    {
+      title: "Le canevas est l’interface.",
+      body: "Une pensée a une forme. Les pages imbriquées l’écrasent, le fil d’un chat aussi. Nous lui donnons un espace où poser les choses côte à côte, les relier, les montrer du doigt.",
+      proof: "Documents, tableaux, PDF, images, audio, vidéo, liens, apps : tout devient un nœud, sur le même canevas.",
+    },
+    {
+      title: "Nolënor tient debout sans IA.",
+      body: "C’est le test du charpentier : si on coupe l’IA, vous savez encore faire. Nolënor doit d’abord être un bon endroit pour penser seul. Penser avec un agent vient ensuite.",
+      proof: "Documents, tableaux, liens, fichiers : tout ce qui est sur le canevas se crée, se modifie, se relie et se retrouve à la main.",
+    },
+    {
+      title: "Vous choisissez ce que voit l’apprenti.",
+      body: "Le contexte, c’est ce que vous donnez de plus important à un agent. Il devrait tenir dans un geste, pas dans un paragraphe. Vous montrez, il regarde là où vous pointez.",
+      proof: "Par défaut, Nolë ne lit pas tout le canevas. Vous lui passez un nœud en le mentionnant avec @, ou d’un Alt-clic sur un nœud ou sur un endroit du canevas.",
+    },
+    {
+      title: "Le travail se montre, il ne se raconte pas.",
+      body: "Un agent qui disparaît et revient avec un résultat vous demande de le croire sur parole. Celui que vous voyez travailler, vous pouvez le guider avant qu’il ne parte bâtir sa cathédrale.",
+      proof: "Chaque étape, chaque appel d’outil s’affiche en direct. Ce que Nolë produit arrive en nœuds sur le canevas, à côté des vôtres.",
+    },
+    {
+      title: "Chaque modification se retrace et s’annule.",
+      body: "Garder les mains dans la matière, c’est aussi savoir qui a touché à quoi. Surtout quand l’une des mains n’est pas la vôtre.",
+      proof: "Chaque nœud garde son historique de versions, où les modifications de Nolë sont séparées des vôtres. N’importe quelle version précédente se restaure en un clic.",
+    },
+    {
+      title: "Si vous partez, votre travail part avec vous.",
+      body: "Un outil qu’on ne peut pas quitter, ce n’est plus un outil, c’est une dépendance. Votre travail doit rester lisible hors de Nolënor.",
+      proof: "Export en formats ouverts (Markdown, JSON, CSV), canevas accessibles à d’autres assistants par MCP, code source public.",
+    },
+    {
+      title: "Faire moins, mais faire juste.",
+      body: "Le métier, c’est savoir ce qu’on ne fera pas. C’est vrai du produit comme du travail : nous aimons mieux livrer peu de choses qui tiennent qu’un mur de boutons.",
+      proof: "Quand ce site dit que Nolënor sait faire quelque chose, il le fait déjà. Ce qui n’est pas prêt est indiqué comme tel.",
+    },
+  ],
+  notThis: [
+    {
+      title: "Pas un chat de plus.",
+      body: "Le chat est très bien pour poser une question, beaucoup moins pour travailler. Dans Nolënor, la conversation est au service du canevas, pas l’inverse.",
+    },
+    {
+      title: "Pas une usine à agents.",
+      body: "Pas d’armée d’agents qui abattent du travail en série pour que vous le relisiez au matin. Nolë travaille sur ce que vous lui montrez, et tout ce qu’il fait reste sur le canevas, sous vos yeux.",
+    },
+    {
+      title: "Pas un classeur.",
+      body: "Vous n’avez pas à décider où va une chose avant de savoir ce que c’est. Posez-la : la recherche et les liens la retrouveront.",
+    },
+    {
+      title: "Pas un tableau blanc jetable.",
+      body: "Un canevas pour le travail qui dure : de vrais documents, de vraies données, un historique sur chaque nœud. Pas un joli tableau qu’on efface en sortant de réunion.",
+    },
+    {
+      title: "Pas pour tout le monde.",
+      body: "Nolënor est fait pour les gens de métier qui veulent aller plus loin, pas se décharger du leur. Si vous cherchez une IA qui travaille à votre place, d’autres outils vous iront mieux.",
+    },
+  ],
+};
+
+const copy = { en, fr }[lang];
+---
+
+
+<Layout
+  title={`${copy.pageTitle} — ${SITE_NAME}`}
+  description={copy.description}
+>
+  <section class="pt-14 pb-14 sm:pt-24 sm:pb-20">
+    <Container class="flex flex-col items-center gap-6 text-center">
+      <SectionLabel>{copy.label}</SectionLabel>
+      <h1 class="max-w-3xl font-serif text-4xl leading-[1.15] text-balance text-foreground sm:text-5xl lg:text-6xl">
+        {copy.heading}
+      </h1>
+      <p class="max-w-2xl text-lg text-pretty text-muted-foreground">
+        {copy.introBefore}{" "}
+        <a href={localizePath("/manifesto", lang)} class="font-semibold text-brand underline-offset-4 hover:underline">{copy.introLink}</a>{" "}
+        {copy.introAfter}
+      </p>
+    </Container>
+  </section>
+
+  <hr class="border-border" />
+
+  <Container class="py-16 sm:py-24">
+    <ol class="mx-auto flex max-w-4xl flex-col">
+      {
+        copy.principles.map((principle, index) => (
+          <li
+            class="grid gap-x-10 gap-y-4 border-b border-border py-10 first:pt-0 last:border-b-0 md:grid-cols-[4rem_minmax(0,1fr)_minmax(0,0.85fr)]"
+            data-reveal
+          >
+            <span class="font-serif text-3xl leading-none text-brand/50">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div class="flex flex-col gap-3">
+              <h2 class="text-[1.75rem] text-balance text-foreground">{principle.title}</h2>
+              <p class="text-base leading-[1.7] text-pretty text-muted-foreground">{principle.body}</p>
+            </div>
+            <div class="proof self-start rounded-xl px-4 py-3.5 md:mt-1.5">
+              <p class="mb-1.5 flex items-center gap-1.5 text-xs font-bold tracking-wide text-brand uppercase">
+                <Icon name="lucide:check" class="h-3.5 w-3.5" />
+                {copy.proofLabel}
+              </p>
+              <p class="text-[0.92rem] leading-relaxed text-pretty text-foreground/85">{principle.proof}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+
+  <hr class="border-border" />
+
+  <section class="py-16 sm:py-24">
+    <Container>
+      <div class="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+        <SectionLabel>{copy.notLabel}</SectionLabel>
+        <h2 class="text-balance text-foreground">{copy.notHeading}</h2>
+        <p class="text-lg text-pretty text-muted-foreground">
+          {copy.notIntro}
+        </p>
+      </div>
+
+      <dl class="mx-auto mt-12 flex max-w-5xl flex-wrap justify-center gap-4">
+        {
+          copy.notThis.map((item) => (
+            <div class="flex w-full flex-col gap-2 rounded-2xl border border-border bg-surface p-6 sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]" data-reveal>
+              <dt class="font-serif text-xl text-foreground">{item.title}</dt>
+              <dd class="text-[0.95rem] leading-relaxed text-pretty text-muted-foreground">{item.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Container>
+  </section>
+
+  <section class="pb-20 sm:pb-28">
+    <Container>
+      <div class="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+        <p class="font-serif text-2xl leading-snug text-balance text-foreground sm:text-3xl">
+          {copy.closing}
+        </p>
+        <p class="text-pretty text-muted-foreground">
+          {copy.closingBody}
+        </p>
+        <a
+          href={`${GITHUB_REPO_URL}/issues`}
+          class="group mt-2 inline-flex items-center gap-1.5 font-semibold text-brand underline-offset-4 hover:underline"
+          rel="noopener noreferrer"
+        >
+          {copy.closingLink}
+          <Icon name="lucide:arrow-right" class="h-4 w-4 transition-transform duration-200 motion-safe:group-hover:translate-x-0.5" />
+        </a>
+      </div>
+    </Container>
+  </section>
+</Layout>
+
+<style>
+  .proof {
+    background: color-mix(in srgb, var(--brand) 8%, #ffffff);
+  }
+</style>

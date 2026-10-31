@@ -1,6 +1,7 @@
 ---
 import MarketMap from "@/components/use-cases/MarketMap.astro";
 import { flagship, vignettes } from "@/data/useCases";
+import { getLang, localizePath } from "@/i18n";
 
 /*
  * The home page's one concrete scene, right before "Is it for you?": a
@@ -8,23 +9,34 @@ import { flagship, vignettes } from "@/data/useCases";
  * work first. The full scenario and the other crafts live on /use-cases;
  * this only has to make the split visible: your nodes, Nolë's nodes.
  */
-const crafts = [flagship.craft, ...vignettes.map((vignette) => vignette.craft)];
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  title: "You lead. Nolë does the legwork. You check.",
+  body: "A consultant meets a new market. They set out their own frame on the canvas, Nolë hangs the research on it, and every figure stays one click from its source. At the end, the map is theirs, and they can explain every part of it.",
+  craftsLabel: "Crafts shown in the use cases",
+  link: "See how each craft works with Nolë",
+};
+const fr: typeof en = {
+  title: "Vous menez. Nolë défriche. Vous vérifiez.",
+  body: "Un consultant arrive sur un marché qu’il ne connaît pas. Il pose sa propre grille sur le canevas, Nolë y accroche les recherches, et chaque chiffre reste à un clic de sa source. Au bout du compte, la carte est la sienne : il peut en justifier chaque élément.",
+  craftsLabel: "Métiers présentés dans les cas d’usage",
+  link: "Voir chaque métier à l’œuvre avec Nolë",
+};
+const copy = { en, fr }[lang];
+
+const crafts = [flagship[lang].craft, ...vignettes[lang].map((vignette) => vignette.craft)];
 ---
 
 <section id="use-cases" class="practice" aria-labelledby="practice-title">
   <div class="wrap practice__grid">
     <div class="practice__text">
-      <h2 id="practice-title">You lead. Nolë does the legwork. You check.</h2>
-      <p>
-        A consultant meets a new market. They set out their own frame on the
-        canvas, Nolë hangs the research on it, and every figure stays one click
-        from its source. At the end, the map is theirs, and they can explain
-        every part of it.
-      </p>
-      <ul class="practice__crafts" aria-label="Crafts shown in the use cases">
+      <h2 id="practice-title">{copy.title}</h2>
+      <p>{copy.body}</p>
+      <ul class="practice__crafts" aria-label={copy.craftsLabel}>
         {crafts.map((craft) => <li>{craft}</li>)}
       </ul>
-      <a href="/use-cases" class="text-link">See how each craft works with Nolë</a>
+      <a href={localizePath("/use-cases", lang)} class="text-link">{copy.link}</a>
     </div>
 
     <div class="practice__map">

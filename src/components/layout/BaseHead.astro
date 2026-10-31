@@ -1,28 +1,105 @@
 ---
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/constants";
+import { getLang, langs, ogLocale, translatePath, defaultLang } from "@/i18n";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
+const lang = getLang(Astro.currentLocale);
+const is404 = Astro.url.pathname.replace(/\/$/, "").endsWith("/404");
+
+const defaultDescription = {
+  en: "Nolënor is a canvas to think and work on, with an AI apprentice at your side. You keep the craft; the agent fills the gaps you show it. A workshop, not a factory.",
+  fr: "Nolënor est un canevas où penser et travailler, avec un apprenti IA à vos côtés. Le métier reste le vôtre ; l’agent s’occupe de ce que vous lui montrez. Un atelier, pas une usine.",
+};
+
 const {
-  title = `${SITE_NAME}. ${TAGLINE}`,
-  description = "Nolënor is a canvas to think and work on, with an AI apprentice at your side. You keep the craft; the agent fills the gaps you show it. A workshop, not a factory.",
+  title = `${SITE_NAME}. ${TAGLINE[lang]}`,
+  description = defaultDescription[lang],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, SITE_URL);
+// Every language version of this page, so search engines serve the right
+// one and treat them as translations rather than duplicates.
+const alternates = langs.map((l) => ({
+  hreflang: l,
+  href: new URL(translatePath(Astro.url.pathname, l), SITE_URL),
+}));
+const xDefault = new URL(translatePath(Astro.url.pathname, defaultLang), SITE_URL);
 // PLACEHOLDER — replace with a real designed 1200x630 social card once produced.
 const ogImageURL = new URL("/og-image.png", SITE_URL);
 ---
 
 <meta charset="utf-8" />
 <script is:inline>document.documentElement.classList.add("js");</script>
+{
+  /*
+   * Language picking, before first paint so the wrong language never
+   * flashes. A static site can't read Accept-Language, so the browser's own
+   * preference list stands in for it.
+   *
+   *  1. A choice the reader made (a click on a language link, remembered in
+   *     localStorage) wins everywhere.
+   *  2. Otherwise, an English page opened by a browser that ranks French
+   *     above English moves to its /fr/ twin.
+   *  3. A /fr/ URL is never sent back to English on a guess: someone opened
+   *     a French link on purpose, or was sent one.
+   *
+   * Skipped on the 404 page, whose URL has no twin to go to.
+   */
+  !is404 && (
+    <script is:inline>
+      (function () {
+        var KEY = "nolenor-lang";
+        var path = location.pathname;
+        var isFr = path === "/fr" || path.indexOf("/fr/") === 0;
+        var current = isFr ? "fr" : "en";
+
+        function pathFor(lang) {
+          var bare = isFr ? path.slice(3) || "/" : path;
+          if (bare.charAt(0) !== "/") bare = "/" + bare;
+          return lang === "fr" ? (bare === "/" ? "/fr/" : "/fr" + bare) : bare;
+        }
+
+        var stored = null;
+        try { stored = localStorage.getItem(KEY); } catch (e) {}
+
+        var target = null;
+        if (stored === "en" || stored === "fr") {
+          if (stored !== current) target = stored;
+        } else if (!isFr) {
+          var prefs = navigator.languages || [navigator.language || ""];
+          for (var i = 0; i < prefs.length; i++) {
+            var code = String(prefs[i]).toLowerCase().slice(0, 2);
+            if (code === "fr") { target = "fr"; break; }
+            if (code === "en") break;
+          }
+        }
+
+        if (target) {
+          location.replace(pathFor(target) + location.search + location.hash);
+          return;
+        }
+
+        // Remember an explicit switch (nav and footer language links).
+        document.addEventListener("click", function (event) {
+          var link = event.target.closest && event.target.closest("a[hreflang]");
+          if (!link) return;
+          try { localStorage.setItem(KEY, link.getAttribute("hreflang")); } catch (e) {}
+        });
+      })();
+    </script>
+  )
+}
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content={Astro.generator} />
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalURL} />
+{alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
+<link rel="alternate" hreflang="x-default" href={xDefault} />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -41,6 +118,12 @@ const ogImageURL = new URL("/og-image.png", SITE_URL);
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:locale" content={ogLocale[lang]} />
+{
+  langs
+    .filter((l) => l !== lang)
+    .map((l) => <meta property="og:locale:alternate" content={ogLocale[l]} />)
+}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

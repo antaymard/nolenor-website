@@ -1,0 +1,56 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/sections/Hero.astro";
+import Problem from "@/components/sections/Problem.astro";
+import NodeTypes from "@/components/sections/NodeTypes.astro";
+import MoreFeatures from "@/components/sections/MoreFeatures.astro";
+import Audience from "@/components/sections/Audience.astro";
+import UseCasesTeaser from "@/components/sections/UseCasesTeaser.astro";
+import Faq from "@/components/sections/Faq.astro";
+import FinalCta from "@/components/sections/FinalCta.astro";
+import StickyFeatureScroll from "@/components/sections/StickyFeatureScroll.astro";
+import InlineCta from "@/components/ui/InlineCta.astro";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const copy = {
+  en: {
+    asideCanvas: { text: "Reading about a canvas only goes so far.", action: "Open a canvas" },
+    asideFree: { text: "All of this is free while we're in beta.", action: "Try it for free" },
+  },
+  fr: {
+    asideCanvas: { text: "Un canevas, ça s’essaie plus que ça ne se lit.", action: "Ouvrir un canevas" },
+    asideFree: { text: "Pendant la bêta, tout est gratuit.", action: "Essayer gratuitement" },
+  },
+}[lang];
+
+// The landing page, in the order it argues: the promise and the canvas,
+// what our tools turned us into, the gestures Nolënor gives back, the
+// materials, the depth, a person at work, who it is for, the questions and
+// the close.
+//
+// Each section draws its own seam (a hairline, a change of paper, or just
+// air) so the page does not part every chapter the same way. The two quiet
+// one-liners sit between hairlines of their own and carry no button:
+// asking four times with a button would be nagging, and this page's whole
+// argument is that it doesn't push you.
+//
+// Anchors: #features, #nodes, #who-its-for and #faq are the four ids
+// src/data/nav.ts points at (in both languages: anchors are never translated). Moving or renaming a section here means
+// updating that file.
+---
+
+<Layout>
+  <Hero />
+  <Problem />
+  <StickyFeatureScroll id="features" />
+  <InlineCta text={copy.asideCanvas.text} action={copy.asideCanvas.action} />
+  <NodeTypes />
+  <MoreFeatures />
+  <InlineCta text={copy.asideFree.text} action={copy.asideFree.action} />
+  <UseCasesTeaser />
+  <Audience />
+  <Faq />
+  <FinalCta />
+</Layout>
