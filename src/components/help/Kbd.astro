@@ -1,5 +1,6 @@
 ---
 import type { KeyCombo } from "@/data/help";
+import { getLang, type Lang } from "@/i18n";
 
 interface Props {
   combo: KeyCombo;
@@ -15,21 +16,51 @@ const { combo, class: className = "" } = Astro.props;
  * html[data-os] (set by the help page's OS switch): no JS means Windows
  * labels, never a blank. Mouse gestures are words, not keycaps, so they
  * get a quieter, borderless style — a keycap reading "double-click"
- * would be pretending.
+ * would be pretending. Combos arrive as language-neutral tokens ("Mod",
+ * "Enter", "double-click"); the labels below are what the reader sees.
  */
-const platformKeys: Record<string, { win: string; mac: string; label: string }> = {
-  Mod: { win: "Ctrl", mac: "⌘", label: "Control or Command" },
-  Alt: { win: "Alt", mac: "⌥", label: "Alt or Option" },
-  Ctrl: { win: "Ctrl", mac: "⌃", label: "Control" },
-  Shift: { win: "Shift", mac: "⇧", label: "Shift" },
+const lang = getLang(Astro.currentLocale);
+
+type PlatformKey = { win: string; mac: string; label: string };
+
+const labels: Record<
+  Lang,
+  { platformKeys: Record<string, PlatformKey>; gestures: Record<string, string>; keys: Record<string, string> }
+> = {
+  en: {
+    platformKeys: {
+      Mod: { win: "Ctrl", mac: "⌘", label: "Control or Command" },
+      Alt: { win: "Alt", mac: "⌥", label: "Alt or Option" },
+      Ctrl: { win: "Ctrl", mac: "⌃", label: "Control" },
+      Shift: { win: "Shift", mac: "⇧", label: "Shift" },
+    },
+    gestures: {
+      scroll: "scroll",
+      click: "click",
+      "double-click": "double-click",
+      "middle-drag": "middle-click + drag",
+    },
+    keys: {},
+  },
+  fr: {
+    platformKeys: {
+      Mod: { win: "Ctrl", mac: "⌘", label: "Ctrl ou Cmd" },
+      Alt: { win: "Alt", mac: "⌥", label: "Alt ou Option" },
+      Ctrl: { win: "Ctrl", mac: "⌃", label: "Contrôle" },
+      Shift: { win: "Maj", mac: "⇧", label: "Majuscule" },
+    },
+    gestures: {
+      scroll: "molette",
+      click: "clic",
+      "double-click": "double-clic",
+      "middle-drag": "clic milieu + glisser",
+    },
+    // Plain keys whose name is a word; letters and symbols print as is.
+    keys: { Enter: "Entrée" },
+  },
 };
 
-const gestures: Record<string, string> = {
-  scroll: "scroll",
-  click: "click",
-  "double-click": "double-click",
-  "middle-drag": "middle-click + drag",
-};
+const { platformKeys, gestures, keys } = labels[lang];
 ---
 
 <span class={`kbd-combo inline-flex items-center gap-1 align-middle ${className}`}>
@@ -45,7 +76,7 @@ const gestures: Record<string, string> = {
         ) : gestures[key] ? (
           <span class="kbd-gesture">{gestures[key]}</span>
         ) : (
-          <kbd class="kbd">{key}</kbd>
+          <kbd class="kbd">{keys[key] ?? key}</kbd>
         )}
       </>
     ))
