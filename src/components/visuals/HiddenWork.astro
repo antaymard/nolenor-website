@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
 
 /*
  * Illustration for problem item 2: what the chat does with its own work.
@@ -11,6 +12,8 @@ import { Icon } from "astro-icon/components";
  * and resets on leaving, so the punchline is never caught mid-loop.
  */
 
+const lang = getLang(Astro.currentLocale);
+
 interface Step {
   text: string;
   /** Pause before this line lands, in ms. */
@@ -19,42 +22,75 @@ interface Step {
   alert?: boolean;
 }
 
-const QUESTION = "Should we hire a second designer?";
-
-const steps: Step[] = [
-  { text: "Thinking...", delay: 700 },
-  { text: "Reading your entire computer...", delay: 900 },
-  {
-    text: "Remembering something you said 8 months ago in an unrelated chat",
-    delay: 1100,
-  },
-  {
-    text: "Overcommitting in the wrong direction without telling you now",
-    delay: 1400,
-  },
-  { text: "Burning tokens you paid for...", delay: 900 },
-  { text: "Forgetting the constraint you gave three messages ago", delay: 1200 },
-  { text: "Preparing a very long answer you won't even read", delay: 1500 },
-  { text: "Session limit reached. Try again in 5 hours", delay: 2000, alert: true },
+// Pauses shared by both languages, one per status line, in order.
+const timing: Omit<Step, "text">[] = [
+  { delay: 700 },
+  { delay: 900 },
+  { delay: 1100 },
+  { delay: 1400 },
+  { delay: 900 },
+  { delay: 1200 },
+  { delay: 1500 },
+  { delay: 2000, alert: true },
 ];
+
+const en = {
+  label:
+    "An AI chat answering a question with a growing stack of status lines (thinking, reading your entire computer, remembering an unrelated chat months ago, burning tokens) none of which say what it is actually using, and the run ends on a session limit instead of an answer.",
+  tab: "New chat",
+  placeholder: "What should we get done?",
+  question: "Should we hire a second designer?",
+  steps: [
+    "Thinking...",
+    "Reading your entire computer...",
+    "Remembering something you said 8 months ago in an unrelated chat",
+    "Overcommitting in the wrong direction without telling you now",
+    "Burning tokens you paid for...",
+    "Forgetting the constraint you gave three messages ago",
+    "Preparing a very long answer you won't even read",
+    "Session limit reached. Try again in 5 hours",
+  ],
+};
+
+const fr: typeof en = {
+  label:
+    "Un chat IA qui répond à une question par une pile croissante de lignes d’état (réflexion, lecture de tout votre ordinateur, souvenir d’une conversation sans rapport vieille de plusieurs mois, tokens gaspillés), dont aucune ne dit ce qu’il utilise vraiment ; et l’exécution s’achève sur une limite de session au lieu d’une réponse.",
+  tab: "Nouveau chat",
+  placeholder: "Que voulez-vous accomplir ?",
+  question: "Faut-il recruter un second designer ?",
+  steps: [
+    "Réflexion…",
+    "Lecture de tout votre ordinateur…",
+    "Rappel d’une phrase dite il y a 8 mois dans une conversation sans rapport",
+    "Engagement à fond dans la mauvaise direction, sans vous prévenir",
+    "Gaspillage des tokens que vous avez payés…",
+    "Oubli de la contrainte donnée il y a trois messages",
+    "Préparation d’une très longue réponse que vous ne lirez même pas",
+    "Limite de session atteinte. Réessayez dans 5 heures",
+  ],
+};
+
+const copy = { en, fr }[lang];
+
+const steps: Step[] = timing.map((t, i) => ({ ...t, text: copy.steps[i] }));
 ---
 
 <div
   class="chat-frame"
   data-status-stack
   role="img"
-  aria-label="An AI chat answering a question with a growing stack of status lines (thinking, reading your entire computer, remembering an unrelated chat months ago, burning tokens) none of which say what it is actually using, and the run ends on a session limit instead of an answer."
+  aria-label={copy.label}
 >
   <div class="chat-app" aria-hidden="true">
     <div class="chat-topbar">
       <span class="chat-dot"></span>
-      <span class="chat-tab">New chat</span>
+      <span class="chat-tab">{copy.tab}</span>
       <Icon name="lucide:plus" class="chat-topicon" />
     </div>
 
     <div class="chat-thread">
       <div class="chat-row chat-row--user" data-status-row data-delay="400">
-        <div><p class="chat-bubble">{QUESTION}</p></div>
+        <div><p class="chat-bubble">{copy.question}</p></div>
       </div>
 
       {
@@ -77,7 +113,7 @@ const steps: Step[] = [
     <div class="chat-input">
       <Icon name="lucide:paperclip" class="chat-icon" />
       <div class="chat-field">
-        <span class="chat-placeholder">What should we get done?</span>
+        <span class="chat-placeholder">{copy.placeholder}</span>
       </div>
       <span class="chat-send"><Icon name="lucide:arrow-up" class="chat-sendicon" /></span>
     </div>

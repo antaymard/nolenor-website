@@ -1,15 +1,33 @@
 ---
 import { Icon } from "astro-icon/components";
 import MediaFrame from "@/components/ui/MediaFrame.astro";
-import type { FeatureStep } from "@/data/features";
+import { featureSteps, type FeatureStep } from "@/data/features";
+import { getLang } from "@/i18n";
 
 interface Props {
   id?: string;
-  steps: FeatureStep[];
+  /** Defaults to the gestures in src/data/features.ts, in the page's language. */
+  steps?: FeatureStep[];
   aspectRatio?: string;
 }
 
-const { id, steps, aspectRatio = "16/10" } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+
+const { id, steps = featureSteps[lang], aspectRatio = "16/10" } = Astro.props;
+
+const en = {
+  titleA: "Lay it down. Show it.",
+  titleB: "Do the work.",
+  lead: "Nolënor gives you back the three gestures. The agent fills the gaps you show it; the work stays yours.",
+};
+
+const fr: typeof en = {
+  titleA: "Posez. Montrez.",
+  titleB: "Faites le travail.",
+  lead: "Nolënor vous rend ces trois gestes. L’agent comble les vides que vous lui montrez ; le travail reste le vôtre.",
+};
+
+const copy = { en, fr }[lang];
 
 /*
  * Pinned: the gestures scroll past on the left, the screen on the right
@@ -24,11 +42,8 @@ const { id, steps, aspectRatio = "16/10" } = Astro.props;
 <section id={id} class="gestures" data-sticky-scroll aria-labelledby="gestures-title">
   <div class="wrap">
     <div class="gestures__head">
-      <h2 id="gestures-title">Lay it down. Show it.<br /> Do the work.</h2>
-      <p class="gestures__lead">
-        Nolënor gives you back the three gestures. The agent fills the gaps you
-        show it; the work stays yours.
-      </p>
+      <h2 id="gestures-title">{copy.titleA}<br /> {copy.titleB}</h2>
+      <p class="gestures__lead">{copy.lead}</p>
     </div>
 
     <div class="gestures__grid">

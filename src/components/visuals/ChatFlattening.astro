@@ -1,5 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
 
 /*
  * Illustration for problem item 3: what the chat does to a thought that
@@ -28,39 +31,64 @@ type Row =
   | { kind: "user"; text: string }
   | { kind: "ai"; text: string; chips: Chip[] };
 
+const en = {
+  label:
+    "An AI chat: someone is still working out what their landing page should say and is barely mid-sentence when the assistant announces it has already built the whole thing: a new structure, three headlines, competitor research, SEO copy, deployed. They ask it to wait, they were still trying to understand what they wanted to say; it answers with five more directions, twelve CTAs and a comparison table. The last thing they type is that they don't know anymore.",
+  tab: "New chat",
+  placeholder: "What should we get done?",
+  first: "Let's think about the wording and structure of your landing page",
+  last: "…Ok, let's do it your way...",
+  answer1:
+    "I've got it. I created a complete landing page with a new structure, three headline options, competitor research, SEO copy, and a deployed version.",
+  chips1: ["new structure", "3 headlines", "research", "SEO copy", "deployed"],
+  wait: "Wait… I was still trying to define what I wanted to say.",
+  answer2:
+    "No problem. Here are five alternative directions, twelve CTAs, and a comparison table.",
+  chips2: ["5 directions", "12 CTAs", "comparison table"],
+};
+
+const fr: typeof en = {
+  label:
+    "Un chat IA : quelqu’un cherche encore ce que sa landing page doit dire, et en est à peine au milieu de sa phrase quand l’assistant annonce qu’il a déjà tout construit : une nouvelle structure, trois titres, une analyse de la concurrence, des textes SEO, la mise en ligne. La personne lui demande d’attendre, elle essayait encore de comprendre ce qu’elle voulait dire ; il répond avec cinq nouvelles pistes, douze CTA et un tableau comparatif. La dernière chose qu’elle tape, c’est qu’elle ne sait plus.",
+  tab: "Nouveau chat",
+  placeholder: "Que voulez-vous accomplir ?",
+  first: "Réfléchissons à la formulation et à la structure de la landing page",
+  last: "…D’accord, faisons à votre manière…",
+  answer1:
+    "C’est compris. J’ai créé une landing page complète, avec une nouvelle structure, trois propositions de titre, une analyse de la concurrence, des textes SEO et une version déployée.",
+  chips1: ["nouvelle structure", "3 titres", "concurrence", "textes SEO", "déployée"],
+  wait: "Attendez… j’essayais encore de définir ce que je voulais dire.",
+  answer2:
+    "Pas de souci. Voici cinq autres pistes, douze CTA et un tableau comparatif.",
+  chips2: ["5 pistes", "12 CTA", "tableau comparatif"],
+};
+
+const copy = { en, fr }[lang];
+
 // Typed into the input before they are sent, so the hesitation is visible.
 // Length is free: the composer wraps, and a wrapped message stays readable.
 // What it must never do is scroll — a composer that slides the start of the
 // sentence out of view as you type is unreadable at exactly the wrong
 // moment, which is why .chat-field grows instead of clipping.
-const FIRST = "Let's think about the wording and structure of your landing page";
-const LAST = "…Ok, let's do it your way...";
+const FIRST = copy.first;
+const LAST = copy.last;
 
+// The last chip of the first answer is a thing already done, not a file.
 const thread: Row[] = [
   { kind: "user", text: FIRST },
   {
     kind: "ai",
-    text: "I've got it. I created a complete landing page with a new structure, three headline options, competitor research, SEO copy, and a deployed version.",
-    chips: [
-      { label: "new structure" },
-      { label: "3 headlines" },
-      { label: "research" },
-      { label: "SEO copy" },
-      { label: "deployed", done: true },
-    ],
+    text: copy.answer1,
+    chips: copy.chips1.map((label, i) => ({
+      label,
+      done: i === copy.chips1.length - 1 ? true : undefined,
+    })),
   },
-  {
-    kind: "user",
-    text: "Wait… I was still trying to define what I wanted to say.",
-  },
+  { kind: "user", text: copy.wait },
   {
     kind: "ai",
-    text: "No problem. Here are five alternative directions, twelve CTAs, and a comparison table.",
-    chips: [
-      { label: "5 directions" },
-      { label: "12 CTAs" },
-      { label: "comparison table" },
-    ],
+    text: copy.answer2,
+    chips: copy.chips2.map((label) => ({ label })),
   },
   { kind: "user", text: LAST },
 ];
@@ -73,12 +101,12 @@ const thread: Row[] = [
   data-cf-first={FIRST}
   data-cf-last={LAST}
   role="img"
-  aria-label="An AI chat: someone is still working out what their landing page should say and is barely mid-sentence when the assistant announces it has already built the whole thing: a new structure, three headlines, competitor research, SEO copy, deployed. They ask it to wait, they were still trying to understand what they wanted to say; it answers with five more directions, twelve CTAs and a comparison table. The last thing they type is that they don't know anymore."
+  aria-label={copy.label}
 >
   <div class="chat-app" aria-hidden="true">
     <div class="chat-topbar">
       <span class="chat-dot"></span>
-      <span class="chat-tab">New chat</span>
+      <span class="chat-tab">{copy.tab}</span>
       <Icon name="lucide:plus" class="chat-topicon" />
     </div>
 
@@ -114,7 +142,7 @@ const thread: Row[] = [
     <div class="chat-input">
       <Icon name="lucide:paperclip" class="chat-icon" />
       <div class="chat-field">
-        <span class="chat-placeholder">What should we get done?</span>
+        <span class="chat-placeholder">{copy.placeholder}</span>
         <span class="cf-typed" data-cf-text></span>
       </div>
       <span class="chat-send"

@@ -2,6 +2,31 @@
 import { Image } from "astro:assets";
 import heroShot from "@/assets/img/main.png";
 import { APP_SIGNUP_URL } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  foil: "You don’t need an agent factory.",
+  point: "You need a workshop.",
+  lede: "Nolënor is a canvas to think and work on, with an AI agent at your side.",
+  cta: "Try it for free",
+  second: "See what it does",
+  terms: "Open beta, free while we build it.",
+  alt: "The Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards fill the board",
+};
+
+const fr: typeof en = {
+  foil: "Vous n’avez pas besoin d’une usine à agents.",
+  point: "Il vous faut un atelier.",
+  lede: "Nolënor est un canevas pour penser et travailler, avec un agent IA à vos côtés.",
+  cta: "Essayer gratuitement",
+  second: "Voir ce qu’il sait faire",
+  terms: "Bêta ouverte, gratuite le temps de la construction.",
+  alt: "Le canevas Nolënor : Nolë crée des nœuds de comparaison à partir d’un fil de conversation, tandis qu’un graphique et des fiches de référence remplissent le canevas",
+};
+
+const copy = { en, fr }[lang];
 
 /*
  * Stage: the promise on five columns, the canvas on seven, running on past
@@ -19,20 +44,20 @@ import { APP_SIGNUP_URL } from "@/lib/constants";
   <div class="wrap hero__grid">
     <div class="hero__text">
       <h1 id="hero-title" class="hero__title">
-        <span class="hero__foil">You don’t need an agent factory.</span>
-        <span class="hero__point">You need a workshop.</span>
+        <span class="hero__foil">{copy.foil}</span>
+        <span class="hero__point">{copy.point}</span>
       </h1>
 
       <p class="hero__lede">
-        Nolënor is a canvas to think and work on, with an AI agent at your side.
+        {copy.lede}
       </p>
 
       <div class="hero__actions">
-        <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">Try it for free</a>
-        <a href="#features" class="hero__second">See what it does</a>
+        <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">{copy.cta}</a>
+        <a href="#features" class="hero__second">{copy.second}</a>
       </div>
 
-      <p class="hero__terms">Open beta, free while we build it.</p>
+      <p class="hero__terms">{copy.terms}</p>
     </div>
 
     <figure
@@ -40,7 +65,7 @@ import { APP_SIGNUP_URL } from "@/lib/constants";
       data-slot="hero"
       data-kind="product"
       data-media-id="hero-demo"
-      data-alt="The Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards fill the board"
+      data-alt={copy.alt}
     >
       <Image
         src={heroShot}
@@ -48,7 +73,7 @@ import { APP_SIGNUP_URL } from "@/lib/constants";
         sizes="(min-width: 60rem) 60vw, 100vw"
         loading="eager"
         fetchpriority="high"
-        alt="The Nolënor canvas: Nolë building comparison nodes from a chat thread while a chart and reference cards fill the board"
+        alt={copy.alt}
       />
     </figure>
   </div>
@@ -102,6 +127,12 @@ import { APP_SIGNUP_URL } from "@/lib/constants";
     line-height: 1.02;
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
+  }
+
+  /* "Il vous faut un atelier." runs longer than its English twin: a little
+     more room keeps it on two lines instead of three. */
+  .hero__point:lang(fr) {
+    max-width: 13ch;
   }
 
   .hero__lede {
