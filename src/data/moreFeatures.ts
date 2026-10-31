@@ -69,9 +69,9 @@ export const featureHighlights: Record<Lang, FeatureHighlight[]> = {
   ],
   fr: [
     {
-      title: "Voir ce que l’agent a changé",
+      title: "Voir ce que l’agent a touché",
       description:
-        "Chaque modification est conservée, et celles de Nolë sont enregistrées à part des vôtres. Revenez une semaine plus tard, lisez exactement ce qu’il a fait à un nœud, et annulez-le si ce n’était pas ce que vous vouliez.",
+        "L’historique garde chaque modification et range celles de Nolë à part des vôtres. Une semaine plus tard, vous relisez exactement ce qu’il a fait sur un nœud, et vous revenez en arrière si ce n’était pas ce que vous aviez en tête.",
       media: {
         ...historyMedia,
         alt: "L’historique des versions d’un nœud, où les modifications de l’agent et celles de l’auteur sont listées séparément le long de la chronologie",
@@ -80,16 +80,16 @@ export const featureHighlights: Record<Lang, FeatureHighlight[]> = {
     {
       title: "Tout retrouver, quel que soit le format",
       description:
-        "PDF, audio et vidéo sont transcrits et indexés à côté de vos propres écrits. Cherchez une phrase dont vous vous souvenez seulement l’avoir entendue, et tombez sur le nœud qui la contient.",
+        "PDF, audio et vidéo sont transcrits et indexés avec ce que vous avez écrit vous-même. Une phrase que vous avez seulement entendue ? Cherchez-la, vous tombez sur le nœud qui la contient.",
       media: {
         ...searchMedia,
         alt: "Des résultats de recherche couvrant une page de PDF, un horodatage de transcription et une note écrite, tous liés à la même phrase",
       },
     },
     {
-      title: "Ouvrir la porte à d’autres",
+      title: "Ouvrir l’atelier à d’autres",
       description:
-        "Invitez des personnes sur un canevas et choisissez ce que chacune peut y faire. Elles arrivent dans le canevas où vous travaillez vraiment (nœuds, fils de discussion et historique), et non dans un export.",
+        "Invitez qui vous voulez sur un canevas et réglez ce que chacun peut y faire. Vos invités entrent dans le canevas où vous travaillez vraiment, avec ses nœuds, ses fils de discussion et son historique, pas dans une copie exportée.",
       media: {
         ...sharedMedia,
         alt: "Un panneau de partage au-dessus d’un canevas : deux personnes avec des niveaux d’accès différents, et un second curseur qui modifie un nœud à l’arrière-plan",
@@ -134,11 +134,11 @@ export const featureNotes: Record<Lang, FeatureNote[]> = {
     {
       title: "Compétences",
       description:
-        "Apprenez une fois à Nolë une manière de travailler. Il charge la compétence quand la tâche l’exige.",
+        "Montrez une seule fois à Nolë votre façon de faire. Il ressort la compétence quand la tâche la demande.",
     },
     {
       title: "Dictée vocale",
-      description: "Parlez à Nolë au lieu de taper. La langue est reconnue à la volée.",
+      description: "Parlez à Nolë plutôt que de taper. La langue est détectée au fil de vos phrases.",
     },
     {
       title: "Génération d’images",
@@ -148,17 +148,17 @@ export const featureNotes: Record<Lang, FeatureNote[]> = {
     {
       title: "Diaporamas",
       description:
-        "Enregistrez des points de vue en travaillant, puis rejouez-les. Le canevas devient la présentation.",
+        "Enregistrez des vues en cours de route, puis faites-les défiler. Le canevas devient votre présentation.",
     },
     {
-      title: "Fonctionne sans IA",
+      title: "Marche aussi sans IA",
       description:
-        "Coupez l’IA, le canevas fonctionne toujours. Votre travail est toujours là. Vous aussi.",
+        "Coupez l’IA : le canevas tourne toujours, votre travail n’a pas bougé. Vous non plus.",
     },
     {
-      title: "Votre travail reste le vôtre.",
+      title: "Votre travail vous appartient.",
       description:
-        "Exportez tout dans des formats ouverts (Markdown, JSON, CSV), quand vous le voulez. Rien ne vous enferme.",
+        "Exportez tout, quand vous voulez, en formats ouverts : Markdown, JSON, CSV. Vous restez libre de partir.",
     },
   ],
 };

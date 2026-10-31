@@ -27,10 +27,10 @@ export const audienceFit: Record<Lang, AudienceList> = {
   fr: {
     title: "C’est pour vous si vous",
     items: [
-      "avez un métier et voulez que l’IA l’amplifie, pas qu’elle s’en empare",
-      "pensez en tas épars avant de penser en dossiers",
-      "voulez montrer à l’IA ce que vous voulez dire, pas seulement le décrire",
-      "voulez comprendre chaque étape, et pouvoir revenir en arrière",
+      "avez un métier et voulez que l’IA l’amplifie, pas qu’elle vous le prenne",
+      "réfléchissez en vrac avant de ranger en dossiers",
+      "préférez montrer à l’IA ce que vous avez en tête plutôt que de tout lui décrire",
+      "tenez à comprendre chaque étape, et à pouvoir revenir dessus",
     ],
   },
 };
@@ -48,10 +48,10 @@ export const audienceMisfit: Record<Lang, AudienceList> = {
   fr: {
     title: "Ce n’est peut-être pas pour vous si vous",
     items: [
-      "attendez de l’IA un résultat fini, sans avoir à intervenir",
-      "cherchez une armée d’agents qui travaille toute la nuit",
-      "n’avez besoin que d’un chat rapide pour des questions ponctuelles",
-      "préférez tout ranger dans des dossiers et des sous-dossiers",
+      "attendez de l’IA un travail fini, sans avoir à y mettre la main",
+      "cherchez une armée d’agents qui tourne toute la nuit",
+      "voulez juste un chat pour poser une question de temps en temps",
+      "aimez que tout soit rangé dans des dossiers et des sous-dossiers",
     ],
   },
 };

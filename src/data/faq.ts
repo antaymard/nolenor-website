@@ -60,54 +60,54 @@ export const faqEntries: Record<Lang, FaqEntry[]> = {
   ],
   fr: [
     {
-      question: "Nolënor est-il un énième outil de chat IA ?",
+      question: "Nolënor, c’est encore un chat avec une IA ?",
       answer:
-        "Non. Nolënor est un canevas sur lequel vous réfléchissez et travaillez, avec un agent intégré. Au lieu de tout décrire dans une conversation, vous posez notes, liens, images, PDF et tableaux dans un même espace, vous montrez à Nolë ceux qui comptent, et vous regardez ce qu’il en fait.",
+        "Non. C’est un canevas pour réfléchir et travailler, avec un agent intégré. Plutôt que de tout expliquer dans une conversation, vous posez notes, liens, images, PDF et tableaux au même endroit, vous montrez à Nolë ceux qui comptent, et vous le regardez travailler dessus.",
     },
     {
       question: "À quoi sert Nolënor ?",
       answer:
-        "Au travail qui demande de la réflexion avant de demander un livrable. Un consultant cartographie un nouveau marché pour un client. Une MSL transforme une étude clinique en présentation. Un toxicologue vérifie la conformité d’un emballage à la réglementation, substance par substance. Un product designer passe de l’analyse de la concurrence à un prototype qui fonctionne. Vous faites le travail ; Nolë comble les manques que vous lui désignez.",
+        "Au travail où il faut réfléchir avant de produire. Un consultant cartographie un nouveau marché pour un client. Une MSL tire une présentation d’une étude clinique. Un toxicologue vérifie qu’un emballage respecte la réglementation, substance par substance. Un product designer part de la concurrence et arrive à un prototype qui marche. Le travail, c’est vous qui le faites ; Nolë comble les trous que vous lui montrez.",
     },
     {
-      question: "En quoi Nolënor diffère-t-il des applications de prise de notes ?",
+      question: "Quelle différence avec une appli de prise de notes ?",
       answer:
-        "La plupart des applications de notes vous demandent de décider où ranger une chose avant même de l’avoir comprise. Sur un canevas, vous la posez d’abord et lui donnez du sens au fil du travail : tout peut être relié, retrouvé et retravaillé, par vous ou par Nolë, sans avoir à choisir un dossier au préalable.",
+        "La plupart des applis de notes vous obligent à décider où ranger une chose avant même de l’avoir comprise. Sur un canevas, vous la posez d’abord et vous y voyez clair en avançant. Tout se relie, se retrouve et se retravaille, par vous ou par Nolë, sans passer par la case dossier.",
     },
     {
       question: "L’IA voit-elle tout mon canevas ?",
       answer:
-        "Non. C’est vous qui lui montrez où regarder : sélectionnez ou @mentionnez les nœuds et les sources que Nolë doit utiliser, et suivez chacune de ses étapes pendant qu’il travaille. C’est ce qui rend son travail facile à vérifier et à corriger.",
+        "Non. C’est vous qui lui dites où regarder : sélectionnez ou @mentionnez les nœuds et les sources que Nolë doit utiliser, puis suivez chacune de ses étapes pendant qu’il travaille. C’est pour ça que son travail reste facile à vérifier et à corriger.",
     },
     {
-      question: "Que puis-je ajouter à mon espace de travail Nolënor ?",
+      question: "Qu’est-ce que je peux mettre dans Nolënor ?",
       answer:
-        "Des notes, des liens, des images, des PDF, de l’audio, de la vidéo, des tableaux, des tâches et des applications interactives. Chaque élément devient un nœud que vous pouvez déplacer, relier, rechercher et réutiliser à mesure que le projet grandit.",
+        "Des notes, des liens, des images, des PDF, de l’audio, de la vidéo, des tableaux, des tâches et des applications interactives. Chaque élément devient un nœud, que vous déplacez, reliez, cherchez et réutilisez à mesure que le projet grandit.",
     },
     {
-      question: "Puis-je utiliser Nolënor sans IA ?",
+      question: "Peut-on se servir de Nolënor sans IA ?",
       answer:
-        "Oui, et nous y tenons. Nolënor est un canevas complet à lui seul : capturez, disposez, reliez et cherchez à la main. Coupez l’IA : votre travail est toujours là, et votre compréhension de ce travail aussi.",
+        "Oui, et on y tient. Nolënor est un canevas complet à lui seul : vous pouvez tout noter, disposer, relier et chercher à la main. Coupez l’IA, votre travail est toujours là, et vous savez toujours ce qu’il contient.",
     },
     {
-      question: "Nolënor peut-il m’aider à travailler avec des PDF et d’autres documents ?",
+      question: "Est-ce que Nolënor m’aide à travailler sur des PDF et d’autres documents ?",
       answer:
-        "Oui. Apportez vos documents sur le canevas, reliez-les à vos idées et posez à Nolë des questions précises sur ceux que vous sélectionnez. Utile pour la recherche, l’analyse, la synthèse et la prise de décision.",
+        "Oui. Déposez vos documents sur le canevas, reliez-les à vos idées et posez à Nolë des questions précises sur ceux que vous sélectionnez. Pratique pour la recherche, l’analyse, la synthèse ou avant une décision.",
     },
     {
-      question: "Nolënor est-il gratuit ?",
+      question: "Nolënor est gratuit ?",
       answer:
-        "Nolënor est actuellement en bêta ouverte, et gratuit pendant que nous le construisons avec ses premiers utilisateurs. L’usage de l’IA est inclus, dans des limites d’usage raisonnable généreuses. Les tarifs pourront évoluer avec le produit.",
+        "Oui, pendant la bêta. Nolënor est en bêta ouverte, et gratuit le temps qu’on le construise avec ses premiers utilisateurs. L’IA est comprise, dans la limite d’un usage raisonnable, et cette limite est large. Les tarifs pourront évoluer avec le produit.",
     },
     {
-      question: "Puis-je exporter mes données depuis Nolënor ?",
+      question: "Je peux exporter mes données ?",
       answer:
-        "Oui. Vous pouvez exporter votre travail dans des formats ouverts (Markdown, JSON et CSV) quand vous le voulez. Votre travail reste le vôtre : il n’est pas enfermé dans la plateforme.",
+        "Oui, quand vous voulez, dans des formats ouverts : Markdown, JSON et CSV. Votre travail vous appartient, il ne reste pas prisonnier de la plateforme.",
     },
     {
       question: "À qui s’adresse Nolënor ?",
       answer:
-        "Aux gens de métier qui veulent que l’IA amplifie leur savoir-faire plutôt qu’elle ne s’en empare : développeurs, designers, chercheurs, consultants, stratèges, fondateurs. Si vous cherchez un pilote automatique, ce n’est sans doute pas pour vous.",
+        "Aux gens de métier qui veulent que l’IA amplifie leur savoir-faire, pas qu’elle le leur prenne : développeurs, designers, chercheurs, consultants, stratèges, fondateurs. Si vous cherchez un pilote automatique, ce n’est sans doute pas le bon outil.",
     },
   ],
 };

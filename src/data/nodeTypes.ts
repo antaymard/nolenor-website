@@ -126,55 +126,55 @@ const copy: Record<Lang, Record<NodeKey, NodeCopy>> = {
     title: {
       name: "Titre",
       description:
-        "Des repères sur votre canevas. Délimitez des zones pour toujours retrouver votre chemin, quelle que soit la matière que vous y posez.",
-      alt: "Un nœud Titre avec sa barre de mise en forme ouverte, relié à deux nœuds plus petits et légendés sur le canevas",
+        "Des repères pour s’orienter. Découpez le canevas en zones et vous retrouverez votre chemin, même quand les choses s’accumulent.",
+      alt: "Un nœud Titre, barre de mise en forme ouverte, relié à deux petits nœuds légendés sur le canevas",
     },
     blocknote: {
       name: "Blocknote",
       description:
-        "Un véritable éditeur de texte riche, avec titres, listes, tableaux, mentions, dates, encadrés…",
+        "Un éditeur de texte complet : titres, listes, tableaux, mentions, dates, encadrés…",
       alt: "Un nœud Blocknote avec son menu de commandes « / » ouvert sur les types de blocs : séparateur, tableau, image, vidéo, audio, fichier",
     },
     link: {
       name: "Lien",
       description:
-        "Déposez n’importe quelle URL sur le canevas et gardez la source à un clic, au lieu de la perdre parmi vos onglets.",
+        "Déposez une URL sur le canevas : la source reste à un clic, au lieu de se noyer parmi les onglets.",
       alt: "Un nœud Lien affichant l’aperçu d’une page externe (vignette, titre, description et favicon)",
     },
     pdf: {
       name: "PDF",
       description:
-        "Gardez le document lui-même sur le canevas et lisez-le sur place. Rien à télécharger, aucun fichier à chercher.",
+        "Le document lui-même, posé sur le canevas et lisible sur place. Rien à télécharger, rien à chercher.",
       alt: "Un nœud PDF affichant une étude de marché directement sur le canevas, graphiques compris",
     },
     table: {
       name: "Tableau",
       description:
-        "Des données structurées, en colonnes typées (texte, nombre, date, lien, choix, mentions…).",
+        "Des données structurées, avec des colonnes typées : texte, nombre, date, lien, sélection, mentions…",
       alt: "Un nœud Tableau aux colonnes typées (version, statut à choix, date, texte), avec une cellule de choix ouverte",
     },
     app: {
       name: "App",
       description:
-        "Une mini-application dans un nœud, qui lit les données du canevas pour bâtir exactement le tableau de bord ou l’outil qu’il vous faut.",
-      alt: "Un nœud App affichant un tableau de bord de comparaison de coûts en direct, construit à partir des données du canevas, avec des champs modifiables et un graphique",
+        "Une mini-app logée dans un nœud, qui puise dans les données du canevas : le tableau de bord ou l’outil qu’il vous faut, taillé sur mesure.",
+      alt: "Un nœud App qui affiche en direct un comparatif de coûts tiré des données du canevas, avec des champs modifiables et un graphique",
     },
     image: {
       name: "Image",
       description:
-        "Collez une capture d’écran, une référence, ou générez des images. Le visuel se trouve exactement là où l’on en parle.",
+        "Collez une capture d’écran ou une référence, ou générez l’image. Elle reste posée là où l’on en parle.",
       alt: "Un nœud Image contenant une grille 2×2 de variantes de logo générées, avec la légende de génération en dessous",
     },
     media: {
       name: "Audio et vidéo",
       description:
-        "Mémos vocaux, entretiens, conférences, à écouter sur le canevas, avec des boucles pour réécouter un passage.",
+        "Mémos vocaux, entretiens, conférences, à écouter sur le canevas. Mettez un passage en boucle et réécoutez-le autant qu’il le faut.",
       alt: "Un nœud Audio avec un lecteur à forme d’onde et une zone de boucle, au-dessus d’un nœud Vidéo en lecture sur le canevas",
     },
     custom: {
-      name: "Personnalisé",
+      name: "Sur mesure",
       description:
-        "Concevez votre propre type de nœud, avec exactement les champs qu’il vous faut. Réutilisez-le partout comme modèle.",
+        "Dessinez votre propre type de nœud, avec les champs dont vous avez besoin, et réutilisez-le partout comme modèle.",
     },
   },
 };
