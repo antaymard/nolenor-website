@@ -315,11 +315,11 @@ const basicsFr: HelpStep[] = [
     id: "move-around",
     title: "Se déplacer",
     body: [
-      "Maintenez le bouton du milieu de la souris et faites glisser pour vous déplacer. Maintenez Ctrl et faites tourner la molette pour zoomer. Sur un pavé tactile, deux doigts suffisent pour parcourir le canevas.",
-      "Vous préférez le bouton gauche ? Choisissez la main dans la barre d’outils et faites glisser n’importe où. Sur une tablette ou un téléphone, un doigt déplace la vue et un pincement zoome.",
+      "Maintenez la molette enfoncée et faites glisser pour vous déplacer. Pour zoomer, maintenez Ctrl et tournez la molette. Sur un pavé tactile, glissez à deux doigts.",
+      "Vous préférez le bouton gauche ? Prenez la main dans la barre d’outils, puis faites glisser n’importe où. Sur tablette ou sur téléphone, glissez d’un doigt pour vous déplacer et pincez pour zoomer.",
     ],
     illustration: "navigate",
-    alt: "Un canevas avec quelques nœuds, une souris dont le bouton du milieu est mis en évidence, et des flèches dans quatre directions",
+    alt: "Un canevas avec quelques nœuds, une souris à la molette surlignée et des flèches dans les quatre directions",
     tryIt: [
       { label: "Zoomer", keys: [["Mod", "scroll"]] },
       { label: "Se déplacer", keys: [["middle-drag"]] },
@@ -329,11 +329,11 @@ const basicsFr: HelpStep[] = [
     id: "add-nodes",
     title: "Ajouter un nœud",
     body: [
-      "Faites un clic droit sur le canevas et choisissez quoi ajouter. Ou passez-vous du menu : pointez l’endroit voulu et tapez une seule lettre. Le nœud apparaît sous votre curseur, prêt à être rempli.",
-      "Coller et glisser-déposer fonctionnent aussi. Une image, un PDF, un fichier audio, un CSV, une URL ou du texte brut devient chaque fois le nœud qui lui convient.",
+      "Faites un clic droit sur le canevas et choisissez ce que vous voulez ajouter. Plus rapide : pointez l’endroit voulu et tapez une lettre. Le nœud apparaît sous le curseur, vous pouvez écrire tout de suite.",
+      "Vous pouvez aussi coller ou glisser-déposer. Image, PDF, fichier audio, CSV, URL ou simple texte : chacun devient le nœud qui lui correspond.",
     ],
     illustration: "create",
-    alt: "Une rangée de touches — T, D, A, I, L — dont le D est mis en évidence, et un nouveau nœud document qui apparaît sous le curseur",
+    alt: "Une rangée de touches T, D, A, I et L, le D surligné, et un nouveau nœud document qui apparaît sous le curseur",
     tryIt: [
       { label: "Titre", keys: [["T"]] },
       { label: "Document", keys: [["D"]] },
@@ -346,11 +346,11 @@ const basicsFr: HelpStep[] = [
     id: "open-nodes",
     title: "Ouvrir et modifier",
     body: [
-      "Double-cliquez sur un nœud pour l’ouvrir dans une fenêtre, avec de la place pour lire et écrire. Sélectionnez un nœud pour faire apparaître sa barre d’outils, puis cliquez sur le crayon pour le modifier sur place.",
-      "Sélectionnez plusieurs nœuds et appuyez sur Entrée : ils s’ouvrent côte à côte, jusqu’à quatre à la fois.",
+      "Double-cliquez sur un nœud pour l’ouvrir dans une fenêtre, avec de la place pour lire et écrire. Pour le modifier sur place, sélectionnez-le : sa barre d’outils apparaît, cliquez sur le crayon.",
+      "Sélectionnez plusieurs nœuds et appuyez sur Entrée : ils s’ouvrent côte à côte, quatre au maximum.",
     ],
     illustration: "open",
-    alt: "Un petit nœud sélectionné sur le canevas qui s’agrandit en une large fenêtre contenant un document",
+    alt: "Un petit nœud sélectionné sur le canevas s’agrandit en une grande fenêtre qui affiche un document",
     tryIt: [
       { label: "Ouvrir", keys: [["double-click"]] },
       { label: "Ouvrir la sélection", keys: [["Enter"]] },
@@ -360,11 +360,11 @@ const basicsFr: HelpStep[] = [
     id: "connect-nodes",
     title: "Relier les idées",
     body: [
-      "Faites glisser le point situé au bord d’un nœud jusqu’à un autre nœud pour les relier. Double-cliquez sur une connexion pour lui donner un libellé.",
-      "Un clic droit sur une connexion permet de l’épaissir, de la passer en tirets ou en pointillés, ou de sauter à l’une de ses extrémités. Nolë lit aussi les liens : ils lui disent comment les choses s’articulent.",
+      "Pour relier deux nœuds, faites glisser le point situé au bord de l’un jusqu’à l’autre. Double-cliquez sur le lien pour lui donner un libellé.",
+      "Faites un clic droit sur un lien pour l’épaissir, le passer en tirets ou en pointillés, ou sauter à l’une de ses extrémités. Nolë lit aussi les liens : ils lui disent comment vos idées s’articulent.",
     ],
     illustration: "connect",
-    alt: "Trois nœuds reliés par des connexions courbes, dont l’une porte le libellé « soutient »",
+    alt: "Trois nœuds reliés par des liens courbes, dont l’un porte le libellé « soutient »",
     tryIt: [{ label: "Nommer un lien", keys: [["double-click"]] }],
   },
 ];
@@ -372,13 +372,13 @@ const basicsFr: HelpStep[] = [
 const withNoleFr: HelpStep[] = [
   {
     id: "give-context",
-    title: "Choisir ce que Nolë voit",
+    title: "Montrer à Nolë ce qui compte",
     body: [
-      "Par défaut, Nolë ne lit pas tout votre canevas : c’est vous qui lui confiez ce qui compte. Tapez @ dans la zone de message pour mentionner un nœud, ou maintenez Alt et cliquez sur un nœud pour le joindre.",
-      "Faites Alt-clic sur un espace vide du canevas pour désigner un emplacement : « placez le résumé ici » veut alors dire exactement là.",
+      "Nolë ne lit pas tout le canevas d’office : il travaille sur ce que vous lui montrez. Tapez @ dans la zone de message pour mentionner un nœud, ou cliquez sur un nœud en maintenant Alt pour le joindre.",
+      "Faites Alt-clic dans une zone vide du canevas pour désigner un endroit précis. « Placez le résumé ici » voudra dire : là, exactement.",
     ],
     illustration: "context",
-    alt: "Un nœud cerné de la couleur de la marque sur le canevas, relié à une pastille portant son nom dans la zone de message de Nolë",
+    alt: "Sur le canevas, un nœud entouré de la couleur de la marque, relié à une pastille à son nom dans la zone de message de Nolë",
     tryIt: [
       { label: "Mentionner", keys: [["@"]] },
       { label: "Joindre", keys: [["Alt", "click"]] },
@@ -388,11 +388,11 @@ const withNoleFr: HelpStep[] = [
     id: "run-tasks",
     title: "Demander, puis continuer",
     body: [
-      "Posez votre demande depuis la barre en bas de n’importe quel canevas, ou appuyez sur N pour ouvrir le panneau complet. Inutile de surveiller : chaque demande s’exécute comme une tâche à part, plusieurs peuvent tourner côte à côte, et les résultats apparaissent sur le canevas au fur et à mesure.",
-      "Une idée vous vient en pleine réponse ? Envoyez-la quand même. Elle rejoint la réponse en cours après l’étape actuelle, sans qu’il faille tout arrêter pour recommencer.",
+      "Posez votre question depuis la barre en bas de chaque canevas, ou appuyez sur N pour ouvrir le panneau complet. Inutile de rester à regarder : chaque demande devient une tâche à part, plusieurs tournent en parallèle et les résultats arrivent sur le canevas au fur et à mesure.",
+      "Une idée vous vient pendant la réponse ? Envoyez-la sans attendre. Nolë l’intègre à la réponse en cours dès la fin de l’étape actuelle. Pas besoin de tout arrêter pour recommencer.",
     ],
     illustration: "tasks",
-    alt: "La barre de message en bas du canevas, surmontée de trois tâches empilées : une en cours, une en attente, une terminée",
+    alt: "La barre de message en bas du canevas, surmontée de trois tâches : une en cours, une en attente, une terminée",
     tryIt: [
       { label: "Panneau Nolë", keys: [["N"]] },
       { label: "Dicter", keys: [["Ctrl", "Alt"]] },
@@ -400,10 +400,10 @@ const withNoleFr: HelpStep[] = [
   },
   {
     id: "review-changes",
-    title: "Revoir ses modifications",
+    title: "Relire ce que Nolë a changé",
     body: [
-      "Chaque modification est conservée. Ouvrez un nœud : son historique liste chaque version, en distinguant les changements de Nolë des vôtres. Voyez ce qui a changé, comparez, et restaurez n’importe quelle version antérieure en un clic.",
-      "L’historique survit à la suppression, et le canevas a sa corbeille : rien de ce que vous construisez ne disparaît sur un simple faux clic.",
+      "Chaque modification est conservée. Ouvrez un nœud : son historique liste toutes les versions et distingue les changements de Nolë des vôtres. Lisez ce qu’il a fait, comparez, et restaurez une version antérieure en un clic.",
+      "L’historique survit même à la suppression, et le canevas a sa corbeille : un faux clic ne suffit jamais à perdre votre travail.",
     ],
     illustration: "history",
     alt: "Une chronologie de versions où alternent les modifications de l’utilisateur et celles de Nolë, avec un bouton Restaurer sur l’une d’elles",
@@ -414,54 +414,54 @@ const proTipsFr: HelpTip[] = [
   {
     icon: "lucide:magnet",
     title: "Aligner au cordeau",
-    body: "Maintenez Maj pendant que vous déplacez ou redimensionnez. Bords, centres et espacements s’aimantent aux nœuds voisins, avec des repères tracés au fil du geste.",
+    body: "Maintenez Maj pendant que vous déplacez ou redimensionnez. Bords, centres et espacements s’aimantent aux nœuds voisins, et des repères s’affichent à mesure.",
     keys: [["Shift"]],
   },
   {
     icon: "lucide:frame",
     title: "Regrouper avec des cadres",
-    body: "Appuyez sur F et tracez un cadre autour d’un ensemble de nœuds. Il les déplace d’un seul bloc, et vous pouvez confier un cadre entier à Nolë.",
+    body: "Appuyez sur F et tracez un cadre autour de plusieurs nœuds. Ils se déplacent ensuite d’un bloc, et vous pouvez montrer tout le cadre à Nolë.",
     keys: [["F"]],
   },
   {
     icon: "lucide:bookmark",
     title: "Garder vos repères",
-    body: "Clic droit sur un nœud, puis Favori. Appuyez sur B pour ouvrir vos favoris et y revenir d’un bond, quelle que soit la taille du canevas.",
+    body: "Faites un clic droit sur un nœud, puis choisissez Favori. Appuyez sur B pour afficher vos favoris et y revenir d’un saut, même sur un très grand canevas.",
     keys: [["B"]],
   },
   {
     icon: "lucide:search",
     title: "Chercher jusque dans les fichiers",
-    body: "Les PDF, l’audio et la vidéo sont transcrits et indexés. Cherchez une phrase que vous avez seulement entendue, et retrouvez le nœud.",
+    body: "PDF, audio et vidéo sont transcrits puis indexés. Tapez une phrase que vous avez seulement entendue : la recherche vous mène droit au nœud.",
     keys: [["Mod", "K"]],
   },
   {
     icon: "lucide:command",
     title: "Passer d’un canevas à l’autre",
-    body: "Le centre de commandes retrouve n’importe quel canevas par son nom et vous y emmène, sans repasser par l’accueil.",
+    body: "Tapez le nom d’un canevas dans le centre de commandes : il vous y emmène, sans repasser par l’accueil.",
     keys: [["Mod", "P"]],
   },
   {
     icon: "lucide:copy",
     title: "Dupliquer d’un geste",
-    body: "Dupliquez une sélection sur place, ou copiez-la pour la coller sur un autre canevas. Le collage fonctionne aussi depuis votre presse-papiers.",
+    body: "Dupliquez une sélection sur place, ou copiez-la et collez-la sur un autre canevas. Vous pouvez aussi coller ce que contient votre presse-papiers.",
     keys: [["Mod", "D"]],
   },
   {
     icon: "lucide:mic",
     title: "Penser à voix haute",
-    body: "Appuyez sur R pour enregistrer un mémo vocal directement sur le canevas. Il est transcrit : on peut le retrouver par la recherche, et Nolë peut le lire.",
+    body: "Appuyez sur R pour enregistrer un mémo vocal directement sur le canevas. Il est transcrit : vous le retrouverez par la recherche, et Nolë peut le lire.",
     keys: [["R"]],
   },
   {
     icon: "lucide:layout-dashboard",
-    title: "Demander un outil, pas une réponse",
-    body: "« Faites un graphique de la colonne Statut de ce tableau. » Nolë construit un nœud App relié à vos données, qui reste à jour à mesure que le tableau évolue.",
+    title: "Demander un outil plutôt qu’une réponse",
+    body: "« Faites un graphique de la colonne Statut de ce tableau. » Nolë construit un nœud App branché sur vos données, qui se met à jour quand le tableau change.",
   },
   {
     icon: "lucide:hash",
-    title: "Passer des nœuds à d’autres assistants",
-    body: "Clic droit, Copier l’ID, puis collez-le dans Claude ou ChatGPT connecté via MCP. Ils trouveront exactement le nœud dont vous parlez.",
+    title: "Partager un nœud avec d’autres assistants",
+    body: "Faites un clic droit, puis Copier l’ID, et collez-le dans Claude ou ChatGPT connecté via MCP. Ils trouveront le nœud exact dont vous parlez.",
   },
 ];
 
@@ -499,8 +499,8 @@ const shortcutGroupsFr: ShortcutGroup[] = [
       { action: "Ouvrir la sélection", keys: [["Enter"]] },
       { action: "Tout rechercher", keys: [["Mod", "K"]] },
       { action: "Centre de commandes", keys: [["Mod", "P"]] },
-      { action: "Enregistrer la fenêtre au premier plan", keys: [["Mod", "S"]] },
-      { action: "Rechercher dans la fenêtre au premier plan", keys: [["Mod", "F"]] },
+      { action: "Enregistrer la fenêtre active", keys: [["Mod", "S"]] },
+      { action: "Rechercher dans la fenêtre active", keys: [["Mod", "F"]] },
     ],
   },
   {
@@ -508,7 +508,7 @@ const shortcutGroupsFr: ShortcutGroup[] = [
     rows: [
       { action: "Ouvrir ou fermer le panneau", keys: [["N"]] },
       { action: "Mentionner un nœud", keys: [["@"]] },
-      { action: "Joindre un nœud ou un emplacement", keys: [["Alt", "click"]] },
+      { action: "Joindre un nœud ou un endroit", keys: [["Alt", "click"]] },
       { action: "Dicter (maintenir)", keys: [["Ctrl", "Alt"]] },
     ],
   },
@@ -518,37 +518,37 @@ const goingFurtherFr: FurtherEntry[] = [
   {
     icon: "lucide:sparkles",
     title: "Compétences",
-    body: "Apprenez une fois pour toutes à Nolë une façon de travailler, avec des instructions et des fichiers. Il charge la compétence quand une tâche l’exige.",
+    body: "Apprenez une méthode à Nolë une fois pour toutes, avec des instructions et des fichiers. Il charge la compétence dès qu’une tâche le demande.",
     where: "Paramètres → Compétences",
   },
   {
     icon: "lucide:brain",
     title: "Mémoire de l’agent",
-    body: "Ce que Nolë retient de vous et de votre travail d’une conversation à l’autre. Consultez-la, corrigez-la, effacez ce que vous préférez lui faire oublier.",
+    body: "Ce que Nolë retient de vous et de votre travail d’une conversation à l’autre. Lisez-la, corrigez-la, effacez ce que vous préférez qu’il oublie.",
     where: "Paramètres → Mémoire de l’agent",
   },
   {
     icon: "lucide:calendar-clock",
     title: "Routines",
-    body: "Confiez à Nolë une tâche à mener seul : toutes les heures, tous les jours, certains jours choisis, ou une seule fois à heure fixe.",
+    body: "Confiez à Nolë une tâche qu’il mène seul : toutes les heures, chaque jour, les jours de votre choix, ou une seule fois à l’heure dite.",
     where: "Paramètres → Routines",
   },
   {
     icon: "lucide:shapes",
     title: "Nœuds personnalisés",
-    body: "Concevez un type de nœud avec exactement les champs qu’il vous faut, un aspect compact sur le canevas et un affichage complet dans sa fenêtre.",
+    body: "Créez un type de nœud avec exactement les champs dont vous avez besoin, une vue compacte pour le canevas et une vue complète pour sa fenêtre.",
     where: "Paramètres → Nœuds personnalisés",
   },
   {
     icon: "lucide:plug",
     title: "Tokens MCP & API",
-    body: "Ouvrez vos canevas à Claude, ChatGPT, Cursor ou tout autre client MCP. Créez un token, choisissez ses droits, collez la commande.",
+    body: "Ouvrez vos canevas à Claude, ChatGPT, Cursor ou n’importe quel client MCP. Créez un token, choisissez ses droits, collez la commande.",
     where: "Paramètres → Tokens MCP & API",
   },
   {
     icon: "lucide:download",
     title: "Export",
-    body: "Emportez tout, dans des formats ouverts : Markdown, JSON et CSV. Votre réflexion reste la vôtre.",
+    body: "Repartez avec tout, en formats ouverts : Markdown, JSON et CSV. Vos idées restent à vous.",
     where: "Paramètres → Exporter mes données",
   },
 ];
