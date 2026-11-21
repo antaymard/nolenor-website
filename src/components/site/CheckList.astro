@@ -1,0 +1,16 @@
+---
+import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
+
+interface Props {
+  items: string[];
+  tone?: "check" | "dash" | "cross";
+}
+
+const { items, tone = "check" } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+---
+
+<ul class:list={["checks", `checks--${tone}`]}>
+  {items.map((item) => <li set:html={md(item, lang)} />)}
+</ul>

@@ -30,11 +30,11 @@ export const mcpReadTools: Record<Lang, McpTool[]> = {
   fr: [
     {
       name: "list_canvases",
-      body: "Les canevas auxquels vous avez accès, avec leur id, leur nom et leur description. Cet id est le canvasId que demandent tous les autres outils.",
+      body: "Les canvas auxquels vous avez accès, avec leur id, leur nom et leur description. Cet id est le canvasId que demandent tous les autres outils.",
     },
     {
       name: "bash",
-      body: "Un shell en lecture seule, isolé en sandbox, ouvert sur un seul canevas. La commande nole liste (nole ls), lit (nole read), cherche (nole search) et extrait les tableaux (nole table) ; grep, jq, awk et consorts font le reste.",
+      body: "Un shell en lecture seule, isolé en sandbox, ouvert sur un seul canvas. La commande nole liste (nole ls), lit (nole read), cherche (nole search) et extrait les tableaux (nole table) ; grep, jq, awk et consorts font le reste.",
     },
   ],
 };
@@ -105,7 +105,7 @@ export const nodeDataFields: Record<Lang, ApiField[]> = {
     { name: "nodeId", body: "L’id du nœud demandé." },
     {
       name: "nodeDataId",
-      body: "Id du contenu affiché par le nœud. Plusieurs nœuds peuvent partager le même, quand un contenu apparaît sur plusieurs canevas.",
+      body: "Id du contenu affiché par le nœud. Plusieurs nœuds peuvent partager le même, quand un contenu apparaît sur plusieurs canvas.",
     },
     {
       name: "type",
@@ -158,7 +158,7 @@ export const apiErrors: Record<Lang, ApiError[]> = {
     {
       status: 404,
       code: "canvas_not_found",
-      body: "Le canevas n’existe pas, ou votre token n’y a pas accès. Les deux cas reçoivent la même réponse : l’API ne révèle jamais l’existence d’un canevas privé.",
+      body: "Le canvas n’existe pas, ou votre token n’y a pas accès. Les deux cas reçoivent la même réponse : l’API ne révèle jamais l’existence d’un canvas privé.",
     },
   ],
 };

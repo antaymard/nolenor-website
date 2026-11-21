@@ -1,0 +1,25 @@
+---
+import type { Prompt } from "./types";
+import { getLang } from "@/i18n";
+import { md, typo } from "@/lib/md";
+
+
+interface Props {
+  items: Prompt[];
+}
+
+const { items } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const [open, close] = lang === "fr" ? ["«\u00a0", "\u00a0»"] : ["“", "”"];
+---
+
+<ul class="prompts">
+  {
+    items.map((p) => (
+      <li class="prompt">
+        <p class="prompt__ctx" set:html={md(p.context, lang)} />
+        <p class="prompt__text">{open}{typo(p.text, lang)}{close}</p>
+      </li>
+    ))
+  }
+</ul>

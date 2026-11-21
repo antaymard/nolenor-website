@@ -1,0 +1,75 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CheckList from "@/components/site/CheckList.astro";
+import Cta from "@/components/site/Cta.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import { product } from "@/data/pages/product";
+import { PUBLIC_CANVASES } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const c = product[lang];
+const page = "product";
+const tones = ["paper", "light"] as const;
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero
+    eyebrow={c.hero.eyebrow}
+    title={c.hero.title}
+    lede={c.hero.lede}
+    page={page}
+    secondary={{ label: c.hero.demo, href: PUBLIC_CANVASES.home, kind: "demo" }}
+    note={c.hero.note}
+  >
+    <nav slot="after" class="toc" aria-label={c.hero.tocLabel}>
+      {c.chapters.map((ch) => <a href={`#${ch.id}`}>{ch.eyebrow.replace(/^\d+ · /, "")}</a>)}
+      <a href="#not-yet">{c.notYet.eyebrow}</a>
+    </nav>
+  </PageHero>
+
+  {
+    c.chapters.map((ch, i) => (
+      <Section id={ch.id} tone={tones[i % 2]} layout="split" eyebrow={ch.eyebrow} title={ch.title} intro={ch.intro}>
+        <CheckList items={ch.items} />
+        {ch.more && (
+          <div class="sec__more">
+            <Cta kind="link" href={ch.more.href} label={ch.more.label} page={page} placement={ch.id} />
+          </div>
+        )}
+      </Section>
+    ))
+  }
+
+  <Section id="not-yet" tone="tint" layout="split" eyebrow={c.notYet.eyebrow} title={c.notYet.title} intro={c.notYet.intro}>
+    <CheckList items={c.notYet.items} tone="dash" />
+  </Section>
+
+  <ClosingCta title={c.close.title} text={c.close.text} page={page} />
+</Layout>
+
+<style>
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+  }
+
+  .toc a {
+    padding: var(--space-2xs) var(--space-sm);
+    border: var(--rule-hair) solid var(--color-rule-2);
+    border-radius: var(--radius-pill);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-ink-2);
+    transition: border-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out);
+  }
+
+  .toc a:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+</style>

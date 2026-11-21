@@ -1,0 +1,35 @@
+---
+import type { Card } from "./types";
+import { getLang, localizePath } from "@/i18n";
+import { md } from "@/lib/md";
+
+
+interface Props {
+  cards: Card[];
+  cols?: 2 | 3 | 4;
+  /** quiet: no card chrome, just text blocks separated by hairlines. */
+  look?: "card" | "quiet";
+}
+
+const { cards, cols = 3, look = "card" } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+---
+
+<ul class:list={["cards", `cards--${cols}`, `cards--${look}`]}>
+  {
+    cards.map((card) => (
+      <li class:list={["card", card.href && "card--link"]}>
+        {card.eyebrow && <p class="card__eyebrow" set:html={md(card.eyebrow, lang)} />}
+        <h3 class="card__title">
+          {card.href ? <a href={localizePath(card.href, lang)}>{card.title}</a> : card.title}
+        </h3>
+        <p class="card__text" set:html={md(card.text, lang)} />
+        {card.href && card.linkLabel && (
+          <span class="card__more" aria-hidden="true">
+            {card.linkLabel} →
+          </span>
+        )}
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,43 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CardGrid from "@/components/site/CardGrid.astro";
+import CheckList from "@/components/site/CheckList.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import { about } from "@/data/pages/about";
+import { CONTACT_EMAIL } from "@/lib/constants";
+import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
+
+const lang = getLang(Astro.currentLocale);
+const c = about[lang];
+const page = "about";
+const contact = CONTACT_EMAIL
+  ? c.contact.withEmail.replace("[EMAIL]", `[${CONTACT_EMAIL}](mailto:${CONTACT_EMAIL})`)
+  : c.contact.withoutEmail;
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} lede={c.hero.lede} page={page} />
+
+  <Section id="why" tone="light" layout="split" title={c.why.title}>
+    <div class="stack-md">
+      {c.why.paragraphs.map((p) => <p class="sec__intro" set:html={md(p, lang)} />)}
+    </div>
+  </Section>
+
+  <Section id="how" title={c.how.title}>
+    <CardGrid cards={c.how.cards} cols={3} />
+  </Section>
+
+  <Section id="facts" tone="tint" layout="split" title={c.facts.title}>
+    <CheckList items={c.facts.items} tone="dash" />
+  </Section>
+
+  <Section id="contact" layout="split" title={c.contact.title}>
+    <p class="sec__intro" set:html={md(contact, lang)} />
+  </Section>
+
+  <ClosingCta title={c.close.title} page={page} secondary={{ label: c.close.secondary, href: "/manifesto" }} />
+</Layout>

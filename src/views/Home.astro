@@ -1,56 +1,94 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "@/layouts/Layout.astro";
-import Hero from "@/components/sections/Hero.astro";
-import Problem from "@/components/sections/Problem.astro";
-import NodeTypes from "@/components/sections/NodeTypes.astro";
-import MoreFeatures from "@/components/sections/MoreFeatures.astro";
-import Audience from "@/components/sections/Audience.astro";
-import UseCasesTeaser from "@/components/sections/UseCasesTeaser.astro";
-import Faq from "@/components/sections/Faq.astro";
-import FinalCta from "@/components/sections/FinalCta.astro";
-import StickyFeatureScroll from "@/components/sections/StickyFeatureScroll.astro";
-import InlineCta from "@/components/ui/InlineCta.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CardGrid from "@/components/site/CardGrid.astro";
+import Gestures from "@/components/site/Gestures.astro";
+import DataTable from "@/components/site/DataTable.astro";
+import FaqList from "@/components/site/FaqList.astro";
+import Cta from "@/components/site/Cta.astro";
+import NewsletterBlock from "@/components/site/NewsletterBlock.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import heroShot from "@/assets/img/main.png";
+import { home } from "@/data/pages/home";
+import { PUBLIC_CANVASES } from "@/lib/constants";
 import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
 
 const lang = getLang(Astro.currentLocale);
+const c = home[lang];
+const page = "home";
 
-const copy = {
-  en: {
-    asideCanvas: { text: "Reading about a canvas only goes so far.", action: "Open a canvas" },
-    asideFree: { text: "All of this is free while we're in beta.", action: "Try it for free" },
-  },
-  fr: {
-    asideCanvas: { text: "Un canevas, ça s’essaie plus que ça ne se lit.", action: "Ouvrir un canevas" },
-    asideFree: { text: "Pendant la bêta, tout est gratuit.", action: "Essayer gratuitement" },
-  },
-}[lang];
-
-// The landing page, in the order it argues: the promise and the canvas,
-// what our tools turned us into, the gestures Nolënor gives back, the
-// materials, the depth, a person at work, who it is for, the questions and
-// the close.
-//
-// Each section draws its own seam (a hairline, a change of paper, or just
-// air) so the page does not part every chapter the same way. The two quiet
-// one-liners sit between hairlines of their own and carry no button:
-// asking four times with a button would be nagging, and this page's whole
-// argument is that it doesn't push you.
-//
-// Anchors: #features, #nodes, #who-its-for and #faq are the four ids
-// src/data/nav.ts points at (in both languages: anchors are never translated). Moving or renaming a section here means
-// updating that file.
+// The order the page argues in: what it is (5 s), the role our tools gave
+// us, the three gestures with their proof, one project from pile to table,
+// how the canvas grows, who it's for, next to the tools you already use,
+// why trust it, questions, a quiet door for the not-yet, the close.
 ---
 
-<Layout>
-  <Hero />
-  <Problem />
-  <StickyFeatureScroll id="features" />
-  <InlineCta text={copy.asideCanvas.text} action={copy.asideCanvas.action} />
-  <NodeTypes />
-  <MoreFeatures />
-  <InlineCta text={copy.asideFree.text} action={copy.asideFree.action} />
-  <UseCasesTeaser />
-  <Audience />
-  <Faq />
-  <FinalCta />
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero
+    variant="home"
+    eyebrow={c.hero.eyebrow}
+    title={c.hero.title}
+    lede={c.hero.lede}
+    page={page}
+    secondary={{ label: c.hero.demo, href: PUBLIC_CANVASES.home, kind: "demo" }}
+    note={c.hero.note}
+  >
+    <figure slot="media" class="phero__shot" data-media-id="hero-demo">
+      <Image
+        src={heroShot}
+        widths={[960, 1440, 1916]}
+        sizes="(min-width: 60rem) 60vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        alt={c.hero.alt}
+      />
+    </figure>
+  </PageHero>
+
+  <Section id="problem" tone="light" eyebrow={c.problem.eyebrow} title={c.problem.title} intro={c.problem.intro}>
+    <CardGrid cards={c.problem.roles} cols={3} look="quiet" />
+    <p class="sec__kicker">{c.problem.kicker}</p>
+  </Section>
+
+  <Gestures id="how-it-works" eyebrow={c.gestures.eyebrow} title={c.gestures.title} steps={c.gestures.steps} />
+
+  <Section id="example" tone="tint" eyebrow={c.example.eyebrow} title={c.example.title} intro={c.example.intro}>
+    <DataTable headers={c.example.headers} rows={c.example.rows} />
+    <p class="sec__kicker" set:html={md(c.example.outro, lang)} />
+  </Section>
+
+  <Section id="canvas" title={c.grows.title}>
+    <CardGrid cards={c.grows.cards} cols={3} />
+    <div class="sec__more"><Cta kind="link" href="/product" label={c.grows.more} page={page} placement="grows" /></div>
+  </Section>
+
+  <Section id="who-its-for" tone="light" title={c.audience.title}>
+    <CardGrid cards={c.audience.cards} cols={4} />
+    <p class="sec__more callout" set:html={md(c.audience.notFor, lang)} />
+  </Section>
+
+  <Section id="compare" title={c.compare.title}>
+    <DataTable headers={c.compare.headers} rows={c.compare.rows} highlightRow={3} />
+    <div class="sec__more"><Cta kind="link" href="/compare" label={c.compare.more} page={page} placement="compare" /></div>
+  </Section>
+
+  <Section id="trust" tone="tint" title={c.trust.title}>
+    <CardGrid cards={c.trust.cards} cols={4} />
+  </Section>
+
+  <Section id="faq" layout="split" title={c.faq.title}>
+    <FaqList items={c.faq.items} />
+  </Section>
+
+  <NewsletterBlock title={c.newsletter.title} text={c.newsletter.text} placement="home" />
+
+  <ClosingCta
+    title={c.close.title}
+    text={c.close.text}
+    page={page}
+    secondary={{ label: c.close.secondary, href: "/manifesto" }}
+  />
 </Layout>

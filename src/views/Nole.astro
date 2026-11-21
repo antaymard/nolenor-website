@@ -1,0 +1,53 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CardGrid from "@/components/site/CardGrid.astro";
+import CheckList from "@/components/site/CheckList.astro";
+import Prompts from "@/components/site/Prompts.astro";
+import Cta from "@/components/site/Cta.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import MediaFrame from "@/components/ui/MediaFrame.astro";
+import addAttachmentsVid from "@/assets/vid/add-attachments.mp4?url";
+import { nole } from "@/data/pages/nole";
+import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
+
+const lang = getLang(Astro.currentLocale);
+const c = nole[lang];
+const page = "nole";
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} lede={c.hero.lede} page={page} note={c.hero.note} />
+
+  <Section id="how" tone="light" eyebrow={c.how.eyebrow} title={c.how.title}>
+    <CardGrid cards={c.how.steps} cols={4} look="quiet" />
+    <div class="sec__more">
+      <MediaFrame id="nole-at-work" src={addAttachmentsVid} alt={c.hero.title} aspectRatio="16/9" />
+    </div>
+  </Section>
+
+  <Section id="can" layout="split" title={c.can.title} intro={c.can.intro}>
+    <CheckList items={c.can.items} />
+  </Section>
+
+  <Section id="cannot" tone="tint" layout="split" title={c.cannot.title} intro={c.cannot.intro}>
+    <CheckList items={c.cannot.items} tone="dash" />
+  </Section>
+
+  <Section id="prompts" title={c.prompts.title} intro={c.prompts.intro}>
+    <Prompts items={c.prompts.items} />
+  </Section>
+
+  <Section id="models" tone="light" layout="split" eyebrow={c.models.eyebrow} title={c.models.title}>
+    <p class="callout" set:html={md(c.models.text, lang)} />
+  </Section>
+
+  <Section id="why" narrow title={c.why.title}>
+    <p class="sec__intro" set:html={md(c.why.text, lang)} />
+    <div class="sec__more"><Cta kind="link" href="/manifesto" label={c.why.link} page={page} placement="why" /></div>
+  </Section>
+
+  <ClosingCta title={c.close.title} text={c.close.text} page={page} />
+</Layout>

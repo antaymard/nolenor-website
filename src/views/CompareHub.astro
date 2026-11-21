@@ -1,0 +1,32 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import DataTable from "@/components/site/DataTable.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import { compareCommon, compareHub } from "@/data/pages/compare";
+import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
+
+const lang = getLang(Astro.currentLocale);
+const common = compareCommon[lang];
+const c = compareHub[lang];
+const page = "compare";
+
+// The hub: one line per tool (what it does best, what Nolënor adds), each
+// linking to its detailed page, then a word for people leaving Kosmik.
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} lede={c.hero.lede} page={page} />
+
+  <Section id="summary">
+    <DataTable headers={c.table.headers} rows={c.table.rows} highlight={2} />
+  </Section>
+
+  <Section id="kosmik" tone="light">
+    <p class="callout" set:html={md(c.kosmik, lang)} />
+  </Section>
+
+  <ClosingCta title={common.close.title} text={common.close.text} page={page} />
+</Layout>

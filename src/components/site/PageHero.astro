@@ -1,0 +1,41 @@
+---
+import CtaRow from "./CtaRow.astro";
+import type { SecondaryAction } from "./types";
+import { getLang } from "@/i18n";
+import { md, typo } from "@/lib/md";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede: string;
+  page: string;
+  secondary?: SecondaryAction | null;
+  note?: string;
+  /** "home" puts the media beside the text, bleeding off the right edge. */
+  variant?: "home" | "page";
+  showCta?: boolean;
+}
+
+const { eyebrow, title, lede, page, secondary, note, variant = "page", showCta = true } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const hasMedia = Astro.slots.has("media");
+---
+
+<section class:list={["phero", `phero--${variant}`, hasMedia && "phero--media"]} aria-labelledby={`${page}-title`}>
+  <div class="wrap phero__grid">
+    <div class="phero__text">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1 id={`${page}-title`} class="phero__title">{typo(title, lang)}</h1>
+      <p class="phero__lede" set:html={md(lede, lang)} />
+      {showCta && <CtaRow page={page} placement="hero" secondary={secondary} note={note} />}
+      <slot name="after" />
+    </div>
+    {
+      hasMedia && (
+        <div class="phero__media">
+          <slot name="media" />
+        </div>
+      )
+    }
+  </div>
+</section>

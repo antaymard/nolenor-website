@@ -282,12 +282,6 @@ const goingFurtherEn: FurtherEntry[] = [
     where: "Settings → Agent Memory",
   },
   {
-    icon: "lucide:calendar-clock",
-    title: "Routines",
-    body: "Give Nolë a task to run on its own: every hour, every day, on chosen days, or once at a set time.",
-    where: "Settings → Routines",
-  },
-  {
     icon: "lucide:shapes",
     title: "Custom nodes",
     body: "Design a node type with exactly the fields you need, a compact look for the canvas and a full one for its window.",
@@ -319,7 +313,7 @@ const basicsFr: HelpStep[] = [
       "Vous préférez le bouton gauche ? Prenez la main dans la barre d’outils, puis faites glisser n’importe où. Sur tablette ou sur téléphone, glissez d’un doigt pour vous déplacer et pincez pour zoomer.",
     ],
     illustration: "navigate",
-    alt: "Un canevas avec quelques nœuds, une souris à la molette surlignée et des flèches dans les quatre directions",
+    alt: "Un canvas avec quelques nœuds, une souris à la molette surlignée et des flèches dans les quatre directions",
     tryIt: [
       { label: "Zoomer", keys: [["Mod", "scroll"]] },
       { label: "Se déplacer", keys: [["middle-drag"]] },
@@ -329,7 +323,7 @@ const basicsFr: HelpStep[] = [
     id: "add-nodes",
     title: "Ajouter un nœud",
     body: [
-      "Faites un clic droit sur le canevas et choisissez ce que vous voulez ajouter. Plus rapide : pointez l’endroit voulu et tapez une lettre. Le nœud apparaît sous le curseur, vous pouvez écrire tout de suite.",
+      "Faites un clic droit sur le canvas et choisissez ce que vous voulez ajouter. Plus rapide : pointez l’endroit voulu et tapez une lettre. Le nœud apparaît sous le curseur, vous pouvez écrire tout de suite.",
       "Vous pouvez aussi coller ou glisser-déposer. Image, PDF, fichier audio, CSV, URL ou simple texte : chacun devient le nœud qui lui correspond.",
     ],
     illustration: "create",
@@ -350,7 +344,7 @@ const basicsFr: HelpStep[] = [
       "Sélectionnez plusieurs nœuds et appuyez sur Entrée : ils s’ouvrent côte à côte, quatre au maximum.",
     ],
     illustration: "open",
-    alt: "Un petit nœud sélectionné sur le canevas s’agrandit en une grande fenêtre qui affiche un document",
+    alt: "Un petit nœud sélectionné sur le canvas s’agrandit en une grande fenêtre qui affiche un document",
     tryIt: [
       { label: "Ouvrir", keys: [["double-click"]] },
       { label: "Ouvrir la sélection", keys: [["Enter"]] },
@@ -374,11 +368,11 @@ const withNoleFr: HelpStep[] = [
     id: "give-context",
     title: "Montrer à Nolë ce qui compte",
     body: [
-      "Nolë ne lit pas tout le canevas d’office : il travaille sur ce que vous lui montrez. Tapez @ dans la zone de message pour mentionner un nœud, ou cliquez sur un nœud en maintenant Alt pour le joindre.",
-      "Faites Alt-clic dans une zone vide du canevas pour désigner un endroit précis. « Placez le résumé ici » voudra dire : là, exactement.",
+      "Nolë ne lit pas tout le canvas d’office : il travaille sur ce que vous lui montrez. Tapez @ dans la zone de message pour mentionner un nœud, ou cliquez sur un nœud en maintenant Alt pour le joindre.",
+      "Faites Alt-clic dans une zone vide du canvas pour désigner un endroit précis. « Placez le résumé ici » voudra dire : là, exactement.",
     ],
     illustration: "context",
-    alt: "Sur le canevas, un nœud entouré de la couleur de la marque, relié à une pastille à son nom dans la zone de message de Nolë",
+    alt: "Sur le canvas, un nœud entouré de la couleur de la marque, relié à une pastille à son nom dans la zone de message de Nolë",
     tryIt: [
       { label: "Mentionner", keys: [["@"]] },
       { label: "Joindre", keys: [["Alt", "click"]] },
@@ -388,11 +382,11 @@ const withNoleFr: HelpStep[] = [
     id: "run-tasks",
     title: "Demander, puis continuer",
     body: [
-      "Posez votre question depuis la barre en bas de chaque canevas, ou appuyez sur N pour ouvrir le panneau complet. Inutile de rester à regarder : chaque demande devient une tâche à part, plusieurs tournent en parallèle et les résultats arrivent sur le canevas au fur et à mesure.",
+      "Posez votre question depuis la barre en bas de chaque canvas, ou appuyez sur N pour ouvrir le panneau complet. Inutile de rester à regarder : chaque demande devient une tâche à part, plusieurs tournent en parallèle et les résultats arrivent sur le canvas au fur et à mesure.",
       "Une idée vous vient pendant la réponse ? Envoyez-la sans attendre. Nolë l’intègre à la réponse en cours dès la fin de l’étape actuelle. Pas besoin de tout arrêter pour recommencer.",
     ],
     illustration: "tasks",
-    alt: "La barre de message en bas du canevas, surmontée de trois tâches : une en cours, une en attente, une terminée",
+    alt: "La barre de message en bas du canvas, surmontée de trois tâches : une en cours, une en attente, une terminée",
     tryIt: [
       { label: "Panneau Nolë", keys: [["N"]] },
       { label: "Dicter", keys: [["Ctrl", "Alt"]] },
@@ -403,7 +397,7 @@ const withNoleFr: HelpStep[] = [
     title: "Relire ce que Nolë a changé",
     body: [
       "Chaque modification est conservée. Ouvrez un nœud : son historique liste toutes les versions et distingue les changements de Nolë des vôtres. Lisez ce qu’il a fait, comparez, et restaurez une version antérieure en un clic.",
-      "L’historique survit même à la suppression, et le canevas a sa corbeille : un faux clic ne suffit jamais à perdre votre travail.",
+      "L’historique survit même à la suppression, et le canvas a sa corbeille : un faux clic ne suffit jamais à perdre votre travail.",
     ],
     illustration: "history",
     alt: "Une chronologie de versions où alternent les modifications de l’utilisateur et celles de Nolë, avec un bouton Restaurer sur l’une d’elles",
@@ -426,7 +420,7 @@ const proTipsFr: HelpTip[] = [
   {
     icon: "lucide:bookmark",
     title: "Garder vos repères",
-    body: "Faites un clic droit sur un nœud, puis choisissez Favori. Appuyez sur B pour afficher vos favoris et y revenir d’un saut, même sur un très grand canevas.",
+    body: "Faites un clic droit sur un nœud, puis choisissez Favori. Appuyez sur B pour afficher vos favoris et y revenir d’un saut, même sur un très grand canvas.",
     keys: [["B"]],
   },
   {
@@ -437,20 +431,20 @@ const proTipsFr: HelpTip[] = [
   },
   {
     icon: "lucide:command",
-    title: "Passer d’un canevas à l’autre",
-    body: "Tapez le nom d’un canevas dans le centre de commandes : il vous y emmène, sans repasser par l’accueil.",
+    title: "Passer d’un canvas à l’autre",
+    body: "Tapez le nom d’un canvas dans le centre de commandes : il vous y emmène, sans repasser par l’accueil.",
     keys: [["Mod", "P"]],
   },
   {
     icon: "lucide:copy",
     title: "Dupliquer d’un geste",
-    body: "Dupliquez une sélection sur place, ou copiez-la et collez-la sur un autre canevas. Vous pouvez aussi coller ce que contient votre presse-papiers.",
+    body: "Dupliquez une sélection sur place, ou copiez-la et collez-la sur un autre canvas. Vous pouvez aussi coller ce que contient votre presse-papiers.",
     keys: [["Mod", "D"]],
   },
   {
     icon: "lucide:mic",
     title: "Penser à voix haute",
-    body: "Appuyez sur R pour enregistrer un mémo vocal directement sur le canevas. Il est transcrit : vous le retrouverez par la recherche, et Nolë peut le lire.",
+    body: "Appuyez sur R pour enregistrer un mémo vocal directement sur le canvas. Il est transcrit : vous le retrouverez par la recherche, et Nolë peut le lire.",
     keys: [["R"]],
   },
   {
@@ -467,7 +461,7 @@ const proTipsFr: HelpTip[] = [
 
 const shortcutGroupsFr: ShortcutGroup[] = [
   {
-    title: "Canevas",
+    title: "Canvas",
     rows: [
       { action: "Se déplacer", keys: [["middle-drag"]] },
       { action: "Zoomer", keys: [["Mod", "scroll"]] },
@@ -528,21 +522,15 @@ const goingFurtherFr: FurtherEntry[] = [
     where: "Paramètres → Mémoire de l’agent",
   },
   {
-    icon: "lucide:calendar-clock",
-    title: "Routines",
-    body: "Confiez à Nolë une tâche qu’il mène seul : toutes les heures, chaque jour, les jours de votre choix, ou une seule fois à l’heure dite.",
-    where: "Paramètres → Routines",
-  },
-  {
     icon: "lucide:shapes",
     title: "Nœuds personnalisés",
-    body: "Créez un type de nœud avec exactement les champs dont vous avez besoin, une vue compacte pour le canevas et une vue complète pour sa fenêtre.",
+    body: "Créez un type de nœud avec exactement les champs dont vous avez besoin, une vue compacte pour le canvas et une vue complète pour sa fenêtre.",
     where: "Paramètres → Nœuds personnalisés",
   },
   {
     icon: "lucide:plug",
     title: "Tokens MCP & API",
-    body: "Ouvrez vos canevas à Claude, ChatGPT, Cursor ou n’importe quel client MCP. Créez un token, choisissez ses droits, collez la commande.",
+    body: "Ouvrez vos canvas à Claude, ChatGPT, Cursor ou n’importe quel client MCP. Créez un token, choisissez ses droits, collez la commande.",
     where: "Paramètres → Tokens MCP & API",
   },
   {

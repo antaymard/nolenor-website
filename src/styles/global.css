@@ -1,26 +1,6 @@
-/* Hallmark · shape: narrative workflow (redesign of the kept sequence) · genre: editorial · theme: brand · redesign: full · job: sign up
- * paper: oklch(94.9% 0.021 79) · accent: oklch(47.1% 0.075 277) · display: Hedvig Letters Serif · body: Nunito · hero: Stage (/), the canvas bleeding off the right edge · nav: edge-aligned bar, links beside the wordmark · footer: index columns over a statement line (a real 13-link sitemap and the wishlist form) · signature: the product canvas running past the edge of the page
- * axes: light/roman-serif/cool · posture: Restrained, one Committed band at the close · contrast: pass · fold: pass · v2.0.0 */
-/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V3 · weakest: V, the kept section order still reads as a software page; broke it with a switcher for the problem, a bento for the depth, rows for the FAQ and a closing band */
-/* Hallmark · waive 44c · the Stage visual bleeds off the outer edge on purpose · the Nolënor canvas runs past the page like a workbench past a window */
-/* Hallmark · waive 39b · the problem tabs carry a verb and its role on two lines · each chore tab names the operator it turns you into */
-/* Hallmark · waive 85 · the footer form is the project's wired wishlist endpoint · Nolënor product updates were already in the footer before this redesign */
-/* Hallmark · waive 72 · the LostThread sidebar list runs on under its frame's clip by design · the Nolënor archive scene shows a list that never ends */
-/* Hallmark · dismissed 49 · the tab label is a verb over its role on two lines, never one long run · Nolënor problem tabs */
-/* Hallmark · dismissed 59 · two of the ten blocks are the one-line asides between hairlines, kept from the Nolënor page as quiet doors */
-/* Hallmark · dismissed 3 · the node wells carry inline icons beside the name, no tiles, nine real Nolënor node types */
-/* Hallmark · answered F4 · the inverse button is the primary itself, recoloured for the indigo closing band */
-/* Hallmark · dropped lucide:arrow-right, lucide:chevron-right · 63 names arrows glued to link text; the chevrons belonged to the old strip accordion */
-/* Hallmark · reworded "You don't need an agent factory. You need a workshop." keeps both sentences at two sizes; "An apprentice, not a replacement." and the second lede sentence moved down the page · 58 names a hero of four text blocks */
-/* Hallmark · reworded "File it. Type it. Review it. Our tools made us operators." to the heading "Our tools made us operators." over the three chores as tabs · 58 caps the hero-sized head at six words, and the chores now work as controls */
-/* Hallmark · dropped "It's not you, it's the view: the tool stopped helping you think, and you started serving it." · 58 and the generated cadence craft.md names */
-/* Hallmark · reworded "Lay it down. Show it. Do the work. Nolënor gives you back the three gestures." splits into heading and lead; dropped "AI makes the space livable. The space makes AI legible." · 58 caps the screen budget, and the hero no longer repeats the gestures */
-/* Hallmark · reworded "FAQ" to "Questions", the old label becoming the heading · 54 names the eyebrow */
-/* Hallmark · dropped "And every edit is kept, yours and Nolë's." from the nodes lead, "Less headline, more day-to-day." from the depth lead · 69, the version history says it once */
-/* Hallmark · reworded "hero-demo" stays as data-media-id on the hero slot; main.png ships through astro:assets, so its URL changed, not its file */
 @import "tailwindcss";
-@import "./chat-mock.css";
 @import "./tokens.css";
+@import "./site.css";
 
 /*
  * Brand palette, from the section-by-section design brief: exactly three

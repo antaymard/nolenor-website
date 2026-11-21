@@ -1,0 +1,15 @@
+---
+// One page per use case (/use-cases/founders, ...). The page itself lives in
+// src/views/UseCase.astro and is shared by every language; the URL decides
+// which one it renders in.
+import UseCase from "@/views/UseCase.astro";
+import { useCaseSlugs, type UseCaseSlug } from "@/data/pages/useCases";
+
+export function getStaticPaths() {
+  return useCaseSlugs.map((slug) => ({ params: { slug } }));
+}
+
+const slug = Astro.params.slug as UseCaseSlug;
+---
+
+<UseCase slug={slug} />

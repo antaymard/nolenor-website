@@ -1,0 +1,87 @@
+---
+import { getLang, useTranslations } from "@/i18n";
+
+interface Props {
+  /** Where the form sits, sent as `referral` so sign-ups can be attributed. */
+  placement: string;
+  /** Visually larger variant for the in-page block. */
+  size?: "sm" | "md";
+}
+
+const { placement, size = "sm" } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const uid = `nl-${placement}`;
+---
+
+<form
+  class:list={["nl", `nl--${size}`]}
+  novalidate
+  data-wishlist-form
+  data-placement={placement}
+  data-msg-sending={t("footer.updates.sending")}
+  data-msg-already={t("footer.updates.already")}
+  data-msg-success={t("footer.updates.success")}
+  data-msg-error={t("footer.updates.error")}
+>
+  <label for={`${uid}-email`} class="sr-only">{t("footer.updates.email")}</label>
+  <input
+    id={`${uid}-email`}
+    name="email"
+    type="email"
+    autocomplete="email"
+    required
+    placeholder={t("footer.updates.placeholder")}
+  />
+  <button type="submit" class:list={["btn", size === "sm" && "btn--sm"]}>{t("footer.updates.submit")}</button>
+  <p class="nl__status" role="status" aria-live="polite" data-wishlist-status></p>
+</form>
+
+<style>
+  .nl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    max-width: 26rem;
+  }
+
+  .nl--md {
+    max-width: 30rem;
+  }
+
+  .nl input {
+    flex: 1 1 12rem;
+    min-width: 0;
+    min-height: 40px;
+    padding-inline: var(--space-sm);
+    border: 1px solid var(--color-muted);
+    border-radius: var(--radius-inner);
+    background: var(--color-paper-3);
+    color: var(--color-ink);
+    font-size: var(--text-md);
+  }
+
+  .nl--md input {
+    min-height: 48px;
+  }
+
+  .nl input::placeholder {
+    color: var(--color-muted);
+  }
+
+  .nl input:hover {
+    border-color: var(--color-ink);
+  }
+
+  .nl input:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  .nl__status {
+    flex-basis: 100%;
+    min-height: 1lh;
+    font-size: var(--text-sm);
+    color: var(--color-ink-2);
+  }
+</style>

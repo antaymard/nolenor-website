@@ -1,0 +1,24 @@
+---
+import type { FaqItem } from "./types";
+import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
+
+
+interface Props {
+  items: FaqItem[];
+}
+
+const { items } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+---
+
+<div class="faq">
+  {
+    items.map((item) => (
+      <details class="faq__item">
+        <summary class="faq__q">{item.q}</summary>
+        <div class="faq__a" set:html={md(item.a, lang)} />
+      </details>
+    ))
+  }
+</div>

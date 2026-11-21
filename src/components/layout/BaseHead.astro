@@ -11,8 +11,8 @@ const lang = getLang(Astro.currentLocale);
 const is404 = Astro.url.pathname.replace(/\/$/, "").endsWith("/404");
 
 const defaultDescription = {
-  en: "Nolënor is a canvas to think and work on, with an AI apprentice at your side. You keep the craft; the agent fills the gaps you show it. A workshop, not a factory.",
-  fr: "Nolënor est un canevas où penser et travailler, avec un apprenti IA à vos côtés. Le métier reste le vôtre ; l’agent s’occupe de ce que vous lui montrez. Un atelier, pas une usine.",
+  en: "Nolënor is a canvas where you lay out everything a project needs, and where Nolë, its AI agent, works right on it, in plain sight. Free today.",
+  fr: "Nolënor est un canvas où vous posez toute la matière d’un projet, et où Nolë, son agent IA, travaille directement dessus, sous vos yeux. Gratuit aujourd’hui.",
 };
 
 const {
@@ -28,8 +28,9 @@ const alternates = langs.map((l) => ({
   href: new URL(translatePath(Astro.url.pathname, l), SITE_URL),
 }));
 const xDefault = new URL(translatePath(Astro.url.pathname, defaultLang), SITE_URL);
-// PLACEHOLDER — replace with a real designed 1200x630 social card once produced.
-const ogImageURL = new URL("/og-image.png", SITE_URL);
+// 1200x630 social cards, one per language (generated from the hero copy
+// and main.png; replace with a designed version when there is one).
+const ogImageURL = new URL(lang === "fr" ? "/og-image-fr.png" : "/og-image.png", SITE_URL);
 ---
 
 <meta charset="utf-8" />
@@ -117,6 +118,8 @@ const ogImageURL = new URL("/og-image.png", SITE_URL);
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:image" content={ogImageURL} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:site_name" content={SITE_NAME} />
 <meta property="og:locale" content={ogLocale[lang]} />
 {

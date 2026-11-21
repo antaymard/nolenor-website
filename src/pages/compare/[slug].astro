@@ -1,0 +1,14 @@
+---
+// One page per comparison; the page itself lives in src/views/Compare.astro
+// and is shared by every language; the URL decides which one it renders in.
+import Compare from "@/views/Compare.astro";
+import { compareSlugs, type CompareSlug } from "@/data/pages/compare";
+
+export function getStaticPaths() {
+  return compareSlugs.map((slug) => ({ params: { slug } }));
+}
+
+const slug = Astro.params.slug as CompareSlug;
+---
+
+<Compare slug={slug} />

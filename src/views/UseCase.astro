@@ -1,0 +1,62 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CardGrid from "@/components/site/CardGrid.astro";
+import DataTable from "@/components/site/DataTable.astro";
+import FaqList from "@/components/site/FaqList.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import { useCases, type UseCaseSlug } from "@/data/pages/useCases";
+import { PUBLIC_CANVASES } from "@/lib/constants";
+import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
+
+interface Props {
+  slug: UseCaseSlug;
+}
+
+const { slug } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const c = useCases[slug][lang];
+const page = `use-cases-${slug}`;
+
+// One template for every case: the hero, how it goes today, the canvas,
+// who does what step by step (and how you check it), what's left at the
+// end, questions, the close. The "see it for real" link stays hidden until
+// the case has a public canvas (PUBLIC_CANVASES in constants.ts).
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero
+    eyebrow={c.hero.eyebrow}
+    title={c.hero.title}
+    lede={c.hero.lede}
+    page={page}
+    secondary={{ label: c.hero.demo, href: PUBLIC_CANVASES[slug], kind: "demo" }}
+  />
+
+  <Section id="today" tone="light" title={c.today.title}>
+    <p class="callout" set:html={md(c.today.text, lang)} />
+  </Section>
+
+  <Section id="canvas" eyebrow={c.canvas.eyebrow} title={c.canvas.title} intro={c.canvas.intro}>
+    {c.canvas.zones && <CardGrid cards={c.canvas.zones} cols={4} />}
+    {c.canvas.text && <p class="callout" set:html={md(c.canvas.text, lang)} />}
+  </Section>
+
+  <Section id="steps" tone="tint" title={c.steps.title}>
+    <DataTable headers={c.steps.headers} rows={c.steps.rows} />
+    <p class="sec__kicker" set:html={md(c.left, lang)} />
+    {c.proof && <p class="sec__more" set:html={md(c.proof, lang)} />}
+  </Section>
+
+  {
+    c.faq && (
+      <Section id="faq" layout="split" title={c.faq.title}>
+        <FaqList items={c.faq.items} />
+      </Section>
+    )
+  }
+
+  <ClosingCta title={c.close.title} text={c.close.text} page={page} />
+</Layout>

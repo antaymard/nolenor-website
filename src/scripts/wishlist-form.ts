@@ -1,4 +1,5 @@
 import { WISHLIST_ENDPOINT } from "@/lib/constants";
+import { track } from "./track";
 
 interface WishlistResponse {
   success: boolean;
@@ -6,61 +7,68 @@ interface WishlistResponse {
   message?: string;
 }
 
-// Wires the footer "Get product updates" form to the real Convex
-// /wishlist/subscribe endpoint. That endpoint's CORS allow-list only
-// accepts requests from nolenor.fr/nolenor.com (see constants.ts) — on
-// localhost or a preview deploy this fetch will always fail with an
-// opaque network error before any response body is even readable. That
-// is expected, not a bug, so failures are always shown as a calm,
-// generic message rather than surfaced as a broken feature.
+// Wires every [data-wishlist-form] (the footer one and the in-page block)
+// to the Convex /wishlist/subscribe endpoint. `referral` carries the page
+// and the placement, so a subscription can be traced to where it came
+// from.
+//
+// The endpoint's CORS allow-list only accepts nolenor.fr / nolenor.com: on
+// localhost or a preview deploy the fetch always fails before any response
+// is readable. Expected, not a bug, so failures show a calm generic message.
 export function initWishlistForm(): void {
-  const form = document.querySelector<HTMLFormElement>("#wishlist-form");
-  const message = document.querySelector<HTMLElement>("#wishlist-form-message");
-  if (!form || !message) return;
+  const forms = document.querySelectorAll<HTMLFormElement>("[data-wishlist-form]");
 
-  // The messages are rendered into the form in the page's language.
-  const text = {
-    sending: form.dataset.msgSending ?? "Sending…",
-    already: form.dataset.msgAlready ?? "You're already on the list.",
-    success: form.dataset.msgSuccess ?? "You're in! Thanks for subscribing.",
-    error: form.dataset.msgError ?? "Something went wrong. Please try again later.",
-  };
+  forms.forEach((form) => {
+    const message = form.querySelector<HTMLElement>("[data-wishlist-status]");
+    if (!message) return;
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+    const text = {
+      sending: form.dataset.msgSending ?? "Sending…",
+      already: form.dataset.msgAlready ?? "You're already on the list.",
+      success: form.dataset.msgSuccess ?? "You're on the list. Thank you.",
+      error: form.dataset.msgError ?? "Something went wrong. Please try again later.",
+    };
 
-    const emailInput = form.querySelector<HTMLInputElement>(
-      'input[name="email"]',
-    );
-    const email = emailInput?.value.trim();
-    if (!email) return;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-    const submitButton = form.querySelector<HTMLButtonElement>(
-      'button[type="submit"]',
-    );
-    submitButton?.setAttribute("disabled", "true");
-    message.textContent = text.sending;
-
-    try {
-      const response = await fetch(WISHLIST_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = (await response.json()) as WishlistResponse;
-
-      if (data.success) {
-        message.textContent = data.alreadySubscribed
-          ? text.already
-          : text.success;
-        form.reset();
-      } else {
-        message.textContent = text.error;
+      const emailInput = form.querySelector<HTMLInputElement>('input[name="email"]');
+      const email = emailInput?.value.trim();
+      if (!email || !emailInput?.checkValidity()) {
+        emailInput?.setAttribute("aria-invalid", "true");
+        emailInput?.focus();
+        return;
       }
-    } catch {
-      message.textContent = text.error;
-    } finally {
-      submitButton?.removeAttribute("disabled");
-    }
+      emailInput.removeAttribute("aria-invalid");
+
+      const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      submitButton?.setAttribute("disabled", "true");
+      message.textContent = text.sending;
+
+      const referral = `${window.location.pathname}#${form.dataset.placement ?? "form"}`;
+      let result = "error";
+
+      try {
+        const response = await fetch(WISHLIST_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, referral }),
+        });
+        const data = (await response.json()) as WishlistResponse;
+
+        if (data.success) {
+          result = data.alreadySubscribed ? "already" : "success";
+          message.textContent = data.alreadySubscribed ? text.already : text.success;
+          form.reset();
+        } else {
+          message.textContent = text.error;
+        }
+      } catch {
+        message.textContent = text.error;
+      } finally {
+        submitButton?.removeAttribute("disabled");
+        track("newsletter_submit", { placement: form.dataset.placement, result });
+      }
+    });
   });
 }

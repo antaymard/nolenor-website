@@ -1,0 +1,26 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CardGrid from "@/components/site/CardGrid.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import { useCasesHub } from "@/data/pages/useCases";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const c = useCasesHub[lang];
+const page = "use-cases";
+
+// The hub only opens doors: what the four cases share, then one card per
+// case. Each case argues for itself on its own page.
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} lede={c.hero.lede} page={page} />
+
+  <Section id="doors" tone="light">
+    <CardGrid cards={c.doors} cols={2} />
+  </Section>
+
+  <ClosingCta title={c.close.title} text={c.close.text} page={page} />
+</Layout>

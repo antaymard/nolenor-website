@@ -1,0 +1,66 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CardGrid from "@/components/site/CardGrid.astro";
+import DataTable from "@/components/site/DataTable.astro";
+import CheckList from "@/components/site/CheckList.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import { compareCommon, comparePages, otherComparisons, type CompareSlug } from "@/data/pages/compare";
+import { getLang } from "@/i18n";
+import { typo } from "@/lib/md";
+
+interface Props {
+  slug: CompareSlug;
+}
+
+const { slug } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const common = compareCommon[lang];
+const c = comparePages[lang][slug];
+const page = `compare-${slug}`;
+
+// One comparison: the short answer, what to keep the other tool for and
+// what to take Nolënor for, the table (prices dated), how they work
+// together when they do, then the other comparisons and the close.
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero eyebrow={common.eyebrow} title={c.hero.title} lede={c.hero.lede} page={page} />
+
+  <Section id="choose" tone="light" title={common.duoTitle}>
+    <div class="duo">
+      <div class="duo__col">
+        <h3>{typo(c.keep.title, lang)}</h3>
+        <CheckList items={c.keep.items} tone="dash" />
+      </div>
+      <div class="duo__col">
+        <h3>{typo(c.take.title, lang)}</h3>
+        <CheckList items={c.take.items} />
+      </div>
+    </div>
+  </Section>
+
+  <Section id="table" title={common.tableTitle}>
+    <DataTable headers={c.table.headers} rows={c.table.rows} highlight={2} />
+    <p class="price-note">{common.priceNote}</p>
+  </Section>
+
+  {c.together && <Section id="together" tone="tint" title={common.togetherTitle} intro={c.together} />}
+
+  {c.kosmik && <Section id="kosmik" tone="tint" title={c.kosmik.title} intro={c.kosmik.text} />}
+
+  <Section id="other-comparisons" tone="light" title={common.othersTitle}>
+    <CardGrid cards={otherComparisons(slug, lang)} cols={3} />
+  </Section>
+
+  <ClosingCta title={common.close.title} text={common.close.text} page={page} />
+</Layout>
+
+<style>
+  .price-note {
+    margin-top: var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+</style>

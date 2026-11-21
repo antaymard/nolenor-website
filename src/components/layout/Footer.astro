@@ -1,13 +1,14 @@
 ---
 import { Icon } from "astro-icon/components";
 import Logo from "@/components/ui/Logo.astro";
+import NewsletterForm from "@/components/site/NewsletterForm.astro";
 import { getNav } from "@/data/nav";
 import { GITHUB_REPO_URL, SITE_NAME, TAGLINE } from "@/lib/constants";
 import { getLang, languages, langs, translatePath, useTranslations } from "@/i18n";
 
 const lang = getLang(Astro.currentLocale);
 const t = useTranslations(lang);
-const { footerProductLinks, footerAboutLinks, footerLegalLinks } = getNav(lang);
+const { footerProductLinks, footerUseCaseLinks, footerCompareLinks, footerCompanyLinks } = getNav(lang);
 const languageLinks = langs.map((l) => ({
   lang: l,
   label: languages[l],
@@ -17,14 +18,14 @@ const languageLinks = langs.map((l) => ({
 const year = new Date().getFullYear();
 
 /*
- * Index columns, because the site has a real sitemap (thirteen links over
- * three groups), under the tagline set large as the footer's one line. The
- * product-updates form keeps its ids: wishlist-form.ts finds it by them.
+ * Four index columns (the real sitemap) beside the workshop-log form,
+ * under the tagline set large as the footer's one line.
  */
 const groups = [
   { title: t("footer.product"), links: footerProductLinks },
-  { title: t("footer.about"), links: footerAboutLinks },
-  { title: t("footer.legal"), links: footerLegalLinks },
+  { title: t("footer.useCases"), links: footerUseCaseLinks },
+  { title: t("footer.compare"), links: footerCompareLinks },
+  { title: t("footer.about"), links: footerCompanyLinks },
 ];
 ---
 
@@ -43,7 +44,9 @@ const groups = [
             <ul>
               {group.links.map((link) => (
                 <li>
-                  <a href={link.href}>{link.label}</a>
+                  <a href={link.href} {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                    {link.label}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -54,27 +57,7 @@ const groups = [
       <div class="foot__updates">
         <h2>{t("footer.updates.title")}</h2>
         <p>{t("footer.updates.body")}</p>
-        <form
-          id="wishlist-form"
-          class="foot__form"
-          novalidate
-          data-msg-sending={t("footer.updates.sending")}
-          data-msg-already={t("footer.updates.already")}
-          data-msg-success={t("footer.updates.success")}
-          data-msg-error={t("footer.updates.error")}
-        >
-          <label for="wishlist-email" class="sr-only">{t("footer.updates.email")}</label>
-          <input
-            id="wishlist-email"
-            name="email"
-            type="email"
-            autocomplete="email"
-            required
-            placeholder={t("footer.updates.placeholder")}
-          />
-          <button type="submit" class="btn btn--sm">{t("footer.updates.submit")}</button>
-        </form>
-        <p id="wishlist-form-message" class="foot__status" role="status" aria-live="polite"></p>
+        <NewsletterForm placement="footer" />
       </div>
     </div>
 
@@ -284,7 +267,7 @@ const groups = [
 
   @media (min-width: 60rem) {
     .foot__grid {
-      grid-template-columns: repeat(3, minmax(0, 2fr)) minmax(0, 4fr);
+      grid-template-columns: repeat(4, minmax(0, 2fr)) minmax(0, 4fr);
     }
 
     .foot__updates {

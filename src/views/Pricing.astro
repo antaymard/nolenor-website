@@ -1,0 +1,87 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/site/PageHero.astro";
+import Section from "@/components/site/Section.astro";
+import CardGrid from "@/components/site/CardGrid.astro";
+import CheckList from "@/components/site/CheckList.astro";
+import Cta from "@/components/site/Cta.astro";
+import FaqList from "@/components/site/FaqList.astro";
+import ClosingCta from "@/components/site/ClosingCta.astro";
+import { pricing } from "@/data/pages/pricing";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+const c = pricing[lang];
+const page = "pricing";
+---
+
+<Layout title={c.meta.title} description={c.meta.description}>
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} lede={c.hero.lede} page={page} showCta={false}>
+    <div slot="media" class="plan">
+      <p class="plan__name">{c.plan.name}</p>
+      <p class="plan__price">{c.plan.price} <span>{c.plan.per}</span></p>
+      <p class="plan__intro">{c.plan.intro}</p>
+      <CheckList items={c.plan.items} />
+      <Cta page={page} placement="plan" label={c.plan.cta} />
+      <p class="plan__fine">{c.plan.fineprint}</p>
+    </div>
+  </PageHero>
+
+  <Section id="commitments" tone="light" eyebrow={c.promises.eyebrow} title={c.promises.title}>
+    <CardGrid cards={c.promises.items} cols={3} />
+  </Section>
+
+  <Section id="thinking" layout="split" title={c.thinking.title}>
+    <div class="stack-md">
+      {c.thinking.paragraphs.map((p) => <p class="sec__intro">{p}</p>)}
+    </div>
+  </Section>
+
+  <Section id="faq" tone="tint" layout="split" title={c.faq.title}>
+    <FaqList items={c.faq.items} />
+  </Section>
+
+  <ClosingCta title={c.close.title} text={c.close.text} page={page} />
+</Layout>
+
+<style>
+  .plan {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-xl);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-card);
+    background: var(--color-paper-3);
+    box-shadow: 0 24px 48px -32px var(--color-shadow);
+  }
+
+  .plan__name {
+    font-weight: 800;
+    color: var(--color-accent);
+  }
+
+  .plan__price {
+    font-family: var(--font-display);
+    font-size: var(--text-display-s);
+    line-height: 1;
+    color: var(--color-ink);
+  }
+
+  .plan__price span {
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    color: var(--color-ink-2);
+  }
+
+  .plan__intro {
+    font-weight: 700;
+  }
+
+  .plan__fine {
+    font-size: var(--text-sm);
+    color: var(--color-ink-2);
+  }
+
+</style>

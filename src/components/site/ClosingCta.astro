@@ -1,0 +1,30 @@
+---
+import CtaRow from "./CtaRow.astro";
+import type { SecondaryAction } from "./types";
+import { TAGLINE } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+interface Props {
+  title: string;
+  text?: string;
+  page: string;
+  secondary?: SecondaryAction | null;
+  signature?: boolean;
+}
+
+const { title, text, page, secondary, signature = false } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+---
+
+<section class="close" aria-labelledby={`${page}-close-title`}>
+  <div class="wrap close__grid">
+    <div>
+      <h2 id={`${page}-close-title`}>{title}</h2>
+      {signature && <p class="close__sig">{TAGLINE[lang]}</p>}
+    </div>
+    <div class="close__act">
+      {text && <p>{text}</p>}
+      <CtaRow page={page} placement="close" secondary={secondary} inverse />
+    </div>
+  </div>
+</section>

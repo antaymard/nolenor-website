@@ -1,0 +1,77 @@
+---
+import type { GestureStep } from "./types";
+import MediaFrame from "@/components/ui/MediaFrame.astro";
+import { getLang } from "@/i18n";
+import { md } from "@/lib/md";
+
+
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title: string;
+  steps: GestureStep[];
+}
+
+const { id, eyebrow, title, steps } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+
+/*
+ * Pinned: the steps scroll past on the left, the screen on the right holds
+ * still and changes with them (sticky-scroll.ts swaps it as each step
+ * crosses the middle of the viewport). Under 60rem each step carries its
+ * own media inline.
+ */
+---
+
+<section id={id} class="gest" data-sticky-scroll aria-labelledby={`${id ?? "gest"}-title`}>
+  <div class="wrap">
+    <header class="gest__head">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h2 id={`${id ?? "gest"}-title`} class="sec__title">{title}</h2>
+    </header>
+
+    <div class="gest__grid">
+      <ol class="gest__steps">
+        {
+          steps.map((step, index) => (
+            <li class="gest__step" data-sticky-step={index}>
+              <h3>{step.title}</h3>
+              <p class="gest__text" set:html={md(step.text, lang)} />
+              <ul class="checks checks--check">
+                {step.bullets.map((b) => <li set:html={md(b, lang)} />)}
+              </ul>
+              <div class="gest__inline">
+                <MediaFrame id={step.media.id} alt={step.media.alt} src={step.media.src} kind={step.media.kind} />
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="gest__pin">
+        <div class="gest__stage">
+          <div class="gest__stack">
+            {
+              steps.map((step, index) => (
+                <div
+                  class="gest__layer"
+                  data-sticky-media={index}
+                  data-active={index === 0 ? "true" : "false"}
+                  aria-hidden={index === 0 ? undefined : "true"}
+                >
+                  <MediaFrame
+                    id={step.media.id}
+                    alt={step.media.alt}
+                    src={step.media.src}
+                    kind={step.media.kind}
+                    autoplay={false}
+                  />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

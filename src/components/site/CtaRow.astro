@@ -1,0 +1,37 @@
+---
+import type { SecondaryAction } from "./types";
+import Cta from "./Cta.astro";
+
+
+interface Props {
+  page: string;
+  placement: string;
+  primaryLabel?: string;
+  secondary?: SecondaryAction | null;
+  note?: string;
+  inverse?: boolean;
+}
+
+const { page, placement, primaryLabel, secondary, note, inverse = false } = Astro.props;
+// A demo link with no URL yet (constants.ts) is simply not shown.
+const showSecondary = secondary && secondary.href;
+---
+
+<div class:list={["cta-row", inverse && "cta-row--inverse"]}>
+  <div class="cta-row__actions">
+    <Cta page={page} placement={placement} label={primaryLabel} variant={inverse ? "inverse" : "primary"} />
+    {
+      showSecondary && (
+        <Cta
+          kind={secondary.kind ?? "link"}
+          href={secondary.href}
+          label={secondary.label}
+          page={page}
+          placement={`${placement}-secondary`}
+          variant="text"
+        />
+      )
+    }
+  </div>
+  {note && <p class="cta-row__note">{note}</p>}
+</div>

@@ -9,6 +9,11 @@ const SITE_URL = "https://nolenor.com";
 export default defineConfig({
   site: SITE_URL,
   output: "static",
+  // /principles was folded into the manifesto.
+  redirects: {
+    "/principles": "/manifesto#principles",
+    "/fr/principles": "/fr/manifesto#principles",
+  },
   // English at the root, French under /fr/. Keep in step with
   // src/i18n/index.ts.
   i18n: {

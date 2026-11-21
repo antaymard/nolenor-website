@@ -1,0 +1,41 @@
+---
+import { getLang } from "@/i18n";
+import { md, typo } from "@/lib/md";
+
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  tone?: "paper" | "light" | "tint";
+  /** split: heading on the left, content on the right (desktop). */
+  layout?: "stack" | "split";
+  narrow?: boolean;
+  class?: string;
+}
+
+const { id, eyebrow, title, intro, tone = "paper", layout = "stack", narrow = false, class: className = "" } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const headingId = id ? `${id}-title` : undefined;
+---
+
+<section
+  id={id}
+  class:list={["sec", `sec--${tone}`, `sec--${layout}`, narrow && "sec--narrow", className]}
+  aria-labelledby={title ? headingId : undefined}
+>
+  <div class="wrap sec__grid">
+    {
+      (eyebrow || title || intro) && (
+        <header class="sec__head">
+          {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+          {title && <h2 id={headingId} class="sec__title">{typo(title, lang)}</h2>}
+          {intro && <p class="sec__intro" set:html={md(intro, lang)} />}
+        </header>
+      )
+    }
+    <div class="sec__body">
+      <slot />
+    </div>
+  </div>
+</section>

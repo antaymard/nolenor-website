@@ -1,0 +1,21 @@
+---
+import NewsletterForm from "./NewsletterForm.astro";
+
+interface Props {
+  title: string;
+  text: string;
+  placement: string;
+}
+
+const { title, text, placement } = Astro.props;
+---
+
+<section class="nlb" aria-labelledby={`nlb-${placement}`}>
+  <div class="wrap nlb__grid">
+    <div>
+      <h2 id={`nlb-${placement}`} class="nlb__title">{title}</h2>
+      <p class="nlb__text">{text}</p>
+    </div>
+    <NewsletterForm placement={placement} size="md" />
+  </div>
+</section>

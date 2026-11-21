@@ -1,0 +1,39 @@
+---
+import { signupUrl } from "@/lib/constants";
+import { getLang, localizePath, useTranslations } from "@/i18n";
+
+interface Props {
+  /** signup: the sign-up button (tagged with page + placement). demo: a public canvas. link: anything else. */
+  kind?: "signup" | "demo" | "link";
+  href?: string;
+  label?: string;
+  page: string;
+  placement: string;
+  variant?: "primary" | "secondary" | "inverse" | "text";
+}
+
+const { kind = "signup", href, label, page, placement, variant = kind === "signup" ? "primary" : "text" } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+
+const external = kind === "signup" || kind === "demo" || (href?.startsWith("http") ?? false);
+const target = kind === "signup" ? signupUrl(page, placement) : href && !external ? localizePath(href, lang) : href;
+const text = label ?? t("nav.cta");
+const cls = {
+  primary: "btn",
+  secondary: "btn btn--ghost",
+  inverse: "btn btn--inverse",
+  text: "cta-text",
+}[variant];
+---
+
+<a
+  href={target}
+  class={cls}
+  data-cta={kind}
+  data-cta-placement={`${page}-${placement}`}
+  {...(external ? { rel: "noopener noreferrer" } : {})}
+  {...(kind === "demo" ? { target: "_blank" } : {})}
+>
+  {text}{variant === "text" && <span aria-hidden="true" class="cta-text__arrow">→</span>}
+</a>
