@@ -22,6 +22,7 @@ const en = {
   title: ["Who said canvases were ", "only", " for brainstorming?"] as Title,
   lede: "On a Nolënor canvas, you file, you calculate, you find things again. Things a whiteboard doesn’t do.",
   soon: "Coming soon: automations.",
+  canvasName: "What a canvas can do",
   features: [
     { key: "views", icon: "lucide:table", title: "Your information filed, seen the way you need it.", body: "Records shaped to your needs, seen as a table, a kanban, a calendar, a gallery or a timeline.", img: viewsEn, alt: "A quotes database seen as a kanban: new, sent, negotiating, signed, with each quote’s amount." },
     { key: "calc", icon: "lucide:sigma", title: "Numbers that update themselves.", body: "A value computes from a table, a field or another node. When a source changes, everything follows.", img: calcEn, alt: "A sales table feeding computed values (monthly revenue, average order, goal reached) through dotted ƒ links, next to a breakdown chart." },
@@ -33,6 +34,7 @@ const en = {
 const fr: typeof en = {
   title: ["Qui a dit que les canvas, c’était ", "seulement", " pour brainstormer ?"] as Title,
   lede: "Sur un canvas Nolënor, on range, on calcule, on retrouve. Ce qu’un tableau blanc ne fait pas.",
+  canvasName: "Ce qu’un canvas sait faire",
   soon: "Bientôt : les automatisations.",
   features: [
     { key: "views", icon: "lucide:table", title: "Vos infos rangées, vues comme il vous faut.", body: "Des fiches sur mesure, vues en table, en kanban, en calendrier, en galerie ou en timeline.", img: viewsFr, alt: "Une base de devis vue en kanban : nouveau, envoyé, négociation, signé, avec le montant de chaque devis." },
@@ -45,8 +47,25 @@ const fr: typeof en = {
 const copy = { en, fr }[lang];
 
 /** Which side each node runs past the page margin on wide screens, and the selected one. */
-const BLEED: Record<string, string> = { views: "bleed-left", calc: "bleed-right", nested: "bleed-left", search: "bleed-right" };
 const SELECTED = "dash";
+
+/*
+ * Where each node sits on the canvas, in px of a 1200 × 900 plane that is
+ * scaled, text included, to the canvas's width (a zoomed-out canvas). The
+ * dense screens (linked numbers, dashboards) get the room; the search and
+ * the kanban, which read at a glance, less.
+ */
+const PLANE = { w: 1200, h: 900 };
+const AT: Record<string, { x: number; y: number; w: number }> = {
+  calc: { x: 0, y: 0, w: 520 },
+  dash: { x: 590, y: 40, w: 470 },
+  soon: { x: 1095, y: 150, w: 105 },
+  nested: { x: 0, y: 410, w: 260 },
+  views: { x: 320, y: 450, w: 380 },
+  search: { x: 760, y: 480, w: 340 },
+};
+const pos = (key: string) => `--x:${AT[key].x}px;--y:${AT[key].y}px;--w:${AT[key].w}px`;
+const ORDER = ["calc", "dash", "nested", "views", "search"];
 
 /*
  * The answer to "a canvas is a whiteboard": five things a whiteboard can't
@@ -64,14 +83,24 @@ const SELECTED = "dash";
     </h2>
     <div class="node doc depth__lede"><p>{copy.lede}</p></div>
 
+  </div>
+
+  <!-- A real canvas, the width of the screen: its chrome, its dots, its nodes. -->
+  <div class="depth__canvas">
+    <div class="ui-pill depth__crumb" aria-hidden="true">
+      <span class="depth__tile">N</span>
+      <strong>{copy.canvasName}</strong>
+      <Icon name="lucide:chevron-down" />
+    </div>
     <div class="depth__board" data-depth-board>
+      <div class="depth__plane" style={`--pw:${PLANE.w}px;--ph:${PLANE.h}px`} data-depth-plane>
       <svg class="depth__edges" aria-hidden="true"></svg>
       {
-        copy.features.map((f) => (
-          <article class:list={["node feature", `feature--${f.key}`, BLEED[f.key], f.key === SELECTED && "node--selected"]} data-node={f.key} data-reveal>
+        ORDER.map((key) => copy.features.find((f) => f.key === key)!).map((f) => (
+          <article class:list={["node feature", `feature--${f.key}`, f.key === SELECTED && "node--selected"]} style={pos(f.key)} data-node={f.key} data-reveal>
             {f.key === SELECTED && <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>}
             <figure class="feature__shot">
-              <Image src={f.img} alt={f.alt} widths={[560, 840, 1120, 1400]} sizes="(min-width: 60rem) 55vw, 100vw" />
+              <Image src={f.img} alt={f.alt} widths={[480, 720, 960, 1400]} sizes="(min-width: 60rem) 45vw, 100vw" />
             </figure>
             <div class="feature__text">
               <h3>
@@ -83,11 +112,13 @@ const SELECTED = "dash";
           </article>
         ))
       }
-      <div class="node node--yellow feature--soon" data-node="soon">
+      <div class="node node--yellow feature--soon" style={pos("soon")} data-node="soon">
         <Icon name="lucide:workflow" />
         {copy.soon}
       </div>
+      </div>
     </div>
+    <img class="depth__toolbar" src="/morph/toolbar.webp" alt="" width="340" height="50" aria-hidden="true" />
   </div>
 </section>
 
@@ -97,33 +128,49 @@ const SELECTED = "dash";
   // Wide screens only: on a phone the nodes are stacked and the links would
   // only cross them.
   type Side = "right" | "bottom" | "left" | "top";
-  const LINKS: [string, Side, string, Side, string?][] = [
-    ["views", "right", "calc", "left"],
-    ["nested", "right", "search", "left"],
-    ["search", "bottom", "dash", "top"],
+  const LINKS: [string, Side, string, Side][] = [
+    ["calc", "right", "dash", "left"],
     ["dash", "right", "soon", "left"],
+    ["calc", "bottom", "views", "top"],
+    ["nested", "right", "views", "left"],
+    ["views", "right", "search", "left"],
+    ["dash", "bottom", "search", "top"],
   ];
   const NORMAL: Record<Side, [number, number]> = { right: [1, 0], left: [-1, 0], top: [0, -1], bottom: [0, 1] };
 
+  const WIDE = "(min-width: 75rem)";
+
   document.querySelectorAll<HTMLElement>("[data-depth-board]").forEach((board) => {
+    const plane = board.querySelector<HTMLElement>("[data-depth-plane]")!;
     const svg = board.querySelector<SVGSVGElement>(".depth__edges")!;
+    const layout = () => {
+      if (!window.matchMedia(WIDE).matches) {
+        plane.style.transform = "";
+        board.style.height = "";
+        svg.innerHTML = "";
+        return;
+      }
+      // Zoom the plane to the canvas's width, never past 1.2 (centred then).
+      const pw = plane.offsetWidth;
+      const scale = Math.min(1.2, board.clientWidth / pw);
+      plane.style.transform = `translateX(${(board.clientWidth - pw * scale) / 2}px) scale(${scale})`;
+      board.style.height = `${plane.offsetHeight * scale}px`;
+      draw();
+    };
     const draw = () => {
-      svg.innerHTML = "";
-      if (window.innerWidth < 960) return;
-      const base = board.getBoundingClientRect();
+      // Offsets are in the plane's own (unscaled) coordinates.
       const point = (key: string, side: Side) => {
-        const el = board.querySelector<HTMLElement>(`[data-node="${key}"]`);
+        const el = plane.querySelector<HTMLElement>(`[data-node="${key}"]`);
         if (!el) return null;
-        const r = el.getBoundingClientRect();
-        const x = r.left - base.left;
-        const y = r.top - base.top;
+        const x = el.offsetLeft;
+        const y = el.offsetTop;
         return {
-          x: side === "left" ? x : side === "right" ? x + r.width : x + r.width / 2,
-          y: side === "top" ? y : side === "bottom" ? y + r.height : y + r.height / 2,
+          x: side === "left" ? x : side === "right" ? x + el.offsetWidth : x + el.offsetWidth / 2,
+          y: side === "top" ? y : side === "bottom" ? y + el.offsetHeight : y + el.offsetHeight / 2,
         };
       };
       let html = "";
-      for (const [from, fs, to, ts, label] of LINKS) {
+      for (const [from, fs, to, ts] of LINKS) {
         const a = point(from, fs);
         const b = point(to, ts);
         if (!a || !b) continue;
@@ -131,22 +178,16 @@ const SELECTED = "dash";
         const [nx1, ny1] = NORMAL[fs];
         const [nx2, ny2] = NORMAL[ts];
         const d = `M ${a.x} ${a.y} C ${a.x + nx1 * k} ${a.y + ny1 * k}, ${b.x + nx2 * k} ${b.y + ny2 * k}, ${b.x} ${b.y}`;
-        // The arrow points into the target, against its side's normal.
         const tx = -nx2;
         const ty = -ny2;
         const wing = (sgn: number) => `${b.x - tx * 7.5 - ty * 6 * sgn},${b.y - ty * 7.5 + tx * 6 * sgn}`;
         html += `<path d="${d}"/><polyline points="${wing(1)} ${b.x},${b.y} ${wing(-1)}"/>`;
-        if (label) {
-          const mx = (a.x + b.x) / 2;
-          const my = (a.y + b.y) / 2;
-          html += `<rect x="${mx - 30}" y="${my - 10}" width="60" height="20" rx="10" class="depth__pill"/><text x="${mx}" y="${my + 4}" text-anchor="middle" class="depth__pill-text">${label}</text>`;
-        }
       }
       svg.innerHTML = html;
     };
-    new ResizeObserver(draw).observe(board);
-    window.addEventListener("load", draw);
-    document.fonts?.ready.then(draw);
+    new ResizeObserver(layout).observe(board);
+    window.addEventListener("load", layout);
+    document.fonts?.ready.then(layout);
   });
 </script>
 
@@ -238,10 +279,7 @@ const SELECTED = "dash";
     font-size: var(--text-lg);
   }
 
-  .depth__board {
-    display: grid;
-    gap: var(--space-lg);
-  }
+
 
   .feature {
     display: flex;
@@ -305,45 +343,124 @@ const SELECTED = "dash";
     height: 18px;
   }
 
-  /* Dropped, not gridded: different sizes, a tall node on the left, the
-     "coming soon" note tucked in a corner. */
-  @media (min-width: 60rem) {
-    .depth__board {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
+  /* The canvas: full width (24px from the screen's edges), the app's
+     dotted background, its breadcrumb and toolbar. */
+  .depth__canvas {
+    position: relative;
+    width: calc(100vw - 48px);
+    margin-left: calc(50% - 50vw + 24px);
+    padding: 80px 48px 96px;
+    border: 1px solid oklch(0.929 0.013 255.508);
+    border-radius: 16px;
+    background-color: #fafafa;
+    background-image: radial-gradient(#d1d1d6 1px, transparent 1.3px);
+    background-size: 16px 16px;
+    container-type: inline-size;
+    overflow: hidden;
+  }
+
+  .depth__crumb {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    gap: 8px;
+    padding: 4px 10px 4px 6px;
+    font-size: 13px;
+  }
+
+  .depth__crumb strong {
+    color: #0f172a;
+  }
+
+  .depth__crumb svg {
+    width: 14px;
+    height: 14px;
+    color: #64748b;
+  }
+
+  .depth__tile {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #7c3aed;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .depth__toolbar {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    width: 340px;
+    height: auto;
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: 59.99rem) {
+    .depth__canvas {
+      padding: 64px 12px 24px;
+    }
+
+    .depth__toolbar {
+      display: none;
+    }
+  }
+
+  .depth__plane {
+    position: relative;
+  }
+
+  /* Medium screens: the nodes in two columns, flowed. */
+  @media (min-width: 40rem) and (max-width: 74.99rem) {
+    .depth__plane {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
       align-items: start;
-      gap: var(--space-xl) var(--space-lg);
     }
 
-    .feature--views {
-      grid-column: 1 / 8;
-      grid-row: 1;
+    .depth__edges {
+      display: none;
+    }
+  }
+
+  @media (max-width: 39.99rem) {
+    .depth__plane {
+      display: grid;
+      gap: var(--space-lg);
+    }
+  }
+
+  /* Wide screens: a plane of fixed size, nodes placed at the spots in AT,
+     the whole plane zoomed to the canvas (see the script). */
+  @media (min-width: 75rem) {
+    .depth__board {
+      position: relative;
     }
 
-    .feature--calc {
-      grid-column: 8 / 13;
-      grid-row: 1;
-      margin-top: var(--space-3xl);
+    .depth__plane {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--pw);
+      height: var(--ph);
+      transform-origin: 0 0;
     }
 
-    .feature--nested {
-      grid-column: 1 / 5;
-      grid-row: 2 / 4;
-    }
-
-    .feature--search {
-      grid-column: 5 / 13;
-      grid-row: 2;
-    }
-
-    .feature--dash {
-      grid-column: 5 / 10;
-      grid-row: 3;
+    .feature,
+    .feature--soon {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--w);
     }
 
     .feature--soon {
-      grid-column: 10 / 13;
-      grid-row: 3;
-      align-self: end;
+      align-items: flex-start;
     }
   }
 </style>
