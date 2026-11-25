@@ -44,6 +44,13 @@ function setup(root: HTMLElement) {
   const frame = root.querySelector<HTMLElement>("[data-ptc-frame]")!;
   const input = root.querySelector<HTMLInputElement>("[data-ptc-range]")!;
   const replay = root.querySelector<HTMLButtonElement>("[data-ptc-replay]")!;
+  // Shown or not, the button keeps its place (visibility, not display), so
+  // the bar beside it never changes width.
+  const showReplay = (on: boolean) => {
+    replay.dataset.shown = String(on);
+    replay.tabIndex = on ? 0 : -1;
+    replay.setAttribute("aria-hidden", String(!on));
+  };
 
   const el: Els = {};
   stage.querySelectorAll<HTMLElement>("[data-el]").forEach((n) => {
@@ -223,14 +230,14 @@ function setup(root: HTMLElement) {
   const stop = () => cancelAnimationFrame(raf);
   const play = () => {
     stop();
-    replay.hidden = true;
+    showReplay(false);
     const from = Number(input.value) / 1000 >= 0.999 ? 0 : Number(input.value) / 1000;
     const t0 = performance.now() - from * PLAY_MS;
     const tick = (now: number) => {
       const t = Math.min(1, (now - t0) / PLAY_MS);
       show(t);
       if (t < 1) raf = requestAnimationFrame(tick);
-      else replay.hidden = false;
+      else showReplay(true);
     };
     raf = requestAnimationFrame(tick);
   };
@@ -239,16 +246,17 @@ function setup(root: HTMLElement) {
     stop();
     render(Number(input.value) / 1000);
     input.setAttribute("aria-valuetext", `${Math.round(Number(input.value) / 10)} %`);
-    replay.hidden = false;
+    showReplay(true);
   });
   input.addEventListener("pointerdown", stop);
   replay.addEventListener("click", play);
 
   if (prefersReducedMotion()) {
     show(1);
-    replay.hidden = false;
+    showReplay(true);
     return;
   }
+  showReplay(false);
   show(0);
   // Plays once by itself, the first time most of it is on screen.
   const io = new IntersectionObserver(
