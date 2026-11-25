@@ -1,0 +1,525 @@
+---
+import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+import { CANVAS, CRUMB, DOCK, EDGES, FLIGHTS, MAIN, PAGE, ROWS, TOOLBAR, WEEKLY, WS, type FlightKey } from "@/lib/pagesToCanvas";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  from: "Pages",
+  to: "Canvas",
+  slider: "From pages to canvas",
+  replay: "Replay",
+  caption: "The same project, twice. In pages, everything is filed one inside another. On a canvas, it is all in view, with what links to what.",
+  alt: "A project in a page tool, with nested pages, tabs and a database, breaks apart into a Nolënor canvas: sub-pages become sub-canvases, the database and its views become nodes linked together, and the page stays open in a window docked on the right.",
+};
+const fr: typeof en = {
+  from: "Pages",
+  to: "Canvas",
+  slider: "Passer des pages au canvas",
+  replay: "Rejouer",
+  caption: "Le même projet, deux fois. En pages, tout est rangé l’un dans l’autre. Sur un canvas, tout est sous vos yeux, avec ce qui relie quoi.",
+  alt: "Un projet dans un outil de pages, avec ses sous-pages, ses onglets et sa base de données, s’éclate en un canvas Nolënor : les sous-pages deviennent des sous-canvas, la base et ses vues deviennent des nœuds reliés entre eux, et la page reste ouverte dans une fenêtre ancrée à droite.",
+};
+const copy = { en, fr }[lang];
+
+const keys = Object.keys(FLIGHTS) as FlightKey[];
+const px = (n: number) => `${n}px`;
+const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x)};top:${px(r.y)};width:${px(r.w)};height:${px(r.h)}`;
+
+/*
+ * Not a video: a slider the reader can drag both ways. It plays once on its
+ * own when it scrolls into view, then hands over (any touch on the control
+ * stops the playback). With reduced motion it simply starts on the canvas.
+ *
+ * Every node face is a 2× render of the app's real components; the chrome
+ * around them (sidebar, breadcrumb, frames, links) is drawn here so it can
+ * move. The script that moves it is src/scripts/pages-to-canvas.ts.
+ */
+---
+
+<figure class="ptc" data-ptc>
+  <div class="ptc__frame" data-ptc-frame role="img" aria-label={copy.alt}>
+    <div class="ptc__stage" data-ptc-stage aria-hidden="true">
+      <!-- Sidebar -->
+      <div class="ptc__ws" data-el="ws">
+        <span class="ptc__ws-tile" data-el="ws-tile">N</span>
+        <span class="ptc__ws-name" data-el="ws-name">{WS}</span>
+        <Icon name="lucide:chevron-down" class="ptc__ico-s" />
+      </div>
+      <div class="ptc__search" data-el="search">
+        <Icon name="lucide:search" class="ptc__ico" />
+        <span class="ptc__grow">Search</span>
+        <span class="ptc__kbd" data-el="kbd">Ctrl K</span>
+      </div>
+      <div class="ptc__label ptc__fav" data-el="fav">Favorites</div>
+      <div class="ptc__label" data-el="spaces">Teamspaces</div>
+      {ROWS.map((r, i) =>
+        r.b === null ? (
+          <div class="ptc__row ptc__row--gone" data-row={i} style={`left:${px(16 + r.depth * 14)};top:${px(r.a)}`}>
+            <Icon name={r.icon} class="ptc__ico ptc__muted" />
+            {r.label}
+          </div>
+        ) : (
+          <div class:list={["ptc__row", r.active && "ptc__row--active"]} data-row={i} style={`padding-left:${px(4 + r.depth * 14)}`}>
+            <span class="ptc__chev" data-el="chev"><Icon name="lucide:chevron-down" class="ptc__ico-s" /></span>
+            <span class="ptc__glyph">
+              <span class="ptc__glyph-page" data-el="page"><Icon name={r.icon} class="ptc__ico ptc__muted" /></span>
+              <span class="ptc__glyph-tile" data-el="tile" style={`background:${r.tile}`}>{r.label[0]}</span>
+            </span>
+            <span class="ptc__trunc">{r.label}</span>
+          </div>
+        ),
+      )}
+
+      <!-- The page area, which splits into the canvas and the docked window -->
+      <div class="ptc__canvas" data-el="canvas">
+        <div class="ptc__dots" data-el="dots"></div>
+        <img class="ptc__toolbar" data-el="toolbar" src="/morph/toolbar.webp" alt="" width={TOOLBAR.w} height={TOOLBAR.h} style={`left:${px(TOOLBAR.x - CANVAS.x)};top:${px(TOOLBAR.y - CANVAS.y)}`} />
+      </div>
+      <div class="ptc__dock" data-el="dock">
+        <div class="ptc__dock-head" data-el="dock-head">
+          <Icon name="lucide:notebook-text" class="ptc__ico" />
+          {PAGE}
+        </div>
+      </div>
+
+      <!-- The page tool's chrome, which leaves -->
+      <div class="ptc__topbar" data-el="topbar" style={`left:${px(MAIN.x)};width:${px(MAIN.w)}`}>
+        <span class="ptc__plus"><Icon name="lucide:plus" class="ptc__ico" /></span>
+      </div>
+      <div class="ptc__meta" data-el="meta">
+        <span>Edited 2h ago</span><span>Share</span>
+        <Icon name="lucide:star" class="ptc__ico" /><Icon name="lucide:ellipsis" class="ptc__ico" />
+      </div>
+      <div class="ptc__dock-tab" data-el="weekly-tab" style={`left:${px(DOCK.x + 164)}`}>
+        <Icon name="lucide:notebook-text" class="ptc__ico" />
+        {WEEKLY}
+      </div>
+
+      <!-- Links between the landed nodes -->
+      <svg class="ptc__edges" viewBox="0 0 1280 720" width="1280" height="720">
+        {EDGES.map((e) => (
+          <g data-edge>
+            <path d={e.d} />
+            <polyline points={e.arrow} />
+          </g>
+        ))}
+      </svg>
+
+      <!-- The breadcrumb, which becomes the canvas's pill -->
+      <div class="ptc__crumb" data-el="crumb" style={at(CRUMB.a)}>
+        Clients <span class="ptc__sep">/</span> Halden Logistics <span class="ptc__sep">/</span>
+        <span class="ptc__crumb-page" data-el="crumb-page">{PAGE}</span>
+        <span class="ptc__pop" data-el="crumb-chev"><Icon name="lucide:chevron-down" class="ptc__ico-s" /></span>
+        <span class="ptc__crumb-tools ptc__pop" data-el="crumb-tools">
+          <Icon name="lucide:undo-2" class="ptc__ico" /><Icon name="lucide:redo-2" class="ptc__ico ptc__faint" /><Icon name="lucide:cloud-check" class="ptc__ico ptc__ok" />
+        </span>
+      </div>
+
+      <!-- Travelling elements: the page tool's face, then the node's -->
+      {keys.map((k) => {
+        const f = FLIGHTS[k];
+        return (
+          <div class="ptc__fly" data-fly={k} style={at(f.a)}>
+            <img src={`/morph/${k}-a.webp`} alt="" width={f.a.w} height={f.a.h} data-face="a" decoding="async" />
+            <img src={`/morph/${k}-b.webp`} alt="" width={f.b.w} height={f.b.h} data-face="b" decoding="async" />
+          </div>
+        );
+      })}
+
+      <!-- Who else is here -->
+      <div class="ptc__people ptc__pop" data-el="people" style={`left:${px(CANVAS.x + CANVAS.w - 74)}`}>
+        <span style="background:#db2777">M</span><span style="background:#2563eb">J</span>
+      </div>
+      <div class="ptc__cursor" data-el="cursor">
+        <svg width="18" height="20" viewBox="0 0 18 20"><path d="M1 1 L1 16 L5 12 L8 19 L11 18 L8 11 L14 11 Z" fill="#db2777" stroke="white" stroke-width="1.5"></path></svg>
+        <span>Maya</span>
+      </div>
+      <div class="ptc__people ptc__pop ptc__people--node" data-el="on-board" style={`left:${px(FLIGHTS.board.b.x + FLIGHTS.board.b.w - 32)};top:${px(FLIGHTS.board.b.y + FLIGHTS.board.b.h - 32)}`}>
+        <span style="background:#db2777">M</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ptc__control">
+    <span aria-hidden="true">{copy.from}</span>
+    <input type="range" min="0" max="1000" value="0" step="1" aria-label={copy.slider} data-ptc-range />
+    <span aria-hidden="true">{copy.to}</span>
+    <button type="button" class="ptc__replay" data-ptc-replay hidden>
+      <Icon name="lucide:rotate-ccw" />{copy.replay}
+    </button>
+  </div>
+  <figcaption class="ptc__caption">{copy.caption}</figcaption>
+</figure>
+
+<script>
+  import { initPagesToCanvas } from "@/scripts/pages-to-canvas";
+  initPagesToCanvas();
+</script>
+
+<style>
+  .ptc {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .ptc__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    outline: 1px solid var(--color-shade);
+    outline-offset: -1px;
+    box-shadow: 0 30px 60px -30px var(--color-shadow);
+    background: #f7f7f5;
+  }
+
+  .ptc__stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+    transform-origin: 0 0;
+    overflow: hidden;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #37352f;
+    background: #f7f7f5;
+    user-select: none;
+  }
+
+  .ptc__stage > * {
+    position: absolute;
+  }
+
+  .ptc__ico {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+  .ptc__ico-s {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    color: #64748b;
+  }
+  .ptc__muted {
+    color: #91918e;
+  }
+  .ptc__faint {
+    opacity: 0.5;
+  }
+  .ptc__ok {
+    color: #22c55e;
+  }
+  .ptc__pop {
+    transform-origin: left center;
+  }
+
+  /* Sidebar */
+  .ptc__ws {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ptc__ws-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+  }
+  .ptc__ws-name {
+    white-space: nowrap;
+    color: #0f172a;
+  }
+  .ptc__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+    border: 1px solid transparent;
+  }
+  .ptc__grow {
+    flex: 1;
+  }
+  .ptc__kbd {
+    margin-right: 8px;
+    padding: 0 4px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 11px;
+  }
+  .ptc__label {
+    left: 16px;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 500;
+    color: #91918e;
+    transform-origin: left center;
+  }
+  .ptc__fav {
+    top: 136px;
+    height: 20px;
+    overflow: hidden;
+  }
+  .ptc__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ptc__row--gone {
+    height: 28px;
+    gap: 8px;
+  }
+  .ptc__row--active {
+    font-weight: 600;
+  }
+  .ptc__chev {
+    display: flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+  .ptc__glyph {
+    position: relative;
+    display: flex;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  .ptc__glyph > span {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ptc__glyph-tile {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .ptc__trunc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Canvas and dock */
+  .ptc__canvas,
+  .ptc__dock {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid transparent;
+  }
+  .ptc__dots {
+    position: absolute;
+    inset: 0;
+    background-color: #f8fafc;
+    background-image: radial-gradient(#cbd5e1 1px, transparent 1.2px);
+    background-size: 20px 20px;
+  }
+  .ptc__toolbar {
+    position: absolute;
+    width: 340px;
+    height: 50px;
+  }
+  .ptc__dock-head {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    gap: 8px;
+    padding-left: 12px;
+    border-bottom: 1px solid rgb(226 232 240 / 0.7);
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  /* The page tool's chrome */
+  .ptc__topbar {
+    top: 0;
+    height: 46px;
+    border-bottom: 1px solid #ebebea;
+    background: #f7f7f5;
+  }
+  .ptc__plus {
+    position: absolute;
+    top: 8px;
+    left: 392px;
+    display: flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    color: #91918e;
+  }
+  .ptc__meta {
+    top: 56px;
+    right: 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #91918e;
+  }
+  .ptc__dock-tab {
+    top: 10px;
+    display: flex;
+    height: 32px;
+    align-items: center;
+    gap: 6px;
+    padding-left: 10px;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .ptc__edges {
+    top: 0;
+    left: 0;
+    overflow: visible;
+    fill: none;
+    stroke: #94a3b8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ptc__edges path {
+    stroke-width: 1.25;
+  }
+  .ptc__edges polyline {
+    stroke-width: 1.5;
+  }
+
+  .ptc__crumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .ptc__sep {
+    color: #cbd5e1;
+  }
+  .ptc__crumb-page {
+    color: #0f172a;
+  }
+  .ptc__crumb-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 4px;
+    padding-left: 8px;
+    border-left: 1px solid #e2e8f0;
+    color: #475569;
+  }
+
+  .ptc__fly {
+    overflow: hidden;
+    border: 1px solid transparent;
+  }
+  .ptc__fly img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: none;
+    transform-origin: 0 0;
+  }
+
+  .ptc__people {
+    top: 24px;
+    display: flex;
+    transform-origin: center;
+  }
+  .ptc__people span {
+    display: flex;
+    width: 26px;
+    height: 26px;
+    margin-left: -6px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    box-shadow: 0 0 0 2px #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .ptc__people--node span {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+    box-shadow:
+      0 0 0 2px #fff,
+      0 0 0 4px rgb(219 39 119 / 0.33);
+  }
+  .ptc__cursor span {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #db2777;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #fff;
+  }
+
+  /* The control */
+  .ptc__control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: min(100%, 40rem);
+    margin-inline: auto;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-ink-2);
+  }
+  .ptc__control input {
+    flex: 1;
+    accent-color: var(--color-accent);
+    min-height: 44px;
+    cursor: grab;
+  }
+  .ptc__control input:active {
+    cursor: grabbing;
+  }
+  .ptc__replay {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--color-accent);
+    cursor: pointer;
+  }
+  .ptc__replay svg {
+    width: 15px;
+    height: 15px;
+  }
+  .ptc__replay[hidden] {
+    display: none;
+  }
+  .ptc__caption {
+    max-width: 60ch;
+    margin-inline: auto;
+    text-align: center;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+</style>

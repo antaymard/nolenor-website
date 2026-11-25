@@ -1,0 +1,255 @@
+---
+import PagesToCanvas from "@/components/home/PagesToCanvas.astro";
+import { APP_SIGNUP_URL, PUBLIC_CANVAS_URL } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  pace: "Think at your own pace.",
+  ai: "AI when you want it.",
+  toggle: "AI",
+  lede: "Nolënor is an infinite canvas for deep work. Structure your ideas, explore options with AI, keep your dashboards in one place, plan what comes next.",
+  off: "AI off, it is already a full tool: documents, tables, views and files, all laid out on the canvas.",
+  on: "AI on, Nolë works with you, in small steps you can follow and redirect.",
+  cta: "Open a canvas",
+  second: "See a real canvas",
+  terms: "Open beta. No card, export any time.",
+};
+const fr: typeof en = {
+  pace: "Pensez à votre rythme.",
+  ai: "L’IA, quand vous voulez.",
+  toggle: "IA",
+  lede: "Nolënor est un canvas infini pour travailler en profondeur. Structurez vos idées, explorez des pistes avec l’IA, centralisez vos tableaux de bord, planifiez la suite.",
+  off: "IA éteinte, c’est déjà un outil complet : documents, tables, vues et fichiers, tout se range sur le canvas.",
+  on: "IA allumée, Nolë travaille avec vous, par petites étapes que vous suivez et redirigez.",
+  cta: "Ouvrir un canvas",
+  second: "Voir un vrai canvas",
+  terms: "Bêta ouverte. Sans carte, export à tout moment.",
+};
+const copy = { en, fr }[lang];
+
+/*
+ * The promise, then the proof right under it. The second line of the
+ * headline carries a real switch: the reader turns the AI on and off and
+ * the line below says what Nolënor is in each state. It starts off, on
+ * purpose: the tool comes first, the agent when you call it.
+ *
+ * One button for the whole page ("Open a canvas"); the real public canvas
+ * is a link, not a second button.
+ */
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div class="hero__text">
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__pace">{copy.pace}</span>
+        <span class="hero__ai">{copy.ai}</span>
+      </h1>
+
+      <p class="hero__lede">{copy.lede}</p>
+
+      <div class="hero__switch" data-ai-switch>
+        <button type="button" role="switch" aria-checked="false" class="switch" aria-describedby="hero-ai-state">
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+          <span class="switch__label">{copy.toggle}</span>
+        </button>
+        <p id="hero-ai-state" class="hero__state" aria-live="polite" data-off={copy.off} data-on={copy.on}>{copy.off}</p>
+      </div>
+
+      <div class="hero__actions">
+        <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">{copy.cta}</a>
+        <a href={PUBLIC_CANVAS_URL} class="hero__second" rel="noopener noreferrer">{copy.second}</a>
+      </div>
+      <p class="hero__terms">{copy.terms}</p>
+    </div>
+
+    <div class="hero__demo">
+      <PagesToCanvas />
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-ai-switch]").forEach((root) => {
+    const button = root.querySelector<HTMLButtonElement>('[role="switch"]')!;
+    const state = root.querySelector<HTMLElement>(".hero__state")!;
+    button.addEventListener("click", () => {
+      const on = button.getAttribute("aria-checked") !== "true";
+      button.setAttribute("aria-checked", String(on));
+      state.textContent = (on ? state.dataset.on : state.dataset.off) ?? "";
+    });
+  });
+</script>
+
+<style>
+  .hero {
+    padding-block: var(--space-2xl) var(--section-gap-s);
+  }
+
+  .hero__text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    max-width: 52rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hero__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-ink);
+    min-width: 0;
+  }
+
+  .hero__pace {
+    font-size: var(--text-display);
+    line-height: 1.02;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  .hero__ai {
+    font-size: var(--text-display-s);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-accent);
+    font-style: italic;
+  }
+
+  .hero__lede {
+    max-width: 44ch;
+    font-size: var(--text-lead);
+    line-height: 1.45;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
+
+  .hero__switch {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    max-width: 40rem;
+    padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-sm);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-pill);
+    background: var(--color-paper-3);
+    text-align: left;
+  }
+
+  .switch {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: 44px;
+    padding: 0 var(--space-xs);
+    border: 0;
+    background: none;
+    font: 800 var(--text-sm) / 1 var(--font-body);
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .switch__track {
+    position: relative;
+    width: 44px;
+    height: 26px;
+    border-radius: var(--radius-pill);
+    background: var(--color-rule-2);
+    transition: background-color var(--dur-short) var(--ease-out);
+  }
+
+  .switch__thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-paper-3);
+    box-shadow: 0 1px 3px var(--color-shade);
+    transition: transform var(--dur-short) var(--ease-out);
+  }
+
+  .switch[aria-checked="true"] .switch__track {
+    background: var(--color-accent);
+  }
+
+  .switch[aria-checked="true"] .switch__thumb {
+    transform: translateX(18px);
+  }
+
+  .switch:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-pill);
+  }
+
+  .hero__state {
+    min-height: 2.9em;
+    display: flex;
+    align-items: center;
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--color-ink-2);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-md) var(--space-lg);
+    margin-top: var(--space-xs);
+  }
+
+  .hero__second {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    font-weight: 700;
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule-2);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color var(--dur-short) var(--ease-out);
+  }
+
+  .hero__second:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .hero__terms {
+    margin-top: calc(var(--space-sm) * -1);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .hero__demo {
+    max-width: 72rem;
+    margin: var(--space-2xl) auto 0;
+  }
+
+  @media (max-width: 40rem) {
+    .hero__switch {
+      border-radius: var(--radius-card);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .switch__track,
+    .switch__thumb,
+    .hero__second {
+      transition: none;
+    }
+  }
+</style>

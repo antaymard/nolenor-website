@@ -45,3 +45,17 @@ export const TAGLINE = {
   en: "A workshop, not a factory.",
   fr: "Un atelier, pas une usine.",
 } as const;
+
+// PLACEHOLDER: the public, duplicable canvases the home page links to
+// ("See a real canvas" and the three "Open this canvas" cards). They are
+// still to be prepared in the app; until then every link opens the app.
+export const PUBLIC_CANVAS_URL = APP_URL;
+export const SHOWCASE_CANVAS_URLS = {
+  builders: APP_URL,
+  business: APP_URL,
+  documents: APP_URL,
+} as const;
+
+// PLACEHOLDER: no public contact address yet. "Contact me" on the home page
+// points here.
+export const CONTACT_URL = "mailto:contact@nolenor.com";

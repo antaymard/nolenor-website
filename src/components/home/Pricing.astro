@@ -1,0 +1,123 @@
+---
+import { APP_SIGNUP_URL } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  title: "Free during the beta. Clear after.",
+  body: "All of Nolënor, AI included, with no credit card. And for what comes next, commitments in writing:",
+  // Each line is a public commitment: keep only the ones we hold to.
+  promises: [
+    "A free plan that stays.",
+    "Thirty days’ notice before any price change.",
+    "Your data, exportable at any time, for free.",
+    "The cost of an AI request shown before you run it.",
+  ],
+  cta: "Open a canvas",
+};
+const fr: typeof en = {
+  title: "Gratuit pendant la bêta. Lisible après.",
+  body: "Tout Nolënor, IA comprise, sans carte bancaire. Et pour la suite, des engagements écrits :",
+  promises: [
+    "Une formule gratuite qui reste.",
+    "Trente jours de préavis avant tout changement de prix.",
+    "Vos données exportables à tout moment, gratuitement.",
+    "Le coût d’une demande à l’IA affiché avant de la lancer.",
+  ],
+  cta: "Ouvrir un canvas",
+};
+const copy = { en, fr }[lang];
+
+/*
+ * The one indigo band of the page: the price, the promises, and the page's
+ * button. The promises are numbered like clauses because that is what they
+ * are.
+ */
+---
+
+<section id="pricing" class="pricing" aria-labelledby="pricing-title">
+  <div class="wrap pricing__grid">
+    <div class="pricing__text">
+      <h2 id="pricing-title">{copy.title}</h2>
+      <p>{copy.body}</p>
+      <a href={APP_SIGNUP_URL} class="btn btn--inverse" rel="noopener noreferrer">{copy.cta}</a>
+    </div>
+    <ol class="pricing__promises">
+      {copy.promises.map((promise) => <li>{promise}</li>)}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .pricing {
+    padding-block: var(--section-gap-s);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  .pricing__grid {
+    display: grid;
+    gap: var(--space-2xl) var(--gap-columns);
+    align-items: start;
+  }
+
+  .pricing__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-lg);
+  }
+
+  .pricing h2 {
+    max-width: 14ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-display-s);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-accent-ink);
+    text-wrap: balance;
+  }
+
+  .pricing__text p {
+    max-width: 38ch;
+    font-size: var(--text-lg);
+    line-height: 1.55;
+    color: var(--color-accent-ink-2);
+  }
+
+  .pricing__promises {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: promise;
+    border-top: 1px solid color-mix(in oklab, var(--color-accent-ink) 25%, transparent);
+  }
+
+  .pricing__promises li {
+    counter-increment: promise;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    padding-block: var(--space-md);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-accent-ink) 25%, transparent);
+    font-family: var(--font-display);
+    font-size: var(--text-title);
+    line-height: 1.3;
+  }
+
+  .pricing__promises li::before {
+    content: counter(promise, decimal-leading-zero);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: 2.2;
+    color: var(--color-accent-ink-2);
+  }
+
+  @media (min-width: 60rem) {
+    .pricing__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+  }
+</style>

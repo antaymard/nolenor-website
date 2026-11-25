@@ -26,10 +26,10 @@ interface RawLink {
 }
 
 const primary: RawLink[] = [
-  { label: { en: "Features", fr: "Fonctionnalités" }, href: "/#features" },
-  { label: { en: "Nodes", fr: "Nœuds" }, href: "/#nodes" },
-  { label: { en: "Who it's for", fr: "Pour qui" }, href: "/#who-its-for" },
-  { label: { en: "FAQ", fr: "FAQ" }, href: "/#faq" },
+  { label: { en: "Why", fr: "Pourquoi" }, href: "/#why" },
+  { label: { en: "Projects", fr: "Projets" }, href: "/#use-cases" },
+  { label: { en: "Nolë", fr: "Nolë" }, href: "/#nole" },
+  { label: { en: "Pricing", fr: "Prix" }, href: "/#pricing" },
 ];
 
 const help: RawLink = { label: { en: "Help", fr: "Aide" }, href: "/help" };

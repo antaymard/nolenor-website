@@ -1,0 +1,196 @@
+---
+import { Image } from "astro:assets";
+import { getLang } from "@/i18n";
+import stepsEn from "@/assets/img/home/s07-se-concentrer-en.webp";
+import stepsFr from "@/assets/img/home/s07-se-concentrer-fr.webp";
+import boardEn from "@/assets/img/home/s10-piloter-en.webp";
+import boardFr from "@/assets/img/home/s10-piloter-fr.webp";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  painLabel: "What happened",
+  pain: "You wanted to think out loud. The AI has already handed in its essay.",
+  painBody: "Now you are proofreading an idea that never had time to become yours. Pages you didn’t ask for, and still have to read.",
+  betLabel: "Our bet",
+  bet: "Everywhere, you’re told to keep up with AI. We did the opposite: we made it keep up with you.",
+  betBody: "You don’t have to go faster to stay in the game. The tool should follow the way you think, not the other way round.",
+  proofsLabel: "How it shows",
+  proofs: [
+    {
+      title: "Small steps you can follow.",
+      body: "Nolë works in short, readable steps: what it reads, what it creates, what it changes. You see each one go by, and you can redirect it at any point.",
+      img: stepsEn,
+      alt: "Nolë’s panel next to a canvas: each request is followed by short steps (one image created, one PDF created, one table and one document changed), and the results sit on the canvas: a cut-out chair, a contract extract, a corrected quote.",
+    },
+    {
+      title: "Results on the canvas, not walls of text.",
+      body: "A table, a view, a figure that updates itself: what Nolë makes lands on the canvas, and you handle it like everything else.",
+      img: boardEn,
+      alt: "A quotes pipeline as a kanban board on a canvas, with two figures computed from it underneath: weighted pipeline and signing rate. Nolë’s panel on the left answers who to chase this week.",
+    },
+  ],
+};
+const fr: typeof en = {
+  painLabel: "Le constat",
+  pain: "Vous vouliez réfléchir à voix haute. L’IA a déjà rendu sa copie.",
+  painBody: "Et vous voilà à relire une idée qui n’a pas eu le temps de devenir la vôtre. Des pages que vous n’avez pas demandées, et qu’il faut pourtant relire.",
+  betLabel: "Notre pari",
+  bet: "Partout, on vous somme de suivre le rythme de l’IA. Nous avons fait l’inverse : on l’a mise au vôtre.",
+  betBody: "Pas besoin d’aller plus vite pour rester dans la course. C’est à l’outil de suivre votre façon de penser, pas l’inverse.",
+  proofsLabel: "Ce que ça change",
+  proofs: [
+    {
+      title: "Des petites étapes, que vous suivez.",
+      body: "Nolë avance par étapes courtes et lisibles : ce qu’il lit, ce qu’il crée, ce qu’il modifie. Vous voyez tout passer, et vous le redirigez quand vous voulez.",
+      img: stepsFr,
+      alt: "Le panneau de Nolë à côté d’un canvas : chaque demande est suivie d’étapes courtes (une image créée, un PDF créé, une table et un document modifiés), et les résultats sont posés sur le canvas : une chaise détourée, un extrait de contrat, un devis corrigé.",
+    },
+    {
+      title: "Des résultats sur le canvas, pas des pavés à relire.",
+      body: "Une table, une vue, un chiffre qui se recalcule seul : ce que Nolë produit prend place sur le canvas, et vous le manipulez comme le reste.",
+      img: boardFr,
+      alt: "Un pipeline de devis en kanban sur un canvas, avec deux chiffres calculés dessous : pipeline pondéré et taux de signature. Le panneau de Nolë, à gauche, répond à la question de qui relancer cette semaine.",
+    },
+  ],
+};
+const copy = { en, fr }[lang];
+
+/*
+ * Three acts, read top to bottom: the pain (set like a quote, alone), the
+ * bet (the page's thesis, the biggest type after the hero), then the two
+ * proofs, each a real screen. No icons, no cards around the words.
+ */
+---
+
+<section id="why" class="bet" aria-labelledby="bet-title">
+  <div class="wrap">
+    <div class="bet__act bet__pain" data-reveal>
+      <p class="bet__label">{copy.painLabel}</p>
+      <p class="bet__quote">{copy.pain}</p>
+      <p class="bet__body">{copy.painBody}</p>
+    </div>
+
+    <div class="bet__act bet__thesis" data-reveal>
+      <p class="bet__label">{copy.betLabel}</p>
+      <h2 id="bet-title">{copy.bet}</h2>
+      <p class="bet__body">{copy.betBody}</p>
+    </div>
+
+    <div class="bet__proofs">
+      <p class="bet__label">{copy.proofsLabel}</p>
+      <div class="bet__grid">
+        {
+          copy.proofs.map((proof) => (
+            <article class="proof" data-reveal>
+              <figure class="proof__shot">
+                <Image src={proof.img} alt={proof.alt} widths={[640, 960, 1280]} sizes="(min-width: 60rem) 40vw, 100vw" />
+              </figure>
+              <h3>{proof.title}</h3>
+              <p>{proof.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bet {
+    padding-block: var(--section-gap);
+    border-top: var(--rule-hair) solid var(--color-rule);
+  }
+
+  .bet__act {
+    max-width: 46rem;
+  }
+
+  .bet__label {
+    margin-bottom: var(--space-md);
+    font-size: var(--text-xs);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .bet__quote {
+    font-family: var(--font-display);
+    font-size: var(--text-title);
+    line-height: 1.3;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .bet__body {
+    max-width: 44ch;
+    margin-top: var(--space-md);
+    font-size: var(--text-lg);
+    line-height: 1.55;
+    color: var(--color-ink-2);
+    text-wrap: pretty;
+  }
+
+  .bet__thesis {
+    margin: var(--space-3xl) 0 var(--space-3xl) auto;
+  }
+
+  .bet__thesis h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-section);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .bet__grid {
+    display: grid;
+    gap: var(--space-2xl) var(--gap-columns);
+  }
+
+  .proof {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .proof__shot {
+    margin: 0 0 var(--space-sm);
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    outline: 1px solid var(--color-shade);
+    outline-offset: -1px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .proof__shot :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .proof h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-title);
+    line-height: 1.25;
+    color: var(--color-ink);
+  }
+
+  .proof p {
+    max-width: 46ch;
+    font-size: var(--text-md);
+    line-height: 1.6;
+    color: var(--color-ink-2);
+  }
+
+  @media (min-width: 60rem) {
+    .bet__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
