@@ -1,13 +1,13 @@
 ---
 import { Icon } from "astro-icon/components";
 import { getLang } from "@/i18n";
-import Edge from "@/components/home/Edge.astro";
 
 const lang = getLang(Astro.currentLocale);
 
 const en = {
   ai: "AI",
   window: "WMS rollout · budget",
+  hint: { off: "Click to turn it on", on: "Click to turn it off" },
   states: {
     off: {
       label: "Off",
@@ -26,6 +26,7 @@ const en = {
 const fr: typeof en = {
   ai: "IA",
   window: "WMS rollout · budget",
+  hint: { off: "Cliquez pour l’allumer", on: "Cliquez pour l’éteindre" },
   states: {
     off: {
       label: "Éteinte",
@@ -56,16 +57,6 @@ const modes = ["off", "on"] as const;
 <section id="ai" class="ai" aria-labelledby="ai-title" data-ai-section data-state="off">
   <div class="wrap">
     <div class="ai__head">
-      <div class="node ai__switch">
-        <button type="button" role="switch" aria-checked="false" class="switch" data-ai-toggle aria-labelledby="ai-title">
-          <span class="switch__track"><span class="switch__thumb"></span></span>
-          <span class="switch__label">{copy.ai}</span>
-        </button>
-        <span class="ai__state">
-          {modes.map((m) => <span data-for={m}>{copy.states[m].label}</span>)}
-        </span>
-      </div>
-
       <div class="ai__texts">
         {
           modes.map((m) => (
@@ -86,13 +77,6 @@ const modes = ["off", "on"] as const;
       <div class="ai__window-head">
         <Icon name="lucide:layout-dashboard" />
         {copy.window}
-        <span class="ai__badge" aria-hidden="true">
-          <span class="ai__dot"></span>
-          <span class="ai__badge-ai">{copy.ai}</span>
-          <span class="ai__badge-states">
-            {modes.map((m) => <span data-for={m}>{copy.states[m].label}</span>)}
-          </span>
-        </span>
       </div>
       <div class="ai__screens">
         {
@@ -112,9 +96,21 @@ const modes = ["off", "on"] as const;
             ></video>
           ))
         }
+        <div class="node ai__switch" data-attract>
+          <button type="button" role="switch" aria-checked="false" class="switch" data-ai-toggle aria-labelledby="ai-title">
+            <span class="switch__track"><span class="switch__thumb"></span></span>
+            <span class="ai__switch-text">
+              <span class="ai__switch-state">
+                {modes.map((m) => <span data-for={m}>{copy.ai} · {copy.states[m].label}</span>)}
+              </span>
+              <span class="ai__switch-hint">
+                {modes.map((m) => <span data-for={m}>{copy.hint[m]}</span>)}
+              </span>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
-    <Edge from={50} to={14} height={72} class="ai__out" />
   </div>
 </section>
 
@@ -146,7 +142,10 @@ const modes = ["off", "on"] as const;
       play();
     };
 
-    toggle.addEventListener("click", () => set(section.dataset.state === "on" ? "off" : "on"));
+    toggle.addEventListener("click", () => {
+      section.querySelector("[data-attract]")?.removeAttribute("data-attract");
+      set(section.dataset.state === "on" ? "off" : "on");
+    });
 
     // Play only while the section is on screen.
     new IntersectionObserver(
@@ -171,20 +170,87 @@ const modes = ["off", "on"] as const;
     margin-bottom: var(--space-xl);
   }
 
+  /* The switch sits on the clip itself, bottom right, where the eye ends up. */
   .ai__switch {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    justify-self: start;
-    padding: 4px 16px 4px 6px;
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    z-index: 2;
+    padding: 6px 18px 6px 8px;
+    border-radius: 16px;
+    box-shadow:
+      0 12px 32px -8px rgb(15 23 42 / 0.35),
+      0 1px 2px rgb(15 23 42 / 0.08);
+  }
+
+  @media (max-width: 40rem) {
+    .ai__switch {
+      right: 8px;
+      bottom: 8px;
+      transform: scale(0.72);
+      transform-origin: bottom right;
+    }
+  }
+
+  /* Until it is first used, it calls for attention: a ring that breathes. */
+  .ai__switch[data-attract] {
+    animation: ai-attract 2.4s var(--ease-out) 1.2s infinite;
+  }
+
+  @keyframes ai-attract {
+    0% {
+      box-shadow:
+        0 12px 32px -8px rgb(15 23 42 / 0.35),
+        0 0 0 0 rgb(124 58 237 / 0.45);
+    }
+    70%,
+    100% {
+      box-shadow:
+        0 12px 32px -8px rgb(15 23 42 / 0.35),
+        0 0 0 14px rgb(124 58 237 / 0);
+    }
+  }
+
+  .ai__switch-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .ai__switch-state,
+  .ai__switch-hint {
+    display: grid;
+  }
+
+  .ai__switch-state {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--color-ink);
+  }
+
+  .ai__switch-hint {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .ai__switch-state > span,
+  .ai__switch-hint > span {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transition:
+      opacity 380ms var(--ease-out),
+      transform 380ms var(--ease-out);
   }
 
   .switch {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-xs);
-    min-height: 48px;
-    padding: 0 6px;
+    gap: 12px;
+    min-height: 56px;
+    padding: 0 4px;
     border: 0;
     background: none;
     font: 800 18px / 1 var(--font-body);
@@ -194,8 +260,8 @@ const modes = ["off", "on"] as const;
 
   .switch__track {
     position: relative;
-    width: 56px;
-    height: 32px;
+    width: 64px;
+    height: 36px;
     border-radius: 999px;
     background: #cbd5e1;
     transition: background-color 380ms var(--ease-out);
@@ -205,8 +271,8 @@ const modes = ["off", "on"] as const;
     position: absolute;
     top: 4px;
     left: 4px;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: #fff;
     box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
@@ -218,7 +284,7 @@ const modes = ["off", "on"] as const;
   }
 
   [data-state="on"] .switch__thumb {
-    transform: translateX(24px);
+    transform: translateX(28px);
   }
 
   .switch:focus-visible {
@@ -227,22 +293,13 @@ const modes = ["off", "on"] as const;
     border-radius: 999px;
   }
 
-  .ai__state,
-  .ai__badge-states,
   .ai__texts {
     display: grid;
   }
 
-  .ai__state {
-    font-size: 16px;
-    font-weight: 700;
-    color: #64748b;
-  }
 
   /* Each state's words share one cell and swap: the outgoing ones slide up
      and out, the incoming ones come up from below. */
-  .ai__state > span,
-  .ai__badge-states > span,
   .ai__text {
     grid-area: 1 / 1;
     transition:
@@ -317,28 +374,8 @@ const modes = ["off", "on"] as const;
     height: 16px;
   }
 
-  .ai__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: auto;
-    padding: 2px 10px;
-    border-radius: 999px;
-    background: #f1f5f9;
-    font-size: 12px;
-  }
 
-  .ai__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #94a3b8;
-    transition: background-color 380ms var(--ease-out);
-  }
 
-  [data-state="on"] .ai__dot {
-    background: #7c3aed;
-  }
 
   .ai__screens {
     position: relative;
@@ -370,20 +407,20 @@ const modes = ["off", "on"] as const;
     opacity: 0;
   }
 
-  .ai :global(.ai__out) {
-    margin-top: var(--space-md);
-  }
 
   @media (prefers-reduced-motion: reduce) {
     .switch__track,
     .switch__thumb,
-    .ai__state > span,
-    .ai__badge-states > span,
+    .ai__switch-state > span,
+    .ai__switch-hint > span,
     .ai__text,
     .ai__clip,
-    .ai__window,
-    .ai__dot {
+    .ai__window {
       transition: none;
+    }
+
+    .ai__switch[data-attract] {
+      animation: none;
     }
   }
 </style>
