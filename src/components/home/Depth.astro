@@ -1,0 +1,215 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+import viewsEn from "@/assets/img/home/f-views-en.webp";
+import viewsFr from "@/assets/img/home/f-views-fr.webp";
+import calcEn from "@/assets/img/home/f-calc-en.webp";
+import calcFr from "@/assets/img/home/f-calc-fr.webp";
+import searchEn from "@/assets/img/home/f-search-en.webp";
+import searchFr from "@/assets/img/home/f-search-fr.webp";
+import dashEn from "@/assets/img/home/f-dash-en.webp";
+import dashFr from "@/assets/img/home/f-dash-fr.webp";
+import nestedEn from "@/assets/img/home/f-nested-en.webp";
+import nestedFr from "@/assets/img/home/f-nested-fr.webp";
+
+const lang = getLang(Astro.currentLocale);
+
+type Feature = { key: string; icon: string; title: string; body: string; img: ImageMetadata; alt: string };
+
+const en = {
+  title: "Who said canvases were just for brainstorming?",
+  lede: "On a Nolënor canvas, you file, you calculate, you find things again. Things a whiteboard doesn’t do.",
+  soon: "Coming soon: automations.",
+  features: [
+    { key: "views", icon: "lucide:table", title: "Databases and views", body: "Records shaped to your needs, seen as a table, a kanban, a calendar, a gallery or a timeline.", img: viewsEn, alt: "A quotes database seen as a kanban: new, sent, negotiating, signed, with each quote’s amount." },
+    { key: "calc", icon: "lucide:sigma", title: "Linked numbers", body: "A value computes from a table, a field or another node. When a source changes, everything follows.", img: calcEn, alt: "A sales table feeding computed values (monthly revenue, average order, goal reached) through dotted ƒ links, next to a breakdown chart." },
+    { key: "search", icon: "lucide:search", title: "One search for everything", body: "Documents, PDFs, images, voice memos: one query, and every match, at its page or its minute.", img: searchEn, alt: "The search finds one phrase in a voice memo at 1:12, on page 3 of a PDF and in a site note." },
+    { key: "dash", icon: "lucide:layout-dashboard", title: "Live dashboards", body: "Mini-apps read your tools and APIs, and keep themselves up to date.", img: dashEn, alt: "Charts and figures on a canvas, fed by Steam, Sentry and Discord: wishlists, crashes per day, members, crash-free sessions, builds." },
+    { key: "nested", icon: "lucide:layers", title: "Canvases inside canvases", body: "One canvas per client, per part of the business, per project: go down into the detail, come back up to see the whole.", img: nestedEn, alt: "A company canvas holding one sub-canvas per area: clients and projects, workshop, purchasing, admin, team, marketing." },
+  ] as Feature[],
+};
+const fr: typeof en = {
+  title: "Qui a dit que les canvas, c’était pour brainstormer ?",
+  lede: "Sur un canvas Nolënor, on range, on calcule, on retrouve. Ce qu’un tableau blanc ne fait pas.",
+  soon: "Bientôt : les automatisations.",
+  features: [
+    { key: "views", icon: "lucide:table", title: "Bases de données et vues", body: "Des fiches sur mesure, vues en table, en kanban, en calendrier, en galerie ou en timeline.", img: viewsFr, alt: "Une base de devis vue en kanban : nouveau, envoyé, négociation, signé, avec le montant de chaque devis." },
+    { key: "calc", icon: "lucide:sigma", title: "Des chiffres reliés", body: "Une valeur se calcule à partir d’un tableau, d’un champ ou d’un autre nœud. Une source change, tout suit.", img: calcFr, alt: "Un tableau des ventes qui alimente des valeurs calculées (CA du mois, panier moyen, objectif atteint) par des liens ƒ en pointillés, à côté d’un graphique de répartition." },
+    { key: "search", icon: "lucide:search", title: "Une recherche pour tout", body: "Documents, PDF, images, mémos vocaux : une requête, et chaque passage trouvé, à sa page ou à sa minute.", img: searchFr, alt: "La recherche trouve une expression dans un mémo vocal à 1:12, à la page 3 d’un PDF et dans une note de chantier." },
+    { key: "dash", icon: "lucide:layout-dashboard", title: "Des tableaux de bord branchés", body: "Des mini-apps lisent vos outils et vos API, et se mettent à jour seules.", img: dashFr, alt: "Des graphiques et des chiffres sur un canvas, alimentés par Steam, Sentry et Discord : wishlists, crashs par jour, membres, sessions sans crash, builds." },
+    { key: "nested", icon: "lucide:layers", title: "Des canvas dans les canvas", body: "Un canvas par client, par pan de l’entreprise, par projet : on descend dans le détail, on remonte voir l’ensemble.", img: nestedFr, alt: "Le canvas d’une entreprise avec un sous-canvas par pan : clients et chantiers, atelier, achats, admin, équipe, marketing." },
+  ] as Feature[],
+};
+const copy = { en, fr }[lang];
+
+/*
+ * The answer to "a canvas is a whiteboard": five things a whiteboard can't
+ * do, each one a node holding a real screen of the app, laid out at
+ * different sizes like nodes dropped on a canvas rather than a feature grid.
+ * Custom nodes are folded into the first ("records shaped to your needs");
+ * automations, not built yet, get a dashed "coming soon" node and no screen.
+ */
+---
+
+<section id="depth" class="depth" aria-labelledby="depth-title">
+  <div class="wrap">
+    <h2 id="depth-title" class="title-node depth__title">{copy.title}</h2>
+    <div class="node doc depth__lede"><p>{copy.lede}</p></div>
+
+    <div class="depth__board">
+      {
+        copy.features.map((f) => (
+          <article class:list={["node feature", `feature--${f.key}`]} data-reveal>
+            <figure class="feature__shot">
+              <Image src={f.img} alt={f.alt} widths={[560, 840, 1120, 1400]} sizes="(min-width: 60rem) 50vw, 100vw" />
+            </figure>
+            <div class="feature__text">
+              <h3>
+                <Icon name={f.icon} />
+                {f.title}
+              </h3>
+              <p>{f.body}</p>
+            </div>
+          </article>
+        ))
+      }
+      <div class="node feature--soon">
+        <Icon name="lucide:workflow" />
+        {copy.soon}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .depth {
+    padding-block: var(--section-gap-s) 0;
+  }
+
+  .depth__title {
+    margin: 0 0 var(--space-md) -8px;
+    max-width: 18ch;
+    font-size: var(--text-section);
+    line-height: 1.08;
+  }
+
+  .depth__lede {
+    max-width: 34rem;
+    margin-bottom: var(--space-2xl);
+    font-size: var(--text-lg);
+  }
+
+  .depth__board {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .feature {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .feature__shot {
+    margin: 0;
+    overflow: hidden;
+    border-bottom: 1px solid oklch(0.929 0.013 255.508);
+    background: #fafafa;
+  }
+
+  .feature__shot :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .feature__text {
+    padding: 14px 18px 16px;
+  }
+
+  .feature h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-ink);
+  }
+
+  .feature h3 svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: #64748b;
+  }
+
+  .feature p {
+    margin-top: 6px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+  }
+
+  .feature--soon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-style: dashed;
+    border-color: oklch(0.869 0.022 252.894);
+    background: transparent;
+    box-shadow: none;
+    font-size: 15px;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .feature--soon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Dropped, not gridded: different sizes, a tall node on the left, the
+     "coming soon" note tucked in a corner. */
+  @media (min-width: 60rem) {
+    .depth__board {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      align-items: start;
+      gap: var(--space-xl) var(--space-lg);
+    }
+
+    .feature--views {
+      grid-column: 1 / 8;
+      grid-row: 1;
+    }
+
+    .feature--calc {
+      grid-column: 8 / 13;
+      grid-row: 1;
+      margin-top: var(--space-3xl);
+    }
+
+    .feature--nested {
+      grid-column: 1 / 5;
+      grid-row: 2 / 4;
+    }
+
+    .feature--search {
+      grid-column: 5 / 13;
+      grid-row: 2;
+    }
+
+    .feature--dash {
+      grid-column: 5 / 10;
+      grid-row: 3;
+    }
+
+    .feature--soon {
+      grid-column: 10 / 13;
+      grid-row: 3;
+      align-self: end;
+    }
+  }
+</style>

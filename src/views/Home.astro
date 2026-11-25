@@ -2,13 +2,15 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/home/Hero.astro";
 import Bet from "@/components/home/Bet.astro";
+import Depth from "@/components/home/Depth.astro";
 import AiModes from "@/components/home/AiModes.astro";
 import UseCases from "@/components/home/UseCases.astro";
 import Pricing from "@/components/home/Pricing.astro";
 
 // The landing page (V1), in the order of the brief ("Site vitrine V1 :
-// premier jet" on the Go To Market canvas): the promise, its AI switch and
-// the pages-to-canvas slider; AI off, then AI on; the pain, the bet and its
+// premier jet" on the Go To Market canvas): the promise and the
+// pages-to-canvas slider; what a canvas can do besides brainstorming; the
+// AI switch, off then on; the pain, the bet and its
 // two proofs; five use cases, one tab each in a window; the
 // price and its commitments.
 //
@@ -25,6 +27,7 @@ import Pricing from "@/components/home/Pricing.astro";
 
 <Layout canvas>
   <Hero />
+  <Depth />
   <AiModes />
   <Bet />
   <UseCases />
