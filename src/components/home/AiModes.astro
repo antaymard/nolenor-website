@@ -88,7 +88,7 @@ const modes = ["off", "on"] as const;
               poster={`/clips/ai-${m}-${lang}.webp`}
               muted
               playsinline
-              loop
+              loop={m === "on"}
               preload={m === "off" ? "auto" : "metadata"}
               width="1280"
               height="720"
@@ -142,7 +142,24 @@ const modes = ["off", "on"] as const;
       play();
     };
 
+    // Once the "off" clip has run to its end, the section turns the AI on by
+    // itself, so the switch shows what it does. Not after the reader has
+    // used it: from then on, it is theirs.
+    let touched = false;
+    clips
+      .find((clip) => clip.dataset.for === "off")
+      ?.addEventListener("ended", () => {
+        if (touched) {
+          const off = clips.find((clip) => clip.dataset.for === "off")!;
+          off.currentTime = 0;
+          void off.play().catch(() => {});
+          return;
+        }
+        set("on");
+      });
+
     toggle.addEventListener("click", () => {
+      touched = true;
       section.querySelector("[data-attract]")?.removeAttribute("data-attract");
       set(section.dataset.state === "on" ? "off" : "on");
     });
