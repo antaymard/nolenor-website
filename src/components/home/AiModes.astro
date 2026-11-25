@@ -45,8 +45,7 @@ const copy = { en, fr }[lang];
 const modes = ["off", "on"] as const;
 
 /*
- * One section, two states, and the switch between them (the hero's switch
- * drives it too). Each state is a short clip of the app itself, rendered
+ * One section, two states, and the switch between them. Each state is a short clip of the app itself, rendered
  * from the product's tutorial kit: off, a PDF opened, a table dropped, a
  * computed value pulled from it; on, a dictated request, Nolë reading the
  * table and drawing the chart, its work shown in violet. Flipping the switch
@@ -139,21 +138,15 @@ const modes = ["off", "on"] as const;
       });
     };
 
-    const set = (state: "off" | "on", fromHero = false) => {
+    const set = (state: "off" | "on") => {
       if (section.dataset.state === state) return;
       section.dataset.state = state;
       toggle.setAttribute("aria-checked", String(state === "on"));
       texts.forEach((text) => text.setAttribute("aria-hidden", String(text.dataset.for !== state)));
       play();
-      if (!fromHero) document.dispatchEvent(new CustomEvent("nolenor:ai", { detail: { state, source: "section" } }));
     };
 
     toggle.addEventListener("click", () => set(section.dataset.state === "on" ? "off" : "on"));
-    // The hero's switch says the same thing: keep the two in step.
-    document.addEventListener("nolenor:ai", (event) => {
-      const { state, source } = (event as CustomEvent<{ state: "off" | "on"; source: string }>).detail;
-      if (source !== "section") set(state, true);
-    });
 
     // Play only while the section is on screen.
     new IntersectionObserver(

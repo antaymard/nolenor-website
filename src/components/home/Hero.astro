@@ -10,41 +10,31 @@ const lang = getLang(Astro.currentLocale);
 const en = {
   pace: "Think at your own pace.",
   ai: "AI when you want it.",
-  you: "You",
   lede: "Nolënor is an infinite canvas for deep work. Structure your ideas, explore options with AI, keep your dashboards in one place, plan what comes next.",
   terms: "Open beta. No card, export any time.",
   cta: "Open a canvas",
   second: "See a real canvas",
-  nole: "Nolë",
-  aiLabel: "AI",
-  off: "Off, it is already a full tool: documents, tables, views and files, all on the canvas.",
-  on: "On, Nolë works with you, in small steps you can follow and redirect.",
   note: "From nested documents to a visual, structured space: the same project, with all its depth. Drag to go from one to the other.",
-  window: "WMS rollout · one project, two ways to see it",
+  window: "Take your projects out of the page tree.",
 };
 const fr: typeof en = {
   pace: "Pensez à votre rythme.",
   ai: "L’IA, quand vous voulez.",
-  you: "Vous",
   lede: "Nolënor est un canvas infini pour travailler en profondeur. Structurez vos idées, explorez des pistes avec l’IA, centralisez vos tableaux de bord, planifiez la suite.",
   terms: "Bêta ouverte. Sans carte, export à tout moment.",
   cta: "Ouvrir un canvas",
   second: "Voir un vrai canvas",
-  nole: "Nolë",
-  aiLabel: "IA",
-  off: "Éteinte, c’est déjà un outil complet : documents, tables, vues et fichiers, tout sur le canvas.",
-  on: "Allumée, Nolë travaille avec vous, par petites étapes que vous suivez et redirigez.",
   note: "De documents imbriqués à un espace visuel et structuré : le même projet, avec toute sa profondeur. Faites glisser pour passer de l’un à l’autre.",
-  window: "WMS rollout · un projet, deux façons de le voir",
+  window: "Sortez vos projets de l’arborescence.",
 };
 const copy = { en, fr }[lang];
 
 /*
- * The hero is a corner of a canvas. The headline is a Title node, selected,
- * with your cursor on it; the pitch is a document node; "See a real canvas"
- * is a Link node; the AI switch sits in a node of its own; a yellow node
- * points, with a real edge, at the window below, which holds the
- * pages-to-canvas slider.
+ * The hero is a corner of a canvas. The headline is a Title node, selected;
+ * a yellow node beside it points, with a real edge, at the window below,
+ * which holds the pages-to-canvas slider. Under it, the pitch is a document
+ * node and "See a real canvas" a Link node. The AI switch lives in its own
+ * section, further down.
  */
 ---
 
@@ -54,10 +44,6 @@ const copy = { en, fr }[lang];
       <span>{copy.pace}</span>
       <span class="hero__ai">{copy.ai}</span>
       <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <span class="cursor hero__cursor" aria-hidden="true">
-        <svg width="18" height="20" viewBox="0 0 18 20"><path d="M1 1 L1 16 L5 12 L8 19 L11 18 L8 11 L14 11 Z" fill="#8b5cf6" stroke="white" stroke-width="1.5"></path></svg>
-        <span style="background:#8b5cf6">{copy.you}</span>
-      </span>
     </h1>
     <div class="node node--yellow doc hero__note">{copy.note}</div>
   </div>
@@ -85,42 +71,9 @@ const copy = { en, fr }[lang];
           </a>
         </div>
       </div>
-
-      <div class="node hero__switch" data-ai-switch>
-        <div class="hero__switch-head"><span class="hero__tile">N</span>{copy.nole}</div>
-        <div class="hero__switch-body">
-          <button type="button" role="switch" aria-checked="false" class="switch" aria-describedby="hero-ai-state">
-            <span class="switch__track"><span class="switch__thumb"></span></span>
-            <span class="switch__label">{copy.aiLabel}</span>
-          </button>
-          <p id="hero-ai-state" aria-live="polite" data-off={copy.off} data-on={copy.on}>{copy.off}</p>
-        </div>
-      </div>
     </div>
   </div>
 </section>
-
-<script>
-  // The hero's switch and the AI section's switch are the same setting:
-  // each one announces its state ("nolenor:ai") and follows the other's.
-  document.querySelectorAll<HTMLElement>("[data-ai-switch]").forEach((root) => {
-    const button = root.querySelector<HTMLButtonElement>('[role="switch"]')!;
-    const state = root.querySelector<HTMLElement>("#hero-ai-state")!;
-    const show = (on: boolean) => {
-      button.setAttribute("aria-checked", String(on));
-      state.textContent = (on ? state.dataset.on : state.dataset.off) ?? "";
-    };
-    button.addEventListener("click", () => {
-      const on = button.getAttribute("aria-checked") !== "true";
-      show(on);
-      document.dispatchEvent(new CustomEvent("nolenor:ai", { detail: { state: on ? "on" : "off", source: "hero" } }));
-    });
-    document.addEventListener("nolenor:ai", (event) => {
-      const { state: next, source } = (event as CustomEvent<{ state: "off" | "on"; source: string }>).detail;
-      if (source !== "hero") show(next === "on");
-    });
-  });
-</script>
 
 <style>
   /* The app's dark canvas preset (#0f172a, dots): it sets the light grey
@@ -176,10 +129,6 @@ const copy = { en, fr }[lang];
     }
   }
 
-  .hero__cursor {
-    right: 12%;
-    bottom: -26px;
-  }
 
   .hero__lede {
     max-width: 38rem;
@@ -205,95 +154,15 @@ const copy = { en, fr }[lang];
   }
 
 
-  .hero__switch-head {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 40px;
-    padding: 0 14px;
-    border-bottom: 1px solid #eef2f6;
-    font-size: 14px;
-    font-weight: 700;
-    color: #475569;
-  }
 
-  .hero__tile {
-    display: inline-flex;
-    width: 20px;
-    height: 20px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    background: #7c3aed;
-    font-size: 11px;
-    font-weight: 800;
-    color: #fff;
-  }
 
-  .hero__switch-body {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: 12px 14px 14px 8px;
-    font-size: var(--text-sm);
-    line-height: 1.45;
-    color: var(--color-ink-2);
-  }
 
-  .hero__switch-body p {
-    min-height: 2.9em;
-    display: flex;
-    align-items: center;
-  }
 
-  .switch {
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-    gap: var(--space-xs);
-    min-height: 44px;
-    padding: 0 6px;
-    border: 0;
-    background: none;
-    font: 800 var(--text-sm) / 1 var(--font-body);
-    color: var(--color-ink);
-    cursor: pointer;
-  }
 
-  .switch__track {
-    position: relative;
-    width: 40px;
-    height: 24px;
-    border-radius: 999px;
-    background: #cbd5e1;
-    transition: background-color var(--dur-short) var(--ease-out);
-  }
 
-  .switch__thumb {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 1px 2px rgb(15 23 42 / 0.2);
-    transition: transform var(--dur-short) var(--ease-out);
-  }
 
-  .switch[aria-checked="true"] .switch__track {
-    background: var(--color-accent);
-  }
 
-  .switch[aria-checked="true"] .switch__thumb {
-    transform: translateX(16px);
-  }
 
-  .switch:focus-visible {
-    outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
-    border-radius: 999px;
-  }
 
   .hero__note {
     max-width: 20rem;
@@ -345,21 +214,7 @@ const copy = { en, fr }[lang];
       margin-top: 0;
     }
 
-    .hero__below {
-      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    }
 
-    .hero__switch {
-      justify-self: end;
-      width: 100%;
-      max-width: 24rem;
-    }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .switch__track,
-    .switch__thumb {
-      transition: none;
-    }
-  }
 </style>
