@@ -1,0 +1,196 @@
+---
+import { Image } from "astro:assets";
+import { getLang } from "@/i18n";
+import Edge from "@/components/home/Edge.astro";
+import offEn from "@/assets/img/home/s06-organiser-en.webp";
+import offFr from "@/assets/img/home/s06-organiser-fr.webp";
+import onEn from "@/assets/img/home/s08-brainstormer-en.webp";
+import onFr from "@/assets/img/home/s08-brainstormer-fr.webp";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  ai: "AI",
+  modes: [
+    {
+      on: false,
+      state: "Off",
+      title: "AI off, it is already a tool.",
+      body: "Documents, tables, databases and their views, PDFs, images, recordings, links, sub-canvases: everything goes on the canvas, gets linked, and turns up again with one search. You file, you link, you decide.",
+      img: offEn,
+      alt: "A kitchen-fitting project canvas with the search open: one query finds a voice memo at 1:12, a page of the plans PDF and a site note, each with the passage highlighted.",
+    },
+    {
+      on: true,
+      state: "On",
+      title: "AI on, it works with you.",
+      body: "Nolë reads what you show it on the canvas, moves in small steps you can watch go by, and lays its results down as nodes you keep, correct or throw away.",
+      img: onEn,
+      alt: "Nolë turns a 47-minute meeting recording into an actions table (who, what, by when) next to the recording’s summary: decisions, open questions and key moments with their timestamps.",
+    },
+  ],
+};
+const fr: typeof en = {
+  ai: "IA",
+  modes: [
+    {
+      on: false,
+      state: "Éteinte",
+      title: "IA éteinte, c’est déjà un outil.",
+      body: "Documents, tables, bases et leurs vues, PDF, images, enregistrements, liens, sous-canvas : tout se pose sur le canvas, se relie, et se retrouve d’une recherche. Vous rangez, vous reliez, vous décidez.",
+      img: offFr,
+      alt: "Le canvas d’un chantier de cuisine, recherche ouverte : une requête trouve un mémo vocal à 1:12, une page du PDF des plans et une note de chantier, le passage surligné à chaque fois.",
+    },
+    {
+      on: true,
+      state: "Allumée",
+      title: "IA allumée, elle travaille avec vous.",
+      body: "Nolë lit ce que vous lui montrez sur le canvas, avance par petites étapes que vous voyez passer, et pose ses résultats en nœuds que vous gardez, corrigez ou jetez.",
+      img: onFr,
+      alt: "Nolë transforme l’enregistrement d’une réunion de 47 minutes en table d’actions (qui, quoi, pour quand), à côté du résumé de l’enregistrement : décisions, questions ouvertes et moments clés horodatés.",
+    },
+  ],
+};
+const copy = { en, fr }[lang];
+
+/*
+ * The two states of the hero's switch, one after the other: the same
+ * canvas without Nolë, then with it. Each starts with the switch itself,
+ * drawn in its state, as a small node.
+ */
+---
+
+<section id="ai" class="modes" aria-label={copy.ai}>
+  <div class="wrap">
+    {
+      copy.modes.map((mode, i) => (
+        <div class:list={["mode", i % 2 === 1 && "mode--flip"]} data-reveal>
+          <div class="mode__text">
+            <div class="node mode__switch" aria-hidden="true">
+              <span class:list={["mode__track", mode.on && "mode__track--on"]}><i></i></span>
+              <span class="mode__ai">{copy.ai}</span>
+              <span class="mode__state">{mode.state}</span>
+            </div>
+            <h2 class="title-node mode__title">{mode.title}</h2>
+            <div class="node doc mode__body"><p>{mode.body}</p></div>
+          </div>
+          <figure class="node mode__shot">
+            <Image src={mode.img} alt={mode.alt} widths={[720, 1080, 1440]} sizes="(min-width: 60rem) 58vw, 100vw" />
+          </figure>
+        </div>
+      ))
+    }
+    <Edge from={30} to={14} height={72} class="modes__out" />
+  </div>
+</section>
+
+<style>
+  .modes {
+    padding-block: var(--section-gap-s) 0;
+  }
+
+  .mode {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .mode + .mode {
+    margin-top: var(--section-gap-s);
+  }
+
+  .mode__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .mode__switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px 8px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .mode__track {
+    position: relative;
+    width: 40px;
+    height: 24px;
+    border-radius: 999px;
+    background: #cbd5e1;
+  }
+
+  .mode__track i {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.2);
+  }
+
+  .mode__track--on {
+    background: var(--color-accent);
+  }
+
+  .mode__track--on i {
+    transform: translateX(16px);
+  }
+
+  .mode__ai {
+    color: var(--color-ink);
+    font-weight: 800;
+  }
+
+  .mode__state {
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .mode__title {
+    margin: 0 0 0 -8px;
+    font-size: var(--text-section);
+    line-height: 1.08;
+  }
+
+  .mode__body {
+    max-width: 30rem;
+    font-size: var(--text-lg);
+  }
+
+  .mode__shot {
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .mode__shot :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .modes :global(.modes__out) {
+    margin-top: var(--space-md);
+  }
+
+  @media (min-width: 60rem) {
+    .mode {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-2xl);
+    }
+
+    .mode--flip .mode__text {
+      order: 2;
+    }
+
+    .mode--flip {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+  }
+</style>

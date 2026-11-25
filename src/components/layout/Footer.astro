@@ -2,7 +2,7 @@
 import { Icon } from "astro-icon/components";
 import Logo from "@/components/ui/Logo.astro";
 import { getNav } from "@/data/nav";
-import { GITHUB_REPO_URL, SITE_NAME, TAGLINE } from "@/lib/constants";
+import { GITHUB_REPO_URL, SITE_NAME } from "@/lib/constants";
 import { getLang, languages, langs, translatePath, useTranslations } from "@/i18n";
 
 const lang = getLang(Astro.currentLocale);
@@ -32,7 +32,6 @@ const groups = [
   <div class="wrap">
     <div class="foot__top">
       <Logo iconClass="h-7 w-7 text-foreground" textClass="text-lg" />
-      <p class="foot__line">{TAGLINE[lang]}</p>
     </div>
 
     <div class="foot__grid">

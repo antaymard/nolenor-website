@@ -1,0 +1,444 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+import { SHOWCASE_CANVAS_URLS } from "@/lib/constants";
+import Edge from "@/components/home/Edge.astro";
+import monitorEn from "@/assets/img/home/s04-monitorer-en.webp";
+import monitorFr from "@/assets/img/home/s04-monitorer-fr.webp";
+import refsEn from "@/assets/img/home/s03a-creer-inspiration-en.webp";
+import refsFr from "@/assets/img/home/s03a-creer-inspiration-fr.webp";
+import itersEn from "@/assets/img/home/s03b-creer-iterations-en.webp";
+import itersFr from "@/assets/img/home/s03b-creer-iterations-fr.webp";
+import companyEn from "@/assets/img/home/s01-structurer-en.webp";
+import companyFr from "@/assets/img/home/s01-structurer-fr.webp";
+import pdfEn from "@/assets/img/home/s02a-comprendre-depot-en.webp";
+import pdfFr from "@/assets/img/home/s02a-comprendre-depot-fr.webp";
+import sheetsEn from "@/assets/img/home/s02b-comprendre-fiches-en.webp";
+import sheetsFr from "@/assets/img/home/s02b-comprendre-fiches-fr.webp";
+import teamEn from "@/assets/img/home/s09-collaborer-en.webp";
+import teamFr from "@/assets/img/home/s09-collaborer-fr.webp";
+
+const lang = getLang(Astro.currentLocale);
+
+type Profile = "builders" | "small" | "consultants" | "midsize";
+
+const profiles: Record<Profile, { en: string; fr: string }> = {
+  builders: { en: "Builders", fr: "Builders" },
+  small: { en: "Small businesses", fr: "Petites entreprises" },
+  consultants: { en: "Consultants", fr: "Consultants" },
+  midsize: { en: "Mid-size companies", fr: "ETI" },
+};
+
+const en = {
+  title: "What you can do with it.",
+  lede: "Five real projects, shown as they are on the canvas.",
+  filter: "Filter by profile",
+  all: "All",
+  cases: [
+    {
+      profiles: ["builders", "midsize"],
+      canvas: "Brume · tracking",
+      tile: "#0d9488",
+      title: "Your numbers, wired to your own APIs.",
+      body: "Wishlists, crashes, builds: mini-apps read your APIs and update themselves. Ask a question, and Nolë cross-checks the sources.",
+      shots: [{ img: monitorEn, tab: "", alt: "A small game studio’s tracking canvas: Steam wishlists over seven weeks, crashes per day with a red spike, Discord members, crash-free sessions and the list of builds. Nolë explains the spike from the build list." }],
+      href: SHOWCASE_CANVAS_URLS.builders,
+    },
+    {
+      profiles: ["builders"],
+      canvas: "Brume · art direction",
+      tile: "#7c3aed",
+      title: "From references to the approved version.",
+      body: "Lay down your references and your brief, generate first directions, and keep every version on the canvas with the note that moved it on.",
+      shots: [
+        { img: refsEn, tab: "References", alt: "Character references, links and an art-direction brief attached to Nolë, which generates three key-art directions from them." },
+        { img: itersEn, tab: "Iterations", alt: "Four versions of a key art in a row, each with the note that led to the next one, the last marked approved." },
+      ],
+      href: SHOWCASE_CANVAS_URLS.builders,
+    },
+    {
+      profiles: ["small"],
+      canvas: "Atelier Kervern",
+      tile: "#0284c7",
+      title: "The whole business on one surface.",
+      body: "One sub-canvas per part of the business, the processes, the clients and the reference files, kept where you can see them. On your own, or with an integrator who sets it up for you.",
+      shots: [{ img: companyEn, tab: "", alt: "A joinery workshop’s canvas: one sub-canvas per area of the business, the quoting process, the active clients table and the reference files." }],
+      href: SHOWCASE_CANVAS_URLS.business,
+    },
+    {
+      profiles: ["consultants"],
+      canvas: "Renazine · clinical file",
+      tile: "#ea580c",
+      title: "Five hundred pages, nine summaries.",
+      body: "Drop in the PDF. Nolë draws one card per study from it, with the page each time, which you correct and complete.",
+      shots: [
+        { img: pdfEn, tab: "The PDF", alt: "A 512-page clinical file dropped on the canvas; Nolë reads it and starts one card per study." },
+        { img: sheetsEn, tab: "The cards", alt: "Nine study cards (patients, effect, page number), a summary table and an effect chart, all linked to the source PDF." },
+      ],
+      href: SHOWCASE_CANVAS_URLS.documents,
+    },
+    {
+      profiles: ["small", "midsize"],
+      canvas: "Leroux kitchen · site",
+      tile: "#db2777",
+      title: "The whole team on the same canvas.",
+      body: "Photos, plans, site notes and the build tracker: everyone sees who is working where, and opens the document they need.",
+      shots: [{ img: teamEn, tab: "", alt: "A kitchen-fitting canvas with three people on it: the site photo, the plans, the site notes and the build tracker, with the quote terms open in a window." }],
+      href: SHOWCASE_CANVAS_URLS.business,
+    },
+  ],
+  aside: "Buying a home, negotiating a salary, planning a long trip: it works for those too.",
+};
+const fr: typeof en = {
+  title: "Ce que vous pouvez en faire.",
+  lede: "Cinq vrais projets, montrés tels qu’ils sont sur le canvas.",
+  filter: "Filtrer par profil",
+  all: "Tous",
+  cases: [
+    {
+      profiles: ["builders", "midsize"],
+      canvas: "Brume · suivi",
+      tile: "#0d9488",
+      title: "Vos chiffres, branchés sur vos API.",
+      body: "Wishlists, crashs, builds : des mini-apps lisent vos API et se mettent à jour seules. Une question, et Nolë croise les sources.",
+      shots: [{ img: monitorFr, tab: "", alt: "Le canvas de suivi d’un petit studio de jeu : wishlists Steam sur sept semaines, crashs par jour avec un pic en rouge, membres Discord, sessions sans crash et liste des builds. Nolë explique le pic à partir des builds." }],
+      href: SHOWCASE_CANVAS_URLS.builders,
+    },
+    {
+      profiles: ["builders"],
+      canvas: "Brume · direction artistique",
+      tile: "#7c3aed",
+      title: "Des références à la version validée.",
+      body: "Posez vos références et votre brief, générez des pistes, et gardez chaque version sur le canvas avec la remarque qui l’a fait évoluer.",
+      shots: [
+        { img: refsFr, tab: "Références", alt: "Des références de personnages, des liens et un brief de direction artistique joints à Nolë, qui en tire trois pistes de key art." },
+        { img: itersFr, tab: "Itérations", alt: "Quatre versions d’un key art à la suite, chacune avec la remarque qui a mené à la suivante, la dernière validée." },
+      ],
+      href: SHOWCASE_CANVAS_URLS.builders,
+    },
+    {
+      profiles: ["small"],
+      canvas: "Atelier Kervern",
+      tile: "#0284c7",
+      title: "Toute l’entreprise sur une seule surface.",
+      body: "Un sous-canvas par pan de l’entreprise, les process, les clients et les documents de référence, rangés là où on les voit. Seul, ou avec un intégrateur qui le paramètre pour vous.",
+      shots: [{ img: companyFr, tab: "", alt: "Le canvas d’un atelier de menuiserie : un sous-canvas par pan de l’entreprise, le process de devis, la table des clients actifs et les documents de référence." }],
+      href: SHOWCASE_CANVAS_URLS.business,
+    },
+    {
+      profiles: ["consultants"],
+      canvas: "Rénazine · dossier clinique",
+      tile: "#ea580c",
+      title: "Cinq cents pages, neuf fiches.",
+      body: "Déposez le PDF. Nolë en tire une fiche par étude, avec la page à chaque fois, que vous corrigez et complétez.",
+      shots: [
+        { img: pdfFr, tab: "Le PDF", alt: "Un dossier clinique de 512 pages déposé sur le canvas ; Nolë le lit et commence une fiche par étude." },
+        { img: sheetsFr, tab: "Les fiches", alt: "Neuf fiches d’études (patients, effet, numéro de page), une table de synthèse et un graphique des effets, tous reliés au PDF source." },
+      ],
+      href: SHOWCASE_CANVAS_URLS.documents,
+    },
+    {
+      profiles: ["small", "midsize"],
+      canvas: "Chantier Leroux · cuisine",
+      tile: "#db2777",
+      title: "Toute l’équipe sur le même canvas.",
+      body: "Photos, plans, notes de chantier et suivi de fabrication : chacun voit qui travaille où, et ouvre le document dont il a besoin.",
+      shots: [{ img: teamFr, tab: "", alt: "Le canvas d’un chantier de cuisine avec trois personnes dessus : la photo du chantier, les plans, les notes de chantier et le suivi de fabrication, les conditions du devis ouvertes dans une fenêtre." }],
+      href: SHOWCASE_CANVAS_URLS.business,
+    },
+  ],
+  aside: "Et pour un achat immobilier, une négociation de salaire ou un grand voyage, ça marche aussi.",
+};
+const copy = { en, fr }[lang];
+
+/*
+ * Five real projects, builders first (the page's first reader), filterable
+ * by profile with the canvas's own pill of toggles. Each one is a sub-canvas
+ * card (its cover is the canvas itself; the card links to the public canvas,
+ * still to be prepared), an edge, and its document node. A project told in
+ * two steps carries two tabs on its card.
+ */
+---
+
+<section id="use-cases" class="cases" aria-labelledby="cases-title">
+  <div class="wrap">
+    <h2 id="cases-title" class="title-node cases__title">{copy.title}</h2>
+    <div class="cases__head">
+      <div class="node doc cases__lede"><p>{copy.lede}</p></div>
+      <div class="ui-pill cases__filter" role="group" aria-label={copy.filter} data-case-filter>
+        <button type="button" aria-pressed="true" data-profile="all">{copy.all}</button>
+        {(Object.keys(profiles) as Profile[]).map((key) => (
+          <button type="button" aria-pressed="false" data-profile={key}>{profiles[key][lang]}</button>
+        ))}
+      </div>
+    </div>
+
+    <div class="cases__grid">
+      {
+        copy.cases.map((c, i) => (
+          <article class="case" data-profiles={c.profiles.join(" ")} data-case>
+            <div class="node canvas-card">
+              <div class="canvas-card__cover">
+                {c.shots.length > 1 && (
+                  <div class="ui-pill case__tabs" role="tablist">
+                    {c.shots.map((shot, j) => (
+                      <button type="button" role="tab" aria-selected={j === 0 ? "true" : "false"} data-tab={j}>
+                        <span>{j + 1}</span>
+                        {shot.tab}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {c.shots.map((shot, j) => (
+                  <Image
+                    src={shot.img}
+                    alt={shot.alt}
+                    widths={[640, 960, 1280]}
+                    sizes="(min-width: 60rem) 45vw, 100vw"
+                    data-shot={j}
+                    hidden={j > 0}
+                  />
+                ))}
+              </div>
+              <a href={c.href} class="canvas-card__bar" rel="noopener noreferrer">
+                <span class="canvas-card__tile" style={`background:${c.tile}`}>{c.canvas[0]}</span>
+                <span class="canvas-card__name">{c.canvas}</span>
+                <Icon name="lucide:arrow-up-right" class="canvas-card__go" />
+              </a>
+            </div>
+            <Edge from={50} to={50} height={32} />
+            <div class="node doc">
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+              <p class="case__profiles">
+                {c.profiles.map((p) => (
+                  <span>{profiles[p as Profile][lang]}</span>
+                ))}
+              </p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="node doc cases__aside"><p>{copy.aside}</p></div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-case-filter]").forEach((group) => {
+    const section = group.closest("section")!;
+    const cases = [...section.querySelectorAll<HTMLElement>("[data-case]")];
+    group.addEventListener("click", (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-profile]");
+      if (!button) return;
+      const profile = button.dataset.profile!;
+      group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+      cases.forEach((c) => {
+        c.hidden = profile !== "all" && !c.dataset.profiles!.split(" ").includes(profile);
+      });
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>("[data-case]").forEach((card) => {
+    const tabs = [...card.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+    const shots = [...card.querySelectorAll<HTMLImageElement>("[data-shot]")];
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+        shots.forEach((s) => (s.hidden = s.dataset.shot !== tab.dataset.tab));
+      }),
+    );
+  });
+</script>
+
+<style>
+  .cases {
+    padding-block: var(--section-gap-s);
+  }
+
+  .cases__title {
+    margin: 0 0 var(--space-md) -8px;
+    font-size: var(--text-section);
+    line-height: 1.08;
+  }
+
+  .cases__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .cases__lede {
+    max-width: 30rem;
+    font-size: var(--text-lg);
+  }
+
+  .cases__filter {
+    flex-wrap: wrap;
+  }
+
+  .cases__filter button,
+  .case__tabs button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    font: 600 14px / 1 var(--font-body);
+    color: #475569;
+    cursor: pointer;
+  }
+
+  .cases__filter button:hover,
+  .case__tabs button:hover {
+    background: #f1f5f9;
+  }
+
+  .cases__filter button[aria-pressed="true"],
+  .case__tabs button[aria-selected="true"] {
+    background: #f1f5f9;
+    color: var(--color-ink);
+  }
+
+  .cases__grid {
+    display: grid;
+    gap: var(--space-2xl) var(--gap-columns);
+  }
+
+  .case {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .case[hidden] {
+    display: none;
+  }
+
+  .case h3 {
+    font-size: 1.25em;
+    font-weight: 700;
+  }
+
+  .case__profiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .case__profiles span {
+    padding: 1px 8px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .canvas-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .case__tabs {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 1;
+  }
+
+  .case__tabs button span {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e2e8f0;
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  .canvas-card__cover {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: oklch(0.968 0.007 247.896);
+  }
+
+  .canvas-card__cover :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+  }
+
+  .canvas-card__cover :global(img[hidden]) {
+    display: none;
+  }
+
+  .canvas-card__bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid oklch(0.929 0.013 255.508);
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .canvas-card__bar:hover .canvas-card__name {
+    text-decoration: underline;
+  }
+
+  .canvas-card__tile {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .canvas-card__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .canvas-card__go {
+    width: 16px;
+    height: 16px;
+    color: #64748b;
+  }
+
+  .cases__aside {
+    max-width: 34rem;
+    margin-top: var(--space-2xl);
+    color: var(--color-ink-2);
+  }
+
+  @media (min-width: 60rem) {
+    .cases__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

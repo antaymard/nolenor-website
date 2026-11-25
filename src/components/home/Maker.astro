@@ -8,8 +8,6 @@ const lang = getLang(Astro.currentLocale);
 const en = {
   title: "A craftsman, not a factory.",
   body: "Nolënor is built by Antoine, on his own, in Brittany. Trained as a pharmacist, a developer for ten years, formerly a product manager.",
-  // DRAFT: Antoine's own sentence on why he builds Nolënor goes here.
-  quote: "I wanted somewhere to think without a tool doing the thinking for me. I couldn’t find it, so I’m building it.",
   missingTitle: "Not there yet",
   missing: ["Importing from Notion and Airtable.", "Automations.", "A real mobile version."],
   manifesto: "Read the manifesto",
@@ -18,8 +16,6 @@ const en = {
 const fr: typeof en = {
   title: "Un artisan, pas une usine.",
   body: "Nolënor est construit par Antoine, seul, en Bretagne. Pharmacien de formation, développeur depuis dix ans, ancien responsable produit.",
-  // BROUILLON : la phrase d’Antoine sur le pourquoi du projet.
-  quote: "Je voulais un endroit où réfléchir sans qu’un outil le fasse à ma place. Je ne l’ai pas trouvé, alors je le construis.",
   missingTitle: "Ce qui n’existe pas encore",
   missing: ["L’import depuis Notion et Airtable.", "Les automatisations.", "Une vraie version mobile."],
   manifesto: "Lire le manifeste",
@@ -39,7 +35,7 @@ const copy = { en, fr }[lang];
       <h2 id="maker-title" class="title-node maker__title">{copy.title}</h2>
       <div class="node doc maker__doc">
         <p>{copy.body}</p>
-        <blockquote>{copy.quote}</blockquote>
+        {/* Antoine’s own sentence on why he builds Nolënor goes here (a <blockquote>), written by him. */}
       </div>
       <div class="maker__links">
         <a href={localizePath("/manifesto", lang)} class="node link-node"><Icon name="lucide:file-text" />{copy.manifesto}</a>

@@ -2,15 +2,17 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/home/Hero.astro";
 import Bet from "@/components/home/Bet.astro";
-import Projects from "@/components/home/Projects.astro";
+import AiModes from "@/components/home/AiModes.astro";
+import UseCases from "@/components/home/UseCases.astro";
 import Agent from "@/components/home/Agent.astro";
 import Pricing from "@/components/home/Pricing.astro";
 import Maker from "@/components/home/Maker.astro";
 
-// The landing page (V1), in the order it argues: the promise and the
-// pages-to-canvas slider under it; the pain, the bet and its two proofs;
-// one canvas per project; what Nolë can do; the price and its commitments;
-// who is behind it and what is not there yet.
+// The landing page (V1), in the order of the brief ("Site vitrine V1 :
+// premier jet" on the Go To Market canvas): the promise, its AI switch and
+// the pages-to-canvas slider; AI off, then AI on; the pain, the bet and its
+// two proofs; five use cases, filterable by profile; what Nolë can do; the
+// price and its commitments; who is behind it and what is not there yet.
 //
 // One button for the whole page, "Open a canvas" (hero and pricing band).
 // Everything else is a link.
@@ -25,8 +27,9 @@ import Maker from "@/components/home/Maker.astro";
 
 <Layout canvas>
   <Hero />
+  <AiModes />
   <Bet />
-  <Projects />
+  <UseCases />
   <Agent />
   <Pricing />
   <Maker />

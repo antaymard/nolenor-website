@@ -42,8 +42,8 @@ export const WISHLIST_ENDPOINT = `${API_ORIGIN}/wishlist/subscribe`;
 export const GITHUB_REPO_URL = "https://github.com/antaymard/nolenor";
 
 export const TAGLINE = {
-  en: "A workshop, not a factory.",
-  fr: "Un atelier, pas une usine.",
+  en: "Think at your own pace. AI when you want it.",
+  fr: "Pensez à votre rythme. L’IA, quand vous voulez.",
 } as const;
 
 // PLACEHOLDER: the public, duplicable canvases the home page links to
