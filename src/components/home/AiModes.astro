@@ -12,13 +12,15 @@ const en = {
     off: {
       label: "Off",
       title: "AI off, it is already a tool.",
-      body: "Open a PDF next to your canvas, drop a table in, pull a computed value from it. No AI involved: the canvas does the work, and the numbers follow.",
+      steps: [["Open", " a PDF next to your canvas."], ["Drop", " a table in."], ["Pull", " a computed value from it."]],
+      note: "No AI involved: the canvas does the work, and the numbers follow.",
       alt: "A quote PDF opens in a window docked on the right; a CSV file is dropped onto the canvas and becomes a table; a link dragged from the table creates a computed value, the scanner budget, which follows the table.",
     },
     on: {
       label: "On",
       title: "AI on, it works with you.",
-      body: "Alt + click the table and the quote to hand them to Nolë, then ask out loud: “build me a dashboard of the scanner budget with these two nodes”. Nolë reads them, builds three linked charts, and you watch each step happen in violet on the canvas.",
+      steps: [["Alt + click", " the table and the quote: Nolë gets them."], ["Ask out loud", " for a dashboard of the scanner budget."], ["Watch", " Nolë read them and build three linked charts."]],
+      note: "Each step happens on the canvas, in violet: you see what it reads, what it makes.",
       alt: "Alt + click on the table, then on the quote: both get a dashed violet outline and a chip in Nolë’s composer. The request is dictated; Nolë reads the two nodes, then creates three linked chart nodes one after the other, each under a pulsing violet halo: scanners by site, budget by item, roll-out over ten weeks.",
     },
   },
@@ -31,13 +33,15 @@ const fr: typeof en = {
     off: {
       label: "Éteinte",
       title: "IA éteinte, c’est déjà un outil.",
-      body: "Ouvrez un PDF à côté de votre canvas, déposez un tableau, tirez-en une valeur calculée. Sans IA : le canvas fait le travail, et les chiffres suivent.",
+      steps: [["Ouvrez", " un PDF à côté de votre canvas."], ["Déposez", " un tableau."], ["Tirez", "-en une valeur calculée."]],
+      note: "Sans IA : le canvas fait le travail, et les chiffres suivent.",
       alt: "Un devis PDF s’ouvre dans une fenêtre ancrée à droite ; un fichier CSV déposé sur le canvas devient un tableau ; un lien tiré depuis le tableau crée une valeur calculée, le budget scanners, qui suit le tableau.",
     },
     on: {
       label: "Allumée",
       title: "IA allumée, elle travaille avec vous.",
-      body: "Alt + clic sur le tableau et le devis pour les confier à Nolë, puis demandez à voix haute : « fais-moi un tableau de bord du budget scanners avec ces deux nœuds ». Nolë les lit, construit trois graphiques reliés, et vous voyez chaque étape se faire, en violet, sur le canvas.",
+      steps: [["Alt\xa0+ clic", " sur le tableau et le devis\xa0: Nolë les reçoit."], ["Demandez à voix haute", " un tableau de bord du budget."], ["Regardez", " Nolë les lire et construire trois graphiques reliés."]],
+      note: "Chaque étape se fait sur le canvas, en violet : vous voyez ce qu’il lit, ce qu’il crée.",
       alt: "Alt + clic sur le tableau, puis sur le devis : tous deux prennent un contour violet en pointillés et une pastille dans la saisie de Nolë. La demande est dictée ; Nolë lit les deux nœuds, puis crée trois nœuds graphiques reliés, l’un après l’autre, chacun sous un halo violet qui pulse : scanners par site, budget par poste, déploiement sur dix semaines.",
     },
   },
@@ -55,25 +59,8 @@ const modes = ["off", "on"] as const;
 ---
 
 <section id="ai" class="ai" aria-labelledby="ai-title" data-ai-section data-state="off">
-  <div class="wrap">
-    <div class="ai__head">
-      <div class="ai__texts">
-        {
-          modes.map((m) => (
-            <div class="ai__text" data-for={m} aria-hidden={m === "on" ? "true" : undefined}>
-              <h2 id={m === "off" ? "ai-title" : undefined} class="title-node ai__title">
-                {copy.states[m].title}
-              </h2>
-              <div class="node doc ai__body">
-                <p>{copy.states[m].body}</p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-
-    <div class="node ai__window bleed-both">
+  <div class="wrap ai__layout">
+    <div class="node ai__window bleed-left">
       <div class="ai__window-head">
         <Icon name="lucide:layout-dashboard" />
         {copy.window}
@@ -96,19 +83,46 @@ const modes = ["off", "on"] as const;
             ></video>
           ))
         }
-        <div class="node ai__switch" data-attract>
-          <button type="button" role="switch" aria-checked="false" class="switch" data-ai-toggle aria-labelledby="ai-title">
-            <span class="switch__track"><span class="switch__thumb"></span></span>
-            <span class="ai__switch-text">
-              <span class="ai__switch-state">
-                {modes.map((m) => <span data-for={m}>{copy.ai} · {copy.states[m].label}</span>)}
-              </span>
-              <span class="ai__switch-hint">
-                {modes.map((m) => <span data-for={m}>{copy.hint[m]}</span>)}
-              </span>
+      </div>
+    </div>
+
+    <!-- Beside the clip, so it reads while it plays: what happens, step by step, and the switch. -->
+    <div class="ai__side">
+      <div class="ai__texts">
+        {
+          modes.map((m) => (
+            <div class="node doc ai__text" data-for={m} aria-hidden={m === "on" ? "true" : undefined}>
+              <h2 id={m === "off" ? "ai-title" : undefined} class="ai__title">
+                {copy.states[m].title}
+              </h2>
+              <ol class="ai__steps">
+                {copy.states[m].steps.map(([verb, rest]) => (
+                  <li>
+                    <span>
+                      <strong>{verb}</strong>
+                      {rest}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <p class="ai__note">{copy.states[m].note}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="node ai__switch" data-attract>
+        <button type="button" role="switch" aria-checked="false" class="switch" data-ai-toggle aria-labelledby="ai-title">
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+          <span class="ai__switch-text">
+            <span class="ai__switch-state">
+              {modes.map((m) => <span data-for={m}>{copy.ai} · {copy.states[m].label}</span>)}
             </span>
-          </button>
-        </div>
+            <span class="ai__switch-hint">
+              {modes.map((m) => <span data-for={m}>{copy.hint[m]}</span>)}
+            </span>
+          </span>
+        </button>
       </div>
     </div>
   </div>
@@ -178,21 +192,40 @@ const modes = ["off", "on"] as const;
 
 <style>
   .ai {
-    padding-block: var(--section-gap-s) 0;
+    padding-block: var(--section-gap-s) var(--section-gap);
   }
 
-  .ai__head {
+  .ai__layout {
     display: grid;
     gap: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    align-items: center;
   }
 
-  /* The switch sits on the clip itself, bottom right, where the eye ends up. */
+  .ai__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 60rem) {
+    .ai__layout {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  /* On a phone the switch comes first, right under the clip. */
+  @media (max-width: 59.99rem) {
+    .ai__switch {
+      order: -1;
+      align-self: flex-start;
+    }
+  }
+
+
+  /* The switch, beside the clip, under what it explains. */
   .ai__switch {
-    position: absolute;
-    right: 18px;
-    bottom: 18px;
-    z-index: 2;
+    align-self: flex-start;
     padding: 6px 18px 6px 8px;
     border-radius: 16px;
     box-shadow:
@@ -200,14 +233,6 @@ const modes = ["off", "on"] as const;
       0 1px 2px rgb(15 23 42 / 0.08);
   }
 
-  @media (max-width: 40rem) {
-    .ai__switch {
-      right: 8px;
-      bottom: 8px;
-      transform: scale(0.72);
-      transform-origin: bottom right;
-    }
-  }
 
   /* Until it is first used, it calls for attention: a ring that breathes. */
   .ai__switch[data-attract] {
@@ -341,25 +366,63 @@ const modes = ["off", "on"] as const;
   }
 
   .ai__text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-md);
+    padding: 20px 22px 18px;
   }
 
   .ai__title {
-    margin: 0 0 0 -8px;
-    font-size: var(--text-section);
-    line-height: 1.08;
+    font-size: clamp(1.5rem, 1.2vw + 1rem, 2rem);
+    font-weight: var(--weight-display);
+    line-height: 1.12;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
   }
 
   .ai__text[data-for="on"] .ai__title {
     color: #6d28d9;
   }
 
-  .ai__body {
-    max-width: 36rem;
-    font-size: var(--text-lg);
+  /* The steps, numbered like the clip plays them. */
+  .ai__steps {
+    margin-top: var(--space-md);
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .ai__steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    align-items: baseline;
+    padding-block: 7px;
+    border-top: 1px solid #eef2f6;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .ai__steps li::before {
+    content: counter(step);
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f1f5f9;
+    font-size: 12px;
+    font-weight: 800;
+    color: #475569;
+  }
+
+  .ai__text[data-for="on"] .ai__steps li::before {
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+
+  .ai__note {
+    margin-top: var(--space-sm);
+    font-size: 14px;
+    color: #64748b;
   }
 
   .ai__window {
