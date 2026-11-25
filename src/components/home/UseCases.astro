@@ -185,18 +185,9 @@ const copy = { en, fr }[lang];
               {c.shots.map((shot, j) => (
                 <Image src={shot.img} alt={shot.alt} widths={[960, 1440, 1920]} sizes="(min-width: 60rem) 85vw, 100vw" data-shot={j} hidden={j > 0} />
               ))}
-              {c.shots.length > 1 && (
-                <div class="ui-pill win__steps">
-                  {c.shots.map((shot, j) => (
-                    <button type="button" aria-pressed={j === 0 ? "true" : "false"} data-step={j}>
-                      <span>{j + 1}</span>
-                      {shot.tab}
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
-            <div class="node doc win__note">
+            <div class="win__foot">
+            <div class="doc win__note">
               <h3>{c.title}</h3>
               <p>{c.body}</p>
               <p class="win__profiles">
@@ -208,6 +199,17 @@ const copy = { en, fr }[lang];
                 {copy.open}
                 <Icon name="lucide:arrow-up-right" />
               </a>
+            </div>
+            {c.shots.length > 1 && (
+              <div class="win__steps">
+                {c.shots.map((shot, j) => (
+                  <button type="button" aria-pressed={j === 0 ? "true" : "false"} data-step={j}>
+                    <span>{j + 1}</span>
+                    {shot.tab}
+                  </button>
+                ))}
+              </div>
+            )}
             </div>
           </div>
         ))
@@ -348,10 +350,20 @@ const copy = { en, fr }[lang];
     display: none;
   }
 
+  /* Under the screen, never over it: the project's note, and its steps. */
+  .win__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-sm) var(--space-xl);
+    border-top: 1px solid oklch(0.929 0.013 255.508);
+  }
+
   .win__steps {
-    position: absolute;
-    top: 12px;
-    right: 12px;
+    display: flex;
+    gap: 4px;
+    padding: 12px 14px;
   }
 
   .win__steps button {
@@ -376,7 +388,7 @@ const copy = { en, fr }[lang];
   }
 
   .win__note {
-    margin: 12px;
+    max-width: 44rem;
   }
 
   .win__note h3 {
@@ -423,17 +435,4 @@ const copy = { en, fr }[lang];
     color: var(--color-ink-2);
   }
 
-  /* On wide screens the note is dropped over the screen's lower corner. */
-  @media (min-width: 60rem) {
-    .win__note {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      width: 24rem;
-      margin: 0;
-      box-shadow:
-        0 12px 32px -8px rgb(15 23 42 / 0.25),
-        0 1px 2px rgb(15 23 42 / 0.05);
-    }
-  }
 </style>

@@ -16,32 +16,37 @@ import nestedFr from "@/assets/img/home/f-nested-fr.webp";
 const lang = getLang(Astro.currentLocale);
 
 type Feature = { key: string; icon: string; title: string; body: string; img: ImageMetadata; alt: string };
+type Title = [before: string, selected: string, after: string];
 
 const en = {
-  title: "Who said canvases were just for brainstorming?",
+  title: ["Who said canvases were ", "only", " for brainstorming?"] as Title,
   lede: "On a Nolënor canvas, you file, you calculate, you find things again. Things a whiteboard doesn’t do.",
   soon: "Coming soon: automations.",
   features: [
-    { key: "views", icon: "lucide:table", title: "Databases and views", body: "Records shaped to your needs, seen as a table, a kanban, a calendar, a gallery or a timeline.", img: viewsEn, alt: "A quotes database seen as a kanban: new, sent, negotiating, signed, with each quote’s amount." },
-    { key: "calc", icon: "lucide:sigma", title: "Linked numbers", body: "A value computes from a table, a field or another node. When a source changes, everything follows.", img: calcEn, alt: "A sales table feeding computed values (monthly revenue, average order, goal reached) through dotted ƒ links, next to a breakdown chart." },
-    { key: "search", icon: "lucide:search", title: "One search for everything", body: "Documents, PDFs, images, voice memos: one query, and every match, at its page or its minute.", img: searchEn, alt: "The search finds one phrase in a voice memo at 1:12, on page 3 of a PDF and in a site note." },
-    { key: "dash", icon: "lucide:layout-dashboard", title: "Live dashboards", body: "Mini-apps read your tools and APIs, and keep themselves up to date.", img: dashEn, alt: "Charts and figures on a canvas, fed by Steam, Sentry and Discord: wishlists, crashes per day, members, crash-free sessions, builds." },
-    { key: "nested", icon: "lucide:layers", title: "Canvases inside canvases", body: "One canvas per client, per part of the business, per project: go down into the detail, come back up to see the whole.", img: nestedEn, alt: "A company canvas holding one sub-canvas per area: clients and projects, workshop, purchasing, admin, team, marketing." },
+    { key: "views", icon: "lucide:table", title: "Your information filed, seen the way you need it.", body: "Records shaped to your needs, seen as a table, a kanban, a calendar, a gallery or a timeline.", img: viewsEn, alt: "A quotes database seen as a kanban: new, sent, negotiating, signed, with each quote’s amount." },
+    { key: "calc", icon: "lucide:sigma", title: "Numbers that update themselves.", body: "A value computes from a table, a field or another node. When a source changes, everything follows.", img: calcEn, alt: "A sales table feeding computed values (monthly revenue, average order, goal reached) through dotted ƒ links, next to a breakdown chart." },
+    { key: "search", icon: "lucide:search", title: "Find anything, even inside a voice memo.", body: "Documents, PDFs, images, voice memos: one query, and every match, at its page or its minute.", img: searchEn, alt: "The search finds one phrase in a voice memo at 1:12, on page 3 of a PDF and in a site note." },
+    { key: "dash", icon: "lucide:layout-dashboard", title: "Your metrics up to date, without copying them over.", body: "Mini-apps read your tools and APIs, and keep themselves up to date.", img: dashEn, alt: "Charts and figures on a canvas, fed by Steam, Sentry and Discord: wishlists, crashes per day, members, crash-free sessions, builds." },
+    { key: "nested", icon: "lucide:layers", title: "The detail when you need it, the big picture always.", body: "One canvas per client, per part of the business, per project: go down into the detail, come back up to see the whole.", img: nestedEn, alt: "A company canvas holding one sub-canvas per area: clients and projects, workshop, purchasing, admin, team, marketing." },
   ] as Feature[],
 };
 const fr: typeof en = {
-  title: "Qui a dit que les canvas, c’était pour brainstormer ?",
+  title: ["Qui a dit que les canvas, c’était ", "seulement", " pour brainstormer ?"] as Title,
   lede: "Sur un canvas Nolënor, on range, on calcule, on retrouve. Ce qu’un tableau blanc ne fait pas.",
   soon: "Bientôt : les automatisations.",
   features: [
-    { key: "views", icon: "lucide:table", title: "Bases de données et vues", body: "Des fiches sur mesure, vues en table, en kanban, en calendrier, en galerie ou en timeline.", img: viewsFr, alt: "Une base de devis vue en kanban : nouveau, envoyé, négociation, signé, avec le montant de chaque devis." },
-    { key: "calc", icon: "lucide:sigma", title: "Des chiffres reliés", body: "Une valeur se calcule à partir d’un tableau, d’un champ ou d’un autre nœud. Une source change, tout suit.", img: calcFr, alt: "Un tableau des ventes qui alimente des valeurs calculées (CA du mois, panier moyen, objectif atteint) par des liens ƒ en pointillés, à côté d’un graphique de répartition." },
-    { key: "search", icon: "lucide:search", title: "Une recherche pour tout", body: "Documents, PDF, images, mémos vocaux : une requête, et chaque passage trouvé, à sa page ou à sa minute.", img: searchFr, alt: "La recherche trouve une expression dans un mémo vocal à 1:12, à la page 3 d’un PDF et dans une note de chantier." },
-    { key: "dash", icon: "lucide:layout-dashboard", title: "Des tableaux de bord branchés", body: "Des mini-apps lisent vos outils et vos API, et se mettent à jour seules.", img: dashFr, alt: "Des graphiques et des chiffres sur un canvas, alimentés par Steam, Sentry et Discord : wishlists, crashs par jour, membres, sessions sans crash, builds." },
-    { key: "nested", icon: "lucide:layers", title: "Des canvas dans les canvas", body: "Un canvas par client, par pan de l’entreprise, par projet : on descend dans le détail, on remonte voir l’ensemble.", img: nestedFr, alt: "Le canvas d’une entreprise avec un sous-canvas par pan : clients et chantiers, atelier, achats, admin, équipe, marketing." },
+    { key: "views", icon: "lucide:table", title: "Vos infos rangées, vues comme il vous faut.", body: "Des fiches sur mesure, vues en table, en kanban, en calendrier, en galerie ou en timeline.", img: viewsFr, alt: "Une base de devis vue en kanban : nouveau, envoyé, négociation, signé, avec le montant de chaque devis." },
+    { key: "calc", icon: "lucide:sigma", title: "Des chiffres qui se mettent à jour tout seuls.", body: "Une valeur se calcule à partir d’un tableau, d’un champ ou d’un autre nœud. Une source change, tout suit.", img: calcFr, alt: "Un tableau des ventes qui alimente des valeurs calculées (CA du mois, panier moyen, objectif atteint) par des liens ƒ en pointillés, à côté d’un graphique de répartition." },
+    { key: "search", icon: "lucide:search", title: "Tout se retrouve, même dans un mémo vocal.", body: "Documents, PDF, images, mémos vocaux : une requête, et chaque passage trouvé, à sa page ou à sa minute.", img: searchFr, alt: "La recherche trouve une expression dans un mémo vocal à 1:12, à la page 3 d’un PDF et dans une note de chantier." },
+    { key: "dash", icon: "lucide:layout-dashboard", title: "Vos indicateurs à jour, sans rien recopier.", body: "Des mini-apps lisent vos outils et vos API, et se mettent à jour seules.", img: dashFr, alt: "Des graphiques et des chiffres sur un canvas, alimentés par Steam, Sentry et Discord : wishlists, crashs par jour, membres, sessions sans crash, builds." },
+    { key: "nested", icon: "lucide:layers", title: "Le détail quand il faut, la vue d’ensemble toujours.", body: "Un canvas par client, par pan de l’entreprise, par projet : on descend dans le détail, on remonte voir l’ensemble.", img: nestedFr, alt: "Le canvas d’une entreprise avec un sous-canvas par pan : clients et chantiers, atelier, achats, admin, équipe, marketing." },
   ] as Feature[],
 };
 const copy = { en, fr }[lang];
+
+/** Which side each node runs past the page margin on wide screens, and the selected one. */
+const BLEED: Record<string, string> = { views: "bleed-left", calc: "bleed-right", nested: "bleed-left", search: "bleed-right" };
+const SELECTED = "dash";
 
 /*
  * The answer to "a canvas is a whiteboard": five things a whiteboard can't
@@ -54,15 +59,19 @@ const copy = { en, fr }[lang];
 
 <section id="depth" class="depth" aria-labelledby="depth-title">
   <div class="wrap">
-    <h2 id="depth-title" class="title-node depth__title">{copy.title}</h2>
+    <h2 id="depth-title" class="depth__title">
+      {copy.title[0]}<span class="title-node title-node--selected depth__word">{copy.title[1]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[2]}
+    </h2>
     <div class="node doc depth__lede"><p>{copy.lede}</p></div>
 
-    <div class="depth__board">
+    <div class="depth__board" data-depth-board>
+      <svg class="depth__edges" aria-hidden="true"></svg>
       {
         copy.features.map((f) => (
-          <article class:list={["node feature", `feature--${f.key}`]} data-reveal>
+          <article class:list={["node feature", `feature--${f.key}`, BLEED[f.key], f.key === SELECTED && "node--selected"]} data-node={f.key} data-reveal>
+            {f.key === SELECTED && <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>}
             <figure class="feature__shot">
-              <Image src={f.img} alt={f.alt} widths={[560, 840, 1120, 1400]} sizes="(min-width: 60rem) 50vw, 100vw" />
+              <Image src={f.img} alt={f.alt} widths={[560, 840, 1120, 1400]} sizes="(min-width: 60rem) 55vw, 100vw" />
             </figure>
             <div class="feature__text">
               <h3>
@@ -74,7 +83,7 @@ const copy = { en, fr }[lang];
           </article>
         ))
       }
-      <div class="node feature--soon">
+      <div class="node node--yellow feature--soon" data-node="soon">
         <Icon name="lucide:workflow" />
         {copy.soon}
       </div>
@@ -82,17 +91,146 @@ const copy = { en, fr }[lang];
   </div>
 </section>
 
+<script>
+  // Draws the links between the nodes of the board, the way the app draws
+  // its edges (a bezier from side to side, an open arrow at the target).
+  // Wide screens only: on a phone the nodes are stacked and the links would
+  // only cross them.
+  type Side = "right" | "bottom" | "left" | "top";
+  const LINKS: [string, Side, string, Side, string?][] = [
+    ["views", "right", "calc", "left"],
+    ["nested", "right", "search", "left"],
+    ["search", "bottom", "dash", "top"],
+    ["dash", "right", "soon", "left"],
+  ];
+  const NORMAL: Record<Side, [number, number]> = { right: [1, 0], left: [-1, 0], top: [0, -1], bottom: [0, 1] };
+
+  document.querySelectorAll<HTMLElement>("[data-depth-board]").forEach((board) => {
+    const svg = board.querySelector<SVGSVGElement>(".depth__edges")!;
+    const draw = () => {
+      svg.innerHTML = "";
+      if (window.innerWidth < 960) return;
+      const base = board.getBoundingClientRect();
+      const point = (key: string, side: Side) => {
+        const el = board.querySelector<HTMLElement>(`[data-node="${key}"]`);
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        const x = r.left - base.left;
+        const y = r.top - base.top;
+        return {
+          x: side === "left" ? x : side === "right" ? x + r.width : x + r.width / 2,
+          y: side === "top" ? y : side === "bottom" ? y + r.height : y + r.height / 2,
+        };
+      };
+      let html = "";
+      for (const [from, fs, to, ts, label] of LINKS) {
+        const a = point(from, fs);
+        const b = point(to, ts);
+        if (!a || !b) continue;
+        const k = Math.max(40, Math.hypot(b.x - a.x, b.y - a.y) * 0.4);
+        const [nx1, ny1] = NORMAL[fs];
+        const [nx2, ny2] = NORMAL[ts];
+        const d = `M ${a.x} ${a.y} C ${a.x + nx1 * k} ${a.y + ny1 * k}, ${b.x + nx2 * k} ${b.y + ny2 * k}, ${b.x} ${b.y}`;
+        // The arrow points into the target, against its side's normal.
+        const tx = -nx2;
+        const ty = -ny2;
+        const wing = (sgn: number) => `${b.x - tx * 7.5 - ty * 6 * sgn},${b.y - ty * 7.5 + tx * 6 * sgn}`;
+        html += `<path d="${d}"/><polyline points="${wing(1)} ${b.x},${b.y} ${wing(-1)}"/>`;
+        if (label) {
+          const mx = (a.x + b.x) / 2;
+          const my = (a.y + b.y) / 2;
+          html += `<rect x="${mx - 30}" y="${my - 10}" width="60" height="20" rx="10" class="depth__pill"/><text x="${mx}" y="${my + 4}" text-anchor="middle" class="depth__pill-text">${label}</text>`;
+        }
+      }
+      svg.innerHTML = html;
+    };
+    new ResizeObserver(draw).observe(board);
+    window.addEventListener("load", draw);
+    document.fonts?.ready.then(draw);
+  });
+</script>
+
 <style>
   .depth {
     padding-block: var(--section-gap-s) 0;
   }
 
   .depth__title {
-    margin: 0 0 var(--space-md) -8px;
-    max-width: 18ch;
+    max-width: 20ch;
+    margin: 0 0 var(--space-lg);
     font-size: var(--text-section);
-    line-height: 1.08;
+    font-weight: var(--weight-display);
+    line-height: 1.15;
+    letter-spacing: var(--tracking-display);
   }
+
+  /* "seulement" / "only", the word that turns the question, is a selected
+     Title node inside the sentence. */
+  .depth__word {
+    padding: 0 6px;
+    margin: 0 2px;
+    font-size: inherit;
+    line-height: inherit;
+    color: #2563eb;
+  }
+
+  .depth__board {
+    position: relative;
+  }
+
+  .depth__edges {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .depth__edges :global(path),
+  .depth__edges :global(polyline) {
+    fill: none;
+    stroke: #94a3b8;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .depth__edges :global(.depth__pill) {
+    fill: #f0f9ff;
+    stroke: #bae6fd;
+  }
+
+  .depth__edges :global(.depth__pill-text) {
+    font: 600 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    fill: #0369a1;
+  }
+
+  .feature,
+  .feature--soon {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* The selected node shows its handles past its edge. */
+  .feature.node--selected {
+    overflow: visible;
+  }
+
+  .feature.node--selected .feature__shot {
+    border-radius: 11px 11px 0 0;
+  }
+
+  /* Node colours (the app's palette), on the caption of four of them. */
+  .feature--views { border-color: #5eead4; }
+  .feature--views .feature__text { background: #f0fdfa; }
+  .feature--calc { border-color: #7dd3fc; }
+  .feature--calc .feature__text { background: #f0f9ff; }
+  .feature--nested { border-color: #fdba74; }
+  .feature--nested .feature__text { background: #fff7ed; }
+  .feature--search { border-color: #d8b4fe; }
+  .feature--search .feature__text { background: #faf5ff; }
 
   .depth__lede {
     max-width: 34rem;
@@ -157,13 +295,9 @@ const copy = { en, fr }[lang];
     align-items: center;
     gap: 10px;
     padding: 14px 18px;
-    border-style: dashed;
-    border-color: oklch(0.869 0.022 252.894);
-    background: transparent;
-    box-shadow: none;
     font-size: 15px;
     font-weight: 600;
-    color: #64748b;
+    color: #713f12;
   }
 
   .feature--soon svg {
