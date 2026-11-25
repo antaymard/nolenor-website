@@ -463,13 +463,13 @@ html {
 /* Nodes are not boxed in by the page's column: on wide screens, an image
    node can run past the side margin, the way a node sits wherever it was
    dropped on a canvas. --bleed is how far: the space beside the container,
-   up to 10rem, keeping 24px from the screen's edge. */
+   up to 4rem, keeping 24px from the screen's edge. */
 :root {
   --bleed: 0px;
 }
 @media (min-width: 60rem) {
   :root {
-    --bleed: min(10rem, calc(max(0px, (100vw - var(--container)) / 2) + var(--gutter) - 24px));
+    --bleed: min(4rem, calc(max(0px, (100vw - var(--container)) / 2) + var(--gutter) - 24px));
   }
   .bleed-left { margin-left: calc(-1 * var(--bleed)); }
   .bleed-right { margin-right: calc(-1 * var(--bleed)); }

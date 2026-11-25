@@ -115,7 +115,7 @@ const copy = { en, fr }[lang];
     display: flex;
     flex-direction: column;
     margin: 0 0 0 -8px;
-    font-size: clamp(2.4rem, 4vw + 0.6rem, 4.25rem);
+    font-size: var(--text-display);
     line-height: 1.02;
   }
 
@@ -132,7 +132,7 @@ const copy = { en, fr }[lang];
 
   .hero__lede {
     max-width: 38rem;
-    font-size: var(--text-lg);
+    font-size: var(--text-lead);
   }
 
   .hero__terms {

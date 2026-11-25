@@ -150,9 +150,9 @@ const ORDER = ["calc", "dash", "nested", "views", "search"];
         svg.innerHTML = "";
         return;
       }
-      // Zoom the plane to the canvas's width, never past 1.2 (centred then).
+      // Fit the plane to the canvas's width, never enlarged (centred then).
       const pw = plane.offsetWidth;
-      const scale = Math.min(1.2, board.clientWidth / pw);
+      const scale = Math.min(1, board.clientWidth / pw);
       plane.style.transform = `translateX(${(board.clientWidth - pw * scale) / 2}px) scale(${scale})`;
       board.style.height = `${plane.offsetHeight * scale}px`;
       draw();
@@ -276,7 +276,7 @@ const ORDER = ["calc", "dash", "nested", "views", "search"];
   .depth__lede {
     max-width: 34rem;
     margin-bottom: var(--space-2xl);
-    font-size: var(--text-lg);
+    font-size: var(--text-lead);
   }
 
 
