@@ -28,7 +28,6 @@ interface RawLink {
 const primary: RawLink[] = [
   { label: { en: "Why", fr: "Pourquoi" }, href: "/#why" },
   { label: { en: "Use cases", fr: "Usages" }, href: "/#use-cases" },
-  { label: { en: "Nolë", fr: "Nolë" }, href: "/#nole" },
   { label: { en: "Pricing", fr: "Prix" }, href: "/#pricing" },
 ];
 

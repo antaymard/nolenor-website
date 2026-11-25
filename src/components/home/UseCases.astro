@@ -32,9 +32,9 @@ const profiles: Record<Profile, { en: string; fr: string }> = {
 
 const en = {
   title: "What you can do with it.",
-  lede: "Five real projects, shown as they are on the canvas.",
-  filter: "Filter by profile",
-  all: "All",
+  lede: "Five real projects, one tab each.",
+  tabs: "Projects",
+  open: "Open this canvas",
   cases: [
     {
       profiles: ["builders", "midsize"],
@@ -92,9 +92,9 @@ const en = {
 };
 const fr: typeof en = {
   title: "Ce que vous pouvez en faire.",
-  lede: "Cinq vrais projets, montrés tels qu’ils sont sur le canvas.",
-  filter: "Filtrer par profil",
-  all: "Tous",
+  lede: "Cinq vrais projets, un onglet chacun.",
+  tabs: "Projets",
+  open: "Ouvrir ce canvas",
   cases: [
     {
       profiles: ["builders", "midsize"],
@@ -153,71 +153,63 @@ const fr: typeof en = {
 const copy = { en, fr }[lang];
 
 /*
- * Five real projects, builders first (the page's first reader), filterable
- * by profile with the canvas's own pill of toggles. Each one is a sub-canvas
- * card (its cover is the canvas itself; the card links to the public canvas,
- * still to be prepared), an edge, and its document node. A project told in
- * two steps carries two tabs on its card.
+ * One window, the way the app docks one: a tab per project (its canvas
+ * tile and name), one screen at a time, builders first. The project's own
+ * document node sits over the corner of its screen, like a note dropped on
+ * the canvas, with the link to the canvas itself (a public one, still to be
+ * prepared: see SHOWCASE_CANVAS_URLS). A project told in two steps carries
+ * two step tabs on its screen.
  */
 ---
 
 <section id="use-cases" class="cases" aria-labelledby="cases-title">
   <div class="wrap">
     <h2 id="cases-title" class="title-node cases__title">{copy.title}</h2>
-    <div class="cases__head">
-      <div class="node doc cases__lede"><p>{copy.lede}</p></div>
-      <div class="ui-pill cases__filter" role="group" aria-label={copy.filter} data-case-filter>
-        <button type="button" aria-pressed="true" data-profile="all">{copy.all}</button>
-        {(Object.keys(profiles) as Profile[]).map((key) => (
-          <button type="button" aria-pressed="false" data-profile={key}>{profiles[key][lang]}</button>
-        ))}
-      </div>
-    </div>
+    <div class="node doc cases__lede"><p>{copy.lede}</p></div>
 
-    <div class="cases__grid">
+    <div class="node win bleed-both" data-cases>
+      <div class="win__tabs" role="tablist" aria-label={copy.tabs}>
+        {
+          copy.cases.map((c, i) => (
+            <button type="button" role="tab" id={`case-tab-${i}`} aria-controls={`case-panel-${i}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-case-tab={i}>
+              <span class="win__tile" style={`background:${c.tile}`}>{c.canvas[0]}</span>
+              {c.canvas}
+            </button>
+          ))
+        }
+      </div>
       {
         copy.cases.map((c, i) => (
-          <article class="case" data-profiles={c.profiles.join(" ")} data-case>
-            <div class:list={["node canvas-card", i % 2 === 0 ? "bleed-left" : "bleed-right"]}>
-              <div class="canvas-card__cover">
-                {c.shots.length > 1 && (
-                  <div class="ui-pill case__tabs" role="tablist">
-                    {c.shots.map((shot, j) => (
-                      <button type="button" role="tab" aria-selected={j === 0 ? "true" : "false"} data-tab={j}>
-                        <span>{j + 1}</span>
-                        {shot.tab}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {c.shots.map((shot, j) => (
-                  <Image
-                    src={shot.img}
-                    alt={shot.alt}
-                    widths={[640, 960, 1280]}
-                    sizes="(min-width: 60rem) 45vw, 100vw"
-                    data-shot={j}
-                    hidden={j > 0}
-                  />
-                ))}
-              </div>
-              <a href={c.href} class="canvas-card__bar" rel="noopener noreferrer">
-                <span class="canvas-card__tile" style={`background:${c.tile}`}>{c.canvas[0]}</span>
-                <span class="canvas-card__name">{c.canvas}</span>
-                <Icon name="lucide:arrow-up-right" class="canvas-card__go" />
-              </a>
+          <div class="win__panel" role="tabpanel" id={`case-panel-${i}`} aria-labelledby={`case-tab-${i}`} hidden={i > 0} data-case-panel={i}>
+            <div class="win__screen">
+              {c.shots.map((shot, j) => (
+                <Image src={shot.img} alt={shot.alt} widths={[960, 1440, 1920]} sizes="(min-width: 60rem) 85vw, 100vw" data-shot={j} hidden={j > 0} />
+              ))}
+              {c.shots.length > 1 && (
+                <div class="ui-pill win__steps">
+                  {c.shots.map((shot, j) => (
+                    <button type="button" aria-pressed={j === 0 ? "true" : "false"} data-step={j}>
+                      <span>{j + 1}</span>
+                      {shot.tab}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <Edge from={50} to={50} height={32} />
-            <div class="node doc">
+            <div class="node doc win__note">
               <h3>{c.title}</h3>
               <p>{c.body}</p>
-              <p class="case__profiles">
+              <p class="win__profiles">
                 {c.profiles.map((p) => (
                   <span>{profiles[p as Profile][lang]}</span>
                 ))}
               </p>
+              <a href={c.href} class="win__open" rel="noopener noreferrer">
+                {copy.open}
+                <Icon name="lucide:arrow-up-right" />
+              </a>
             </div>
-          </article>
+          </div>
         ))
       }
     </div>
@@ -227,29 +219,34 @@ const copy = { en, fr }[lang];
 </section>
 
 <script>
-  document.querySelectorAll<HTMLElement>("[data-case-filter]").forEach((group) => {
-    const section = group.closest("section")!;
-    const cases = [...section.querySelectorAll<HTMLElement>("[data-case]")];
-    group.addEventListener("click", (event) => {
-      const button = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-profile]");
-      if (!button) return;
-      const profile = button.dataset.profile!;
-      group.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-      cases.forEach((c) => {
-        c.hidden = profile !== "all" && !c.dataset.profiles!.split(" ").includes(profile);
+  document.querySelectorAll<HTMLElement>("[data-cases]").forEach((win) => {
+    const tabs = [...win.querySelectorAll<HTMLButtonElement>("[data-case-tab]")];
+    const panels = [...win.querySelectorAll<HTMLElement>("[data-case-panel]")];
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, i) => {
+        tab.setAttribute("aria-selected", String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+      panels.forEach((panel, i) => (panel.hidden = i !== index));
+      if (focus) tabs[index].focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => select(i));
+      tab.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight") select((i + 1) % tabs.length, true);
+        if (event.key === "ArrowLeft") select((i - 1 + tabs.length) % tabs.length, true);
       });
     });
-  });
-
-  document.querySelectorAll<HTMLElement>("[data-case]").forEach((card) => {
-    const tabs = [...card.querySelectorAll<HTMLButtonElement>("[data-tab]")];
-    const shots = [...card.querySelectorAll<HTMLImageElement>("[data-shot]")];
-    tabs.forEach((tab) =>
-      tab.addEventListener("click", () => {
-        tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
-        shots.forEach((s) => (s.hidden = s.dataset.shot !== tab.dataset.tab));
-      }),
-    );
+    panels.forEach((panel) => {
+      const steps = [...panel.querySelectorAll<HTMLButtonElement>("[data-step]")];
+      const shots = [...panel.querySelectorAll<HTMLImageElement>("[data-shot]")];
+      steps.forEach((step) =>
+        step.addEventListener("click", () => {
+          steps.forEach((s) => s.setAttribute("aria-pressed", String(s === step)));
+          shots.forEach((shot) => (shot.hidden = shot.dataset.shot !== step.dataset.step));
+        }),
+      );
+    });
   });
 </script>
 
@@ -264,98 +261,109 @@ const copy = { en, fr }[lang];
     line-height: 1.08;
   }
 
-  .cases__head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-md);
-    margin-bottom: var(--space-2xl);
-  }
-
   .cases__lede {
     max-width: 30rem;
+    margin-bottom: var(--space-xl);
     font-size: var(--text-lg);
   }
 
-  .cases__filter {
-    flex-wrap: wrap;
+  .win {
+    overflow: hidden;
   }
 
-  .cases__filter button,
-  .case__tabs button {
+  /* The window's tab strip (WindowDock): one tab per project. */
+  .win__tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 6px;
+    border-bottom: 1px solid oklch(0.929 0.013 255.508);
+    background: oklch(0.984 0.003 247.858);
+    scrollbar-width: none;
+  }
+
+  .win__tabs button,
+  .win__steps button {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     min-height: 36px;
-    padding: 0 12px;
-    border: 0;
+    padding: 0 12px 0 8px;
+    border: 1px solid transparent;
     border-radius: 8px;
     background: none;
     font: 600 14px / 1 var(--font-body);
-    color: #475569;
+    white-space: nowrap;
+    color: #64748b;
     cursor: pointer;
   }
 
-  .cases__filter button:hover,
-  .case__tabs button:hover {
-    background: #f1f5f9;
+  .win__tabs button:hover,
+  .win__steps button:hover {
+    color: var(--color-ink);
   }
 
-  .cases__filter button[aria-pressed="true"],
-  .case__tabs button[aria-selected="true"] {
+  .win__tabs button[aria-selected="true"] {
+    border-color: oklch(0.929 0.013 255.508);
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.06);
+    color: var(--color-ink);
+  }
+
+  .win__tile {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .win__panel {
+    position: relative;
+  }
+
+  .win__panel[hidden] {
+    display: none;
+  }
+
+  .win__screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: oklch(0.968 0.007 247.896);
+  }
+
+  .win__screen :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .win__screen :global(img[hidden]) {
+    display: none;
+  }
+
+  .win__steps {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+
+  .win__steps button {
+    padding-left: 6px;
+  }
+
+  .win__steps button[aria-pressed="true"] {
     background: #f1f5f9;
     color: var(--color-ink);
   }
 
-  .cases__grid {
-    display: grid;
-    gap: var(--space-2xl) var(--gap-columns);
-  }
-
-  .case {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .case[hidden] {
-    display: none;
-  }
-
-  .case h3 {
-    font-size: 1.25em;
-    font-weight: 700;
-  }
-
-  .case__profiles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .case__profiles span {
-    padding: 1px 8px;
-    border-radius: 6px;
-    background: #f1f5f9;
-    font-size: 12px;
-    font-weight: 600;
-    color: #475569;
-  }
-
-  .canvas-card {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .case__tabs {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    z-index: 1;
-  }
-
-  .case__tabs button span {
+  .win__steps button span {
     display: inline-flex;
     width: 18px;
     height: 18px;
@@ -367,84 +375,65 @@ const copy = { en, fr }[lang];
     font-weight: 800;
   }
 
-  .canvas-card__cover {
-    position: relative;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background: oklch(0.968 0.007 247.896);
+  .win__note {
+    margin: 12px;
   }
 
-  .canvas-card__cover :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: left top;
+  .win__note h3 {
+    font-size: 1.25em;
+    font-weight: 700;
   }
 
-  .canvas-card__cover :global(img[hidden]) {
-    display: none;
-  }
-
-  .canvas-card__bar {
+  .win__profiles {
     display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .win__profiles span {
+    padding: 1px 8px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .win__open {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-top: 1px solid oklch(0.929 0.013 255.508);
-    background: #fff;
-    color: inherit;
+    gap: 4px;
+    font-weight: 700;
+    color: var(--color-accent);
     text-decoration: none;
   }
 
-  .canvas-card__bar:hover .canvas-card__name {
+  .win__open:hover {
     text-decoration: underline;
   }
 
-  .canvas-card__tile {
-    display: inline-flex;
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #fff;
-  }
-
-  .canvas-card__name {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  .canvas-card__go {
+  .win__open svg {
     width: 16px;
     height: 16px;
-    color: #64748b;
   }
 
   .cases__aside {
     max-width: 34rem;
-    margin-top: var(--space-2xl);
+    margin-top: var(--space-xl);
     color: var(--color-ink-2);
   }
 
+  /* On wide screens the note is dropped over the screen's lower corner. */
   @media (min-width: 60rem) {
-    .cases__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: var(--space-3xl);
-    }
-
-    /* The right column sits a little lower: dropped, not gridded. */
-    .case:nth-child(even) {
-      margin-top: var(--space-3xl);
+    .win__note {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 24rem;
+      margin: 0;
+      box-shadow:
+        0 12px 32px -8px rgb(15 23 42 / 0.25),
+        0 1px 2px rgb(15 23 42 / 0.05);
     }
   }
 </style>

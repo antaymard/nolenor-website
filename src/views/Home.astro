@@ -4,20 +4,18 @@ import Hero from "@/components/home/Hero.astro";
 import Bet from "@/components/home/Bet.astro";
 import AiModes from "@/components/home/AiModes.astro";
 import UseCases from "@/components/home/UseCases.astro";
-import Agent from "@/components/home/Agent.astro";
 import Pricing from "@/components/home/Pricing.astro";
-import Maker from "@/components/home/Maker.astro";
 
 // The landing page (V1), in the order of the brief ("Site vitrine V1 :
 // premier jet" on the Go To Market canvas): the promise, its AI switch and
 // the pages-to-canvas slider; AI off, then AI on; the pain, the bet and its
-// two proofs; five use cases, filterable by profile; what Nolë can do; the
-// price and its commitments; who is behind it and what is not there yet.
+// two proofs; five use cases, one tab each in a window; the
+// price and its commitments.
 //
 // One button for the whole page, "Open a canvas" (hero and pricing band).
 // Everything else is a link.
 //
-// Anchors: #why, #use-cases, #nole and #pricing are the four ids
+// Anchors: #why, #use-cases and #pricing are the three ids
 // src/data/nav.ts points at (in both languages: anchors are never
 // translated). Moving or renaming a section here means updating that file.
 //
@@ -30,7 +28,5 @@ import Maker from "@/components/home/Maker.astro";
   <AiModes />
   <Bet />
   <UseCases />
-  <Agent />
   <Pricing />
-  <Maker />
 </Layout>

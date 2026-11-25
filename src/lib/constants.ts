@@ -55,7 +55,3 @@ export const SHOWCASE_CANVAS_URLS = {
   business: APP_URL,
   documents: APP_URL,
 } as const;
-
-// PLACEHOLDER: no public contact address yet. "Contact me" on the home page
-// points here.
-export const CONTACT_URL = "mailto:contact@nolenor.com";
