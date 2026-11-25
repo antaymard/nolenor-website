@@ -32,8 +32,8 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
 
 <header class="bar">
   <div class="wrap bar__inner">
-    <div class="bar__left">
-      <Logo iconClass="h-7 w-7 text-foreground" textClass="text-lg" />
+    <div class="bar__left ui-pill">
+      <Logo iconClass="h-6 w-6 text-foreground" textClass="text-base" />
 
       <nav aria-label={t("nav.sections")} class="bar__links" data-nav-links>
         {
@@ -46,7 +46,7 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
       </nav>
     </div>
 
-    <div class="bar__right">
+    <div class="bar__right ui-pill">
       <a
         href={helpLink.href}
         class="nav-link nav-link--wide"
@@ -72,44 +72,48 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
 </header>
 
 <style>
+  /* The canvas's own chrome: two floating pills (canvas-ui-container), the
+     breadcrumb side on the left, the actions on the right, over the page. */
   .bar {
     position: sticky;
     top: 0;
     z-index: var(--z-sticky-nav);
-    background: var(--color-paper);
-    border-bottom: var(--rule-hair) solid var(--color-rule);
+    padding-top: 10px;
+    pointer-events: none;
   }
-
   .bar__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-lg);
-    min-height: var(--nav-height);
+    gap: var(--space-sm);
+    min-height: calc(var(--nav-height) - 10px);
   }
-
   .bar__left,
   .bar__right {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xl);
+    pointer-events: auto;
+    gap: var(--space-md);
+    padding: 4px 4px 4px 12px;
   }
-
+  .bar__left {
+    padding-right: 12px;
+  }
   .bar__right {
-    gap: var(--space-lg);
+    gap: var(--space-sm);
   }
-
   .bar__links {
     display: none;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
+    padding-left: var(--space-md);
+    border-left: 1px solid oklch(0.929 0.013 255.508);
   }
 
   .nav-link {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
+    min-height: 36px;
     font-size: var(--text-sm);
+    font-weight: 600;
     color: var(--color-ink-2);
     text-decoration: underline;
     text-decoration-color: transparent;

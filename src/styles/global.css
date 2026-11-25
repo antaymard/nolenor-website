@@ -1,5 +1,5 @@
 /* Hallmark · shape: narrative workflow (redesign of the kept sequence) · genre: editorial · theme: brand · redesign: full · job: sign up
- * paper: oklch(94.9% 0.021 79) · accent: oklch(47.1% 0.075 277) · display: Hedvig Letters Serif · body: Nunito · hero: Stage (/), the canvas bleeding off the right edge · nav: edge-aligned bar, links beside the wordmark · footer: index columns over a statement line (a real 13-link sitemap and the wishlist form) · signature: the product canvas running past the edge of the page
+ * paper: the app's slate-50 shell (tokens.css) · accent: #505785 · display and body: Nunito, as in the app · hero: Stage (/), the canvas bleeding off the right edge · nav: edge-aligned bar, links beside the wordmark · footer: index columns over a statement line (a real 13-link sitemap and the wishlist form) · signature: the product canvas running past the edge of the page
  * axes: light/roman-serif/cool · posture: Restrained, one Committed band at the close · contrast: pass · fold: pass · v2.0.0 */
 /* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V3 · weakest: V, the kept section order still reads as a software page; broke it with a switcher for the problem, a bento for the depth, rows for the FAQ and a closing band */
 /* Hallmark · waive 44c · the Stage visual bleeds off the outer edge on purpose · the Nolënor canvas runs past the page like a workbench past a window */
@@ -124,7 +124,7 @@
 /* Headings whose line breaks are hand-set and must never break anywhere
    else. Size is capped for wide screens (--fit-max) and otherwise derived
    from the viewport, divided by --fit-ratio: the measured width-to-font-size
-   ratio of the heading's longest line in Hedvig Letters Serif, plus a little
+   ratio of the heading's longest line in the display face, plus a little
    slack. The generic serif fallback measures ~11% narrower, so lines fit
    there too while the webfont loads. 3rem is the Container's padding below
    lg, where this branch applies. */
@@ -195,12 +195,15 @@ html {
 
   h2 {
     text-wrap: balance;
+    font-weight: var(--weight-display);
+    letter-spacing: var(--tracking-display);
     font-family: var(--font-serif);
     font-size: 2.25rem;
     line-height: 1.2;
   }
 
   h3 {
+    font-weight: 700;
     font-family: var(--font-serif);
     font-size: 1.5rem;
     line-height: 1.3;
@@ -333,4 +336,140 @@ html {
   height: 100%;
   object-fit: cover;
   z-index: var(--z-base);
+}
+
+/* ── The canvas and its nodes ─────────────────────────────────────────
+   The home page is laid out as a Nolënor canvas: every block is a node, drawn
+   with the app's own classes (NodeFrame, TitleNode, LinkNode, the canvas
+   card, the canvas chrome). Values below are the app's, translated from its
+   Tailwind classes: rounded-xl, border-slate-200, bg-surface,
+   shadow 0 1px 2px, selection ring-2 blue-500/70, React Flow handles. */
+.canvas-dots {
+  background-color: oklch(0.984 0.003 247.858);
+  background-image: radial-gradient(oklch(0.869 0.022 252.894) 1.1px, transparent 1.3px);
+  background-size: 20px 20px;
+}
+
+.node {
+  position: relative;
+  border: 1px solid oklch(0.929 0.013 255.508);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  color: var(--color-ink);
+}
+.node--selected {
+  box-shadow:
+    0 3px 12px rgb(15 23 42 / 0.12),
+    0 0 0 2px rgb(59 130 246 / 0.7);
+}
+/* Coloured nodes: the app's bg-{color}-200 / border-{color}-600. */
+.node--yellow { background: #fef08a; border-color: #ca8a04; }
+.node--sky { background: #bae6fd; border-color: #0284c7; }
+.node--teal { background: #99f6e4; border-color: #0d9488; }
+.node--purple { background: #e9d5ff; border-color: #9333ea; }
+
+/* A document node's body (BlockNote, readonly): 15px Nunito, the app's ramp. */
+.doc {
+  padding: 14px 18px 16px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: oklch(0.279 0.041 260.031);
+}
+.doc > * + * { margin-top: 0.6em; }
+.doc h1 { font-size: 1.75em; line-height: 1.15; font-weight: 600; letter-spacing: -0.01em; color: var(--color-ink); }
+.doc h2 { font-size: 1.5em; line-height: 1.2; font-weight: 500; color: var(--color-ink); }
+.doc h3 { font-size: 1.2em; line-height: 1.3; font-weight: 600; color: var(--color-ink); }
+.doc strong { font-weight: 700; color: var(--color-ink); }
+.doc ul { padding-left: 1.2em; list-style: disc; }
+.doc li + li { margin-top: 0.3em; }
+.doc blockquote { padding-left: 14px; border-left: 3px solid oklch(0.869 0.022 252.894); color: var(--color-ink-2); }
+.doc .check { list-style: none; padding-left: 0; }
+.doc .check li { display: flex; gap: 10px; align-items: baseline; }
+.doc .check li::before {
+  content: "";
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  transform: translateY(2px);
+  border: 1.5px solid oklch(0.704 0.04 256.788);
+  border-radius: 4px;
+}
+.doc .check li[data-checked]::before {
+  border-color: var(--color-accent);
+  background: var(--color-accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-6.5'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+
+/* A Title node: plain text on the canvas, no box (TitleNode). The site
+   shows them as if the canvas were zoomed in ("Scale with zoom"). */
+.title-node {
+  position: relative;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+.title-node--selected {
+  box-shadow: 0 0 0 2px rgb(59 130 246 / 0.7);
+}
+/* React Flow handles: dark dots with a white edge, on the four sides. */
+.handles > i {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  background: #1a192b;
+}
+.handles > i:nth-child(1) { left: -5px; top: calc(50% - 4.5px); }
+.handles > i:nth-child(2) { right: -5px; top: calc(50% - 4.5px); }
+.handles > i:nth-child(3) { top: -5px; left: calc(50% - 4.5px); }
+.handles > i:nth-child(4) { bottom: -5px; left: calc(50% - 4.5px); }
+
+/* The canvas chrome (canvas-ui-container): a white pill, rounded-xl, shadow-md. */
+.ui-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid oklch(0.929 0.013 255.508);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.06);
+  color: #475569;
+  font-size: 13px;
+}
+
+/* A Link node (LinkNode, default look): one line, its icon and the page title. */
+.link-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink);
+  text-decoration: none;
+  transition: box-shadow var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+.link-node svg { width: 18px; height: 18px; flex-shrink: 0; }
+.link-node:hover { box-shadow: 0 3px 12px rgb(15 23 42 / 0.12), 0 0 0 2px rgb(59 130 246 / 0.5); }
+.link-node:active { transform: translateY(1px); }
+
+/* Avatars and the live cursor of a collaborator. */
+.cursor { position: absolute; pointer-events: none; }
+.cursor span {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #fff;
 }

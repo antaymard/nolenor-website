@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import { getLang } from "@/i18n";
+import Edge from "@/components/home/Edge.astro";
 import { SHOWCASE_CANVAS_URLS } from "@/lib/constants";
 import gameEn from "@/assets/img/home/s04-monitorer-en.webp";
 import gameFr from "@/assets/img/home/s04-monitorer-fr.webp";
@@ -18,7 +20,7 @@ const en = {
   aside: "Buying a home, negotiating a salary, planning a long trip: it works for those too.",
   cards: [
     {
-      who: "Builders",
+      canvas: "Brume · suivi", tile: "#0d9488",
       title: "Your product, from idea to launch.",
       body: "Market watch, specs, beta feedback and screenshots in one place. Your coding agent reads the spec straight from the canvas.",
       img: gameEn,
@@ -26,7 +28,7 @@ const en = {
       href: SHOWCASE_CANVAS_URLS.builders,
     },
     {
-      who: "Small businesses",
+      canvas: "Atelier Kervern", tile: "#0284c7",
       title: "The whole business on one surface.",
       body: "Clients, processes, projects and documents, kept where you can see them. On your own, or with an integrator who sets it up for you.",
       img: companyEn,
@@ -34,7 +36,7 @@ const en = {
       href: SHOWCASE_CANVAS_URLS.business,
     },
     {
-      who: "Buried in documents",
+      canvas: "Renazine · clinical file", tile: "#ea580c",
       title: "Five hundred pages, nine summaries.",
       body: "Drop in the PDF. Each study becomes a clear card with its sources, which you correct and complete.",
       img: studiesEn,
@@ -50,7 +52,7 @@ const fr: typeof en = {
   aside: "Et pour un achat immobilier, une négociation de salaire ou un grand voyage, ça marche aussi.",
   cards: [
     {
-      who: "Builders",
+      canvas: "Brume · suivi", tile: "#0d9488",
       title: "Votre produit, de l’idée au lancement.",
       body: "La veille, la spec, les retours de bêta et les captures au même endroit. Votre agent de code lit la spec directement sur le canvas.",
       img: gameFr,
@@ -58,7 +60,7 @@ const fr: typeof en = {
       href: SHOWCASE_CANVAS_URLS.builders,
     },
     {
-      who: "Petites entreprises",
+      canvas: "Atelier Kervern", tile: "#0284c7",
       title: "Toute l’entreprise sur une seule surface.",
       body: "Les clients, les process, les projets et les documents, rangés là où on les voit. Seul, ou avec un intégrateur qui le paramètre pour vous.",
       img: companyFr,
@@ -66,7 +68,7 @@ const fr: typeof en = {
       href: SHOWCASE_CANVAS_URLS.business,
     },
     {
-      who: "Noyés sous les documents",
+      canvas: "Rénazine · dossier clinique", tile: "#ea580c",
       title: "Cinq cents pages, neuf fiches.",
       body: "Déposez le PDF. Chaque étude devient une fiche claire, avec ses sources, que vous corrigez et complétez.",
       img: studiesFr,
@@ -78,142 +80,150 @@ const fr: typeof en = {
 const copy = { en, fr }[lang];
 
 /*
- * Three people, three real canvases. Each card is a link to a public,
- * duplicable canvas (still to be prepared: see SHOWCASE_CANVAS_URLS), so the
- * page shows instead of telling. The links read as links, not buttons: the
- * page keeps one button.
+ * Three real canvases, shown the way the app shows a sub-canvas: a card
+ * whose cover is the canvas itself, its colour tile, its name and the
+ * "go to" arrow. Each card is the link (to a public, duplicable canvas,
+ * still to be prepared: see SHOWCASE_CANVAS_URLS); its document node says
+ * who it is for.
  */
 ---
 
 <section id="use-cases" class="projects" aria-labelledby="projects-title">
   <div class="wrap">
-    <header class="projects__head">
-      <h2 id="projects-title">{copy.title}</h2>
-      <p>{copy.lede}</p>
-    </header>
+    <h2 id="projects-title" class="title-node projects__title">{copy.title}</h2>
+    <div class="node doc projects__lede"><p>{copy.lede}</p></div>
 
     <div class="projects__grid">
       {
         copy.cards.map((card) => (
-          <article class="card" data-reveal>
-            <figure class="card__shot">
-              <Image src={card.img} alt={card.alt} widths={[480, 720, 960]} sizes="(min-width: 60rem) 30vw, 100vw" />
-            </figure>
-            <div class="card__text">
-              <p class="card__who">{card.who}</p>
+          <article class="project" data-reveal>
+            <a href={card.href} class="node canvas-card" rel="noopener noreferrer" aria-label={`${copy.open} · ${card.canvas}`}>
+              <span class="canvas-card__cover">
+                <Image src={card.img} alt={card.alt} widths={[480, 720, 960]} sizes="(min-width: 60rem) 30vw, 100vw" />
+              </span>
+              <span class="canvas-card__bar">
+                <span class="canvas-card__tile" style={`background:${card.tile}`}>{card.canvas[0]}</span>
+                <span class="canvas-card__name">{card.canvas}</span>
+                <Icon name="lucide:arrow-up-right" class="canvas-card__go" />
+              </span>
+            </a>
+            <Edge from={50} to={50} height={32} />
+            <div class="node doc">
               <h3>{card.title}</h3>
               <p>{card.body}</p>
-              <a href={card.href} class="text-link card__link" rel="noopener noreferrer">
-                {copy.open}
-              </a>
             </div>
           </article>
         ))
       }
     </div>
 
-    <p class="projects__aside">{copy.aside}</p>
+    <div class="node doc projects__aside"><p>{copy.aside}</p></div>
   </div>
 </section>
 
 <style>
   .projects {
-    padding-block: var(--section-gap);
-    background: var(--color-paper-3);
-    border-block: var(--rule-hair) solid var(--color-rule);
+    padding-block: var(--section-gap-s);
   }
 
-  .projects__head {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    max-width: 40rem;
-    margin-bottom: var(--space-2xl);
-  }
-
-  .projects__head h2 {
-    font-family: var(--font-display);
-    font-weight: 400;
+  .projects__title {
+    margin: 0 0 var(--space-md) -8px;
     font-size: var(--text-section);
     line-height: 1.08;
-    letter-spacing: var(--tracking-display);
   }
 
-  .projects__head p {
+  .projects__lede {
+    max-width: 32rem;
+    margin-bottom: var(--space-2xl);
     font-size: var(--text-lg);
-    line-height: 1.55;
-    color: var(--color-ink-2);
   }
 
   .projects__grid {
     display: grid;
-    gap: var(--space-xl) var(--gap-columns);
+    gap: var(--space-2xl) var(--gap-columns);
   }
 
-  .card {
+  .project {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project h3 {
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+
+  .canvas-card {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid var(--color-rule);
-    border-radius: var(--radius-card);
-    background: var(--color-paper);
+    color: inherit;
+    text-decoration: none;
+    transition: box-shadow var(--dur-short) var(--ease-out);
   }
 
-  .card__shot {
-    margin: 0;
+  .canvas-card:hover {
+    box-shadow:
+      0 3px 12px rgb(15 23 42 / 0.12),
+      0 0 0 2px rgb(59 130 246 / 0.5);
+  }
+
+  .canvas-card__cover {
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    border-bottom: 1px solid var(--color-rule);
+    background: oklch(0.968 0.007 247.896);
   }
 
-  .card__shot :global(img) {
+  .canvas-card__cover :global(img) {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: left top;
   }
 
-  .card__text {
+  .canvas-card__bar {
     display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid oklch(0.929 0.013 255.508);
+    background: #fff;
+  }
+
+  .canvas-card__tile {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .canvas-card__name {
     flex: 1;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    padding: var(--space-lg);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
   }
 
-  .card__who {
-    font-size: var(--text-xs);
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-  }
-
-  .card h3 {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: var(--text-title);
-    line-height: 1.25;
-    color: var(--color-ink);
-    text-wrap: balance;
-  }
-
-  .card__text > p:not(.card__who) {
-    font-size: var(--text-md);
-    line-height: 1.6;
-    color: var(--color-ink-2);
-  }
-
-  .card__link {
-    margin-top: auto;
-    padding-top: var(--space-sm);
+  .canvas-card__go {
+    width: 16px;
+    height: 16px;
+    color: #64748b;
   }
 
   .projects__aside {
-    margin-top: var(--space-xl);
-    font-size: var(--text-md);
-    color: var(--color-muted);
+    max-width: 34rem;
+    margin-top: var(--space-2xl);
+    color: var(--color-ink-2);
   }
 
   @media (min-width: 60rem) {

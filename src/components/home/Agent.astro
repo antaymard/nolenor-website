@@ -20,7 +20,6 @@ const en = {
   ],
   img: askEn,
   alt: "Nolë answers a question about a 500-page clinical file: it quotes the page it relies on, adds the point to the study card, and the PDF opens in a window at that exact page, the passage highlighted.",
-  caption: "Asked a question, Nolë answers with the page, and the PDF opens right there.",
 };
 const fr: typeof en = {
   title: "Un agent, beaucoup de métiers.",
@@ -36,7 +35,6 @@ const fr: typeof en = {
   ],
   img: askFr,
   alt: "Nolë répond à une question sur un dossier clinique de 500 pages : il cite la page sur laquelle il s’appuie, ajoute le point à la fiche de l’étude, et le PDF s’ouvre dans une fenêtre à cette page précise, le passage surligné.",
-  caption: "À une question, Nolë répond avec la page, et le PDF s’ouvre juste là.",
 };
 const copy = { en, fr }[lang];
 
@@ -50,29 +48,30 @@ const copy = { en, fr }[lang];
 <section id="nole" class="agent" aria-labelledby="agent-title">
   <div class="wrap agent__grid">
     <div class="agent__text">
-      <h2 id="agent-title">{copy.title}</h2>
-      <p class="agent__lede">{copy.lede}</p>
-      <ul class="agent__skills">
-        {
-          copy.skills.map(([verb, what]) => (
-            <li>
-              <strong>{verb}</strong> <span>{what}</span>
-            </li>
-          ))
-        }
-      </ul>
+      <h2 id="agent-title" class="title-node agent__title">{copy.title}</h2>
+      <div class="node doc agent__list">
+        <p>{copy.lede}</p>
+        <ul>
+          {
+            copy.skills.map(([verb, what]) => (
+              <li>
+                <strong>{verb}</strong> {what}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
 
-    <figure class="agent__shot" data-reveal>
+    <figure class="node agent__shot" data-reveal>
       <Image src={copy.img} alt={copy.alt} widths={[720, 1080, 1440]} sizes="(min-width: 60rem) 55vw, 100vw" />
-      <figcaption>{copy.caption}</figcaption>
     </figure>
   </div>
 </section>
 
 <style>
   .agent {
-    padding-block: var(--section-gap);
+    padding-block: var(--section-gap-s);
   }
 
   .agent__grid {
@@ -81,68 +80,37 @@ const copy = { en, fr }[lang];
     align-items: center;
   }
 
-  .agent__text h2 {
-    font-family: var(--font-display);
-    font-weight: 400;
+  .agent__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .agent__title {
+    margin: 0 0 0 -8px;
     font-size: var(--text-section);
     line-height: 1.08;
-    letter-spacing: var(--tracking-display);
-    text-wrap: balance;
   }
 
-  .agent__lede {
-    max-width: 40ch;
-    margin-top: var(--space-md);
-    font-size: var(--text-lg);
-    line-height: 1.55;
-    color: var(--color-ink-2);
+  .agent__list {
+    max-width: 30rem;
+    font-size: 16px;
   }
 
-  .agent__skills {
-    margin: var(--space-xl) 0 0;
-    padding: 0;
-    list-style: none;
-    border-top: var(--rule-hair) solid var(--color-rule);
-  }
-
-  .agent__skills li {
-    display: grid;
-    grid-template-columns: 8.5rem minmax(0, 1fr);
-    align-items: baseline;
-    gap: var(--space-sm);
-    padding-block: var(--space-sm);
-    border-bottom: var(--rule-hair) solid var(--color-rule);
-    font-size: var(--text-md);
-    line-height: 1.5;
-  }
-
-  .agent__skills strong {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: var(--text-lg);
-    color: var(--color-accent);
-  }
-
-  .agent__skills span {
-    color: var(--color-ink-2);
+  .agent__list ul {
+    margin-top: 0.8em;
   }
 
   .agent__shot {
     margin: 0;
+    overflow: hidden;
   }
 
   .agent__shot :global(img) {
+    display: block;
     width: 100%;
     height: auto;
-    border-radius: var(--radius-card);
-    outline: 1px solid var(--color-shade);
-    outline-offset: -1px;
-  }
-
-  .agent__shot figcaption {
-    margin-top: var(--space-sm);
-    font-size: var(--text-sm);
-    color: var(--color-muted);
   }
 
   @media (min-width: 60rem) {

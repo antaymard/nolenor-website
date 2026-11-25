@@ -1,0 +1,69 @@
+---
+/*
+ * A connection between two nodes stacked one under the other, drawn like
+ * the app's edges (CustomEdge): a thin bezier, an open arrow at the target,
+ * an optional label pill. `from` and `to` are horizontal positions in % of
+ * the row, so the edge follows the layout at every width.
+ */
+interface Props {
+  from?: number;
+  to?: number;
+  height?: number;
+  label?: string;
+  class?: string;
+}
+const { from = 50, to = 50, height = 72, label, class: className } = Astro.props;
+const x1 = from * 10;
+const x2 = to * 10;
+const d = `M ${x1} 0 C ${x1} ${height * 0.55}, ${x2} ${height * 0.45}, ${x2} ${height - 1}`;
+---
+
+<div class:list={["edge", className]} style={`height:${height}px`} aria-hidden="true">
+  <svg class="edge__line" viewBox={`0 0 1000 ${height}`} preserveAspectRatio="none">
+    <path d={d} vector-effect="non-scaling-stroke"></path>
+  </svg>
+  <svg class="edge__arrow" style={`left:${to}%`} width="14" height="9" viewBox="0 0 14 9">
+    <polyline points="1,1 7,8 13,1"></polyline>
+  </svg>
+  {label && <span class="edge__label" style={`left:${(from + to) / 2}%`}>{label}</span>}
+</div>
+
+<style>
+  .edge {
+    position: relative;
+    width: 100%;
+  }
+  .edge__line {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .edge path,
+  .edge polyline {
+    fill: none;
+    stroke: #94a3b8;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .edge__arrow {
+    position: absolute;
+    bottom: 0;
+    transform: translateX(-50%);
+  }
+  .edge__label {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1px 8px;
+    border: 1px solid oklch(0.929 0.013 255.508);
+    border-radius: 999px;
+    background: #fff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    color: #64748b;
+    white-space: nowrap;
+  }
+</style>

@@ -1,5 +1,6 @@
 ---
 import { CONTACT_URL } from "@/lib/constants";
+import { Icon } from "astro-icon/components";
 import { getLang, localizePath } from "@/i18n";
 
 const lang = getLang(Astro.currentLocale);
@@ -27,127 +28,86 @@ const fr: typeof en = {
 const copy = { en, fr }[lang];
 
 /*
- * Who is behind it, said plainly, and what is missing, said just as
- * plainly: the list of what doesn't exist yet is part of the promise.
+ * Who is behind it in a document node, the two links as Link nodes, and
+ * what is missing as a to-do list: unchecked, because it isn't done yet.
  */
 ---
 
 <section id="about" class="maker" aria-labelledby="maker-title">
   <div class="wrap maker__grid">
     <div class="maker__text">
-      <h2 id="maker-title">{copy.title}</h2>
-      <p>{copy.body}</p>
-      <blockquote>{copy.quote}</blockquote>
-      <p class="maker__links">
-        <a href={localizePath("/manifesto", lang)} class="text-link">{copy.manifesto}</a>
-        <span aria-hidden="true">·</span>
-        <a href={CONTACT_URL} class="text-link">{copy.contact}</a>
-      </p>
+      <h2 id="maker-title" class="title-node maker__title">{copy.title}</h2>
+      <div class="node doc maker__doc">
+        <p>{copy.body}</p>
+        <blockquote>{copy.quote}</blockquote>
+      </div>
+      <div class="maker__links">
+        <a href={localizePath("/manifesto", lang)} class="node link-node"><Icon name="lucide:file-text" />{copy.manifesto}</a>
+        <a href={CONTACT_URL} class="node link-node"><Icon name="lucide:mail" />{copy.contact}</a>
+      </div>
     </div>
 
-    <aside class="maker__missing" aria-labelledby="missing-title">
-      <h3 id="missing-title">{copy.missingTitle}</h3>
-      <ul>
+    <div class="node doc maker__missing">
+      <h3>{copy.missingTitle}</h3>
+      <ul class="check">
         {copy.missing.map((item) => <li>{item}</li>)}
       </ul>
-    </aside>
+    </div>
   </div>
 </section>
 
 <style>
   .maker {
-    padding-block: var(--section-gap);
+    padding-block: var(--section-gap-s) var(--section-gap);
   }
 
   .maker__grid {
     display: grid;
     gap: var(--space-2xl) var(--gap-columns);
-    align-items: start;
+    align-items: end;
   }
 
   .maker__text {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-lg);
+    gap: var(--space-md);
   }
 
-  .maker h2 {
-    font-family: var(--font-display);
-    font-weight: 400;
+  .maker__title {
+    margin: 0 0 0 -8px;
     font-size: var(--text-section);
     line-height: 1.08;
-    letter-spacing: var(--tracking-display);
   }
 
-  .maker__text > p:not(.maker__links) {
-    max-width: 46ch;
-    font-size: var(--text-lg);
-    line-height: 1.55;
-    color: var(--color-ink-2);
+  .maker__doc {
+    max-width: 36rem;
+    font-size: 17px;
   }
 
-  .maker blockquote {
-    max-width: 34ch;
-    margin: 0;
-    padding-left: var(--space-lg);
-    border-left: 2px solid var(--color-highlight);
-    font-family: var(--font-display);
-    font-size: var(--text-title);
-    font-style: italic;
-    line-height: 1.35;
+  .maker__doc blockquote {
+    font-weight: 600;
     color: var(--color-ink);
   }
 
   .maker__links {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-sm);
-    align-items: center;
-    color: var(--color-muted);
-  }
-
-  .maker__missing {
-    padding: var(--space-lg);
-    border: 1px dashed var(--color-rule-2);
-    border-radius: var(--radius-card);
   }
 
   .maker__missing h3 {
-    margin-bottom: var(--space-sm);
-    font-family: var(--font-body);
-    font-size: var(--text-xs);
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-muted);
+    font-weight: 700;
   }
 
-  .maker__missing ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .maker__missing li {
-    padding-block: var(--space-xs);
-    font-size: var(--text-md);
-    color: var(--color-ink-2);
-  }
-
-  .maker__missing li::before {
-    content: "○";
-    margin-right: var(--space-xs);
-    color: var(--color-rule-2);
+  .maker__missing li + li {
+    margin-top: 0.5em;
   }
 
   @media (min-width: 60rem) {
     .maker__grid {
       grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
       gap: var(--space-3xl);
-    }
-
-    .maker__missing {
-      margin-top: var(--space-2xl);
     }
   }
 </style>

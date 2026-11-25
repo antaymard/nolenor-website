@@ -1,5 +1,7 @@
 ---
+import { Icon } from "astro-icon/components";
 import PagesToCanvas from "@/components/home/PagesToCanvas.astro";
+import Edge from "@/components/home/Edge.astro";
 import { APP_SIGNUP_URL, PUBLIC_CANVAS_URL } from "@/lib/constants";
 import { getLang } from "@/i18n";
 
@@ -8,64 +10,92 @@ const lang = getLang(Astro.currentLocale);
 const en = {
   pace: "Think at your own pace.",
   ai: "AI when you want it.",
-  toggle: "AI",
+  you: "You",
   lede: "Nolënor is an infinite canvas for deep work. Structure your ideas, explore options with AI, keep your dashboards in one place, plan what comes next.",
-  off: "AI off, it is already a full tool: documents, tables, views and files, all laid out on the canvas.",
-  on: "AI on, Nolë works with you, in small steps you can follow and redirect.",
+  terms: "Open beta. No card, export any time.",
   cta: "Open a canvas",
   second: "See a real canvas",
-  terms: "Open beta. No card, export any time.",
+  nole: "Nolë",
+  aiLabel: "AI",
+  off: "Off, it is already a full tool: documents, tables, views and files, all on the canvas.",
+  on: "On, Nolë works with you, in small steps you can follow and redirect.",
+  note: "The same project, in pages then on a canvas. Drag to go from one to the other.",
+  window: "WMS rollout · from pages to canvas",
 };
 const fr: typeof en = {
   pace: "Pensez à votre rythme.",
   ai: "L’IA, quand vous voulez.",
-  toggle: "IA",
+  you: "Vous",
   lede: "Nolënor est un canvas infini pour travailler en profondeur. Structurez vos idées, explorez des pistes avec l’IA, centralisez vos tableaux de bord, planifiez la suite.",
-  off: "IA éteinte, c’est déjà un outil complet : documents, tables, vues et fichiers, tout se range sur le canvas.",
-  on: "IA allumée, Nolë travaille avec vous, par petites étapes que vous suivez et redirigez.",
+  terms: "Bêta ouverte. Sans carte, export à tout moment.",
   cta: "Ouvrir un canvas",
   second: "Voir un vrai canvas",
-  terms: "Bêta ouverte. Sans carte, export à tout moment.",
+  nole: "Nolë",
+  aiLabel: "IA",
+  off: "Éteinte, c’est déjà un outil complet : documents, tables, vues et fichiers, tout sur le canvas.",
+  on: "Allumée, Nolë travaille avec vous, par petites étapes que vous suivez et redirigez.",
+  note: "Le même projet, en pages puis en canvas. Faites glisser pour passer de l’un à l’autre.",
+  window: "WMS rollout · des pages au canvas",
 };
 const copy = { en, fr }[lang];
 
 /*
- * The promise, then the proof right under it. The second line of the
- * headline carries a real switch: the reader turns the AI on and off and
- * the line below says what Nolënor is in each state. It starts off, on
- * purpose: the tool comes first, the agent when you call it.
- *
- * One button for the whole page ("Open a canvas"); the real public canvas
- * is a link, not a second button.
+ * The hero is a corner of a canvas. The headline is a Title node, selected,
+ * with your cursor on it; the pitch is a document node; "See a real canvas"
+ * is a Link node; the AI switch sits in a node of its own; a yellow node
+ * points, with a real edge, at the window below, which holds the
+ * pages-to-canvas slider.
  */
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="wrap">
-    <div class="hero__text">
-      <h1 id="hero-title" class="hero__title">
-        <span class="hero__pace">{copy.pace}</span>
+  <div class="wrap hero__grid">
+    <div class="hero__main">
+      <h1 id="hero-title" class="title-node title-node--selected hero__title">
+        <span>{copy.pace}</span>
         <span class="hero__ai">{copy.ai}</span>
+        <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="cursor hero__cursor" aria-hidden="true">
+          <svg width="18" height="20" viewBox="0 0 18 20"><path d="M1 1 L1 16 L5 12 L8 19 L11 18 L8 11 L14 11 Z" fill="#505785" stroke="white" stroke-width="1.5"></path></svg>
+          <span style="background:#505785">{copy.you}</span>
+        </span>
       </h1>
 
-      <p class="hero__lede">{copy.lede}</p>
-
-      <div class="hero__switch" data-ai-switch>
-        <button type="button" role="switch" aria-checked="false" class="switch" aria-describedby="hero-ai-state">
-          <span class="switch__track"><span class="switch__thumb"></span></span>
-          <span class="switch__label">{copy.toggle}</span>
-        </button>
-        <p id="hero-ai-state" class="hero__state" aria-live="polite" data-off={copy.off} data-on={copy.on}>{copy.off}</p>
+      <div class="node doc hero__lede">
+        <p>{copy.lede}</p>
+        <p class="hero__terms">{copy.terms}</p>
       </div>
 
       <div class="hero__actions">
         <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">{copy.cta}</a>
-        <a href={PUBLIC_CANVAS_URL} class="hero__second" rel="noopener noreferrer">{copy.second}</a>
+        <a href={PUBLIC_CANVAS_URL} class="node link-node" rel="noopener noreferrer">
+          <Icon name="lucide:link" />{copy.second}<Icon name="lucide:arrow-up-right" class="hero__ext" />
+        </a>
       </div>
-      <p class="hero__terms">{copy.terms}</p>
     </div>
 
-    <div class="hero__demo">
+    <div class="hero__side">
+      <div class="node hero__switch" data-ai-switch>
+        <div class="hero__switch-head"><span class="hero__tile">N</span>{copy.nole}</div>
+        <div class="hero__switch-body">
+          <button type="button" role="switch" aria-checked="false" class="switch" aria-describedby="hero-ai-state">
+            <span class="switch__track"><span class="switch__thumb"></span></span>
+            <span class="switch__label">{copy.aiLabel}</span>
+          </button>
+          <p id="hero-ai-state" aria-live="polite" data-off={copy.off} data-on={copy.on}>{copy.off}</p>
+        </div>
+      </div>
+      <div class="node node--yellow doc hero__note">{copy.note}</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <Edge from={87} to={84} height={56} class="hero__edge" />
+    <div class="node hero__window">
+      <div class="hero__window-head">
+        <Icon name="lucide:notebook-text" />
+        {copy.window}
+      </div>
       <PagesToCanvas />
     </div>
   </div>
@@ -74,7 +104,7 @@ const copy = { en, fr }[lang];
 <script>
   document.querySelectorAll<HTMLElement>("[data-ai-switch]").forEach((root) => {
     const button = root.querySelector<HTMLButtonElement>('[role="switch"]')!;
-    const state = root.querySelector<HTMLElement>(".hero__state")!;
+    const state = root.querySelector<HTMLElement>("#hero-ai-state")!;
     button.addEventListener("click", () => {
       const on = button.getAttribute("aria-checked") !== "true";
       button.setAttribute("aria-checked", String(on));
@@ -88,60 +118,110 @@ const copy = { en, fr }[lang];
     padding-block: var(--space-2xl) var(--section-gap-s);
   }
 
-  .hero__text {
+  .hero__grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .hero__main {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-lg);
-    max-width: 52rem;
-    margin-inline: auto;
-    text-align: center;
   }
 
   .hero__title {
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 400;
-    color: var(--color-ink);
-    min-width: 0;
-  }
-
-  .hero__pace {
-    font-size: var(--text-display);
+    margin: 0 0 var(--space-sm) -8px;
+    font-size: clamp(2.4rem, 4vw + 0.6rem, 4.25rem);
     line-height: 1.02;
-    letter-spacing: var(--tracking-display);
-    text-wrap: balance;
   }
 
   .hero__ai {
-    font-size: var(--text-display-s);
-    line-height: 1.1;
-    letter-spacing: var(--tracking-display);
     color: var(--color-accent);
-    font-style: italic;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__title > span:not(.handles):not(.cursor) {
+      white-space: nowrap;
+    }
+  }
+
+  .hero__cursor {
+    right: 12%;
+    bottom: -26px;
   }
 
   .hero__lede {
-    max-width: 44ch;
-    font-size: var(--text-lead);
-    line-height: 1.45;
-    color: var(--color-ink-2);
-    text-wrap: pretty;
+    max-width: 38rem;
+    font-size: var(--text-lg);
   }
 
-  .hero__switch {
+  .hero__terms {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .hero__actions {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-md);
-    max-width: 40rem;
-    padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-sm);
-    border: 1px solid var(--color-rule);
-    border-radius: var(--radius-pill);
-    background: var(--color-paper-3);
-    text-align: left;
+  }
+
+  .hero__ext {
+    width: 15px !important;
+    height: 15px !important;
+    color: var(--color-muted);
+  }
+
+  .hero__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .hero__switch-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border-bottom: 1px solid #eef2f6;
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .hero__tile {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: #7c3aed;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .hero__switch-body {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 12px 14px 14px 8px;
+    font-size: var(--text-sm);
+    line-height: 1.45;
+    color: var(--color-ink-2);
+  }
+
+  .hero__switch-body p {
+    min-height: 2.9em;
+    display: flex;
+    align-items: center;
   }
 
   .switch {
@@ -150,7 +230,7 @@ const copy = { en, fr }[lang];
     align-items: center;
     gap: var(--space-xs);
     min-height: 44px;
-    padding: 0 var(--space-xs);
+    padding: 0 6px;
     border: 0;
     background: none;
     font: 800 var(--text-sm) / 1 var(--font-body);
@@ -160,10 +240,10 @@ const copy = { en, fr }[lang];
 
   .switch__track {
     position: relative;
-    width: 44px;
-    height: 26px;
-    border-radius: var(--radius-pill);
-    background: var(--color-rule-2);
+    width: 40px;
+    height: 24px;
+    border-radius: 999px;
+    background: #cbd5e1;
     transition: background-color var(--dur-short) var(--ease-out);
   }
 
@@ -171,11 +251,11 @@ const copy = { en, fr }[lang];
     position: absolute;
     top: 3px;
     left: 3px;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    background: var(--color-paper-3);
-    box-shadow: 0 1px 3px var(--color-shade);
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(15 23 42 / 0.2);
     transition: transform var(--dur-short) var(--ease-out);
   }
 
@@ -184,71 +264,80 @@ const copy = { en, fr }[lang];
   }
 
   .switch[aria-checked="true"] .switch__thumb {
-    transform: translateX(18px);
+    transform: translateX(16px);
   }
 
   .switch:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
-    border-radius: var(--radius-pill);
+    border-radius: 999px;
   }
 
-  .hero__state {
-    min-height: 2.9em;
+  .hero__note {
+    max-width: 20rem;
+    color: #713f12;
+    font-weight: 600;
+  }
+
+  .hero__edge {
+    display: none;
+  }
+
+  .hero__window {
+    margin-top: var(--space-xl);
+    overflow: hidden;
+  }
+
+  .hero__window-head {
     display: flex;
     align-items: center;
-    font-size: var(--text-sm);
-    line-height: 1.45;
-    color: var(--color-ink-2);
-  }
-
-  .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: var(--space-md) var(--space-lg);
-    margin-top: var(--space-xs);
-  }
-
-  .hero__second {
-    display: inline-flex;
-    align-items: center;
-    min-height: 48px;
+    gap: 8px;
+    height: 42px;
+    padding: 0 14px;
+    border-bottom: 1px solid #eef2f6;
+    font-size: 14px;
     font-weight: 700;
-    color: var(--color-ink);
-    text-decoration: underline;
-    text-decoration-color: var(--color-rule-2);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.3em;
-    transition: text-decoration-color var(--dur-short) var(--ease-out);
+    color: #475569;
   }
 
-  .hero__second:hover {
-    text-decoration-color: var(--color-accent);
+  .hero__window-head svg {
+    width: 16px;
+    height: 16px;
   }
 
-  .hero__terms {
-    margin-top: calc(var(--space-sm) * -1);
-    font-size: var(--text-sm);
-    color: var(--color-muted);
-  }
+  @media (min-width: 60rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      gap: var(--space-2xl);
+    }
 
-  .hero__demo {
-    max-width: 72rem;
-    margin: var(--space-2xl) auto 0;
-  }
+    .hero__grid {
+      align-items: stretch;
+    }
 
-  @media (max-width: 40rem) {
+    .hero__side {
+      padding-top: var(--space-lg);
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
     .hero__switch {
-      border-radius: var(--radius-card);
+      width: 100%;
+      max-width: 22rem;
+    }
+
+    .hero__edge {
+      display: block;
+    }
+
+    .hero__window {
+      margin-top: 0;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .switch__track,
-    .switch__thumb,
-    .hero__second {
+    .switch__thumb {
       transition: none;
     }
   }
