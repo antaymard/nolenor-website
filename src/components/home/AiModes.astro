@@ -74,7 +74,7 @@ const copy = { en, fr }[lang];
             <h2 class="title-node mode__title">{mode.title}</h2>
             <div class="node doc mode__body"><p>{mode.body}</p></div>
           </div>
-          <figure class="node mode__shot">
+          <figure class:list={["node mode__shot", i % 2 === 0 ? "bleed-right" : "bleed-left"]}>
             <Image src={mode.img} alt={mode.alt} widths={[720, 1080, 1440]} sizes="(min-width: 60rem) 58vw, 100vw" />
           </figure>
         </div>
@@ -165,7 +165,7 @@ const copy = { en, fr }[lang];
   }
 
   .mode__shot {
-    margin: 0;
+    margin-block: 0;
     overflow: hidden;
   }
 

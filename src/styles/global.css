@@ -460,6 +460,22 @@ html {
 .link-node:hover { box-shadow: 0 3px 12px rgb(15 23 42 / 0.12), 0 0 0 2px rgb(59 130 246 / 0.5); }
 .link-node:active { transform: translateY(1px); }
 
+/* Nodes are not boxed in by the page's column: on wide screens, an image
+   node can run past the side margin, the way a node sits wherever it was
+   dropped on a canvas. --bleed is how far: the space beside the container,
+   up to 10rem, keeping 24px from the screen's edge. */
+:root {
+  --bleed: 0px;
+}
+@media (min-width: 60rem) {
+  :root {
+    --bleed: min(10rem, calc(max(0px, (100vw - var(--container)) / 2) + var(--gutter) - 24px));
+  }
+  .bleed-left { margin-left: calc(-1 * var(--bleed)); }
+  .bleed-right { margin-right: calc(-1 * var(--bleed)); }
+  .bleed-both { margin-inline: calc(-0.5 * var(--bleed)); }
+}
+
 /* Avatars and the live cursor of a collaborator. */
 .cursor { position: absolute; pointer-events: none; }
 .cursor span {

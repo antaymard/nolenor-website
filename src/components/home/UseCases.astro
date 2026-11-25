@@ -178,7 +178,7 @@ const copy = { en, fr }[lang];
       {
         copy.cases.map((c, i) => (
           <article class="case" data-profiles={c.profiles.join(" ")} data-case>
-            <div class="node canvas-card">
+            <div class:list={["node canvas-card", i % 2 === 0 ? "bleed-left" : "bleed-right"]}>
               <div class="canvas-card__cover">
                 {c.shots.length > 1 && (
                   <div class="ui-pill case__tabs" role="tablist">
@@ -439,6 +439,12 @@ const copy = { en, fr }[lang];
   @media (min-width: 60rem) {
     .cases__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-3xl);
+    }
+
+    /* The right column sits a little lower: dropped, not gridded. */
+    .case:nth-child(even) {
+      margin-top: var(--space-3xl);
     }
   }
 </style>

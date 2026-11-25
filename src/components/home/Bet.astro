@@ -79,9 +79,9 @@ const copy = { en, fr }[lang];
 
     <div class="bet__grid">
       {
-        copy.proofs.map((proof) => (
+        copy.proofs.map((proof, i) => (
           <article class="proof" data-reveal>
-            <figure class="node proof__shot">
+            <figure class:list={["node proof__shot", i === 0 ? "bleed-left" : "bleed-right"]}>
               <Image src={proof.img} alt={proof.alt} widths={[640, 960, 1280]} sizes="(min-width: 60rem) 45vw, 100vw" />
             </figure>
             <Edge from={50} to={50} height={36} />
@@ -153,7 +153,7 @@ const copy = { en, fr }[lang];
   }
 
   .proof__shot {
-    margin: 0;
+    margin-block: 0;
     overflow: hidden;
     aspect-ratio: 16 / 9;
   }
