@@ -5,6 +5,8 @@ import { getLang } from "@/i18n";
 const lang = getLang(Astro.currentLocale);
 
 const en = {
+  heading: "With or without AI, it’s your call.",
+  lede: "The same canvas, the switch off or on. Watch both.",
   ai: "AI",
   window: "WMS rollout · budget",
   hint: { off: "Click to turn it on", on: "Click to turn it off" },
@@ -26,6 +28,8 @@ const en = {
   },
 };
 const fr: typeof en = {
+  heading: "Avec ou sans IA, c’est vous qui décidez.",
+  lede: "Le même canvas, l’interrupteur éteint ou allumé. Regardez les deux.",
   ai: "IA",
   window: "Déploiement WMS · budget",
   hint: { off: "Cliquez pour l’allumer", on: "Cliquez pour l’éteindre" },
@@ -58,7 +62,11 @@ const modes = ["off", "on"] as const;
  */
 ---
 
-<section id="ai" class="ai" aria-labelledby="ai-title" data-ai-section data-state="off">
+<section id="ai" class="ai" aria-labelledby="ai-heading" data-ai-section data-state="off">
+  <div class="wrap ai__intro">
+    <h2 id="ai-heading" class="title-node ai__heading">{copy.heading}</h2>
+    <div class="node doc ai__lede"><p>{copy.lede}</p></div>
+  </div>
   <div class="wrap ai__layout">
     <div class="node ai__window bleed-left">
       <div class="ai__window-head">
@@ -92,9 +100,9 @@ const modes = ["off", "on"] as const;
         {
           modes.map((m) => (
             <div class="node doc ai__text" data-for={m} aria-hidden={m === "on" ? "true" : undefined}>
-              <h2 id={m === "off" ? "ai-title" : undefined} class="ai__title">
+              <h3 id={m === "off" ? "ai-title" : undefined} class="ai__title">
                 {copy.states[m].title}
-              </h2>
+              </h3>
               <ol class="ai__steps">
                 {copy.states[m].steps.map(([verb, rest]) => (
                   <li>
@@ -192,7 +200,23 @@ const modes = ["off", "on"] as const;
 
 <style>
   .ai {
-    padding-block: var(--section-gap-s) var(--section-gap);
+    padding-block: var(--section-gap) var(--section-gap);
+  }
+
+  .ai__intro {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .ai__heading {
+    margin: 0 0 var(--space-md) -8px;
+    font-size: var(--text-section);
+    line-height: 1.1;
+  }
+
+  .ai__lede {
+    display: inline-block;
+    max-width: 34rem;
+    font-size: var(--text-lead);
   }
 
   .ai__layout {
