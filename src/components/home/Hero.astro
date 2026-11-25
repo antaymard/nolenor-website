@@ -101,13 +101,23 @@ const copy = { en, fr }[lang];
 </section>
 
 <script>
+  // The hero's switch and the AI section's switch are the same setting:
+  // each one announces its state ("nolenor:ai") and follows the other's.
   document.querySelectorAll<HTMLElement>("[data-ai-switch]").forEach((root) => {
     const button = root.querySelector<HTMLButtonElement>('[role="switch"]')!;
     const state = root.querySelector<HTMLElement>("#hero-ai-state")!;
-    button.addEventListener("click", () => {
-      const on = button.getAttribute("aria-checked") !== "true";
+    const show = (on: boolean) => {
       button.setAttribute("aria-checked", String(on));
       state.textContent = (on ? state.dataset.on : state.dataset.off) ?? "";
+    };
+    button.addEventListener("click", () => {
+      const on = button.getAttribute("aria-checked") !== "true";
+      show(on);
+      document.dispatchEvent(new CustomEvent("nolenor:ai", { detail: { state: on ? "on" : "off", source: "hero" } }));
+    });
+    document.addEventListener("nolenor:ai", (event) => {
+      const { state: next, source } = (event as CustomEvent<{ state: "off" | "on"; source: string }>).detail;
+      if (source !== "hero") show(next === "on");
     });
   });
 </script>
