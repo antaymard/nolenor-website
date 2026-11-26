@@ -563,22 +563,29 @@ html {
   flex-direction: column;
   justify-content: center;
 }
-.zoom__strip {
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior: contain;
-  scrollbar-width: none;
-  padding-block: 16px;
+/* The picture at the largest size the screen allows. Held upright, it lies
+   across the screen (rotated a quarter turn), as wide as the screen is tall. */
+.zoom__stage {
+  position: fixed;
+  inset: 0;
 }
-.zoom__strip::-webkit-scrollbar { display: none; }
 .zoom__media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: block;
-  width: auto;
   max-width: none;
-  height: min(62dvh, 230vw * 0.5625);
-  margin-inline: 16px;
-  border-radius: 8px;
-  background: #fff;
+  width: calc(100vw - 24px);
+  height: calc(100dvh - 24px);
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+}
+@media (orientation: portrait) {
+  .zoom__media {
+    width: calc(100dvh - 120px);
+    height: calc(100vw - 24px);
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
 }
 .zoom__close {
   position: absolute;
@@ -593,12 +600,5 @@ html {
   border-radius: 999px;
   background: rgb(255 255 255 / 0.14);
   color: #fff;
-}
-.zoom__hint {
-  margin-top: 8px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: rgb(255 255 255 / 0.7);
 }
 html[data-zoom-open] { overflow: hidden; }
