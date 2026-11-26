@@ -26,10 +26,9 @@ interface RawLink {
 }
 
 const primary: RawLink[] = [
-  { label: { en: "Features", fr: "Fonctionnalités" }, href: "/#features" },
-  { label: { en: "Nodes", fr: "Nœuds" }, href: "/#nodes" },
-  { label: { en: "Who it's for", fr: "Pour qui" }, href: "/#who-its-for" },
-  { label: { en: "FAQ", fr: "FAQ" }, href: "/#faq" },
+  { label: { en: "Why", fr: "Pourquoi" }, href: "/#why" },
+  { label: { en: "Use cases", fr: "Usages" }, href: "/#use-cases" },
+  { label: { en: "Pricing", fr: "Prix" }, href: "/#pricing" },
 ];
 
 const help: RawLink = { label: { en: "Help", fr: "Aide" }, href: "/help" };
@@ -42,7 +41,6 @@ const productExtra: RawLink[] = [
 
 const about: RawLink[] = [
   { label: { en: "Manifesto", fr: "Manifeste" }, href: "/manifesto" },
-  { label: { en: "Principles", fr: "Principes" }, href: "/principles" },
 ];
 
 const legal: RawLink[] = [

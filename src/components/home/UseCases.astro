@@ -1,0 +1,431 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+import { SHOWCASE_CANVAS_URLS } from "@/lib/constants";
+import monitorEn from "@/assets/img/home/s04-monitorer-en.webp";
+import monitorFr from "@/assets/img/home/s04-monitorer-fr.webp";
+import itersEn from "@/assets/img/home/s03b-creer-iterations-en.webp";
+import itersFr from "@/assets/img/home/s03b-creer-iterations-fr.webp";
+import companyEn from "@/assets/img/home/s01-structurer-en.webp";
+import companyFr from "@/assets/img/home/s01-structurer-fr.webp";
+import teamEn from "@/assets/img/home/s09-collaborer-en.webp";
+import teamFr from "@/assets/img/home/s09-collaborer-fr.webp";
+import pdfEn from "@/assets/img/home/s02a-comprendre-depot-en.webp";
+import pdfFr from "@/assets/img/home/s02a-comprendre-depot-fr.webp";
+import sheetsEn from "@/assets/img/home/s02b-comprendre-fiches-en.webp";
+import sheetsFr from "@/assets/img/home/s02b-comprendre-fiches-fr.webp";
+
+const lang = getLang(Astro.currentLocale);
+
+type Scenario = { title: string; body: string; img: ImageMetadata; alt: string };
+type Persona = { key: string; icon: string; name: string; who: string; promise: string; href: string; scenarios: Scenario[] };
+
+const en = {
+  title: ["Build ", "the workspace", " you were missing."] as [string, string, string],
+  lede: "Pick who you are: here is what your canvas looks like.",
+  choose: "Who are you?",
+  open: "Open this canvas",
+  personas: [
+    {
+      key: "builders",
+      icon: "lucide:rocket",
+      name: "Builders",
+      who: "Founders, indie makers, product people",
+      promise: "Launch your product without losing anything on the way.",
+      href: SHOWCASE_CANVAS_URLS.builders,
+      scenarios: [
+        { title: "Your launch numbers, live", body: "Wishlists, crashes, builds: mini-apps wired to your APIs, and Nolë cross-checks the sources.", img: monitorEn, alt: "A small game studio’s tracking canvas: Steam wishlists over seven weeks, crashes per day with a red spike, Discord members, crash-free sessions and the list of builds; Nolë explains the spike from the builds." },
+        { title: "Every version kept, every note in view", body: "References, brief, directions: every version stays on the canvas, with the note that moved it on.", img: itersEn, alt: "Four versions of a key art in a row, each with the note that led to the next one, the last marked approved." },
+      ],
+    },
+    {
+      key: "business",
+      icon: "lucide:store",
+      name: "Small businesses",
+      who: "Workshops, agencies, studios, trades",
+      promise: "Your whole business at a glance.",
+      href: SHOWCASE_CANVAS_URLS.business,
+      scenarios: [
+        { title: "Every part of the business in its place", body: "One sub-canvas per part of the business, the processes, the clients and the reference files, where you can see them.", img: companyEn, alt: "A joinery workshop’s canvas: one sub-canvas per area of the business, the quoting process, the active clients table and the reference files." },
+        { title: "The whole team on the same project", body: "Photos, plans, site notes, the build tracker and the client’s emails pulled from Gmail: everyone sees who is working where.", img: teamEn, alt: "A kitchen-fitting canvas with three people on it: the site photo, the plans, the site notes, the build tracker and a mini-app listing the client’s emails, filtered from Gmail, with the quote terms open in a window." },
+      ],
+    },
+    {
+      key: "experts",
+      icon: "lucide:book-open",
+      name: "Consultants & experts",
+      who: "Consultants, analysts, medical and legal",
+      promise: "Five hundred pages, nine summaries.",
+      href: SHOWCASE_CANVAS_URLS.documents,
+      scenarios: [
+        { title: "A 500-page file, read for you", body: "A 512-page PDF on the canvas: Nolë reads it and fills one card per study, with the page each time.", img: pdfEn, alt: "A 512-page clinical file on the canvas, linked to a frame of study cards that Nolë is filling: four of nine done, each with patients, effect, limit and source page." },
+        { title: "Clear cards, sourced to the page", body: "From the PDF to nine cards, then a summary table and a chart, all linked to the source. You check, correct and complete.", img: sheetsEn, alt: "The story left to right: the 512-page PDF, linked to nine study cards (patients, effect, limit, page), linked to a summary table, which feeds an effect chart." },
+      ],
+    },
+  ] as Persona[],
+};
+const fr: typeof en = {
+  title: ["Construisez ", "l’espace de travail", " qui vous manquait."] as [string, string, string],
+  lede: "Choisissez qui vous êtes : voici à quoi ressemble votre canvas.",
+  choose: "Qui êtes-vous ?",
+  open: "Ouvrir ce canvas",
+  personas: [
+    {
+      key: "builders",
+      icon: "lucide:rocket",
+      name: "Builders",
+      who: "Fondateurs, makers, équipes produit",
+      promise: "Lancez votre produit sans rien perdre en route.",
+      href: SHOWCASE_CANVAS_URLS.builders,
+      scenarios: [
+        { title: "Vos chiffres de lancement, en direct", body: "Wishlists, crashs, builds : des mini-apps branchées sur vos API, et Nolë qui croise les sources.", img: monitorFr, alt: "Le canvas de suivi d’un petit studio de jeu : wishlists Steam sur sept semaines, crashs par jour avec un pic en rouge, membres Discord, sessions sans crash et liste des builds ; Nolë explique le pic à partir des builds." },
+        { title: "Chaque version gardée, chaque retour visible", body: "Références, brief, pistes : chaque version reste sur le canvas, avec la remarque qui l’a fait évoluer.", img: itersFr, alt: "Quatre versions d’un key art à la suite, chacune avec la remarque qui a mené à la suivante, la dernière validée." },
+      ],
+    },
+    {
+      key: "business",
+      icon: "lucide:store",
+      name: "Petites entreprises",
+      who: "Ateliers, agences, studios, artisans",
+      promise: "Toute votre entreprise, d’un seul coup d’œil.",
+      href: SHOWCASE_CANVAS_URLS.business,
+      scenarios: [
+        { title: "Chaque pan de l’activité à sa place", body: "Un sous-canvas par pan de l’entreprise, les process, les clients et les documents de référence, là où on les voit.", img: companyFr, alt: "Le canvas d’un atelier de menuiserie : un sous-canvas par pan de l’entreprise, le process de devis, la table des clients actifs et les documents de référence." },
+        { title: "Toute l’équipe sur le même chantier", body: "Photos, plans, notes de chantier, suivi de fabrication et les mails du client tirés de Gmail : chacun voit qui travaille où.", img: teamFr, alt: "Le canvas d’un chantier de cuisine avec trois personnes dessus : la photo du chantier, les plans, les notes de chantier, le suivi de fabrication et une mini-app des mails du client, filtrés depuis Gmail, les conditions du devis ouvertes dans une fenêtre." },
+      ],
+    },
+    {
+      key: "experts",
+      icon: "lucide:book-open",
+      name: "Consultants et experts",
+      who: "Conseil, analystes, médical, juridique",
+      promise: "Cinq cents pages, neuf fiches.",
+      href: SHOWCASE_CANVAS_URLS.documents,
+      scenarios: [
+        { title: "Un dossier de 500 pages, lu pour vous", body: "Un PDF de 512 pages sur le canvas : Nolë le lit et remplit une fiche par étude, avec la page à chaque fois.", img: pdfFr, alt: "Un dossier clinique de 512 pages sur le canvas, relié à un cadre de fiches que Nolë remplit : quatre sur neuf, chacune avec les patients, l’effet, la limite et la page source." },
+        { title: "Des fiches claires, sourcées à la page", body: "Du PDF aux neuf fiches, puis une table de synthèse et un graphique, tous reliés à la source. Vous vérifiez, corrigez, complétez.", img: sheetsFr, alt: "L’histoire de gauche à droite : le PDF de 512 pages, relié à neuf fiches d’études (patients, effet, limite, page), reliées à une table de synthèse qui alimente un graphique des effets." },
+      ],
+    },
+  ] as Persona[],
+};
+const copy = { en, fr }[lang];
+
+/*
+ * Who is reading, first: a persona selector (builders first, the page's
+ * first reader). For the chosen persona, its promise and two concrete
+ * scenarios to pick from on the left, the scenario's real screen on the
+ * right, and the link to its public canvas (still to be prepared: see
+ * SHOWCASE_CANVAS_URLS).
+ */
+---
+
+<section id="use-cases" class="uc ground-plain" aria-labelledby="uc-title" data-uc>
+  <div class="wrap">
+    <h2 id="uc-title" class="title-node uc__title">{copy.title[0]}<span class="title-node title-node--selected uc__word">{copy.title[1]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[2]}</h2>
+    <div class="node doc uc__lede"><p>{copy.lede}</p></div>
+
+    <div class="uc__personas" role="tablist" aria-label={copy.choose}>
+      {
+        copy.personas.map((p, i) => (
+          <button type="button" role="tab" class="node uc__persona" id={`uc-tab-${p.key}`} aria-controls={`uc-panel-${p.key}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-persona={p.key}>
+            <Icon name={p.icon} />
+            <span>
+              <strong>{p.name}</strong>
+              <em>{p.who}</em>
+            </span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="wrap uc__wide">
+    {
+      copy.personas.map((p, i) => (
+        <div class="uc__panel" role="tabpanel" id={`uc-panel-${p.key}`} aria-labelledby={`uc-tab-${p.key}`} hidden={i > 0} data-panel={p.key}>
+          <div class="uc__side">
+            <p class="uc__promise">{p.promise}</p>
+            <div class="uc__scenarios">
+              {p.scenarios.map((s, j) => (
+                <button type="button" class="node uc__scenario" aria-pressed={j === 0 ? "true" : "false"} data-scenario={j}>
+                  <span class="uc__n">{j + 1}</span>
+                  <span>
+                    <strong>{s.title}</strong>
+                    <em>{s.body}</em>
+                  </span>
+                </button>
+              ))}
+            </div>
+            <a href={p.href} class="node link-node" rel="noopener noreferrer">
+              <Icon name="lucide:layout-dashboard" />
+              {copy.open}
+              <Icon name="lucide:arrow-up-right" class="uc__ext" />
+            </a>
+          </div>
+          <figure class="node media uc__shot bleed-right">
+            {p.scenarios.map((s, j) => (
+              <Image src={s.img} alt={s.alt} widths={[960, 1440, 1920]} sizes="(min-width: 60rem) 75vw, 100vw" data-shot={j} hidden={j > 0} />
+            ))}
+          </figure>
+        </div>
+      ))
+    }
+  </div>
+
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-uc]").forEach((section) => {
+    const tabs = [...section.querySelectorAll<HTMLButtonElement>("[data-persona]")];
+    const panels = [...section.querySelectorAll<HTMLElement>("[data-panel]")];
+    const pick = (i: number, focus = false) => {
+      tabs.forEach((t, k) => {
+        t.setAttribute("aria-selected", String(k === i));
+        t.tabIndex = k === i ? 0 : -1;
+      });
+      panels.forEach((panel, k) => (panel.hidden = k !== i));
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => pick(i));
+      tab.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") pick((i + 1) % tabs.length, true);
+        if (e.key === "ArrowLeft") pick((i - 1 + tabs.length) % tabs.length, true);
+      });
+    });
+    panels.forEach((panel) => {
+      const buttons = [...panel.querySelectorAll<HTMLButtonElement>("[data-scenario]")];
+      const shots = [...panel.querySelectorAll<HTMLImageElement>("[data-shot]")];
+      buttons.forEach((b) =>
+        b.addEventListener("click", () => {
+          buttons.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+          shots.forEach((s) => (s.hidden = s.dataset.shot !== b.dataset.scenario));
+        }),
+      );
+    });
+  });
+</script>
+
+<style>
+  .uc {
+    position: relative;
+    padding-block: var(--section-gap);
+  }
+
+  .uc__title {
+    margin: 0 0 var(--space-md) -8px;
+    font-size: var(--text-section);
+    line-height: 1.3;
+  }
+
+  /* "l’espace de travail", what the section is about, a selected Title node. */
+  .uc__word {
+    padding: 0 6px;
+    margin: 0 2px;
+    font-size: inherit;
+    line-height: inherit;
+    color: #2563eb;
+  }
+
+  .uc__lede {
+    display: block;
+    width: fit-content;
+    max-width: 34rem;
+    font-size: var(--text-lead);
+  }
+
+  /* The persona selector: three nodes, the chosen one selected. */
+  .uc__personas {
+    display: grid;
+    gap: var(--space-sm);
+    margin-top: var(--space-2xl);
+  }
+
+  .uc__persona {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      box-shadow var(--dur-short) var(--ease-out),
+      background-color var(--dur-short) var(--ease-out);
+  }
+
+  .uc__persona :global(svg) {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    color: #64748b;
+  }
+
+  .uc__persona span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .uc__persona strong {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .uc__persona em {
+    font-size: 13px;
+    font-style: normal;
+    color: #64748b;
+  }
+
+  .uc__persona:hover {
+    box-shadow:
+      0 3px 12px rgb(15 23 42 / 0.1),
+      0 0 0 1px rgb(59 130 246 / 0.4);
+  }
+
+  .uc__persona[aria-selected="true"] {
+    box-shadow:
+      0 3px 12px rgb(15 23 42 / 0.12),
+      0 0 0 2px rgb(59 130 246 / 0.7);
+  }
+
+  .uc__persona[aria-selected="true"] :global(svg) {
+    color: #2563eb;
+  }
+
+  .uc__wide {
+    max-width: 1440px;
+    margin-top: var(--space-xl);
+  }
+
+  .uc__panel {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .uc__panel[hidden] {
+    display: none;
+  }
+
+  .uc__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .uc__promise {
+    font-size: clamp(1.375rem, 0.8vw + 1.05rem, 1.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+  }
+
+  .uc__scenarios {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    width: 100%;
+  }
+
+  .uc__scenario {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: box-shadow var(--dur-short) var(--ease-out);
+  }
+
+  .uc__scenario span:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .uc__scenario strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .uc__scenario em {
+    font-size: 14px;
+    font-style: normal;
+    line-height: 1.5;
+    color: var(--color-ink-2);
+  }
+
+  .uc__n {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f1f5f9;
+    font-size: 12px;
+    font-weight: 800;
+    color: #475569;
+  }
+
+  .uc__scenario:hover {
+    box-shadow:
+      0 3px 12px rgb(15 23 42 / 0.1),
+      0 0 0 1px rgb(59 130 246 / 0.4);
+  }
+
+  .uc__scenario[aria-pressed="true"] {
+    box-shadow:
+      0 3px 12px rgb(15 23 42 / 0.12),
+      0 0 0 2px rgb(59 130 246 / 0.7);
+  }
+
+  .uc__scenario[aria-pressed="true"] .uc__n {
+    background: #2563eb;
+    color: #fff;
+  }
+
+  .uc__ext {
+    width: 15px !important;
+    height: 15px !important;
+    color: #64748b;
+  }
+
+  .uc__shot {
+    margin: 0;
+  }
+
+  .uc__shot :global(img[hidden]) {
+    display: none;
+  }
+
+
+  @media (min-width: 40rem) {
+    .uc__personas {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .uc__panel {
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .uc__persona,
+    .uc__scenario {
+      transition: none;
+    }
+  }
+</style>

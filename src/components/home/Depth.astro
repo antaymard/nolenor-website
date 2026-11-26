@@ -1,0 +1,324 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+import canvasEn from "@/assets/img/home/depth-canvas-en.webp";
+import canvasFr from "@/assets/img/home/depth-canvas-fr.webp";
+import searchEn from "@/assets/img/home/f-search-en.webp";
+import searchFr from "@/assets/img/home/f-search-fr.webp";
+
+const lang = getLang(Astro.currentLocale);
+
+type Title = [line1: string, before: string, selected: string, after: string];
+type Point = { n: number; title: string; body: string };
+
+const en = {
+  title: ["Who said canvases were", "", "only", " for brainstorming?"] as Title,
+  lede: {
+    lines: [
+      "Whiteboards are flat: great for a meeting, of no use a month later.",
+      "Tools of nested pages, for their part, file things so neatly that thinking gets lost in them.",
+    ],
+    both: "Nolënor keeps the freedom of the first and the depth of the second",
+    rest: ", to run projects over the long haul.",
+  },
+  soon: { tag: "Coming soon", title: "Automations.", body: "Tasks that run on their own: on a schedule, or as soon as something happens in your tools." },
+  canvas: canvasEn,
+  canvasAlt: "A joinery workshop’s canvas: three sub-canvases (clients, workshop, purchasing), an open-quotes database seen as a kanban, two values computed from it through dotted ƒ links (weighted pipeline, win rate), and a live mini-app showing the visitors on the website (42 right now, the curve of the last minutes, the top pages) and a chart of quotes won by month.",
+  search: searchEn,
+  searchAlt: "The search finds one phrase in a voice memo at 1:12, on page 3 of a PDF and in a site note.",
+  points: [
+    { n: 1, title: "The detail when you need it, the big picture always.", body: "One canvas per client, per part of the business, per project: go down, come back up." },
+    { n: 2, title: "Databases that stand up to the best tools.", body: "Records shaped to your needs, typed fields, and every view: table, kanban, calendar, gallery, timeline or list." },
+    { n: 3, title: "Numbers that update themselves.", body: "A value computes from a table, a field or another node. A source changes, everything follows." },
+    { n: 4, title: "Mini-apps coded by Nolë, plugged into your tools.", body: "Ask for the dashboard you’re missing: Nolë codes it and connects it to your third-party tools, with over 2,000 apps available. It keeps itself up to date." },
+    { n: 5, title: "Find anything, even inside a voice memo.", body: "Documents, PDFs, images, recordings: one query, every match, at its page or its minute." },
+  ] as Point[],
+};
+const fr: typeof en = {
+  title: ["Qui a dit que les canvas,", "c’était ", "seulement", " pour brainstormer ?"] as Title,
+  lede: {
+    lines: [
+      "Les tableaux blancs sont plats : parfaits pour une réunion, inutilisables un mois plus tard.",
+      "Les outils de pages imbriquées, eux, rangent si bien que la pensée s’y perd.",
+    ],
+    both: "Nolënor garde la liberté de l’un et la profondeur de l’autre",
+    rest: ", pour piloter des projets sur la durée.",
+  },
+  soon: { tag: "Bientôt", title: "Les automatisations.", body: "Des tâches qui tournent seules : à heure fixe, ou dès qu’il se passe quelque chose dans vos outils." },
+  canvas: canvasFr,
+  canvasAlt: "Le canvas d’un atelier de menuiserie : trois sous-canvas (clients, atelier, achats), une base des devis en cours vue en kanban, deux valeurs calculées à partir d’elle par des liens ƒ en pointillés (pipeline pondéré, taux de signature), une mini-app en direct des visiteurs sur le site (42 en ce moment, la courbe des dernières minutes, les pages les plus vues) et un graphique des devis signés par mois.",
+  search: searchFr,
+  searchAlt: "La recherche trouve une expression dans un mémo vocal à 1:12, à la page 3 d’un PDF et dans une note de chantier.",
+  points: [
+    { n: 1, title: "Le détail quand il faut, la vue d’ensemble toujours.", body: "Un canvas par client, par pan de l’entreprise, par projet : on descend, on remonte." },
+    { n: 2, title: "Des bases de données à la hauteur des meilleurs outils.", body: "Des fiches sur mesure, des champs typés, et toutes les vues : table, kanban, calendrier, galerie, timeline ou liste." },
+    { n: 3, title: "Des chiffres qui se mettent à jour tout seuls.", body: "Une valeur se calcule à partir d’un tableau, d’un champ ou d’un autre nœud. Une source change, tout suit." },
+    { n: 4, title: "Des mini-apps codées par Nolë, branchées sur vos outils.", body: "Demandez le tableau de bord qui vous manque : Nolë le code et le connecte à vos outils tiers, parmi plus de 2 000 applications. Il se tient à jour seul." },
+    { n: 5, title: "Tout se retrouve, même dans un mémo vocal.", body: "Documents, PDF, images, enregistrements : une requête, chaque passage, à sa page ou à sa minute." },
+  ] as Point[],
+};
+const copy = { en, fr }[lang];
+
+/** Where each numbered pin sits on the canvas screen (% of its width and height). */
+const PINS: Record<number, { x: number; y: number }> = {
+  1: { x: 10.2, y: 11.1 },
+  2: { x: 10.2, y: 31.8 },
+  3: { x: 10.2, y: 72.5 },
+  4: { x: 64.8, y: 11.1 },
+};
+
+/*
+ * The answer to "a canvas is a whiteboard": one real canvas, rendered from
+ * the app's own components at a single scale (sub-canvases, a database in a
+ * view, values computed from it, a dashboard), with numbered pins, the
+ * search panel laid over its corner, and the five benefits as a legend.
+ * Automations, not built yet, get a small yellow note and no pin.
+ */
+---
+
+<section id="depth" class="depth ground-plain" aria-labelledby="depth-title">
+  <div class="wrap">
+    <h2 id="depth-title" class="depth__title">
+      <span class="depth__line">{copy.title[0]}</span>
+      <span class="depth__line">{copy.title[1]}<span class="title-node title-node--selected depth__word">{copy.title[2]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[3]}</span>
+    </h2>
+    <div class="node doc depth__lede">
+      {copy.lede.lines.map((line) => <p class="depth__was">{line}</p>)}
+      <p><strong>{copy.lede.both}</strong>{copy.lede.rest}</p>
+    </div>
+  </div>
+
+  <!-- The canvas runs wider than the page's column: it is the thing to read. -->
+  <div class="wrap depth__wide">
+    <div class="depth__stage">
+      <figure class="node media depth__canvas">
+        <div class="media__in">
+          <Image src={copy.canvas} alt={copy.canvasAlt} widths={[720, 1080, 1440, 1920, 2560]} sizes="(min-width: 75rem) 1340px, 100vw" />
+          {
+            Object.entries(PINS).map(([n, p]) => (
+              <span class="pin" style={`left:${p.x}%;top:${p.y}%`} aria-hidden="true">
+                {n}
+              </span>
+            ))
+          }
+        </div>
+      </figure>
+      <figure class="node media depth__search">
+        <div class="media__in">
+          <Image src={copy.search} alt={copy.searchAlt} widths={[480, 720, 960]} sizes="(min-width: 60rem) 600px, 100vw" />
+          <span class="pin" style="left:0;top:0" aria-hidden="true">5</span>
+        </div>
+      </figure>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <ol class="depth__legend">
+      {
+        copy.points.map((p) => (
+          <li>
+            <span class="pin pin--static" aria-hidden="true">{p.n}</span>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </li>
+        ))
+      }
+      <li class="depth__soon">
+        <span class="pin pin--static pin--soon" aria-hidden="true"><Icon name="lucide:workflow" /></span>
+        <h3>
+          {copy.soon.title} <span class="depth__tag">{copy.soon.tag}</span>
+        </h3>
+        <p>{copy.soon.body}</p>
+      </li>
+    </ol>
+
+  </div>
+</section>
+
+<style>
+  .depth {
+    position: relative;
+    padding-block: var(--section-gap);
+  }
+
+  /* Bigger than the other section titles, on two set lines: it is the
+     question the whole page answers. */
+  .depth__title {
+    margin: 0 0 var(--space-lg);
+    font-size: clamp(2rem, 2.4vw + 1.1rem, 3.25rem);
+    font-weight: var(--weight-display);
+    line-height: 1.28;
+    letter-spacing: var(--tracking-display);
+  }
+
+  .depth__line {
+    display: block;
+  }
+
+  /* "seulement" / "only", the word that turns the question, is a selected
+     Title node inside the sentence. */
+  .depth__word {
+    padding: 0 6px;
+    margin: 0 2px;
+    font-size: inherit;
+    line-height: inherit;
+    color: #2563eb;
+  }
+
+  .depth__was {
+    color: var(--color-ink-2);
+  }
+
+  .depth__lede {
+    display: block;
+    width: fit-content;
+    max-width: 40rem;
+    margin-bottom: var(--space-2xl);
+    font-size: var(--text-lead);
+  }
+
+  .depth__wide {
+    max-width: 1440px;
+  }
+
+  .depth__stage {
+    position: relative;
+  }
+
+  .depth__canvas,
+  .depth__search {
+    margin: 0;
+  }
+
+  .media__in {
+    position: relative;
+  }
+
+  /* Its pin sits on the corner, past the frame: let it show. */
+  .depth__search {
+    overflow: visible;
+    width: min(100%, 26rem);
+    margin: var(--space-lg) 0 0 auto;
+  }
+
+  /* A numbered pin, the app's selection blue. */
+  .pin {
+    position: absolute;
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #2563eb;
+    box-shadow: 0 2px 6px rgb(15 23 42 / 0.25);
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  /* Not built yet: an outlined pin, and the item a shade quieter. */
+  .pin--soon {
+    border: 1.5px dashed #94a3b8;
+    background: transparent;
+    box-shadow: none;
+    color: #64748b;
+  }
+
+  .pin--soon :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+
+  .depth__soon h3 {
+    color: #475569;
+  }
+
+  .depth__tag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    vertical-align: 2px;
+    color: #64748b;
+  }
+
+  .pin--static {
+    position: static;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .depth__legend {
+    display: grid;
+    gap: var(--space-lg) var(--space-xl);
+    margin: var(--space-2xl) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .depth__legend li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 4px 12px;
+    align-content: start;
+  }
+
+  .depth__legend h3 {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-ink);
+  }
+
+  .depth__legend p {
+    grid-column: 2;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+  }
+
+
+
+  @media (min-width: 40rem) {
+    .depth__legend {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    /* The search panel is laid over the canvas's lower right corner, and
+       runs past it, like a window opened on top. */
+    .depth__stage {
+      margin-right: 3rem;
+      margin-bottom: 7rem;
+    }
+
+    .depth__canvas {
+      margin-bottom: 0;
+    }
+
+    .depth__search {
+      position: absolute;
+      right: -3rem;
+      bottom: -5rem;
+      width: 34%;
+      margin: 0;
+      box-shadow:
+        0 24px 48px -16px rgb(15 23 42 / 0.3),
+        0 1px 2px rgb(15 23 42 / 0.06);
+    }
+
+    .depth__legend {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-xl) var(--space-2xl);
+    }
+  }
+</style>

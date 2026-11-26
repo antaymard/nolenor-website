@@ -14,7 +14,7 @@ import {
   goingFurther,
   type HelpStep,
 } from "@/data/help";
-import { APP_URL, GITHUB_REPO_URL, SITE_NAME } from "@/lib/constants";
+import { APP_URL, SITE_NAME } from "@/lib/constants";
 import { getLang } from "@/i18n";
 
 /*
@@ -78,8 +78,7 @@ const en = {
   },
   stuck: {
     title: "Still stuck?",
-    body: "Something unclear, broken, or missing from this page? Tell us on GitHub, we read everything. Or just ask Nolë, from any canvas.",
-    github: "Ask on GitHub",
+    body: "Something unclear or missing from this page? Just ask Nolë, from any canvas.",
     app: "Open Nolënor",
   },
 };
@@ -130,8 +129,7 @@ const fr: typeof en = {
   },
   stuck: {
     title: "Besoin d’un coup de main ?",
-    body: "Une explication floue, un bug, une info qui manque ? Dites-le-nous sur GitHub, nous lisons tout. Ou demandez directement à Nolë, depuis n’importe quel canevas.",
-    github: "Écrire sur GitHub",
+    body: "Une explication floue, une info qui manque ? Demandez directement à Nolë, depuis n’importe quel canevas.",
     app: "Ouvrir Nolënor",
   },
 };
@@ -397,10 +395,6 @@ const chapters: { id: string; eyebrow: string; title: string; intro: string; ste
           <p class="text-pretty text-muted-foreground">{copy.stuck.body}</p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <Button href={`${GITHUB_REPO_URL}/issues`} variant="ghost" class="border border-border">
-            <Icon name="lucide:github" class="h-4 w-4" />
-            {copy.stuck.github}
-          </Button>
           <Button href={APP_URL}>
             {copy.stuck.app}
             <Icon name="lucide:arrow-right" class="h-4 w-4" />

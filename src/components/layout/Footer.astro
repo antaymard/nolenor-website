@@ -1,8 +1,7 @@
 ---
-import { Icon } from "astro-icon/components";
 import Logo from "@/components/ui/Logo.astro";
 import { getNav } from "@/data/nav";
-import { GITHUB_REPO_URL, SITE_NAME, TAGLINE } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 import { getLang, languages, langs, translatePath, useTranslations } from "@/i18n";
 
 const lang = getLang(Astro.currentLocale);
@@ -32,7 +31,6 @@ const groups = [
   <div class="wrap">
     <div class="foot__top">
       <Logo iconClass="h-7 w-7 text-foreground" textClass="text-lg" />
-      <p class="foot__line">{TAGLINE[lang]}</p>
     </div>
 
     <div class="foot__grid">
@@ -94,24 +92,16 @@ const groups = [
           ))
         }
       </nav>
-      <a
-        href={GITHUB_REPO_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="foot__gh"
-        aria-label={t("footer.github")}
-      >
-        <Icon name="lucide:github" class="foot__gh-icon" aria-hidden="true" />
-        GitHub
-      </a>
     </div>
   </div>
 </footer>
 
 <style>
+  /* A plain grey ground, without the canvas dots: the page has ended. */
   .foot {
     padding-top: var(--space-3xl);
-    border-top: var(--rule-hair) solid var(--color-rule);
+    border-top: var(--rule-hair) solid #e2e8f0;
+    background: #f1f5f9;
   }
 
   .foot__top {
@@ -124,6 +114,7 @@ const groups = [
 
   .foot__line {
     font-family: var(--font-display);
+    font-weight: var(--weight-display);
     font-size: var(--text-display-s);
     line-height: 1.05;
     letter-spacing: var(--tracking-display);
@@ -155,41 +146,15 @@ const groups = [
 
   .foot li a,
   .foot__langs a,
-  .foot__gh {
-    display: inline-flex;
-    align-items: center;
-    min-height: 32px;
-    font-size: var(--text-sm);
-    color: var(--color-ink-2);
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-underline-offset: 0.25em;
-    transition:
-      color var(--dur-short) var(--ease-out),
-      text-decoration-color var(--dur-short) var(--ease-out);
-  }
 
   .foot li a:hover,
   .foot__langs a:hover,
-  .foot__gh:hover {
-    color: var(--color-ink);
-    text-decoration-color: var(--color-rule-2);
-  }
 
   .foot li a:active,
   .foot__langs a:active,
-  .foot__gh:active {
-    color: var(--color-accent);
-  }
 
   .foot li a:focus-visible,
   .foot__langs a:focus-visible,
-  .foot__gh:focus-visible {
-    outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
-    border-radius: 2px;
-    transition: none;
-  }
 
   .foot__updates {
     grid-column: 1 / -1;
@@ -263,9 +228,6 @@ const groups = [
     color: var(--color-muted);
   }
 
-  .foot__gh {
-    gap: var(--space-xs);
-  }
 
   .foot__langs {
     display: flex;
@@ -277,10 +239,6 @@ const groups = [
     text-decoration-color: var(--color-accent);
   }
 
-  .foot__gh-icon {
-    width: 16px;
-    height: 16px;
-  }
 
   @media (min-width: 60rem) {
     .foot__grid {
@@ -295,8 +253,5 @@ const groups = [
   @media (prefers-reduced-motion: reduce) {
     .foot li a,
     .foot__langs a,
-    .foot__gh {
-      transition: none;
-    }
   }
 </style>

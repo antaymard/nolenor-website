@@ -11,8 +11,8 @@ const lang = getLang(Astro.currentLocale);
 const is404 = Astro.url.pathname.replace(/\/$/, "").endsWith("/404");
 
 const defaultDescription = {
-  en: "Nolënor is a canvas to think and work on, with an AI apprentice at your side. You keep the craft; the agent fills the gaps you show it. A workshop, not a factory.",
-  fr: "Nolënor est un canevas où penser et travailler, avec un apprenti IA à vos côtés. Le métier reste le vôtre ; l’agent s’occupe de ce que vous lui montrez. Un atelier, pas une usine.",
+  en: "Nolënor is an infinite canvas for deep work. Structure your ideas, explore options with AI, keep your dashboards in one place, plan what comes next.",
+  fr: "Nolënor est un canvas infini pour travailler en profondeur. Structurez vos idées, explorez des pistes avec l’IA, centralisez vos tableaux de bord, planifiez la suite.",
 };
 
 const {
@@ -108,7 +108,7 @@ const ogImageURL = new URL("/og-image.png", SITE_URL);
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
-  href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&family=Nunito:wght@400;500;600;700;800&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
   rel="stylesheet"
 />
 

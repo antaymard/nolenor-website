@@ -1,0 +1,237 @@
+---
+import { Icon } from "astro-icon/components";
+import { APP_SIGNUP_URL } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  title: "All of Nolënor, at no cost.",
+  badge: "Free during beta",
+  plan: "Open beta · until the end of 2026",
+  was: "€15",
+  unit: "/ month",
+  terms: "Then €15 / month. No credit card during the beta, every feature, AI included.",
+  cta: "Open a canvas",
+  includedTitle: "Included",
+  included: [
+    "Canvases, sub-canvases and documents",
+    "Databases and all their views",
+    "Computed values and mini-apps",
+    "Nolë, the AI, by text or voice",
+    "Search inside PDFs, images and recordings",
+    "Version history",
+  ],
+};
+const fr: typeof en = {
+  title: "Tout Nolënor, sans rien payer.",
+  badge: "Gratuit pendant la bêta",
+  plan: "Bêta ouverte · jusqu’à fin 2026",
+  was: "15 €",
+  unit: "/ mois",
+  terms: "Ensuite 15 € / mois. Sans carte bancaire pendant la bêta, toutes les fonctions, IA comprise.",
+  cta: "Ouvrir un canvas",
+  includedTitle: "Inclus",
+  included: [
+    "Canvas, sous-canvas et documents",
+    "Bases de données et toutes leurs vues",
+    "Valeurs calculées et mini-apps",
+    "Nolë, l’IA, à l’écrit comme à la voix",
+    "Recherche dans les PDF, images et enregistrements",
+    "Historique des versions",
+  ],
+};
+const copy = { en, fr }[lang];
+
+/*
+ * One price card, a selected node on the canvas: the "free during beta"
+ * badge on its top edge, the price (the one after the beta struck through)
+ * and the way in on the left, what is included on the right.
+ */
+---
+
+<section id="pricing" class="pricing" aria-labelledby="pricing-title">
+  <div class="wrap">
+    <h2 id="pricing-title" class="title-node pricing__title">{copy.title}</h2>
+
+    <div class="node pricing__card">
+      <span class="pricing__badge"><Icon name="lucide:sparkles" />{copy.badge}</span>
+
+      <div class="pricing__main">
+        <div class="pricing__offer">
+          <p class="pricing__plan">{copy.plan}</p>
+          <p class="pricing__price">
+            <s class="pricing__was" aria-label={lang === "fr" ? `au lieu de ${copy.was}` : `instead of ${copy.was}`}>{copy.was}</s>
+            <span class="pricing__figure">0&nbsp;€</span>
+            <span class="pricing__unit">{copy.unit}</span>
+          </p>
+          <p class="pricing__terms">{copy.terms}</p>
+          <a href={APP_SIGNUP_URL} class="btn pricing__cta" rel="noopener noreferrer">{copy.cta}</a>
+        </div>
+
+        <div class="pricing__included">
+          <h3>{copy.includedTitle}</h3>
+          <ul>
+            {
+              copy.included.map((item) => (
+                <li>
+                  <Icon name="lucide:check" />
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing {
+    position: relative;
+    padding-block: var(--section-gap-s) var(--section-gap);
+  }
+
+  .pricing__title {
+    margin: 0 0 var(--space-2xl) -8px;
+    font-size: var(--text-section);
+    line-height: 1.1;
+  }
+
+  /* The card is the selected node: the brand outline, lifted a little. */
+  .pricing__card {
+    position: relative;
+    max-width: 62rem;
+    padding: 0;
+    box-shadow:
+      0 0 0 2px var(--color-accent),
+      0 28px 56px -28px rgb(15 23 42 / 0.35);
+  }
+
+  /* Astride the top edge, like a tag pinned on the node. */
+  .pricing__badge {
+    position: absolute;
+    top: 0;
+    left: var(--space-xl);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #16a34a;
+    box-shadow: 0 6px 16px -6px rgb(22 163 74 / 0.6);
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    transform: translateY(-50%);
+  }
+
+  .pricing__badge svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .pricing__main {
+    display: grid;
+    gap: var(--space-xl) var(--space-2xl);
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  .pricing__offer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pricing__plan {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  .pricing__price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: var(--space-xs);
+  }
+
+  .pricing__figure {
+    font-size: clamp(3.5rem, 4vw + 1.5rem, 4.75rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+  }
+
+  /* The price after the beta, struck through. */
+  .pricing__was {
+    align-self: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-decoration-thickness: 2px;
+  }
+
+  .pricing__unit {
+    font-size: 18px;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .pricing__terms {
+    margin-top: var(--space-sm);
+    max-width: 22rem;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-ink-2);
+  }
+
+  .pricing__cta {
+    margin-top: var(--space-lg);
+  }
+
+  .pricing__included h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .pricing__included ul {
+    display: grid;
+    gap: 10px;
+    margin-top: var(--space-sm);
+  }
+
+  .pricing__included li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--color-ink-2);
+  }
+
+  .pricing__included li svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    color: #16a34a;
+  }
+
+  @media (min-width: 48rem) {
+    .pricing__main {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      padding: var(--space-2xl);
+    }
+
+    .pricing__badge {
+      left: var(--space-2xl);
+    }
+  }
+</style>

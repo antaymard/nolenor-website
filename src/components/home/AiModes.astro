@@ -1,0 +1,549 @@
+---
+import { Icon } from "astro-icon/components";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  heading: ["A tool for thinking, first. And AI as the ", "accelerator", "."] as [string, string, string],
+  lede: "Nolënor is above all an interface to think and create, visually. It works fully without AI. When you need it, switch it on: it speeds your work up, without doing it for you.",
+  ai: "AI",
+  window: "WMS rollout · budget",
+  hint: { off: "Click to turn it on", on: "Click to turn it off" },
+  states: {
+    off: {
+      label: "Off",
+      title: "AI off, your thinking preserved.",
+      steps: [["Open", " a PDF next to your canvas."], ["Drop", " a table in."], ["Pull", " a computed value from it."]],
+      note: "No AI involved: the canvas does the work, and the numbers follow.",
+      alt: "A quote PDF opens in a window docked on the right; a CSV file is dropped onto the canvas and becomes a table; a link dragged from the table creates a computed value, the scanner budget, which follows the table.",
+    },
+    on: {
+      label: "On",
+      title: "AI on, your thinking amplified.",
+      steps: [["Alt + click", " the table and the quote: Nolë gets them."], ["Ask out loud", " for a dashboard of the scanner budget."], ["Watch", " Nolë read them and build three linked charts."]],
+      note: "Each step happens on the canvas, in violet: you see what it reads, what it makes.",
+      alt: "Alt + click on the table, then on the quote: both get a dashed violet outline and a chip in Nolë’s composer. The request is dictated; Nolë reads the two nodes, then creates three linked chart nodes one after the other, each under a pulsing violet halo: scanners by site, budget by item, roll-out over ten weeks.",
+    },
+  },
+};
+const fr: typeof en = {
+  heading: ["D’abord un outil pour penser. Et l’IA en ", "accélérateur", "."] as [string, string, string],
+  lede: "Nolënor est avant tout une interface pour penser et créer, visuellement. Elle fonctionne pleinement sans IA. Quand vous en avez besoin, allumez-la : elle accélère votre travail, sans le faire à votre place.",
+  ai: "IA",
+  window: "Déploiement WMS · budget",
+  hint: { off: "Cliquez pour l’allumer", on: "Cliquez pour l’éteindre" },
+  states: {
+    off: {
+      label: "Éteinte",
+      title: "IA éteinte, réflexion préservée.",
+      steps: [["Ouvrez", " un PDF à côté de votre canvas."], ["Déposez", " un tableau."], ["Tirez", "-en une valeur calculée."]],
+      note: "Sans IA : le canvas fait le travail, et les chiffres suivent.",
+      alt: "Un devis PDF s’ouvre dans une fenêtre ancrée à droite ; un fichier CSV déposé sur le canvas devient un tableau ; un lien tiré depuis le tableau crée une valeur calculée, le budget scanners, qui suit le tableau.",
+    },
+    on: {
+      label: "Allumée",
+      title: "IA allumée, réflexion augmentée.",
+      steps: [["Alt\xa0+ clic", " sur le tableau et le devis\xa0: Nolë les reçoit."], ["Demandez à voix haute", " un tableau de bord du budget."], ["Regardez", " Nolë les lire et construire trois graphiques reliés."]],
+      note: "Chaque étape se fait sur le canvas, en violet : vous voyez ce qu’il lit, ce qu’il crée.",
+      alt: "Alt + clic sur le tableau, puis sur le devis : tous deux prennent un contour violet en pointillés et une pastille dans la saisie de Nolë. La demande est dictée ; Nolë lit les deux nœuds, puis crée trois nœuds graphiques reliés, l’un après l’autre, chacun sous un halo violet qui pulse : scanners par site, budget par poste, déploiement sur dix semaines.",
+    },
+  },
+};
+const copy = { en, fr }[lang];
+const modes = ["off", "on"] as const;
+
+/*
+ * One section, two states, and the switch between them. Each state is a short clip of the app itself, rendered
+ * from the product's tutorial kit: off, a PDF opened, a table dropped, a
+ * computed value pulled from it; on, a dictated request, Nolë reading the
+ * table and drawing the chart, its work shown in violet. Flipping the switch
+ * slides one clip out and the other in, and starts it from the beginning.
+ */
+---
+
+<section id="ai" class="ai" aria-labelledby="ai-heading" data-ai-section data-state="off">
+  <div class="wrap ai__intro">
+    <h2 id="ai-heading" class="title-node ai__heading">{copy.heading[0]}<span class="title-node title-node--selected ai__word">{copy.heading[1]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.heading[2]}</h2>
+    <div class="node doc ai__lede"><p>{copy.lede}</p></div>
+  </div>
+  <div class="wrap ai__layout ai__layout--wide">
+    <div class="node ai__window">
+      <div class="ai__window-head">
+        <Icon name="lucide:layout-dashboard" />
+        {copy.window}
+      </div>
+      <div class="ai__screens media">
+        {
+          modes.map((m) => (
+            <video
+              class="ai__clip"
+              data-for={m}
+              src={`/clips/ai-${m}-${lang}.mp4`}
+              poster={`/clips/ai-${m}-${lang}.webp`}
+              muted
+              playsinline
+              loop={m === "on"}
+              preload={m === "off" ? "auto" : "metadata"}
+              width="1280"
+              height="720"
+              aria-label={copy.states[m].alt}
+            ></video>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Beside the clip, so it reads while it plays: what happens, step by step, and the switch. -->
+    <div class="ai__side">
+      <div class="ai__texts">
+        {
+          modes.map((m) => (
+            <div class="node doc ai__text" data-for={m} aria-hidden={m === "on" ? "true" : undefined}>
+              <h3 id={m === "off" ? "ai-title" : undefined} class="ai__title">
+                {copy.states[m].title}
+              </h3>
+              <ol class="ai__steps">
+                {copy.states[m].steps.map(([verb, rest]) => (
+                  <li>
+                    <span>
+                      <strong>{verb}</strong>
+                      {rest}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <p class="ai__note">{copy.states[m].note}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="node ai__switch" data-attract>
+        <button type="button" role="switch" aria-checked="false" class="switch" data-ai-toggle aria-labelledby="ai-title">
+          <span class="switch__track"><span class="switch__thumb"></span></span>
+          <span class="ai__switch-text">
+            <span class="ai__switch-state">
+              {modes.map((m) => <span data-for={m}>{copy.ai} · {copy.states[m].label}</span>)}
+            </span>
+            <span class="ai__switch-hint">
+              {modes.map((m) => <span data-for={m}>{copy.hint[m]}</span>)}
+            </span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { prefersReducedMotion } from "@/scripts/reduced-motion";
+
+  document.querySelectorAll<HTMLElement>("[data-ai-section]").forEach((section) => {
+    const toggle = section.querySelector<HTMLButtonElement>("[data-ai-toggle]")!;
+    const clips = [...section.querySelectorAll<HTMLVideoElement>("video[data-for]")];
+    const texts = [...section.querySelectorAll<HTMLElement>(".ai__text")];
+    const reduced = prefersReducedMotion();
+    let visible = false;
+
+    const play = () => {
+      clips.forEach((clip) => {
+        const active = clip.dataset.for === section.dataset.state;
+        if (active && visible && !reduced) {
+          clip.currentTime = 0;
+          void clip.play().catch(() => {});
+        } else clip.pause();
+      });
+    };
+
+    const set = (state: "off" | "on") => {
+      if (section.dataset.state === state) return;
+      section.dataset.state = state;
+      toggle.setAttribute("aria-checked", String(state === "on"));
+      texts.forEach((text) => text.setAttribute("aria-hidden", String(text.dataset.for !== state)));
+      play();
+    };
+
+    // Once the "off" clip has run to its end, the section turns the AI on by
+    // itself, so the switch shows what it does. Not after the reader has
+    // used it: from then on, it is theirs.
+    let touched = false;
+    clips
+      .find((clip) => clip.dataset.for === "off")
+      ?.addEventListener("ended", () => {
+        if (touched) {
+          const off = clips.find((clip) => clip.dataset.for === "off")!;
+          off.currentTime = 0;
+          void off.play().catch(() => {});
+          return;
+        }
+        set("on");
+      });
+
+    toggle.addEventListener("click", () => {
+      touched = true;
+      section.querySelector("[data-attract]")?.removeAttribute("data-attract");
+      set(section.dataset.state === "on" ? "off" : "on");
+    });
+
+    // Play only while the section is on screen.
+    new IntersectionObserver(
+      (entries) => {
+        visible = entries.some((entry) => entry.isIntersecting);
+        if (visible) play();
+        else clips.forEach((clip) => clip.pause());
+      },
+      { threshold: 0.35 },
+    ).observe(section.querySelector(".ai__window")!);
+  });
+</script>
+
+<style>
+  /* A change of ground mid-page: the brand's indigo, very light, with its
+     dots, edge to edge. */
+  .ai {
+    padding-block: var(--section-gap) var(--section-gap);
+    background-color: #eef0f7;
+    background-image: radial-gradient(rgb(80 87 133 / 0.22) 1.1px, transparent 1.3px);
+    background-size: 20px 20px;
+    border-block: 1px solid #dfe2ef;
+  }
+
+  .ai__intro {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .ai__heading {
+    margin: 0 0 var(--space-md) -8px;
+    font-size: var(--text-section);
+    line-height: 1.3;
+  }
+
+  /* "accélérateur", the word the section turns on, is a selected Title node. */
+  .ai__word {
+    padding: 0 6px;
+    margin: 0 2px;
+    font-size: inherit;
+    line-height: inherit;
+    color: #2563eb;
+  }
+
+  .ai__lede {
+    display: block;
+    width: fit-content;
+    max-width: 34rem;
+    font-size: var(--text-lead);
+  }
+
+  .ai__layout {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+
+  .ai__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  /* The clip gets the room: this row runs wider than the page's column,
+     and the steps keep a fixed, readable width beside it. */
+  .ai__layout--wide {
+    max-width: 1440px;
+  }
+
+  @media (min-width: 60rem) {
+    .ai__layout {
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: var(--space-xl);
+    }
+  }
+
+  /* On a phone the switch comes first, right under the clip. */
+  @media (max-width: 59.99rem) {
+    .ai__switch {
+      order: -1;
+      align-self: flex-start;
+    }
+  }
+
+
+  /* The switch, beside the clip, under what it explains. */
+  .ai__switch {
+    align-self: flex-start;
+    padding: 6px 18px 6px 8px;
+    border-radius: 16px;
+    box-shadow:
+      0 12px 32px -8px rgb(15 23 42 / 0.35),
+      0 1px 2px rgb(15 23 42 / 0.08);
+  }
+
+
+  /* Until it is first used, it calls for attention: a ring that breathes. */
+  .ai__switch[data-attract] {
+    animation: ai-attract 2.4s var(--ease-out) 1.2s infinite;
+  }
+
+  @keyframes ai-attract {
+    0% {
+      box-shadow:
+        0 12px 32px -8px rgb(15 23 42 / 0.35),
+        0 0 0 0 rgb(124 58 237 / 0.45);
+    }
+    70%,
+    100% {
+      box-shadow:
+        0 12px 32px -8px rgb(15 23 42 / 0.35),
+        0 0 0 14px rgb(124 58 237 / 0);
+    }
+  }
+
+  .ai__switch-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+  }
+
+  .ai__switch-state,
+  .ai__switch-hint {
+    display: grid;
+  }
+
+  .ai__switch-state {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--color-ink);
+  }
+
+  .ai__switch-hint {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .ai__switch-state > span,
+  .ai__switch-hint > span {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transition:
+      opacity 380ms var(--ease-out),
+      transform 380ms var(--ease-out);
+  }
+
+  .switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    font: 800 18px / 1 var(--font-body);
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .switch__track {
+    position: relative;
+    width: 64px;
+    height: 36px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    transition: background-color 380ms var(--ease-out);
+  }
+
+  .switch__thumb {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 0.25);
+    transition: transform 380ms var(--ease-out);
+  }
+
+  [data-state="on"] .switch__track {
+    background: #7c3aed;
+  }
+
+  [data-state="on"] .switch__thumb {
+    transform: translateX(28px);
+  }
+
+  .switch:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 999px;
+  }
+
+  .ai__texts {
+    display: grid;
+  }
+
+
+  /* Each state's words share one cell and swap: the outgoing ones slide up
+     and out, the incoming ones come up from below. */
+  .ai__text {
+    grid-area: 1 / 1;
+    transition:
+      opacity 380ms var(--ease-out),
+      transform 380ms var(--ease-out);
+  }
+
+  [data-state="off"] [data-for="on"]:not(video),
+  [data-state="on"] [data-for="off"]:not(video) {
+    opacity: 0;
+    transform: translateY(14px);
+    pointer-events: none;
+  }
+
+  [data-state="off"] .ai__text[data-for="on"],
+  [data-state="on"] .ai__text[data-for="off"] {
+    visibility: hidden;
+    transition:
+      opacity 380ms var(--ease-out),
+      transform 380ms var(--ease-out),
+      visibility 0s 380ms;
+  }
+
+  .ai__text {
+    padding: 20px 22px 18px;
+  }
+
+  .ai__title {
+    font-size: clamp(1.375rem, 0.6vw + 1.1rem, 1.75rem);
+    font-weight: var(--weight-display);
+    line-height: 1.12;
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
+  }
+
+  .ai__text[data-for="on"] .ai__title {
+    color: #6d28d9;
+  }
+
+  /* The steps, numbered like the clip plays them. */
+  .ai__steps {
+    margin-top: var(--space-md);
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .ai__steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    align-items: baseline;
+    padding-block: 7px;
+    border-top: 1px solid #eef2f6;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .ai__steps li::before {
+    content: counter(step);
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f1f5f9;
+    font-size: 12px;
+    font-weight: 800;
+    color: #475569;
+  }
+
+  .ai__text[data-for="on"] .ai__steps li::before {
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+
+  .ai__note {
+    margin-top: var(--space-sm);
+    font-size: 14px;
+    color: #64748b;
+  }
+
+  .ai__window {
+    overflow: hidden;
+    transition: box-shadow 380ms var(--ease-out);
+  }
+
+  /* With the AI on, the window takes Nolë's violet outline (NoleNodeLayer). */
+  [data-state="on"] .ai__window {
+    box-shadow:
+      0 0 0 2px rgb(124 58 237 / 0.55),
+      0 12px 36px -12px rgb(124 58 237 / 0.45);
+  }
+
+  .ai__window-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 14px;
+    border-bottom: 1px solid #eef2f6;
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .ai__window-head svg {
+    width: 16px;
+    height: 16px;
+  }
+
+
+
+
+  .ai__screens {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+  }
+
+  /* The clips: switching on, the "off" clip slides away to the left and the
+     "on" clip comes in from the right; switching off, the other way round. */
+  .ai__clip {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: auto;
+    transition:
+      transform 520ms var(--ease-out),
+      opacity 520ms var(--ease-out);
+  }
+
+  [data-state="off"] .ai__clip[data-for="on"] {
+    transform: translateX(10%) scale(0.95);
+    opacity: 0;
+  }
+
+  [data-state="on"] .ai__clip[data-for="off"] {
+    transform: translateX(-10%) scale(0.95);
+    opacity: 0;
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+    .switch__track,
+    .switch__thumb,
+    .ai__switch-state > span,
+    .ai__switch-hint > span,
+    .ai__text,
+    .ai__clip,
+    .ai__window {
+      transition: none;
+    }
+
+    .ai__switch[data-attract] {
+      animation: none;
+    }
+  }
+</style>

@@ -60,7 +60,7 @@ export function translatePath(pathname: string, lang: Lang): string {
 const uiEn = {
   "nav.sections": "Page sections",
   "nav.login": "Login",
-  "nav.cta": "Try it for free",
+  "nav.cta": "Open a canvas",
   "nav.switchTo": "Lire en français",
   "logo.home": "Nolënor home",
   "footer.product": "Product",
@@ -77,7 +77,6 @@ const uiEn = {
   "footer.updates.success": "You're in! Thanks for subscribing.",
   "footer.updates.error": "Something went wrong. Please try again later.",
   "footer.rights": "All rights reserved.",
-  "footer.github": "Nolënor on GitHub",
 };
 
 export type UiKey = keyof typeof uiEn;
@@ -85,7 +84,7 @@ export type UiKey = keyof typeof uiEn;
 const uiFr: Record<UiKey, string> = {
   "nav.sections": "Sections de la page",
   "nav.login": "Connexion",
-  "nav.cta": "Essayer gratuitement",
+  "nav.cta": "Ouvrir un canvas",
   "nav.switchTo": "Read in English",
   "logo.home": "Accueil Nolënor",
   "footer.product": "Produit",
@@ -102,7 +101,6 @@ const uiFr: Record<UiKey, string> = {
   "footer.updates.success": "C’est noté, merci !",
   "footer.updates.error": "Quelque chose a coincé. Réessayez un peu plus tard.",
   "footer.rights": "Tous droits réservés.",
-  "footer.github": "Nolënor sur GitHub",
 };
 
 export const ui: Record<Lang, Record<UiKey, string>> = { en: uiEn, fr: uiFr };

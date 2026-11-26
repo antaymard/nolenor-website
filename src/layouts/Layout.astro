@@ -8,9 +8,11 @@ import { getLang, htmlLang } from "@/i18n";
 interface Props {
   title?: string;
   description?: string;
+  /** The page is laid out as a canvas: dot grid under everything. */
+  canvas?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, canvas = false } = Astro.props;
 const lang = getLang(Astro.currentLocale);
 ---
 
@@ -19,7 +21,7 @@ const lang = getLang(Astro.currentLocale);
   <head>
     <BaseHead title={title} description={description} />
   </head>
-  <body class="overflow-x-clip">
+  <body class:list={["overflow-x-clip", canvas && "canvas-dots"]}>
     <Nav />
     <main>
       <slot />

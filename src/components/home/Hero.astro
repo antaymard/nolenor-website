@@ -1,0 +1,215 @@
+---
+import { Icon } from "astro-icon/components";
+import PagesToCanvas from "@/components/home/PagesToCanvas.astro";
+import { APP_SIGNUP_URL, PUBLIC_CANVAS_URL } from "@/lib/constants";
+import { getLang } from "@/i18n";
+
+const lang = getLang(Astro.currentLocale);
+
+const en = {
+  pace: "Your whole project on one canvas.",
+  ai: "And AI by your side.",
+  lede: "An infinite canvas to think, organise and run your projects, with AI when you need it.",
+  terms: "Open beta. No card, export any time.",
+  madeIn: "",
+  cta: "Open a canvas",
+  second: "See a real canvas",
+  window: "Unfold your page tree: your whole project at a glance.",
+};
+const fr: typeof en = {
+  pace: "Tout votre projet sur un canvas.",
+  ai: "Et l’IA à vos côtés.",
+  lede: "Un canvas infini pour penser, organiser et piloter vos projets, avec l’IA quand vous en avez besoin.",
+  terms: "Bêta ouverte. Sans carte, export à tout moment.",
+  madeIn: "Made in France",
+  cta: "Ouvrir un canvas",
+  second: "Voir un vrai canvas",
+  window: "Dépliez votre arborescence : tout votre projet, d’un seul regard.",
+};
+const copy = { en, fr }[lang];
+
+/*
+ * The hero is a corner of a canvas on lavender. The headline is a Title node,
+ * selected; beside it, the pitch and the
+ * two ways in. Below, the window holds the pages-to-canvas slider.
+ */
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero__top">
+    <div class="hero__head">
+      <h1 id="hero-title" class="title-node title-node--selected hero__title">
+        <span>{copy.pace}</span>
+        <span class="hero__ai">{copy.ai}</span>
+        <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      </h1>
+    </div>
+
+    <div class="hero__aside">
+      <p class="hero__lede">{copy.lede}</p>
+      <div class="hero__go">
+      <div class="hero__actions">
+        <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">{copy.cta}</a>
+        <a href={PUBLIC_CANVAS_URL} class="node link-node hero__second" rel="noopener noreferrer">
+          <Icon name="lucide:layout-grid" />{copy.second}<Icon name="lucide:arrow-up-right" class="hero__ext" />
+        </a>
+      </div>
+      <p class="hero__terms">{copy.terms}{copy.madeIn && <span class="hero__made"> · {copy.madeIn}</span>}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="node hero__window bleed-both">
+      <div class="hero__window-head">
+        <Icon name="lucide:notebook-text" />
+        {copy.window}
+      </div>
+      <PagesToCanvas />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* A corner of a canvas on lavender, the brand's indigo turned light,
+     with its dots. Nodes stay white. */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding-block: var(--space-3xl) var(--section-gap-s);
+    background-color: #c9cde6;
+    background-image: radial-gradient(rgb(80 87 133 / 0.28) 1.1px, transparent 1.3px);
+    background-size: 18px 18px;
+  }
+
+
+
+  .hero__top {
+    display: grid;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .hero__head {
+    position: relative;
+    justify-self: start;
+  }
+
+  .hero__title {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0 -8px;
+    font-size: min(var(--text-display), 3.4rem);
+    line-height: 1.04;
+  }
+
+  .hero__ai {
+    color: var(--color-accent);
+  }
+
+  .hero__aside {
+    display: grid;
+    gap: var(--space-lg) var(--space-2xl);
+    align-items: start;
+  }
+
+  .hero__lede {
+    max-width: 34rem;
+  }
+
+  .hero__lede {
+    font-size: var(--text-lead);
+    line-height: 1.5;
+    color: #1e293b;
+    text-wrap: pretty;
+  }
+
+  /* Both ways in, the same size. */
+  .hero__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .hero__actions > a {
+    justify-content: center;
+    height: 48px;
+    min-height: 48px;
+    margin: 0;
+    padding: 0 18px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 26rem) {
+    .hero__actions {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* "See a real canvas" is a Link node. */
+  .hero__second {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .hero__second :global(.hero__ext) {
+    width: 15px;
+    height: 15px;
+    opacity: 0.6;
+  }
+
+  .hero__terms {
+    margin-top: var(--space-md);
+    font-size: var(--text-sm);
+    color: #475569;
+  }
+
+  .hero__made {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .hero__window {
+    overflow: hidden;
+  }
+
+  .hero__window-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 14px;
+    border-bottom: 1px solid #eef2f6;
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .hero__window-head svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__title > span:not(.handles) {
+      white-space: nowrap;
+    }
+
+    /* The slider is the hero's proof: it takes the full bleed on both sides. */
+    .hero__window {
+      margin-inline: calc(-1 * var(--bleed));
+    }
+  }
+
+  /* Wide enough: the pitch on the left, the ways in on the right. */
+  @media (min-width: 60rem) {
+    .hero__aside {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+</style>

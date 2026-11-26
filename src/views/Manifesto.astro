@@ -6,7 +6,7 @@ import SectionLabel from "@/components/ui/SectionLabel.astro";
 import Button from "@/components/ui/Button.astro";
 import ThoughtShape from "@/components/manifesto/ThoughtShape.astro";
 import { APP_SIGNUP_URL, SITE_NAME } from "@/lib/constants";
-import { getLang, localizePath } from "@/i18n";
+import { getLang } from "@/i18n";
 
 const lang = getLang(Astro.currentLocale);
 
@@ -182,7 +182,6 @@ const fr: typeof en = {
 const copy = { en, fr }[lang];
 const escalation = copy.escalation.map((item, index) => ({ ...item, shape: shapes[index] }));
 const { gestures, contrast } = copy;
-const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
 ---
 
 <Layout title={`${copy.pageTitle} — ${SITE_NAME}`} description={copy.description}>
@@ -612,12 +611,6 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
               loin, pas s’en décharger. Pas pour ceux qui attendent que l’IA
               leur en donne un.
             </p>
-            <p>
-              La façon dont nous le construisons en découle.{" "}
-              <a href={localizePath("/principles", lang)} class={linkClass}>
-                Lire nos principes
-              </a>.
-            </p>
           </section>
         ) : (
           <section>
@@ -631,12 +624,6 @@ const linkClass = "font-semibold text-brand underline-offset-4 hover:underline";
               It's made for people who have a craft (developers, designers,
               researchers, consultants, strategists) and want to widen it, not hand
               it off. It isn't for those waiting for AI to give them one.
-            </p>
-            <p>
-              The way we build it follows from all this.{" "}
-              <a href={localizePath("/principles", lang)} class={linkClass}>
-                Read our principles
-              </a>.
             </p>
           </section>
         )

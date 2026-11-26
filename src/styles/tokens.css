@@ -7,42 +7,53 @@
  * Plain :root, not @theme: the scale below must not replace Tailwind's
  * text-sm / text-lg steps, which the other pages still lean on.
  */
+/*
+ * The system, by role, taken from the product's own theme (src/index.css in
+ * the app repo): white surfaces on a slate-50 shell, slate text, the brand
+ * indigo #505785, the highlight yellow, Nunito throughout. The site should
+ * look like the place you land in when you click "Open a canvas".
+ *
+ * Plain :root, not @theme: the scale below must not replace Tailwind's
+ * text-sm / text-lg steps, which the other pages still lean on.
+ */
 :root {
-  --color-paper: oklch(94.9% 0.021 79);
-  --color-paper-2: oklch(91.3% 0.032 83);
-  --color-paper-3: oklch(97.6% 0.012 80);
-  --color-ink: oklch(34% 0.052 273);
-  --color-ink-2: oklch(51.2% 0.06 279);
-  --color-muted: oklch(49% 0.05 279);
-  --color-rule: oklch(88.9% 0.031 82);
-  --color-rule-2: oklch(80% 0.035 82);
-  --color-accent: oklch(47.1% 0.075 277);
-  --color-accent-2: oklch(41% 0.075 277);
-  --color-accent-ink: oklch(94.9% 0.022 81);
-  --color-accent-ink-2: oklch(86% 0.03 279);
-  --color-highlight: oklch(84.4% 0.111 88);
-  --color-focus: oklch(50% 0.18 277);
-  --color-error: oklch(52% 0.19 27);
-  --color-success: oklch(50% 0.12 150);
-  --color-shade: oklch(34% 0.052 273 / 0.07);
-  --color-shadow: oklch(34% 0.052 273 / 0.45);
+  --color-paper: oklch(0.984 0.003 247.858); /* slate-50, the app's shell */
+  --color-paper-2: oklch(0.968 0.007 247.896); /* slate-100, the app's muted */
+  --color-paper-3: oklch(1 0 0); /* surface: cards, nodes, panels */
+  --color-ink: oklch(0.208 0.042 265.755); /* slate-900 */
+  --color-ink-2: oklch(0.446 0.043 257.281); /* slate-600 */
+  --color-muted: oklch(0.554 0.046 257.417); /* slate-500, the app's muted-foreground */
+  --color-rule: oklch(0.929 0.013 255.508); /* slate-200, the app's border */
+  --color-rule-2: oklch(0.869 0.022 252.894); /* slate-300 */
+  --color-accent: oklch(0.471 0.075 276.514); /* #505785, the brand */
+  --color-accent-2: oklch(0.41 0.075 276.514);
+  --color-accent-ink: oklch(0.984 0.003 247.858);
+  --color-accent-ink-2: oklch(0.87 0.03 276);
+  --color-highlight: oklch(0.852 0.199 91.936);
+  --color-focus: oklch(0.55 0.15 276);
+  --color-error: oklch(0.577 0.245 27.325);
+  --color-success: oklch(0.6 0.15 150);
+  --color-shade: oklch(0.208 0.042 265.755 / 0.06);
+  --color-shadow: oklch(0.208 0.042 265.755 / 0.18);
+  --color-dot: oklch(0.869 0.022 252.894);
 
-  --font-display: "Hedvig Letters Serif", Georgia, ui-serif, serif;
+  --font-display: "Nunito", ui-rounded, system-ui, sans-serif;
+  --weight-display: 700;
   --font-body: "Nunito", ui-rounded, system-ui, sans-serif;
 
   --text-xs: 0.8125rem;
   --text-sm: 0.875rem;
   --text-md: 1rem;
   --text-lg: 1.125rem;
-  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem);
-  --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
-  --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem);
-  --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem);
-  --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
+  --text-display-s: clamp(1.875rem, 1.6vw + 1.2rem, 2.75rem);
+  --text-display: clamp(2.25rem, 2.6vw + 1.25rem, 3.75rem);
+  --text-section: clamp(1.625rem, 1.2vw + 1.1rem, 2.5rem);
+  --text-title: clamp(1.125rem, 0.4vw + 0.95rem, 1.375rem);
+  --text-lead: clamp(1.0625rem, 0.2vw + 1rem, 1.1875rem);
   --tracking-display: -0.02em;
 
-  --radius-card: 14px;
-  --radius-inner: 8px;
+  --radius-card: 12px;
+  --radius-inner: 10px;
   --radius-pill: 999px;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -63,11 +74,11 @@
   --space-3xl: 96px;
   --space-4xl: 144px;
 
-  --container: 1360px;
+  --container: 1200px;
   --gutter: 64px;
   --gap-columns: 32px;
-  --section-gap-s: 120px;
-  --section-gap: 144px;
+  --section-gap-s: 136px;
+  --section-gap: 168px;
   --section-gap-l: 176px;
   --nav-height: 72px;
 

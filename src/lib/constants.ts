@@ -38,10 +38,18 @@ export const REST_API_BASE = `${API_ORIGIN}/api/v1`;
 // graceful-failure handling this requires.
 export const WISHLIST_ENDPOINT = `${API_ORIGIN}/wishlist/subscribe`;
 
-// Verified public via the GitHub API.
-export const GITHUB_REPO_URL = "https://github.com/antaymard/nolenor";
 
 export const TAGLINE = {
-  en: "A workshop, not a factory.",
-  fr: "Un atelier, pas une usine.",
+  en: "Your whole project on one canvas. And AI by your side.",
+  fr: "Tout votre projet sur un canvas. Et l’IA à vos côtés.",
+} as const;
+
+// PLACEHOLDER: the public, duplicable canvases the home page links to
+// ("See a real canvas" and the three "Open this canvas" cards). They are
+// still to be prepared in the app; until then every link opens the app.
+export const PUBLIC_CANVAS_URL = APP_URL;
+export const SHOWCASE_CANVAS_URLS = {
+  builders: APP_URL,
+  business: APP_URL,
+  documents: APP_URL,
 } as const;

@@ -33,7 +33,7 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
 <header class="bar">
   <div class="wrap bar__inner">
     <div class="bar__left">
-      <Logo iconClass="h-7 w-7 text-foreground" textClass="text-lg" />
+      <Logo iconClass="h-6 w-6 text-foreground" textClass="text-base" />
 
       <nav aria-label={t("nav.sections")} class="bar__links" data-nav-links>
         {
@@ -72,44 +72,45 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
 </header>
 
 <style>
+  /* A full-width bar, white with a hairline, like the app's own top bar:
+     the wordmark and the section links on the left, the way in on the right. */
   .bar {
     position: sticky;
     top: 0;
     z-index: var(--z-sticky-nav);
-    background: var(--color-paper);
-    border-bottom: var(--rule-hair) solid var(--color-rule);
+    background: #fff;
+    border-bottom: 1px solid oklch(0.929 0.013 255.508);
   }
-
   .bar__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-lg);
+    gap: var(--space-md);
     min-height: var(--nav-height);
   }
-
   .bar__left,
   .bar__right {
     display: flex;
     align-items: center;
-    gap: var(--space-xl);
-  }
-
-  .bar__right {
     gap: var(--space-lg);
   }
-
+  .bar__right {
+    gap: var(--space-md);
+  }
   .bar__links {
     display: none;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
+    padding-left: var(--space-md);
+    border-left: 1px solid oklch(0.929 0.013 255.508);
   }
 
   .nav-link {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
+    min-height: 36px;
     font-size: var(--text-sm);
+    font-weight: 600;
     color: var(--color-ink-2);
     text-decoration: underline;
     text-decoration-color: transparent;
