@@ -14,7 +14,14 @@ type Point = { n: number; title: string; body: string };
 
 const en = {
   title: ["Who said canvases were", "", "only", " for brainstorming?"] as Title,
-  lede: "On a Nolënor canvas, you file, you calculate, you find things again. Things a whiteboard doesn’t do.",
+  lede: {
+    lines: [
+      "Most canvases look great for one brainstorm, then everything has to be copied somewhere else.",
+      "Knowledge bases, for their part, end up as graveyards of ideas.",
+    ],
+    both: "Nolënor brings the two together",
+    rest: ": think in space, file, find, work, and hand the execution to an agent.",
+  },
   soon: "Coming soon: automations.",
   canvas: canvasEn,
   canvasAlt: "A joinery workshop’s canvas: three sub-canvases (clients, workshop, purchasing), an open-quotes database seen as a kanban, two values computed from it through dotted ƒ links (weighted pipeline, win rate), and a live mini-app showing the visitors on the website (42 right now, the curve of the last minutes, the top pages) and a chart of quotes won by month.",
@@ -30,7 +37,14 @@ const en = {
 };
 const fr: typeof en = {
   title: ["Qui a dit que les canvas,", "c’était ", "seulement", " pour brainstormer ?"] as Title,
-  lede: "Sur un canvas Nolënor, on range, on calcule, on retrouve. Ce qu’un tableau blanc ne fait pas.",
+  lede: {
+    lines: [
+      "Les canvas habituels sont beaux le temps d’un brainstorming, puis tout est à recopier ailleurs.",
+      "Les bases de connaissances, elles, finissent en cimetières d’idées.",
+    ],
+    both: "Nolënor réunit les deux",
+    rest: " : penser dans l’espace, ranger, retrouver, travailler, et confier l’exécution à un agent.",
+  },
   soon: "Bientôt : les automatisations.",
   canvas: canvasFr,
   canvasAlt: "Le canvas d’un atelier de menuiserie : trois sous-canvas (clients, atelier, achats), une base des devis en cours vue en kanban, deux valeurs calculées à partir d’elle par des liens ƒ en pointillés (pipeline pondéré, taux de signature), une mini-app en direct des visiteurs sur le site (42 en ce moment, la courbe des dernières minutes, les pages les plus vues) et un graphique des devis signés par mois.",
@@ -69,7 +83,10 @@ const PINS: Record<number, { x: number; y: number }> = {
       <span class="depth__line">{copy.title[0]}</span>
       <span class="depth__line">{copy.title[1]}<span class="title-node title-node--selected depth__word">{copy.title[2]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[3]}</span>
     </h2>
-    <div class="node doc depth__lede"><p>{copy.lede}</p></div>
+    <div class="node doc depth__lede">
+      {copy.lede.lines.map((line) => <p class="depth__was">{line}</p>)}
+      <p><strong>{copy.lede.both}</strong>{copy.lede.rest}</p>
+    </div>
   </div>
 
   <!-- The canvas runs wider than the page's column: it is the thing to read. -->
@@ -145,10 +162,14 @@ const PINS: Record<number, { x: number; y: number }> = {
     color: #2563eb;
   }
 
+  .depth__was {
+    color: var(--color-ink-2);
+  }
+
   .depth__lede {
     display: block;
     width: fit-content;
-    max-width: 34rem;
+    max-width: 40rem;
     margin-bottom: var(--space-2xl);
     font-size: var(--text-lead);
   }
