@@ -17,14 +17,14 @@ const en = {
   lede: "On a Nolënor canvas, you file, you calculate, you find things again. Things a whiteboard doesn’t do.",
   soon: "Coming soon: automations.",
   canvas: canvasEn,
-  canvasAlt: "A joinery workshop’s canvas: three sub-canvases (clients, workshop, purchasing), an open-quotes database seen as a kanban, two values computed from it through dotted ƒ links (weighted pipeline, win rate), and two charts kept up to date: revenue by month and quotes won by month.",
+  canvasAlt: "A joinery workshop’s canvas: three sub-canvases (clients, workshop, purchasing), an open-quotes database seen as a kanban, two values computed from it through dotted ƒ links (weighted pipeline, win rate), and a live mini-app showing the visitors on the website (42 right now, the curve of the last minutes, the top pages) and a chart of quotes won by month.",
   search: searchEn,
   searchAlt: "The search finds one phrase in a voice memo at 1:12, on page 3 of a PDF and in a site note.",
   points: [
     { n: 1, title: "The detail when you need it, the big picture always.", body: "One canvas per client, per part of the business, per project: go down, come back up." },
     { n: 2, title: "Databases that stand up to the best tools.", body: "Records shaped to your needs, typed fields, and every view: table, kanban, calendar, gallery, timeline or list." },
     { n: 3, title: "Numbers that update themselves.", body: "A value computes from a table, a field or another node. A source changes, everything follows." },
-    { n: 4, title: "Your metrics up to date, without copying them over.", body: "Mini-apps read your data and your tools, and keep themselves current." },
+    { n: 4, title: "Mini-apps coded by Nolë, plugged into your tools.", body: "Ask for the dashboard you’re missing: Nolë codes it and connects it to your third-party tools, with over 2,000 apps available. It keeps itself up to date." },
     { n: 5, title: "Find anything, even inside a voice memo.", body: "Documents, PDFs, images, recordings: one query, every match, at its page or its minute." },
   ] as Point[],
 };
@@ -33,14 +33,14 @@ const fr: typeof en = {
   lede: "Sur un canvas Nolënor, on range, on calcule, on retrouve. Ce qu’un tableau blanc ne fait pas.",
   soon: "Bientôt : les automatisations.",
   canvas: canvasFr,
-  canvasAlt: "Le canvas d’un atelier de menuiserie : trois sous-canvas (clients, atelier, achats), une base des devis en cours vue en kanban, deux valeurs calculées à partir d’elle par des liens ƒ en pointillés (pipeline pondéré, taux de signature), et deux graphiques tenus à jour : chiffre d’affaires par mois et devis signés par mois.",
+  canvasAlt: "Le canvas d’un atelier de menuiserie : trois sous-canvas (clients, atelier, achats), une base des devis en cours vue en kanban, deux valeurs calculées à partir d’elle par des liens ƒ en pointillés (pipeline pondéré, taux de signature), une mini-app en direct des visiteurs sur le site (42 en ce moment, la courbe des dernières minutes, les pages les plus vues) et un graphique des devis signés par mois.",
   search: searchFr,
   searchAlt: "La recherche trouve une expression dans un mémo vocal à 1:12, à la page 3 d’un PDF et dans une note de chantier.",
   points: [
     { n: 1, title: "Le détail quand il faut, la vue d’ensemble toujours.", body: "Un canvas par client, par pan de l’entreprise, par projet : on descend, on remonte." },
     { n: 2, title: "Des bases de données à la hauteur des meilleurs outils.", body: "Des fiches sur mesure, des champs typés, et toutes les vues : table, kanban, calendrier, galerie, timeline ou liste." },
     { n: 3, title: "Des chiffres qui se mettent à jour tout seuls.", body: "Une valeur se calcule à partir d’un tableau, d’un champ ou d’un autre nœud. Une source change, tout suit." },
-    { n: 4, title: "Vos indicateurs à jour, sans rien recopier.", body: "Des mini-apps lisent vos données et vos outils, et se tiennent à jour seules." },
+    { n: 4, title: "Des mini-apps codées par Nolë, branchées sur vos outils.", body: "Demandez le tableau de bord qui vous manque : Nolë le code et le connecte à vos outils tiers, parmi plus de 2 000 applications. Il se tient à jour seul." },
     { n: 5, title: "Tout se retrouve, même dans un mémo vocal.", body: "Documents, PDF, images, enregistrements : une requête, chaque passage, à sa page ou à sa minute." },
   ] as Point[],
 };
@@ -86,7 +86,7 @@ const PINS: Record<number, { x: number; y: number }> = {
       </figure>
       <figure class="node media depth__search">
         <div class="media__in">
-          <Image src={copy.search} alt={copy.searchAlt} widths={[480, 720, 960]} sizes="(min-width: 60rem) 420px, 100vw" />
+          <Image src={copy.search} alt={copy.searchAlt} widths={[480, 720, 960]} sizes="(min-width: 60rem) 600px, 100vw" />
           <span class="pin" style="left:0;top:0" aria-hidden="true">5</span>
         </div>
       </figure>
@@ -245,14 +245,18 @@ const PINS: Record<number, { x: number; y: number }> = {
        runs past it, like a window opened on top. */
     .depth__stage {
       margin-right: 3rem;
-      margin-bottom: 4rem;
+      margin-bottom: 9rem;
+    }
+
+    .depth__canvas {
+      margin-bottom: 0;
     }
 
     .depth__search {
       position: absolute;
       right: -3rem;
-      bottom: -4rem;
-      width: 34%;
+      bottom: -5rem;
+      width: 50%;
       margin: 0;
       box-shadow:
         0 24px 48px -16px rgb(15 23 42 / 0.3),
