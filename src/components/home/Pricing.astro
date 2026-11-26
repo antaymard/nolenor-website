@@ -1,7 +1,5 @@
 ---
 import { Icon } from "astro-icon/components";
-import { Image } from "astro:assets";
-import cuisine from "@/assets/img/home/photos/cuisine.webp";
 import { APP_SIGNUP_URL } from "@/lib/constants";
 import { getLang } from "@/i18n";
 
@@ -53,7 +51,6 @@ const copy = { en, fr }[lang];
 ---
 
 <section id="pricing" class="pricing" aria-labelledby="pricing-title">
-  <figure class="node photo-node" style="--w:380px;right:-170px;top:58%" aria-hidden="true"><Image src={cuisine} alt="" widths={[480, 900]} sizes="380px" /></figure>
   <div class="wrap">
     <h2 id="pricing-title" class="title-node pricing__title">{copy.title}</h2>
 
@@ -94,7 +91,6 @@ const copy = { en, fr }[lang];
 <style>
   .pricing {
     position: relative;
-    overflow-x: clip;
     padding-block: var(--section-gap-s) var(--section-gap);
   }
 
