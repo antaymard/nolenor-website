@@ -70,11 +70,14 @@ const PINS: Record<number, { x: number; y: number }> = {
       <span class="depth__line">{copy.title[1]}<span class="title-node title-node--selected depth__word">{copy.title[2]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[3]}</span>
     </h2>
     <div class="node doc depth__lede"><p>{copy.lede}</p></div>
+  </div>
 
+  <!-- The canvas runs wider than the page's column: it is the thing to read. -->
+  <div class="wrap depth__wide">
     <div class="depth__stage">
       <figure class="node media depth__canvas">
         <div class="media__in">
-          <Image src={copy.canvas} alt={copy.canvasAlt} widths={[720, 1080, 1440, 1920]} sizes="(min-width: 75rem) 1100px, 100vw" />
+          <Image src={copy.canvas} alt={copy.canvasAlt} widths={[720, 1080, 1440, 1920, 2560]} sizes="(min-width: 75rem) 1340px, 100vw" />
           {
             Object.entries(PINS).map(([n, p]) => (
               <span class="pin" style={`left:${p.x}%;top:${p.y}%`} aria-hidden="true">
@@ -91,7 +94,9 @@ const PINS: Record<number, { x: number; y: number }> = {
         </div>
       </figure>
     </div>
+  </div>
 
+  <div class="wrap">
     <ol class="depth__legend">
       {
         copy.points.map((p) => (
@@ -145,6 +150,10 @@ const PINS: Record<number, { x: number; y: number }> = {
     max-width: 34rem;
     margin-bottom: var(--space-2xl);
     font-size: var(--text-lead);
+  }
+
+  .depth__wide {
+    max-width: 1440px;
   }
 
   .depth__stage {
@@ -245,7 +254,7 @@ const PINS: Record<number, { x: number; y: number }> = {
        runs past it, like a window opened on top. */
     .depth__stage {
       margin-right: 3rem;
-      margin-bottom: 9rem;
+      margin-bottom: 7rem;
     }
 
     .depth__canvas {
@@ -256,7 +265,7 @@ const PINS: Record<number, { x: number; y: number }> = {
       position: absolute;
       right: -3rem;
       bottom: -5rem;
-      width: 50%;
+      width: 34%;
       margin: 0;
       box-shadow:
         0 24px 48px -16px rgb(15 23 42 / 0.3),
