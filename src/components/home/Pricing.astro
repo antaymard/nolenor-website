@@ -1,12 +1,27 @@
 ---
+import { Icon } from "astro-icon/components";
 import { APP_SIGNUP_URL } from "@/lib/constants";
 import { getLang } from "@/i18n";
 
 const lang = getLang(Astro.currentLocale);
 
 const en = {
-  title: "Free during the beta.",
-  body: "All of Nolënor, AI included, with no credit card. And for what comes next, commitments in writing:",
+  title: "All of Nolënor, at no cost.",
+  badge: "Free during beta",
+  plan: "Open beta",
+  unit: "/ month",
+  terms: "No credit card. Every feature, AI included.",
+  cta: "Open a canvas",
+  includedTitle: "Included",
+  included: [
+    "Canvases, sub-canvases and documents",
+    "Databases and all their views",
+    "Computed values and mini-apps",
+    "Nolë, the AI, by text or voice",
+    "Search inside PDFs, images and recordings",
+    "Version history",
+  ],
+  promisesTitle: "And for what comes next, in writing",
   // Each line is a public commitment: keep only the ones we hold to.
   promises: [
     "A free plan that stays.",
@@ -14,141 +29,260 @@ const en = {
     "Your data, exportable at any time, for free.",
     "The cost of an AI request shown before you run it.",
   ],
-  cta: "Open a canvas",
-  valueLabel: "During the beta",
-  promisesTitle: "Our commitments",
 };
 const fr: typeof en = {
-  title: "Gratuit pendant la bêta.",
-  body: "Tout Nolënor, IA comprise, sans carte bancaire. Et pour la suite, des engagements écrits :",
+  title: "Tout Nolënor, sans rien payer.",
+  badge: "Gratuit pendant la bêta",
+  plan: "Bêta ouverte",
+  unit: "/ mois",
+  terms: "Sans carte bancaire. Toutes les fonctions, IA comprise.",
+  cta: "Ouvrir un canvas",
+  includedTitle: "Inclus",
+  included: [
+    "Canvas, sous-canvas et documents",
+    "Bases de données et toutes leurs vues",
+    "Valeurs calculées et mini-apps",
+    "Nolë, l’IA, à l’écrit comme à la voix",
+    "Recherche dans les PDF, images et enregistrements",
+    "Historique des versions",
+  ],
+  promisesTitle: "Et pour la suite, des engagements écrits",
   promises: [
     "Une formule gratuite qui reste.",
     "Trente jours de préavis avant tout changement de prix.",
     "Vos données exportables à tout moment, gratuitement.",
     "Le coût d’une demande à l’IA affiché avant de la lancer.",
   ],
-  cta: "Ouvrir un canvas",
-  valueLabel: "Pendant la bêta",
-  promisesTitle: "Nos engagements",
 };
 const copy = { en, fr }[lang];
 
 /*
- * The price as a Value node (the app's ValueFace: label, figure, unit), the
- * commitments as a checklist in a document node, all of them ticked: each
- * one is a promise already made.
+ * One price card, a selected node on the canvas: the "free during beta"
+ * badge on its top edge, the price and the way in on the left, what is
+ * included on the right, and the written commitments along its foot.
  */
 ---
 
 <section id="pricing" class="pricing" aria-labelledby="pricing-title">
-  <div class="wrap pricing__grid">
-    <div class="pricing__text">
-      <h2 id="pricing-title" class="title-node pricing__title">{copy.title}</h2>
-      <div class="pricing__row">
-        <div class="node value-node" aria-label={`${copy.valueLabel} : 0 €`}>
-          <span class="value-node__label">{copy.valueLabel}</span>
-          <span class="value-node__figure">0<small>€</small></span>
+  <div class="wrap">
+    <h2 id="pricing-title" class="title-node pricing__title">{copy.title}</h2>
+
+    <div class="node pricing__card">
+      <span class="pricing__badge"><Icon name="lucide:sparkles" />{copy.badge}</span>
+
+      <div class="pricing__main">
+        <div class="pricing__offer">
+          <p class="pricing__plan">{copy.plan}</p>
+          <p class="pricing__price" aria-label={`0 € ${copy.unit}`}>
+            <span class="pricing__figure">0&nbsp;€</span>
+            <span class="pricing__unit">{copy.unit}</span>
+          </p>
+          <p class="pricing__terms">{copy.terms}</p>
+          <a href={APP_SIGNUP_URL} class="btn pricing__cta" rel="noopener noreferrer">{copy.cta}</a>
         </div>
-        <div class="node doc pricing__body"><p>{copy.body}</p></div>
+
+        <div class="pricing__included">
+          <h3>{copy.includedTitle}</h3>
+          <ul>
+            {
+              copy.included.map((item) => (
+                <li>
+                  <Icon name="lucide:check" />
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       </div>
-      <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">{copy.cta}</a>
-    </div>
-    <div class="node doc pricing__promises">
-      <h3>{copy.promisesTitle}</h3>
-      <ul class="check">
-        {copy.promises.map((promise) => <li data-checked>{promise}</li>)}
-      </ul>
+
+      <div class="pricing__promises">
+        <h3>{copy.promisesTitle}</h3>
+        <ul>
+          {
+            copy.promises.map((promise) => (
+              <li>
+                <Icon name="lucide:shield-check" />
+                {promise}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   .pricing {
-    padding-block: var(--section-gap-s);
-  }
-
-  .pricing__grid {
-    display: grid;
-    gap: var(--space-2xl) var(--gap-columns);
-    align-items: center;
-  }
-
-  .pricing__text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-lg);
+    padding-block: var(--section-gap-s) var(--section-gap);
   }
 
   .pricing__title {
-    margin: 0 0 0 -8px;
+    margin: 0 0 var(--space-2xl) -8px;
     font-size: var(--text-section);
-    line-height: 1.08;
+    line-height: 1.1;
   }
 
-  .pricing__row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    gap: var(--space-md);
+  /* The card is the selected node: the brand outline, lifted a little. */
+  .pricing__card {
+    position: relative;
+    max-width: 62rem;
+    padding: 0;
+    box-shadow:
+      0 0 0 2px var(--color-accent),
+      0 28px 56px -28px rgb(15 23 42 / 0.35);
   }
 
-  .value-node {
-    display: flex;
-    min-width: 11rem;
-    flex-direction: column;
+  /* Astride the top edge, like a tag pinned on the node. */
+  .pricing__badge {
+    position: absolute;
+    top: 0;
+    left: var(--space-xl);
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 14px 20px;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: #16a34a;
+    box-shadow: 0 6px 16px -6px rgb(22 163 74 / 0.6);
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    transform: translateY(-50%);
   }
 
-  .value-node__label {
-    font-size: 12px;
-    font-weight: 600;
+  .pricing__badge svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .pricing__main {
+    display: grid;
+    gap: var(--space-xl) var(--space-2xl);
+    padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+  }
+
+  .pricing__offer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pricing__plan {
+    font-size: 14px;
+    font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: #64748b;
   }
 
-  .value-node__figure {
-    font-size: 36px;
+  .pricing__price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: var(--space-xs);
+  }
+
+  .pricing__figure {
+    font-size: clamp(3.5rem, 4vw + 1.5rem, 4.75rem);
     font-weight: 800;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     color: var(--color-ink);
   }
 
-  .value-node__figure small {
-    margin-left: 4px;
-    font-size: 16px;
+  .pricing__unit {
+    font-size: 18px;
     font-weight: 600;
     color: #64748b;
   }
 
-  .pricing__body {
-    flex: 1;
-    min-width: 14rem;
-    max-width: 24rem;
-    display: flex;
-    align-items: center;
+  .pricing__terms {
+    margin-top: var(--space-sm);
+    max-width: 22rem;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-ink-2);
   }
 
-  .pricing__promises {
-    font-size: 17px;
+  .pricing__cta {
+    margin-top: var(--space-lg);
   }
 
+  .pricing__included h3,
   .pricing__promises h3 {
+    font-size: 15px;
     font-weight: 700;
+    color: var(--color-ink);
   }
 
-  .pricing__promises li + li {
-    margin-top: 0.7em;
+  .pricing__included ul {
+    display: grid;
+    gap: 10px;
+    margin-top: var(--space-sm);
   }
 
-  @media (min-width: 60rem) {
-    .pricing__grid {
-      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  .pricing__included li,
+  .pricing__promises li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--color-ink-2);
+  }
+
+  .pricing__included li svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    color: #16a34a;
+  }
+
+  /* The commitments, along the card's foot, on the app's grey. */
+  .pricing__promises {
+    padding: var(--space-lg) var(--space-xl);
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0 0 var(--radius-card) var(--radius-card);
+    background: #f8fafc;
+  }
+
+  .pricing__promises ul {
+    display: grid;
+    gap: 10px var(--space-xl);
+    margin-top: var(--space-sm);
+  }
+
+  .pricing__promises li {
+    font-size: 15px;
+  }
+
+  .pricing__promises li svg {
+    flex-shrink: 0;
+    width: 17px;
+    height: 17px;
+    margin-top: 2px;
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 48rem) {
+    .pricing__main {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      padding: var(--space-2xl) var(--space-2xl) var(--space-xl);
+    }
+
+    .pricing__promises {
+      padding: var(--space-lg) var(--space-2xl);
+    }
+
+    .pricing__promises ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pricing__badge {
+      left: var(--space-2xl);
     }
   }
 </style>
