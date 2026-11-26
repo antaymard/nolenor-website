@@ -117,6 +117,7 @@ const copy = { en, fr }[lang];
   <div class="wrap why__wide">
     <ol class="why__points" data-why-points>
       <svg class="why__edges" aria-hidden="true"></svg>
+      <svg class="why__edges why__edges--heads" aria-hidden="true"></svg>
       {
         copy.points.map((p, i) => (
           <li class:list={["why__point", i % 2 === 1 && "why__point--flip"]} data-reveal>
@@ -180,21 +181,26 @@ const copy = { en, fr }[lang];
   // bottom of each step's text to the top of the next one, drawn the way
   // the app draws its edges. Wide screens only (stacked, they'd only cross).
   document.querySelectorAll<HTMLElement>("[data-why-points]").forEach((list) => {
-    const svg = list.querySelector<SVGSVGElement>(".why__edges")!;
+    const svg = list.querySelector<SVGSVGElement>(".why__edges:not(.why__edges--heads)")!;
+    // The arrowheads sit above the nodes, so a node never hides them.
+    const heads = list.querySelector<SVGSVGElement>(".why__edges--heads")!;
     const draw = () => {
       svg.innerHTML = "";
+      heads.innerHTML = "";
       if (!window.matchMedia("(min-width: 60rem)").matches) return;
       const base = list.getBoundingClientRect();
       const texts = [...list.querySelectorAll<HTMLElement>("[data-why-text]")].map((el) => el.getBoundingClientRect());
       let html = "";
+      let tips = "";
       for (let i = 0; i < texts.length - 1; i++) {
         const a = { x: texts[i].left + texts[i].width / 2 - base.left, y: texts[i].bottom - base.top };
         const b = { x: texts[i + 1].left + texts[i + 1].width / 2 - base.left, y: texts[i + 1].top - base.top };
         const k = Math.max(60, (b.y - a.y) * 0.5);
         html += `<path d="M ${a.x} ${a.y} C ${a.x} ${a.y + k}, ${b.x} ${b.y - k}, ${b.x} ${b.y}"/>`;
-        html += `<polyline points="${b.x - 6},${b.y - 7.5} ${b.x},${b.y} ${b.x + 6},${b.y - 7.5}"/>`;
+        tips += `<polyline points="${b.x - 6},${b.y - 8} ${b.x},${b.y - 0.5} ${b.x + 6},${b.y - 8}"/>`;
       }
       svg.innerHTML = html;
+      heads.innerHTML = tips;
     };
     new ResizeObserver(draw).observe(list);
     window.addEventListener("load", draw);
@@ -241,6 +247,10 @@ const copy = { en, fr }[lang];
     overflow: visible;
     pointer-events: none;
     z-index: 0;
+  }
+
+  .why__edges--heads {
+    z-index: 2;
   }
 
   .why__edges :global(path),
