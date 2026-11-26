@@ -112,14 +112,15 @@ const copy = { en, fr }[lang];
     </h2>
     <div class="node doc why__lede"><p>{copy.lede}</p></div>
 
-    <ol class="why__points">
+    <ol class="why__points" data-why-points>
+      <svg class="why__edges" aria-hidden="true"></svg>
       {
         copy.points.map((p, i) => (
           <li class:list={["why__point", i % 2 === 1 && "why__point--flip"]} data-reveal>
             <figure class:list={["node media why__shot", i % 2 === 0 ? "bleed-left" : "bleed-right"]}>
               <Image src={p.img} alt={p.alt} widths={[640, 960, 1280]} sizes="(min-width: 60rem) 60vw, 100vw" />
             </figure>
-            <div class="node doc why__text">
+            <div class="node doc why__text" data-why-text>
               <span class="why__n" aria-hidden="true">{i + 1}</span>
               <h3>{p.title}</h3>
               <p>{p.body}</p>
@@ -169,6 +170,32 @@ const copy = { en, fr }[lang];
   </div>
 </section>
 
+<script>
+  // The three steps are linked like nodes on a canvas: an edge from the
+  // bottom of each step's text to the top of the next one, drawn the way
+  // the app draws its edges. Wide screens only (stacked, they'd only cross).
+  document.querySelectorAll<HTMLElement>("[data-why-points]").forEach((list) => {
+    const svg = list.querySelector<SVGSVGElement>(".why__edges")!;
+    const draw = () => {
+      svg.innerHTML = "";
+      if (!window.matchMedia("(min-width: 60rem)").matches) return;
+      const base = list.getBoundingClientRect();
+      const texts = [...list.querySelectorAll<HTMLElement>("[data-why-text]")].map((el) => el.getBoundingClientRect());
+      let html = "";
+      for (let i = 0; i < texts.length - 1; i++) {
+        const a = { x: texts[i].left + texts[i].width / 2 - base.left, y: texts[i].bottom - base.top };
+        const b = { x: texts[i + 1].left + texts[i + 1].width / 2 - base.left, y: texts[i + 1].top - base.top };
+        const k = Math.max(60, (b.y - a.y) * 0.5);
+        html += `<path d="M ${a.x} ${a.y} C ${a.x} ${a.y + k}, ${b.x} ${b.y - k}, ${b.x} ${b.y}"/>`;
+        html += `<polyline points="${b.x - 6},${b.y - 7.5} ${b.x},${b.y} ${b.x + 6},${b.y - 7.5}"/>`;
+      }
+      svg.innerHTML = html;
+    };
+    new ResizeObserver(draw).observe(list);
+    window.addEventListener("load", draw);
+  });
+</script>
+
 <style>
   .why {
     padding-block: var(--section-gap);
@@ -201,7 +228,32 @@ const copy = { en, fr }[lang];
     font-size: var(--text-lead);
   }
 
+  .why__edges {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .why__edges :global(path),
+  .why__edges :global(polyline) {
+    fill: none;
+    stroke: #94a3b8;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .why__point {
+    position: relative;
+    z-index: 1;
+  }
+
   .why__points {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-3xl);
