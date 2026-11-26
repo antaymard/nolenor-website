@@ -1,4 +1,3 @@
-import { prefersReducedMotion } from "./reduced-motion";
 import {
   CANVAS,
   CRUMB,
@@ -44,6 +43,13 @@ function setup(root: HTMLElement) {
   const frame = root.querySelector<HTMLElement>("[data-ptc-frame]")!;
   const input = root.querySelector<HTMLInputElement>("[data-ptc-range]")!;
   const replay = root.querySelector<HTMLButtonElement>("[data-ptc-replay]")!;
+  const intro = root.querySelector<HTMLElement>("[data-ptc-intro]");
+  const showIntro = (on: boolean) => {
+    if (intro) intro.dataset.shown = String(on);
+  };
+  // Before the morph, the nested-documents view holds a moment on its own.
+  const HOLD_MS = 1800;
+  let holdTimer = 0;
   // Shown or not, the button keeps its place (visibility, not display), so
   // the bar beside it never changes width.
   const showReplay = (on: boolean) => {
@@ -74,34 +80,46 @@ function setup(root: HTMLElement) {
     return { path, arrow, len };
   });
 
-  // Fit the fixed stage to its frame. On a phone, a larger fixed scale in a
-  // frame that pans sideways (the CSS lets it scroll).
-  const phone = window.matchMedia("(max-width: 39.99rem)");
-  const PHONE_SCALE = 0.56;
+  // Fit the fixed stage to its frame.
   const fit = () => {
-    if (phone.matches) {
-      stage.style.transform = `scale(${PHONE_SCALE})`;
-      frame.style.height = `${Math.round(STAGE.h * PHONE_SCALE)}px`;
-    } else {
-      stage.style.transform = `scale(${frame.clientWidth / STAGE.w})`;
-      frame.style.height = "";
-    }
+    stage.style.transform = `scale(${frame.clientWidth / STAGE.w})`;
   };
   new ResizeObserver(fit).observe(frame);
-  phone.addEventListener("change", fit);
   fit();
 
-  const view = root.querySelector<HTMLElement>("[data-ptc-view]");
-  if (view) {
-    frame.addEventListener(
-      "scroll",
-      () => {
-        if (frame.scrollLeft > 8) view.dataset.panned = "";
-        view.toggleAttribute("data-end", frame.scrollLeft + frame.clientWidth >= frame.scrollWidth - 4);
-      },
-      { passive: true },
-    );
-  }
+  // Phones: full screen, in landscape (rotated by CSS while upright; on
+  // Android, real full screen locked to landscape where allowed).
+  const fullBtn = root.querySelector<HTMLButtonElement>("[data-ptc-full]");
+  const closeBtn = root.querySelector<HTMLButtonElement>("[data-ptc-close]");
+  const backdrop = root.parentElement?.querySelector<HTMLElement>("[data-ptc-backdrop]") ?? null;
+  const orientation = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
+  const setFull = (on: boolean) => {
+    root.classList.toggle("ptc--full", on);
+    if (backdrop) backdrop.hidden = !on;
+    document.documentElement.toggleAttribute("data-zoom-open", on);
+    document.documentElement.toggleAttribute("data-ptc-full", on);
+    if (on) {
+      document.documentElement
+        .requestFullscreen?.()
+        .then(() => orientation?.lock?.("landscape"))
+        .catch(() => {});
+      closeBtn?.focus({ preventScroll: true });
+    } else {
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      orientation?.unlock?.();
+      fullBtn?.focus({ preventScroll: true });
+    }
+    requestAnimationFrame(fit);
+  };
+  fullBtn?.addEventListener("click", () => setFull(true));
+  closeBtn?.addEventListener("click", () => setFull(false));
+  backdrop?.addEventListener("click", () => setFull(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && root.classList.contains("ptc--full")) setFull(false);
+  });
+  document.addEventListener("fullscreenchange", () => {
+    if (!document.fullscreenElement && root.classList.contains("ptc--full")) setFull(false);
+  });
 
   function render(t: number) {
     const split = win(t, 0.06, 0.42);
@@ -264,33 +282,32 @@ function setup(root: HTMLElement) {
     raf = requestAnimationFrame(tick);
   };
 
+  // The intro card stays until Play; then the nested-documents view holds,
+  // then the morph.
+  const start = () => {
+    stop();
+    window.clearTimeout(holdTimer);
+    showIntro(false);
+    showReplay(false);
+    show(0);
+    holdTimer = window.setTimeout(play, HOLD_MS);
+  };
+  root.querySelector<HTMLButtonElement>("[data-ptc-play]")?.addEventListener("click", start);
+
   input.addEventListener("input", () => {
     stop();
+    window.clearTimeout(holdTimer);
+    showIntro(false);
     render(Number(input.value) / 1000);
     input.setAttribute("aria-valuetext", `${Math.round(Number(input.value) / 10)} %`);
     showReplay(true);
   });
   input.addEventListener("pointerdown", stop);
-  replay.addEventListener("click", play);
+  replay.addEventListener("click", start);
 
-  if (prefersReducedMotion()) {
-    show(1);
-    showReplay(true);
-    return;
-  }
+  // The first picture is the intro card, with its Play button.
   showReplay(false);
   show(0);
-  // Plays once by itself, the first time most of it is on screen.
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        io.disconnect();
-        window.setTimeout(play, 400);
-      }
-    },
-    { threshold: 0.6 },
-  );
-  io.observe(frame);
 }
 
 export function initPagesToCanvas(): void {

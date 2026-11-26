@@ -10,7 +10,11 @@ const en = {
   to: "Structured canvas",
   slider: "From nested documents to a structured canvas",
   replay: "Replay",
-  pan: "Swipe to explore",
+  introTitle: "Your project, structured visually.",
+  introSub: "Go from rigid nesting to a visual, dynamic structure.",
+  play: "Play the animation",
+  full: "Full screen",
+  close: "Close",
   caption: "The same project, twice. In pages, everything is filed one inside another. On a canvas, it is all in view, with what links to what.",
   alt: "A project in a page tool, with nested pages, tabs and a database, breaks apart into a Nolënor canvas: sub-pages become sub-canvases, the database and its views become nodes linked together, and the page stays open in a window docked on the right.",
 };
@@ -19,7 +23,11 @@ const fr: typeof en = {
   to: "Canvas structuré",
   slider: "Des documents imbriqués à un canvas structuré",
   replay: "Rejouer",
-  pan: "Glissez pour explorer",
+  introTitle: "Votre projet, structuré visuellement.",
+  introSub: "Passez d’une imbrication rigide à une structure visuelle et dynamique.",
+  play: "Lancer l’animation",
+  full: "Plein écran",
+  close: "Fermer",
   caption: "Le même projet, deux fois. En pages, tout est rangé l’un dans l’autre. Sur un canvas, tout est sous vos yeux, avec ce qui relie quoi.",
   alt: "Un projet dans un outil de pages, avec ses sous-pages, ses onglets et sa base de données, s’éclate en un canvas Nolënor : les sous-pages deviennent des sous-canvas, la base et ses vues deviennent des nœuds reliés entre eux, et la page reste ouverte dans une fenêtre ancrée à droite.",
 };
@@ -145,7 +153,15 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
     </div>
   </div>
 
-  <span class="ptc__hint" aria-hidden="true"><Icon name="lucide:move-horizontal" />{copy.pan}</span>
+  <!-- The first picture: what the animation is about to show, as two nodes
+       on an empty canvas. It goes when the animation starts. -->
+  <div class="ptc__intro" data-ptc-intro data-shown="true">
+    <p class="title-node title-node--selected ptc__intro-title">{copy.introTitle}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></p>
+    <span class="ptc__intro-edge" aria-hidden="true"></span>
+    <p class="node doc ptc__intro-sub">{copy.introSub}</p>
+    <button type="button" class="btn ptc__play" data-ptc-play><Icon name="lucide:play" />{copy.play}</button>
+  </div>
+  <button type="button" class="ptc__full" data-ptc-full aria-label={copy.full}><Icon name="lucide:maximize-2" /></button>
   </div>
 
   <div class="ptc__control">
@@ -156,8 +172,10 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
       <Icon name="lucide:rotate-ccw" />{copy.replay}
     </button>
   </div>
+  <button type="button" class="ptc__close" data-ptc-close aria-label={copy.close}><Icon name="lucide:x" /></button>
   <figcaption class="sr-only">{copy.caption}</figcaption>
 </figure>
+<div class="ptc__backdrop" data-ptc-backdrop hidden></div>
 
 <script>
   import { initPagesToCanvas } from "@/scripts/pages-to-canvas";
@@ -475,71 +493,222 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
     color: #fff;
   }
 
-  /* On a phone the stage is shown at about twice the fitted size, in a
-     frame that pans sideways: a fade on the right edge and a small hint say
-     there is more, and the hint goes after the first swipe. */
+  /* On a phone the whole stage fits the screen's width, as on a desktop;
+     a button opens it full screen, turned to landscape (rotated a quarter
+     turn while the phone is upright), slider included. */
   .ptc__view {
     position: relative;
+    container-type: inline-size;
   }
 
-  .ptc__hint {
+  /* The intro card: an empty Nolënor canvas, a selected title node, an edge,
+     a document node. Sizes follow the frame's width (cqw). */
+  .ptc__intro {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 4cqw;
+    background-color: #f8fafc;
+    background-image: radial-gradient(#cbd5e1 1.1px, transparent 1.3px);
+    background-size: 18px 18px;
+    text-align: center;
+    transition:
+      opacity 450ms var(--ease-out, ease-out),
+      visibility 0s 450ms;
+  }
+
+  .ptc__intro[data-shown="false"] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .ptc__intro-title {
+    margin: 0;
+    padding: 0.2em 0.45em;
+    font-size: clamp(1.25rem, 4.2cqw, 3.25rem);
+    line-height: 1.15;
+    color: var(--color-ink);
+    background: #fff;
+  }
+
+  .ptc__intro-edge {
+    position: relative;
+    display: block;
+    width: 1.5px;
+    height: clamp(20px, 4cqw, 44px);
+    margin-top: 6px;
+    background: #b1b1b7;
+    transform-origin: top;
+  }
+
+  .ptc__intro-edge::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    border-right: 1.5px solid #b1b1b7;
+    border-bottom: 1.5px solid #b1b1b7;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .ptc__intro-sub {
+    max-width: 34em;
+    margin: 0;
+    padding: 0.9em 1.2em;
+    font-size: clamp(0.8125rem, 1.75cqw, 1.3125rem);
+    line-height: 1.45;
+    color: var(--color-ink-2);
+  }
+
+  /* The nodes come in one after the other, as if being placed. */
+  .ptc__intro[data-shown="true"] .ptc__intro-title {
+    animation: intro-pop 420ms var(--ease-out, ease-out) both;
+  }
+  .ptc__intro[data-shown="true"] .ptc__intro-edge {
+    animation: intro-draw 320ms 380ms var(--ease-out, ease-out) both;
+  }
+  .ptc__intro[data-shown="true"] .ptc__intro-sub {
+    animation: intro-pop 420ms 620ms var(--ease-out, ease-out) both;
+  }
+
+  .ptc__play {
+    gap: 8px;
+    margin-top: clamp(14px, 3cqw, 32px);
+    min-height: 44px;
+    font-size: clamp(0.875rem, 1.5cqw, 1rem);
+  }
+
+  .ptc__play :global(svg) {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .ptc__intro[data-shown="true"] .ptc__play {
+    animation: intro-pop 420ms 1000ms var(--ease-out, ease-out) both;
+  }
+
+  @keyframes intro-pop {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.97);
+    }
+  }
+
+  @keyframes intro-draw {
+    from {
+      transform: scaleY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ptc__intro,
+    .ptc__intro * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  .ptc__full,
+  .ptc__close,
+  .ptc__backdrop {
     display: none;
   }
 
   @media (max-width: 39.99rem) {
-    .ptc__frame {
-      aspect-ratio: auto;
-      overflow-x: auto;
-      overflow-y: hidden;
-      overscroll-behavior-x: contain;
-      scrollbar-width: none;
-    }
-
-    .ptc__frame::-webkit-scrollbar {
-      display: none;
-    }
-
-    .ptc__view::after {
-      content: "";
+    .ptc__full {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 36px;
-      background: linear-gradient(to right, rgb(241 245 249 / 0), rgb(241 245 249 / 0.95));
-      pointer-events: none;
-      transition: opacity 200ms ease;
-    }
-
-    .ptc__view[data-end]::after {
-      opacity: 0;
-    }
-
-    .ptc__hint {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
+      right: 10px;
+      bottom: 10px;
+      z-index: 3;
       display: inline-flex;
+      width: 40px;
+      height: 40px;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
+      justify-content: center;
+      border: 1px solid rgb(255 255 255 / 0.6);
       border-radius: 999px;
-      background: rgb(15 23 42 / 0.82);
-      font-size: 13px;
-      font-weight: 700;
+      background: rgb(15 23 42 / 0.78);
       color: #fff;
-      pointer-events: none;
-      transition: opacity 250ms ease;
+      box-shadow: 0 4px 12px rgb(15 23 42 / 0.25);
     }
 
-    .ptc__hint :global(svg) {
-      width: 15px;
-      height: 15px;
+    .ptc__full :global(svg),
+    .ptc__close :global(svg) {
+      width: 18px;
+      height: 18px;
     }
+  }
 
-    .ptc__view[data-panned] .ptc__hint {
-      opacity: 0;
+  .ptc--full {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 501;
+    width: min(calc(100vw - 24px), calc((100dvh - 80px) * 16 / 9));
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+  }
+
+  @media (orientation: portrait) {
+    .ptc--full {
+      width: min(calc(100dvh - 24px), calc((100vw - 80px) * 16 / 9));
+      transform: translate(-50%, -50%) rotate(90deg);
     }
+  }
+
+  .ptc--full .ptc__full {
+    display: none;
+  }
+
+  /* Full screen: the slider and its labels on one row again. */
+  .ptc--full .ptc__control {
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding-block: 2px;
+    font-size: 13px;
+  }
+
+  .ptc--full .ptc__control input {
+    order: 0;
+    flex-basis: auto;
+  }
+
+  .ptc--full .ptc__control > span:nth-of-type(2) {
+    margin-left: 0;
+  }
+
+  .ptc--full .ptc__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 4;
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgb(15 23 42 / 0.78);
+    color: #fff;
+  }
+
+  .ptc__backdrop:not([hidden]) {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: block;
+    background: #0b1220;
   }
 
   /* The control */

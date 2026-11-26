@@ -40,8 +40,8 @@ export const WISHLIST_ENDPOINT = `${API_ORIGIN}/wishlist/subscribe`;
 
 
 export const TAGLINE = {
-  en: "Your whole project on one canvas. And AI by your side.",
-  fr: "Tout votre projet sur un canvas. Et l’IA à vos côtés.",
+  en: "Your whole project on one canvas. With or without AI.",
+  fr: "Tout votre projet sur un canvas. Avec ou sans IA.",
 } as const;
 
 // PLACEHOLDER: the public, duplicable canvases the home page links to

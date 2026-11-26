@@ -99,7 +99,7 @@ const cropStyle = (c: { x: number; y: number; w: number; h: number }) =>
  */
 ---
 
-<section id="depth" class="depth ground-plain" aria-labelledby="depth-title">
+<section id="depth" class="depth ground-plain" aria-labelledby="depth-title" data-depth data-attract>
   <div class="wrap">
     <h2 id="depth-title" class="depth__title">
       <span class="depth__line">{copy.title[0]}</span>
@@ -118,18 +118,36 @@ const cropStyle = (c: { x: number; y: number; w: number; h: number }) =>
         <div class="media__in">
           <Image src={copy.canvas} alt={copy.canvasAlt} widths={[720, 1080, 1440, 1920, 2560]} sizes="(min-width: 75rem) 1340px, 100vw" />
           {
-            Object.entries(PINS).map(([n, p]) => (
-              <span class="pin" style={`left:${p.x}%;top:${p.y}%`} aria-hidden="true">
-                {n}
-              </span>
-            ))
+            Object.entries(PINS).map(([n, p]) => {
+              const point = copy.points.find((q) => q.n === Number(n))!;
+              return (
+                <span class="spot" style={`left:${p.x}%;top:${p.y}%`}>
+                  <button type="button" class="pin pin--hot" aria-describedby={`spot-${n}`}>{n}</button>
+                  <span class="spot__card" id={`spot-${n}`} role="tooltip">
+                    <strong>{point.title}</strong>
+                    <span>{point.body}</span>
+                  </span>
+                </span>
+              );
+            })
           }
         </div>
       </figure>
       <figure class="node media depth__search">
         <div class="media__in">
           <Image src={copy.search} alt={copy.searchAlt} widths={[480, 720, 960]} sizes="(min-width: 60rem) 600px, 100vw" />
-          <span class="pin" style="left:0;top:0" aria-hidden="true">5</span>
+          {(() => {
+            const point = copy.points.find((q) => q.n === 5)!;
+            return (
+              <span class="spot spot--left" style="left:0;top:0">
+                <button type="button" class="pin pin--hot" aria-describedby="spot-5">5</button>
+                <span class="spot__card" id="spot-5" role="tooltip">
+                  <strong>{point.title}</strong>
+                  <span>{point.body}</span>
+                </span>
+              </span>
+            );
+          })()}
         </div>
       </figure>
     </div>
@@ -158,6 +176,17 @@ const cropStyle = (c: { x: number; y: number; w: number; h: number }) =>
 
   </div>
 </section>
+
+<script>
+  // The pins pulse until one of them is pointed at or focused.
+  document.querySelectorAll<HTMLElement>("[data-depth]").forEach((section) => {
+    const calm = () => section.removeAttribute("data-attract");
+    section.querySelectorAll(".pin--hot").forEach((pin) => {
+      pin.addEventListener("pointerenter", calm, { once: true });
+      pin.addEventListener("focus", calm, { once: true });
+    });
+  });
+</script>
 
 <style>
   .depth {
@@ -241,6 +270,155 @@ const cropStyle = (c: { x: number; y: number; w: number; h: number }) =>
     font-size: 13px;
     font-weight: 800;
     color: #fff;
+  }
+
+
+  /* A pin on the picture, with its card. The card shows on hover or focus
+     (pointers that hover, from 60rem); elsewhere the legend says it all. */
+  .spot {
+    position: absolute;
+    z-index: 2;
+    width: 0;
+    height: 0;
+  }
+
+  .spot:hover,
+  .spot:focus-within {
+    z-index: 5;
+  }
+
+  .spot .pin {
+    left: 0;
+    top: 0;
+    padding: 0;
+    font-family: inherit;
+    cursor: default;
+  }
+
+  .spot__card {
+    position: absolute;
+    top: 0;
+    left: 30px;
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid oklch(0.929 0.013 255.508);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow:
+      0 0 0 2px rgb(59 130 246 / 0.7),
+      0 18px 40px -12px rgb(15 23 42 / 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(4px, -50%);
+    transition:
+      opacity 160ms var(--ease-out),
+      transform 160ms var(--ease-out),
+      visibility 0s 160ms;
+  }
+
+  .spot--left .spot__card {
+    left: auto;
+    right: 30px;
+    transform: translate(-4px, -50%);
+  }
+
+  .spot__card strong {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-ink);
+  }
+
+  .spot__card span {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-ink-2);
+  }
+
+  @media (hover: hover) and (min-width: 60rem) {
+    .spot .pin {
+      cursor: help;
+    }
+
+    .spot:hover .spot__card,
+    .spot:focus-within .spot__card {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(0, -50%);
+      transition:
+        opacity 160ms var(--ease-out),
+        transform 160ms var(--ease-out);
+    }
+
+    .spot:hover .pin,
+    .spot:focus-within .pin {
+      transform: scale(1.1);
+    }
+
+    /* The cards say it on the picture: the legend keeps only what has no
+       pin (automations, coming soon). */
+    .depth__legend > li:not(.depth__soon) {
+      display: none;
+    }
+
+    .depth__legend {
+      display: block;
+      margin-top: var(--space-xl);
+    }
+
+    .depth__soon {
+      max-width: 34rem;
+    }
+
+    .depth__canvas {
+      overflow: visible;
+    }
+
+    /* Bigger pins, pulsing like the AI switch until one is pointed at. */
+    .pin--hot {
+      width: 34px;
+      height: 34px;
+      margin: -17px 0 0 -17px;
+      font-size: 15px;
+      transition: transform 160ms var(--ease-out);
+    }
+
+    [data-attract] .pin--hot {
+      animation: pin-attract 2.4s var(--ease-out) 1s infinite;
+    }
+
+    [data-attract] .spot:nth-child(3) .pin--hot { animation-delay: 1.3s; }
+    [data-attract] .spot:nth-child(4) .pin--hot { animation-delay: 1.6s; }
+    [data-attract] .spot:nth-child(5) .pin--hot { animation-delay: 1.9s; }
+    [data-attract] .depth__search .pin--hot { animation-delay: 2.2s; }
+  }
+
+  @keyframes pin-attract {
+    0% {
+      box-shadow:
+        0 2px 6px rgb(15 23 42 / 0.25),
+        0 0 0 0 rgb(37 99 235 / 0.5);
+    }
+    70%,
+    100% {
+      box-shadow:
+        0 2px 6px rgb(15 23 42 / 0.25),
+        0 0 0 14px rgb(37 99 235 / 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-attract] .pin--hot {
+      animation: none;
+    }
+
+    .spot__card {
+      transition: none;
+    }
   }
 
   /* Not built yet: an outlined pin, and the item a shade quieter. */
