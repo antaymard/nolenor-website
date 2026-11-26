@@ -22,7 +22,7 @@ type Scenario = { title: string; body: string; img: ImageMetadata; alt: string }
 type Persona = { key: string; icon: string; name: string; who: string; promise: string; href: string; scenarios: Scenario[] };
 
 const en = {
-  title: "Build the workspace you were missing.",
+  title: ["Build ", "the workspace", " you were missing."] as [string, string, string],
   lede: "Pick who you are: here is what your canvas looks like.",
   choose: "Who are you?",
   open: "Open this canvas",
@@ -66,7 +66,7 @@ const en = {
   ] as Persona[],
 };
 const fr: typeof en = {
-  title: "Construisez l’espace de travail qui vous manquait.",
+  title: ["Construisez ", "l’espace de travail", " qui vous manquait."] as [string, string, string],
   lede: "Choisissez qui vous êtes : voici à quoi ressemble votre canvas.",
   choose: "Qui êtes-vous ?",
   open: "Ouvrir ce canvas",
@@ -122,7 +122,7 @@ const copy = { en, fr }[lang];
 
 <section id="use-cases" class="uc" aria-labelledby="uc-title" data-uc>
   <div class="wrap">
-    <h2 id="uc-title" class="title-node uc__title">{copy.title}</h2>
+    <h2 id="uc-title" class="title-node uc__title">{copy.title[0]}<span class="title-node title-node--selected uc__word">{copy.title[1]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[2]}</h2>
     <div class="node doc uc__lede"><p>{copy.lede}</p></div>
 
     <div class="uc__personas" role="tablist" aria-label={copy.choose}>
@@ -215,7 +215,16 @@ const copy = { en, fr }[lang];
   .uc__title {
     margin: 0 0 var(--space-md) -8px;
     font-size: var(--text-section);
-    line-height: 1.1;
+    line-height: 1.3;
+  }
+
+  /* "l’espace de travail", what the section is about, a selected Title node. */
+  .uc__word {
+    padding: 0 6px;
+    margin: 0 2px;
+    font-size: inherit;
+    line-height: inherit;
+    color: #2563eb;
   }
 
   .uc__lede {

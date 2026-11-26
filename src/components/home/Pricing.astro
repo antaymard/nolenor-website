@@ -8,9 +8,10 @@ const lang = getLang(Astro.currentLocale);
 const en = {
   title: "All of Nolënor, at no cost.",
   badge: "Free during beta",
-  plan: "Open beta",
+  plan: "Open beta · until the end of 2026",
+  was: "€15",
   unit: "/ month",
-  terms: "No credit card. Every feature, AI included.",
+  terms: "Then €15 / month. No credit card during the beta, every feature, AI included.",
   cta: "Open a canvas",
   includedTitle: "Included",
   included: [
@@ -21,21 +22,14 @@ const en = {
     "Search inside PDFs, images and recordings",
     "Version history",
   ],
-  promisesTitle: "And for what comes next, in writing",
-  // Each line is a public commitment: keep only the ones we hold to.
-  promises: [
-    "A free plan that stays.",
-    "Thirty days’ notice before any price change.",
-    "Your data, exportable at any time, for free.",
-    "The cost of an AI request shown before you run it.",
-  ],
 };
 const fr: typeof en = {
   title: "Tout Nolënor, sans rien payer.",
   badge: "Gratuit pendant la bêta",
-  plan: "Bêta ouverte",
+  plan: "Bêta ouverte · jusqu’à fin 2026",
+  was: "15 €",
   unit: "/ mois",
-  terms: "Sans carte bancaire. Toutes les fonctions, IA comprise.",
+  terms: "Ensuite 15 € / mois. Sans carte bancaire pendant la bêta, toutes les fonctions, IA comprise.",
   cta: "Ouvrir un canvas",
   includedTitle: "Inclus",
   included: [
@@ -46,20 +40,13 @@ const fr: typeof en = {
     "Recherche dans les PDF, images et enregistrements",
     "Historique des versions",
   ],
-  promisesTitle: "Et pour la suite, des engagements écrits",
-  promises: [
-    "Une formule gratuite qui reste.",
-    "Trente jours de préavis avant tout changement de prix.",
-    "Vos données exportables à tout moment, gratuitement.",
-    "Le coût d’une demande à l’IA affiché avant de la lancer.",
-  ],
 };
 const copy = { en, fr }[lang];
 
 /*
  * One price card, a selected node on the canvas: the "free during beta"
- * badge on its top edge, the price and the way in on the left, what is
- * included on the right, and the written commitments along its foot.
+ * badge on its top edge, the price (the one after the beta struck through)
+ * and the way in on the left, what is included on the right.
  */
 ---
 
@@ -73,7 +60,8 @@ const copy = { en, fr }[lang];
       <div class="pricing__main">
         <div class="pricing__offer">
           <p class="pricing__plan">{copy.plan}</p>
-          <p class="pricing__price" aria-label={`0 € ${copy.unit}`}>
+          <p class="pricing__price">
+            <s class="pricing__was" aria-label={lang === "fr" ? `au lieu de ${copy.was}` : `instead of ${copy.was}`}>{copy.was}</s>
             <span class="pricing__figure">0&nbsp;€</span>
             <span class="pricing__unit">{copy.unit}</span>
           </p>
@@ -96,19 +84,6 @@ const copy = { en, fr }[lang];
         </div>
       </div>
 
-      <div class="pricing__promises">
-        <h3>{copy.promisesTitle}</h3>
-        <ul>
-          {
-            copy.promises.map((promise) => (
-              <li>
-                <Icon name="lucide:shield-check" />
-                {promise}
-              </li>
-            ))
-          }
-        </ul>
-      </div>
     </div>
   </div>
 </section>
@@ -160,7 +135,7 @@ const copy = { en, fr }[lang];
   .pricing__main {
     display: grid;
     gap: var(--space-xl) var(--space-2xl);
-    padding: var(--space-2xl) var(--space-xl) var(--space-xl);
+    padding: var(--space-2xl) var(--space-xl);
   }
 
   .pricing__offer {
@@ -192,6 +167,15 @@ const copy = { en, fr }[lang];
     color: var(--color-ink);
   }
 
+  /* The price after the beta, struck through. */
+  .pricing__was {
+    align-self: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-decoration-thickness: 2px;
+  }
+
   .pricing__unit {
     font-size: 18px;
     font-weight: 600;
@@ -210,8 +194,7 @@ const copy = { en, fr }[lang];
     margin-top: var(--space-lg);
   }
 
-  .pricing__included h3,
-  .pricing__promises h3 {
+  .pricing__included h3 {
     font-size: 15px;
     font-weight: 700;
     color: var(--color-ink);
@@ -223,8 +206,7 @@ const copy = { en, fr }[lang];
     margin-top: var(--space-sm);
   }
 
-  .pricing__included li,
-  .pricing__promises li {
+  .pricing__included li {
     display: flex;
     gap: 10px;
     align-items: flex-start;
@@ -241,44 +223,10 @@ const copy = { en, fr }[lang];
     color: #16a34a;
   }
 
-  /* The commitments, along the card's foot, on the app's grey. */
-  .pricing__promises {
-    padding: var(--space-lg) var(--space-xl);
-    border-top: 1px solid #e2e8f0;
-    border-radius: 0 0 var(--radius-card) var(--radius-card);
-    background: #f8fafc;
-  }
-
-  .pricing__promises ul {
-    display: grid;
-    gap: 10px var(--space-xl);
-    margin-top: var(--space-sm);
-  }
-
-  .pricing__promises li {
-    font-size: 15px;
-  }
-
-  .pricing__promises li svg {
-    flex-shrink: 0;
-    width: 17px;
-    height: 17px;
-    margin-top: 2px;
-    color: var(--color-accent);
-  }
-
   @media (min-width: 48rem) {
     .pricing__main {
       grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-      padding: var(--space-2xl) var(--space-2xl) var(--space-xl);
-    }
-
-    .pricing__promises {
-      padding: var(--space-lg) var(--space-2xl);
-    }
-
-    .pricing__promises ul {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: var(--space-2xl);
     }
 
     .pricing__badge {
