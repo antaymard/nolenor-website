@@ -1,5 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
+import PagesToCanvas from "@/components/home/PagesToCanvas.astro";
 import { APP_SIGNUP_URL, PUBLIC_CANVAS_URL } from "@/lib/constants";
 import { getLang } from "@/i18n";
 
@@ -13,8 +14,7 @@ const en = {
   madeIn: "",
   cta: "Open a canvas",
   second: "See a real canvas",
-  window: "A crêperie opening: tasks, figures, photos and the schedule, on one canvas.",
-  alt: "A crêperie’s opening canvas: sub-canvases for the works, the menu and the team, a task board, photos, and two values computed from the board. A card is dragged to Done and the values follow; then, Alt held, a request is dictated with the board attached, and Nolë draws the opening schedule beside it.",
+  window: "Unfold your page tree: your whole project at a glance.",
 };
 const fr: typeof en = {
   pace: "Tout votre projet sur un canvas.",
@@ -24,17 +24,13 @@ const fr: typeof en = {
   madeIn: "Made in France",
   cta: "Ouvrir un canvas",
   second: "Voir un vrai canvas",
-  window: "Une crêperie qui ouvre : tâches, chiffres, photos et planning, sur un seul canvas.",
-  alt: "Le canvas d’ouverture d’une crêperie : des sous-canvas pour les travaux, la carte et l’équipe, un tableau de tâches, des photos et deux valeurs calculées à partir du tableau. Une carte passe en « Fait » et les valeurs suivent ; puis, Alt maintenu, une demande est dictée avec le tableau joint, et Nolë trace le planning d’ouverture à côté.",
+  window: "Dépliez votre arborescence : tout votre projet, d’un seul regard.",
 };
 const copy = { en, fr }[lang];
 
 /*
  * The hero is a corner of a canvas. The headline is a Title node, selected;
- * the window below plays a short clip of a canvas at work (a card moved by
- * hand, values that follow, a dictated request Nolë answers on the canvas).
- * The pages-to-canvas slider (PagesToCanvas.astro) is kept, unused, in case
- * it comes back. Under it, the pitch is a document
+ * the window below holds the pages-to-canvas slider. Under it, the pitch is a document
  * node and "See a real canvas" a Link node. The AI switch lives in its own
  * section, further down.
  */
@@ -52,24 +48,10 @@ const copy = { en, fr }[lang];
   <div class="wrap">
     <div class="node hero__window bleed-both">
       <div class="hero__window-head">
-        <Icon name="lucide:layout-dashboard" />
+        <Icon name="lucide:notebook-text" />
         {copy.window}
       </div>
-      <div class="hero__screen">
-        <video
-          class="hero__clip"
-          src={`/clips/hero-${lang}.mp4`}
-          poster={`/clips/hero-${lang}.webp`}
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-          width="1920"
-          height="1080"
-          aria-label={copy.alt}
-        ></video>
-      </div>
+      <PagesToCanvas />
     </div>
 
     <!-- The pitch and the two ways in, in one brand-coloured block sitting
@@ -235,18 +217,6 @@ const copy = { en, fr }[lang];
     font-size: 14px;
     font-weight: 700;
     color: #475569;
-  }
-
-  .hero__screen {
-    padding: 10px;
-    background: #f1f5f9;
-  }
-
-  .hero__clip {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
   }
 
   .hero__window-head svg {
