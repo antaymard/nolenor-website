@@ -602,3 +602,6 @@ html {
   color: #fff;
 }
 html[data-zoom-open] { overflow: hidden; }
+
+/* The hero's slider opened full screen (pages-to-canvas.ts): above the bar. */
+html[data-ptc-full] .hero { z-index: 600; }
