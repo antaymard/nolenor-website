@@ -44,6 +44,12 @@ function setup(root: HTMLElement) {
   const frame = root.querySelector<HTMLElement>("[data-ptc-frame]")!;
   const input = root.querySelector<HTMLInputElement>("[data-ptc-range]")!;
   const replay = root.querySelector<HTMLButtonElement>("[data-ptc-replay]")!;
+  const intro = root.querySelector<HTMLElement>("[data-ptc-intro]");
+  const showIntro = (on: boolean) => {
+    if (intro) intro.dataset.shown = String(on);
+  };
+  const INTRO_MS = 2600;
+  let introTimer = 0;
   // Shown or not, the button keeps its place (visibility, not display), so
   // the bar beside it never changes width.
   const showReplay = (on: boolean) => {
@@ -276,18 +282,34 @@ function setup(root: HTMLElement) {
     raf = requestAnimationFrame(tick);
   };
 
+  // The intro card, then the animation.
+  const playWithIntro = () => {
+    stop();
+    window.clearTimeout(introTimer);
+    showReplay(false);
+    show(0);
+    showIntro(true);
+    introTimer = window.setTimeout(() => {
+      showIntro(false);
+      play();
+    }, INTRO_MS);
+  };
+
   input.addEventListener("input", () => {
     stop();
+    window.clearTimeout(introTimer);
+    showIntro(false);
     render(Number(input.value) / 1000);
     input.setAttribute("aria-valuetext", `${Math.round(Number(input.value) / 10)} %`);
     showReplay(true);
   });
   input.addEventListener("pointerdown", stop);
-  replay.addEventListener("click", play);
+  replay.addEventListener("click", playWithIntro);
 
   if (prefersReducedMotion()) {
-    show(1);
-    showReplay(true);
+    // The intro stays until the slider is moved.
+    show(0);
+    showReplay(false);
     return;
   }
   showReplay(false);
@@ -297,7 +319,7 @@ function setup(root: HTMLElement) {
     (entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         io.disconnect();
-        window.setTimeout(play, 400);
+        playWithIntro();
       }
     },
     { threshold: 0.6 },
