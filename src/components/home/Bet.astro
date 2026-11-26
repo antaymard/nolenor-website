@@ -1,199 +1,385 @@
 ---
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
 import { getLang } from "@/i18n";
 import Edge from "@/components/home/Edge.astro";
-import stepsEn from "@/assets/img/home/s07-se-concentrer-en.webp";
-import stepsFr from "@/assets/img/home/s07-se-concentrer-fr.webp";
-import boardEn from "@/assets/img/home/s10-piloter-en.webp";
-import boardFr from "@/assets/img/home/s10-piloter-fr.webp";
+import iterEn from "@/assets/img/home/s03b-creer-iterations-en.webp";
+import iterFr from "@/assets/img/home/s03b-creer-iterations-fr.webp";
+import joinEn from "@/assets/img/home/s07-se-concentrer-en.webp";
+import joinFr from "@/assets/img/home/s07-se-concentrer-fr.webp";
+import withEn from "@/assets/img/home/s03a-creer-inspiration-en.webp";
+import withFr from "@/assets/img/home/s03a-creer-inspiration-fr.webp";
 
 const lang = getLang(Astro.currentLocale);
 
+type Point = { title: string; body: string; img: ImageMetadata; alt: string };
+
 const en = {
-  heading: "You at the centre of the thinking. AI in support.",
-  pain: "You wanted to think out loud. The AI has already handed in its essay.",
-  painBody: "Now you are proofreading an idea that never had time to become yours. Pages you didn’t ask for, and still have to read.",
-  bet: "Everywhere, you’re told to keep up with AI. We did the opposite: we made it keep up with you.",
-  betBody: "You don’t have to go faster to stay in the game. The tool should follow the way you think, not the other way round.",
-  proofs: [
+  title: "Why a canvas is the right place to work with AI.",
+  lede: "A chat narrows your thinking to a conversation, and leaves you nothing to do without it. A canvas lets you think first, then makes room for the AI.",
+  points: [
     {
-      title: "Small steps you can follow.",
-      body: "Nolë works in short, readable steps: what it reads, what it creates, what it changes. You see each one go by, and you can redirect it at any point.",
-      img: stepsEn,
-      alt: "Nolë’s panel next to a canvas: each request is followed by short steps (one image created, one PDF created, one table and one document changed), and the results sit on the canvas: a cut-out chair, a contract extract, a corrected quote.",
+      title: "A space that frees your thinking.",
+      body: "Drop things in any order, try, miss, try again. Nothing to file first: structure comes when it helps.",
+      img: iterEn,
+      alt: "Four versions of a key art side by side on a canvas, each with the note that led to the next one, the last one approved.",
     },
     {
-      title: "Results on the canvas, not walls of text.",
-      body: "A table, a view, a figure that updates itself: what Nolë makes lands on the canvas, and you handle it like everything else.",
-      img: boardEn,
-      alt: "A quotes pipeline as a kanban board on a canvas, with two figures computed from it underneath: weighted pipeline and signing rate. Nolë’s panel on the left answers who to chase this week.",
+      title: "You work, the AI joins in.",
+      body: "The canvas is yours first. Nolë comes in as a copilot on what you are doing, instead of everything going through a chat.",
+      img: joinEn,
+      alt: "Nolë’s panel beside a canvas the user is working on: a cut-out chair, a contract extract and a corrected quote, each made by Nolë on request, in short steps.",
     },
-  ],
+    {
+      title: "An AI that moves forward with you.",
+      body: "It reads the context you hand it, works in small visible steps, alongside you, and you redirect it at any point.",
+      img: withEn,
+      alt: "References and a brief attached to Nolë with Alt + click, and Nolë generating three key-art directions from them, right next to the references.",
+    },
+  ] as Point[],
+  gone: {
+    title: "What you won’t have any more",
+    items: ["Generated walls of text to proofread.", "Deliverables lost in a chat thread.", "Searching through threads and drives."],
+  },
+  versions: {
+    title: "And everything is versioned.",
+    body: "Every change, yours and Nolë’s, can be found and restored.",
+    head: "Version history",
+    restore: "Restore",
+    rows: [
+      ["You", "edited", "2 min ago"],
+      ["Nolë", "edited", "5 min ago"],
+      ["You", "edited", "yesterday"],
+    ],
+  },
 };
 const fr: typeof en = {
-  heading: "Vous au centre de la réflexion. L’IA en appui.",
-  pain: "Vous vouliez réfléchir à voix haute. L’IA a déjà rendu sa copie.",
-  painBody: "Et vous voilà à relire une idée qui n’a pas eu le temps de devenir la vôtre. Des pages que vous n’avez pas demandées, et qu’il faut pourtant relire.",
-  bet: "Partout, on vous somme de suivre le rythme de l’IA. Nous avons fait l’inverse : on l’a mise au vôtre.",
-  betBody: "Pas besoin d’aller plus vite pour rester dans la course. C’est à l’outil de suivre votre façon de penser, pas l’inverse.",
-  proofs: [
+  title: "Pourquoi le canvas est la bonne interface pour travailler avec l’IA.",
+  lede: "Un chat réduit votre pensée à une conversation, et ne vous laisse rien faire sans lui. Un canvas vous laisse penser d’abord, puis fait de la place à l’IA.",
+  points: [
     {
-      title: "Des petites étapes, que vous suivez.",
-      body: "Nolë avance par étapes courtes et lisibles : ce qu’il lit, ce qu’il crée, ce qu’il modifie. Vous voyez tout passer, et vous le redirigez quand vous voulez.",
-      img: stepsFr,
-      alt: "Le panneau de Nolë à côté d’un canvas : chaque demande est suivie d’étapes courtes (une image créée, un PDF créé, une table et un document modifiés), et les résultats sont posés sur le canvas : une chaise détourée, un extrait de contrat, un devis corrigé.",
+      title: "Un espace qui libère la réflexion.",
+      body: "Posez en vrac, essayez, ratez, recommencez. Rien à ranger d’abord : la structure vient quand elle sert.",
+      img: iterFr,
+      alt: "Quatre versions d’un key art côte à côte sur un canvas, chacune avec la remarque qui a mené à la suivante, la dernière validée.",
     },
     {
-      title: "Des résultats sur le canvas, pas des pavés à relire.",
-      body: "Une table, une vue, un chiffre qui se recalcule seul : ce que Nolë produit prend place sur le canvas, et vous le manipulez comme le reste.",
-      img: boardFr,
-      alt: "Un pipeline de devis en kanban sur un canvas, avec deux chiffres calculés dessous : pipeline pondéré et taux de signature. Le panneau de Nolë, à gauche, répond à la question de qui relancer cette semaine.",
+      title: "Vous travaillez, l’IA s’invite.",
+      body: "Le canvas est d’abord le vôtre. Nolë vient en copilote sur ce que vous faites, au lieu de tout faire passer par un chat.",
+      img: joinFr,
+      alt: "Le panneau de Nolë à côté d’un canvas sur lequel l’utilisateur travaille : une chaise détourée, un extrait de contrat et un devis corrigé, faits par Nolë à la demande, par petites étapes.",
     },
-  ],
+    {
+      title: "Une IA qui avance avec vous.",
+      body: "Elle lit le contexte que vous lui donnez, avance par petites étapes visibles, à côté de vous, et vous la redirigez à tout moment.",
+      img: withFr,
+      alt: "Des références et un brief joints à Nolë par Alt + clic, et Nolë qui en tire trois pistes de key art, juste à côté des références.",
+    },
+  ] as Point[],
+  gone: {
+    title: "Ce que vous n’aurez plus",
+    items: ["Des pavés générés à relire.", "Des livrables perdus dans un fil de discussion.", "Des recherches dans les threads et les drives."],
+  },
+  versions: {
+    title: "Et tout est versionné.",
+    body: "Chaque modification, la vôtre comme celle de Nolë, se retrouve et se restaure.",
+    head: "Historique des versions",
+    restore: "Restaurer",
+    rows: [
+      ["Vous", "modifié", "il y a 2 min"],
+      ["Nolë", "modifié", "il y a 5 min"],
+      ["Vous", "modifié", "hier"],
+    ],
+  },
 };
 const copy = { en, fr }[lang];
 
 /*
- * Three acts, as nodes linked on a canvas: the pain in a document node; an
- * edge to the bet, a Title node (the page's thesis); two edges down to the
- * proofs, each an image node (a real screen) with its document node.
+ * Why the canvas, for working with AI. Three numbered steps, each a real
+ * screen beside its words, alternating sides: a space that frees thinking,
+ * the AI joining the human's work rather than the other way round, an AI
+ * that works with context, in small visible steps. Then what goes away
+ * (crossed out, as on a checklist) and the version history, drawn as the
+ * app draws it.
  */
 ---
 
-<section id="why" class="bet" aria-labelledby="why-title">
+<section id="why" class="why" aria-labelledby="why-title">
   <div class="wrap">
-    <h2 id="why-title" class="title-node bet__heading">{copy.heading}</h2>
+    <h2 id="why-title" class="title-node why__title">{copy.title}</h2>
+    <div class="node doc why__lede"><p>{copy.lede}</p></div>
 
-    <div class="node doc bet__pain" data-reveal>
-      <h3>{copy.pain}</h3>
-      <p>{copy.painBody}</p>
-    </div>
-
-    <Edge from={22} to={58} height={88} />
-
-    <div class="bet__thesis" data-reveal>
-      <p class="title-node bet__title">{copy.bet}</p>
-      <div class="node doc bet__body"><p>{copy.betBody}</p></div>
-    </div>
-
-    <div class="bet__fork">
-      <Edge from={58} to={25} height={96} />
-      <Edge from={58} to={75} height={96} />
-    </div>
-
-    <div class="bet__grid">
+    <ol class="why__points">
       {
-        copy.proofs.map((proof, i) => (
-          <article class="proof" data-reveal>
-            <figure class:list={["node media proof__shot", i === 0 ? "bleed-left" : "bleed-right"]}>
-              <Image src={proof.img} alt={proof.alt} widths={[640, 960, 1280]} sizes="(min-width: 60rem) 45vw, 100vw" />
+        copy.points.map((p, i) => (
+          <li class:list={["why__point", i % 2 === 1 && "why__point--flip"]} data-reveal>
+            <figure class:list={["node media why__shot", i % 2 === 0 ? "bleed-left" : "bleed-right"]}>
+              <Image src={p.img} alt={p.alt} widths={[640, 960, 1280]} sizes="(min-width: 60rem) 60vw, 100vw" />
             </figure>
-            <Edge from={50} to={50} height={36} />
-            <div class="node doc">
-              <h3>{proof.title}</h3>
-              <p>{proof.body}</p>
+            <div class="node doc why__text">
+              <span class="why__n" aria-hidden="true">{i + 1}</span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
             </div>
-          </article>
+          </li>
         ))
       }
+    </ol>
+
+    <Edge from={50} to={50} height={64} />
+
+    <div class="why__end">
+      <div class="node doc why__gone">
+        <h3>{copy.gone.title}</h3>
+        <ul>
+          {copy.gone.items.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+
+      <div class="node why__versions">
+        <div class="why__versions-text">
+          <h3>
+            <Icon name="lucide:history" />
+            {copy.versions.title}
+          </h3>
+          <p>{copy.versions.body}</p>
+        </div>
+        <div class="vh" aria-hidden="true">
+          <div class="vh__head">
+            {copy.versions.head}
+            <span class="vh__restore"><Icon name="lucide:rotate-ccw" />{copy.versions.restore}</span>
+          </div>
+          {
+            copy.versions.rows.map(([who, what, when], i) => (
+              <div class:list={["vh__row", i === 1 && "vh__row--on"]}>
+                <Icon name={who === "Nolë" ? "lucide:bot" : "lucide:user"} />
+                <span>
+                  <strong>{who}</strong> · {what}
+                </span>
+                <em>{when}</em>
+              </div>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  .bet {
-    padding-block: var(--space-xl) var(--section-gap-s);
+  .why {
+    padding-block: var(--section-gap);
   }
 
-  .bet__pain {
-    max-width: 34rem;
-  }
-
-  .bet__pain h3 {
-    font-size: 1.3em;
-    line-height: 1.25;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-
-  /* The section's answer, before the story that leads to it. */
-  .bet__heading {
-    max-width: 22ch;
-    margin: 0 0 var(--space-2xl) -8px;
+  .why__title {
+    max-width: 24ch;
+    margin: 0 0 var(--space-md) -8px;
     font-size: var(--text-section);
     line-height: 1.12;
   }
 
-  .bet__thesis {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-md);
-    max-width: 50rem;
-    margin-left: auto;
-  }
-
-  .bet__title {
-    margin: 0 0 0 -8px;
-    font-size: clamp(1.375rem, 0.8vw + 1rem, 1.875rem);
-    line-height: 1.2;
-  }
-
-  .bet__body {
-    max-width: 34rem;
+  .why__lede {
+    display: inline-block;
+    max-width: 38rem;
     font-size: var(--text-lead);
   }
 
-  .bet__fork {
-    position: relative;
-    height: 96px;
-  }
-
-  .bet__fork > :global(.edge) {
-    position: absolute;
-    inset: 0;
-  }
-
-  .bet__grid {
-    display: grid;
-    gap: var(--space-2xl) var(--gap-columns);
-  }
-
-  .proof {
+  .why__points {
     display: flex;
     flex-direction: column;
+    gap: var(--space-3xl);
+    margin: var(--space-3xl) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .proof__shot {
+  .why__point {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+
+  .why__shot {
     margin-block: 0;
   }
 
-  .proof h3 {
-    font-size: 1.3em;
+  .why__text {
+    position: relative;
+    padding: 20px 22px 18px;
+  }
+
+  .why__text h3 {
+    font-size: clamp(1.25rem, 0.5vw + 1.05rem, 1.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .why__text p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* The step's number, a pin on the node's corner. */
+  .why__n {
+    position: absolute;
+    top: -14px;
+    left: -14px;
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 2px 6px rgb(15 23 42 / 0.2);
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .why__end {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: stretch;
+  }
+
+  .why__gone h3,
+  .why__versions h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
     font-weight: 700;
   }
 
-  @media (max-width: 59.99rem) {
-    .bet__fork {
-      display: none;
-    }
-
-    /* The section's answer, before the story that leads to it. */
-  .bet__heading {
-    max-width: 22ch;
-    margin: 0 0 var(--space-2xl) -8px;
-    font-size: var(--text-section);
-    line-height: 1.12;
+  .why__gone ul {
+    margin-top: var(--space-sm);
+    padding: 0;
+    list-style: none;
   }
 
-  .bet__thesis {
-      margin-bottom: var(--space-2xl);
-    }
+  /* Crossed out, like done items on a checklist. */
+  .why__gone li {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    padding-block: 6px;
+    border-top: 1px solid #eef2f6;
+    font-size: 16px;
+    color: #64748b;
+    text-decoration: line-through;
+    text-decoration-color: rgb(239 68 68 / 0.7);
+    text-decoration-thickness: 2px;
+  }
+
+  .why__gone li::before {
+    content: "×";
+    flex-shrink: 0;
+    font-weight: 800;
+    color: #ef4444;
+  }
+
+  .why__versions {
+    display: grid;
+    gap: var(--space-md);
+    padding: 18px 20px;
+  }
+
+  .why__versions h3 :global(svg) {
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+  }
+
+  .why__versions-text p {
+    margin-top: 6px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+  }
+
+  /* The version history, as the app's window lists it. */
+  .vh {
+    overflow: hidden;
+    border: 1px solid oklch(0.929 0.013 255.508);
+    border-radius: 10px;
+    background: #fafafa;
+    font-size: 13px;
+  }
+
+  .vh__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid oklch(0.929 0.013 255.508);
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .vh__restore {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border: 1px solid oklch(0.929 0.013 255.508);
+    border-radius: 6px;
+    background: #fff;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .vh__restore :global(svg),
+  .vh__row :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+
+  .vh__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    color: #475569;
+  }
+
+  .vh__row strong {
+    color: var(--color-ink);
+  }
+
+  .vh__row em {
+    margin-left: auto;
+    font-style: normal;
+    color: #94a3b8;
+  }
+
+  .vh__row--on {
+    background: #eef2ff;
   }
 
   @media (min-width: 60rem) {
-    .bet__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .why__point {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--space-2xl);
+    }
+
+    .why__point--flip {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+
+    .why__point--flip .why__shot {
+      order: 2;
+    }
+
+    .why__end {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .why__versions {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      align-items: center;
     }
   }
 </style>
