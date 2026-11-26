@@ -26,7 +26,6 @@ const en = {
   lede: "Pick who you are: here is what your canvas looks like.",
   choose: "Who are you?",
   open: "Open this canvas",
-  aside: "Buying a home, negotiating a salary, planning a long trip: it works for those too.",
   personas: [
     {
       key: "builders",
@@ -71,7 +70,6 @@ const fr: typeof en = {
   lede: "Choisissez qui vous êtes : voici à quoi ressemble votre canvas.",
   choose: "Qui êtes-vous ?",
   open: "Ouvrir ce canvas",
-  aside: "Et pour un achat immobilier, une négociation de salaire ou un grand voyage, ça marche aussi.",
   personas: [
     {
       key: "builders",
@@ -175,9 +173,6 @@ const copy = { en, fr }[lang];
     }
   </div>
 
-  <div class="wrap">
-    <div class="node doc uc__aside"><p>{copy.aside}</p></div>
-  </div>
 </section>
 
 <script>
@@ -403,13 +398,6 @@ const copy = { en, fr }[lang];
     display: none;
   }
 
-  .uc__aside {
-    display: block;
-    width: fit-content;
-    max-width: 34rem;
-    margin-top: var(--space-2xl);
-    color: var(--color-ink-2);
-  }
 
   @media (min-width: 40rem) {
     .uc__personas {
