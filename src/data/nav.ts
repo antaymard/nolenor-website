@@ -41,7 +41,6 @@ const productExtra: RawLink[] = [
 
 const about: RawLink[] = [
   { label: { en: "Manifesto", fr: "Manifeste" }, href: "/manifesto" },
-  { label: { en: "Principles", fr: "Principes" }, href: "/principles" },
 ];
 
 const legal: RawLink[] = [
