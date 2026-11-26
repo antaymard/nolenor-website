@@ -92,7 +92,11 @@ const copy = { en, fr }[lang];
   .hero__title {
     display: flex;
     flex-direction: column;
-    margin: 0 0 0 -8px;
+    margin: 0 0 0 -14px;
+    /* A title node on a white ground, as on the canvas, still selected. */
+    padding: 8px 14px 10px;
+    border-radius: 8px;
+    background: #fff;
     font-size: min(var(--text-display), 3.4rem);
     line-height: 1.04;
   }
