@@ -67,13 +67,13 @@ const modes = ["off", "on"] as const;
     <h2 id="ai-heading" class="title-node ai__heading">{copy.heading}</h2>
     <div class="node doc ai__lede"><p>{copy.lede}</p></div>
   </div>
-  <div class="wrap ai__layout">
-    <div class="node ai__window bleed-left">
+  <div class="wrap ai__layout ai__layout--wide">
+    <div class="node ai__window">
       <div class="ai__window-head">
         <Icon name="lucide:layout-dashboard" />
         {copy.window}
       </div>
-      <div class="ai__screens">
+      <div class="ai__screens media">
         {
           modes.map((m) => (
             <video
@@ -231,9 +231,15 @@ const modes = ["off", "on"] as const;
     gap: var(--space-md);
   }
 
+  /* The clip gets the room: this row runs wider than the page's column,
+     and the steps keep a fixed, readable width beside it. */
+  .ai__layout--wide {
+    max-width: 1440px;
+  }
+
   @media (min-width: 60rem) {
     .ai__layout {
-      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      grid-template-columns: minmax(0, 1fr) 320px;
       gap: var(--space-xl);
     }
   }
@@ -484,9 +490,7 @@ const modes = ["off", "on"] as const;
   .ai__screens {
     position: relative;
     display: grid;
-    aspect-ratio: 16 / 9;
     overflow: hidden;
-    background: #f1f5f9;
   }
 
   /* The clips: switching on, the "off" clip slides away to the left and the
@@ -494,8 +498,7 @@ const modes = ["off", "on"] as const;
   .ai__clip {
     grid-area: 1 / 1;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     transition:
       transform 520ms var(--ease-out),
       opacity 520ms var(--ease-out);

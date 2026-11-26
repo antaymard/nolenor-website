@@ -476,6 +476,22 @@ html {
   .bleed-both { margin-inline: calc(-0.5 * var(--bleed)); }
 }
 
+/* A screen of the app inside a node: the same margin on every side, in
+   the app's shell colour (slate-100), so captures never touch their frame
+   and every one sits the same way. */
+.media {
+  padding: 10px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+.media img,
+.media video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
 /* Avatars and the live cursor of a collaborator. */
 .cursor { position: absolute; pointer-events: none; }
 .cursor span {

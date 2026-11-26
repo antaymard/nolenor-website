@@ -32,7 +32,7 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
 
 <header class="bar">
   <div class="wrap bar__inner">
-    <div class="bar__left ui-pill">
+    <div class="bar__left">
       <Logo iconClass="h-6 w-6 text-foreground" textClass="text-base" />
 
       <nav aria-label={t("nav.sections")} class="bar__links" data-nav-links>
@@ -46,7 +46,7 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
       </nav>
     </div>
 
-    <div class="bar__right ui-pill">
+    <div class="bar__right">
       <a
         href={helpLink.href}
         class="nav-link nav-link--wide"
@@ -72,33 +72,30 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
 </header>
 
 <style>
-  /* The canvas's own chrome: two floating pills (canvas-ui-container), the
-     breadcrumb side on the left, the actions on the right, over the page. */
+  /* A full-width bar, white with a hairline, like the app's own top bar:
+     the wordmark and the section links on the left, the way in on the right. */
   .bar {
     position: sticky;
     top: 0;
     z-index: var(--z-sticky-nav);
-    padding-top: 10px;
-    pointer-events: none;
+    background: #fff;
+    border-bottom: 1px solid oklch(0.929 0.013 255.508);
   }
   .bar__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-sm);
-    min-height: calc(var(--nav-height) - 10px);
+    gap: var(--space-md);
+    min-height: var(--nav-height);
   }
   .bar__left,
   .bar__right {
-    pointer-events: auto;
-    gap: var(--space-md);
-    padding: 4px 4px 4px 12px;
-  }
-  .bar__left {
-    padding-right: 12px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
   }
   .bar__right {
-    gap: var(--space-sm);
+    gap: var(--space-md);
   }
   .bar__links {
     display: none;

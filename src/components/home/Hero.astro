@@ -77,11 +77,10 @@ const copy = { en, fr }[lang];
 
 <style>
   /* The app's dark canvas preset (#0f172a, dots): it sets the light grey
-     of the slider apart. It runs up under the floating nav. Nodes stay
-     white, as they do on a dark canvas in the app. */
+     of the slider apart. Nodes stay white, as they do on a dark canvas in
+     the app. */
   .hero {
-    margin-top: calc(-1 * var(--nav-height));
-    padding-block: calc(var(--nav-height) + var(--space-2xl)) var(--section-gap-s);
+    padding-block: var(--space-3xl) var(--section-gap-s);
     background-color: #0f172a;
     background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.3px);
     background-size: 16px 16px;

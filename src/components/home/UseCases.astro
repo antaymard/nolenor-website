@@ -181,7 +181,7 @@ const copy = { en, fr }[lang];
       {
         copy.cases.map((c, i) => (
           <div class="win__panel" role="tabpanel" id={`case-panel-${i}`} aria-labelledby={`case-tab-${i}`} hidden={i > 0} data-case-panel={i}>
-            <div class="win__screen">
+            <div class="win__screen media">
               {c.shots.map((shot, j) => (
                 <Image src={shot.img} alt={shot.alt} widths={[960, 1440, 1920]} sizes="(min-width: 60rem) 85vw, 100vw" data-shot={j} hidden={j > 0} />
               ))}
@@ -335,15 +335,6 @@ const copy = { en, fr }[lang];
 
   .win__screen {
     position: relative;
-    aspect-ratio: 16 / 9;
-    background: oklch(0.968 0.007 247.896);
-  }
-
-  .win__screen :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 
   .win__screen :global(img[hidden]) {

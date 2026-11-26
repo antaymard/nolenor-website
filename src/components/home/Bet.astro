@@ -81,7 +81,7 @@ const copy = { en, fr }[lang];
       {
         copy.proofs.map((proof, i) => (
           <article class="proof" data-reveal>
-            <figure class:list={["node proof__shot", i === 0 ? "bleed-left" : "bleed-right"]}>
+            <figure class:list={["node media proof__shot", i === 0 ? "bleed-left" : "bleed-right"]}>
               <Image src={proof.img} alt={proof.alt} widths={[640, 960, 1280]} sizes="(min-width: 60rem) 45vw, 100vw" />
             </figure>
             <Edge from={50} to={50} height={36} />
@@ -154,15 +154,6 @@ const copy = { en, fr }[lang];
 
   .proof__shot {
     margin-block: 0;
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-  }
-
-  .proof__shot :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
   }
 
   .proof h3 {

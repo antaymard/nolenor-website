@@ -2,77 +2,64 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import { getLang } from "@/i18n";
-import viewsEn from "@/assets/img/home/f-views-en.webp";
-import viewsFr from "@/assets/img/home/f-views-fr.webp";
-import calcEn from "@/assets/img/home/f-calc-en.webp";
-import calcFr from "@/assets/img/home/f-calc-fr.webp";
+import canvasEn from "@/assets/img/home/depth-canvas-en.webp";
+import canvasFr from "@/assets/img/home/depth-canvas-fr.webp";
 import searchEn from "@/assets/img/home/f-search-en.webp";
 import searchFr from "@/assets/img/home/f-search-fr.webp";
-import dashEn from "@/assets/img/home/f-dash-en.webp";
-import dashFr from "@/assets/img/home/f-dash-fr.webp";
-import nestedEn from "@/assets/img/home/f-nested-en.webp";
-import nestedFr from "@/assets/img/home/f-nested-fr.webp";
 
 const lang = getLang(Astro.currentLocale);
 
-type Feature = { key: string; icon: string; title: string; body: string; img: ImageMetadata; alt: string };
 type Title = [before: string, selected: string, after: string];
+type Point = { n: number; title: string; body: string };
 
 const en = {
   title: ["Who said canvases were ", "only", " for brainstorming?"] as Title,
   lede: "On a Nolënor canvas, you file, you calculate, you find things again. Things a whiteboard doesn’t do.",
   soon: "Coming soon: automations.",
-  canvasName: "What a canvas can do",
-  features: [
-    { key: "views", icon: "lucide:table", title: "Your information filed, seen the way you need it.", body: "Records shaped to your needs, seen as a table, a kanban, a calendar, a gallery or a timeline.", img: viewsEn, alt: "A quotes database seen as a kanban: new, sent, negotiating, signed, with each quote’s amount." },
-    { key: "calc", icon: "lucide:sigma", title: "Numbers that update themselves.", body: "A value computes from a table, a field or another node. When a source changes, everything follows.", img: calcEn, alt: "A sales table feeding computed values (monthly revenue, average order, goal reached) through dotted ƒ links, next to a breakdown chart." },
-    { key: "search", icon: "lucide:search", title: "Find anything, even inside a voice memo.", body: "Documents, PDFs, images, voice memos: one query, and every match, at its page or its minute.", img: searchEn, alt: "The search finds one phrase in a voice memo at 1:12, on page 3 of a PDF and in a site note." },
-    { key: "dash", icon: "lucide:layout-dashboard", title: "Your metrics up to date, without copying them over.", body: "Mini-apps read your tools and APIs, and keep themselves up to date.", img: dashEn, alt: "Charts and figures on a canvas, fed by Steam, Sentry and Discord: wishlists, crashes per day, members, crash-free sessions, builds." },
-    { key: "nested", icon: "lucide:layers", title: "The detail when you need it, the big picture always.", body: "One canvas per client, per part of the business, per project: go down into the detail, come back up to see the whole.", img: nestedEn, alt: "A company canvas holding one sub-canvas per area: clients and projects, workshop, purchasing, admin, team, marketing." },
-  ] as Feature[],
+  canvas: canvasEn,
+  canvasAlt: "A joinery workshop’s canvas: three sub-canvases (clients, workshop, purchasing), an open-quotes database seen as a kanban, two values computed from it through dotted ƒ links (weighted pipeline, win rate), and two charts kept up to date: revenue by month and quotes won by month.",
+  search: searchEn,
+  searchAlt: "The search finds one phrase in a voice memo at 1:12, on page 3 of a PDF and in a site note.",
+  points: [
+    { n: 1, title: "The detail when you need it, the big picture always.", body: "One canvas per client, per part of the business, per project: go down, come back up." },
+    { n: 2, title: "Your information filed, seen the way you need it.", body: "Records shaped to your needs, as a table, a kanban, a calendar, a gallery or a timeline." },
+    { n: 3, title: "Numbers that update themselves.", body: "A value computes from a table, a field or another node. A source changes, everything follows." },
+    { n: 4, title: "Your metrics up to date, without copying them over.", body: "Mini-apps read your data and your tools, and keep themselves current." },
+    { n: 5, title: "Find anything, even inside a voice memo.", body: "Documents, PDFs, images, recordings: one query, every match, at its page or its minute." },
+  ] as Point[],
 };
 const fr: typeof en = {
   title: ["Qui a dit que les canvas, c’était ", "seulement", " pour brainstormer ?"] as Title,
   lede: "Sur un canvas Nolënor, on range, on calcule, on retrouve. Ce qu’un tableau blanc ne fait pas.",
-  canvasName: "Ce qu’un canvas sait faire",
   soon: "Bientôt : les automatisations.",
-  features: [
-    { key: "views", icon: "lucide:table", title: "Vos infos rangées, vues comme il vous faut.", body: "Des fiches sur mesure, vues en table, en kanban, en calendrier, en galerie ou en timeline.", img: viewsFr, alt: "Une base de devis vue en kanban : nouveau, envoyé, négociation, signé, avec le montant de chaque devis." },
-    { key: "calc", icon: "lucide:sigma", title: "Des chiffres qui se mettent à jour tout seuls.", body: "Une valeur se calcule à partir d’un tableau, d’un champ ou d’un autre nœud. Une source change, tout suit.", img: calcFr, alt: "Un tableau des ventes qui alimente des valeurs calculées (CA du mois, panier moyen, objectif atteint) par des liens ƒ en pointillés, à côté d’un graphique de répartition." },
-    { key: "search", icon: "lucide:search", title: "Tout se retrouve, même dans un mémo vocal.", body: "Documents, PDF, images, mémos vocaux : une requête, et chaque passage trouvé, à sa page ou à sa minute.", img: searchFr, alt: "La recherche trouve une expression dans un mémo vocal à 1:12, à la page 3 d’un PDF et dans une note de chantier." },
-    { key: "dash", icon: "lucide:layout-dashboard", title: "Vos indicateurs à jour, sans rien recopier.", body: "Des mini-apps lisent vos outils et vos API, et se mettent à jour seules.", img: dashFr, alt: "Des graphiques et des chiffres sur un canvas, alimentés par Steam, Sentry et Discord : wishlists, crashs par jour, membres, sessions sans crash, builds." },
-    { key: "nested", icon: "lucide:layers", title: "Le détail quand il faut, la vue d’ensemble toujours.", body: "Un canvas par client, par pan de l’entreprise, par projet : on descend dans le détail, on remonte voir l’ensemble.", img: nestedFr, alt: "Le canvas d’une entreprise avec un sous-canvas par pan : clients et chantiers, atelier, achats, admin, équipe, marketing." },
-  ] as Feature[],
+  canvas: canvasFr,
+  canvasAlt: "Le canvas d’un atelier de menuiserie : trois sous-canvas (clients, atelier, achats), une base des devis en cours vue en kanban, deux valeurs calculées à partir d’elle par des liens ƒ en pointillés (pipeline pondéré, taux de signature), et deux graphiques tenus à jour : chiffre d’affaires par mois et devis signés par mois.",
+  search: searchFr,
+  searchAlt: "La recherche trouve une expression dans un mémo vocal à 1:12, à la page 3 d’un PDF et dans une note de chantier.",
+  points: [
+    { n: 1, title: "Le détail quand il faut, la vue d’ensemble toujours.", body: "Un canvas par client, par pan de l’entreprise, par projet : on descend, on remonte." },
+    { n: 2, title: "Vos infos rangées, vues comme il vous faut.", body: "Des fiches sur mesure, en table, en kanban, en calendrier, en galerie ou en timeline." },
+    { n: 3, title: "Des chiffres qui se mettent à jour tout seuls.", body: "Une valeur se calcule à partir d’un tableau, d’un champ ou d’un autre nœud. Une source change, tout suit." },
+    { n: 4, title: "Vos indicateurs à jour, sans rien recopier.", body: "Des mini-apps lisent vos données et vos outils, et se tiennent à jour seules." },
+    { n: 5, title: "Tout se retrouve, même dans un mémo vocal.", body: "Documents, PDF, images, enregistrements : une requête, chaque passage, à sa page ou à sa minute." },
+  ] as Point[],
 };
 const copy = { en, fr }[lang];
 
-/** Which side each node runs past the page margin on wide screens, and the selected one. */
-const SELECTED = "dash";
-
-/*
- * Where each node sits on the canvas, in px of a 1200 × 900 plane that is
- * scaled, text included, to the canvas's width (a zoomed-out canvas). The
- * dense screens (linked numbers, dashboards) get the room; the search and
- * the kanban, which read at a glance, less.
- */
-const PLANE = { w: 1200, h: 900 };
-const AT: Record<string, { x: number; y: number; w: number }> = {
-  calc: { x: 0, y: 0, w: 520 },
-  dash: { x: 590, y: 40, w: 470 },
-  soon: { x: 1095, y: 150, w: 105 },
-  nested: { x: 0, y: 410, w: 260 },
-  views: { x: 320, y: 450, w: 380 },
-  search: { x: 760, y: 480, w: 340 },
+/** Where each numbered pin sits on the canvas screen (% of its width and height). */
+const PINS: Record<number, { x: number; y: number }> = {
+  1: { x: 10.2, y: 11.1 },
+  2: { x: 10.2, y: 31.8 },
+  3: { x: 10.2, y: 72.5 },
+  4: { x: 64.8, y: 11.1 },
 };
-const pos = (key: string) => `--x:${AT[key].x}px;--y:${AT[key].y}px;--w:${AT[key].w}px`;
-const ORDER = ["calc", "dash", "nested", "views", "search"];
 
 /*
- * The answer to "a canvas is a whiteboard": five things a whiteboard can't
- * do, each one a node holding a real screen of the app, laid out at
- * different sizes like nodes dropped on a canvas rather than a feature grid.
- * Custom nodes are folded into the first ("records shaped to your needs");
- * automations, not built yet, get a dashed "coming soon" node and no screen.
+ * The answer to "a canvas is a whiteboard": one real canvas, rendered from
+ * the app's own components at a single scale (sub-canvases, a database in a
+ * view, values computed from it, a dashboard), with numbered pins, the
+ * search panel laid over its corner, and the five benefits as a legend.
+ * Automations, not built yet, get a small yellow note and no pin.
  */
 ---
 
@@ -83,117 +70,49 @@ const ORDER = ["calc", "dash", "nested", "views", "search"];
     </h2>
     <div class="node doc depth__lede"><p>{copy.lede}</p></div>
 
-  </div>
-
-  <!-- A real canvas, the width of the screen: its chrome, its dots, its nodes. -->
-  <div class="depth__canvas">
-    <div class="ui-pill depth__crumb" aria-hidden="true">
-      <span class="depth__tile">N</span>
-      <strong>{copy.canvasName}</strong>
-      <Icon name="lucide:chevron-down" />
+    <div class="depth__stage">
+      <figure class="node media depth__canvas">
+        <div class="media__in">
+          <Image src={copy.canvas} alt={copy.canvasAlt} widths={[720, 1080, 1440, 1920]} sizes="(min-width: 75rem) 1100px, 100vw" />
+          {
+            Object.entries(PINS).map(([n, p]) => (
+              <span class="pin" style={`left:${p.x}%;top:${p.y}%`} aria-hidden="true">
+                {n}
+              </span>
+            ))
+          }
+        </div>
+      </figure>
+      <figure class="node media depth__search">
+        <div class="media__in">
+          <Image src={copy.search} alt={copy.searchAlt} widths={[480, 720, 960]} sizes="(min-width: 60rem) 420px, 100vw" />
+          <span class="pin" style="left:0;top:0" aria-hidden="true">5</span>
+        </div>
+      </figure>
     </div>
-    <div class="depth__board" data-depth-board>
-      <div class="depth__plane" style={`--pw:${PLANE.w}px;--ph:${PLANE.h}px`} data-depth-plane>
-      <svg class="depth__edges" aria-hidden="true"></svg>
+
+    <ol class="depth__legend">
       {
-        ORDER.map((key) => copy.features.find((f) => f.key === key)!).map((f) => (
-          <article class:list={["node feature", `feature--${f.key}`, f.key === SELECTED && "node--selected"]} style={pos(f.key)} data-node={f.key} data-reveal>
-            {f.key === SELECTED && <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>}
-            <figure class="feature__shot">
-              <Image src={f.img} alt={f.alt} widths={[480, 720, 960, 1400]} sizes="(min-width: 60rem) 45vw, 100vw" />
-            </figure>
-            <div class="feature__text">
-              <h3>
-                <Icon name={f.icon} />
-                {f.title}
-              </h3>
-              <p>{f.body}</p>
-            </div>
-          </article>
+        copy.points.map((p) => (
+          <li>
+            <span class="pin pin--static" aria-hidden="true">{p.n}</span>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </li>
         ))
       }
-      <div class="node node--yellow feature--soon" style={pos("soon")} data-node="soon">
-        <Icon name="lucide:workflow" />
-        {copy.soon}
-      </div>
-      </div>
+    </ol>
+
+    <div class="node node--yellow depth__soon">
+      <Icon name="lucide:workflow" />
+      {copy.soon}
     </div>
-    <img class="depth__toolbar" src="/morph/toolbar.webp" alt="" width="340" height="50" aria-hidden="true" />
   </div>
 </section>
 
-<script>
-  // Draws the links between the nodes of the board, the way the app draws
-  // its edges (a bezier from side to side, an open arrow at the target).
-  // Wide screens only: on a phone the nodes are stacked and the links would
-  // only cross them.
-  type Side = "right" | "bottom" | "left" | "top";
-  const LINKS: [string, Side, string, Side][] = [
-    ["calc", "right", "dash", "left"],
-    ["dash", "right", "soon", "left"],
-    ["calc", "bottom", "views", "top"],
-    ["nested", "right", "views", "left"],
-    ["views", "right", "search", "left"],
-    ["dash", "bottom", "search", "top"],
-  ];
-  const NORMAL: Record<Side, [number, number]> = { right: [1, 0], left: [-1, 0], top: [0, -1], bottom: [0, 1] };
-
-  const WIDE = "(min-width: 75rem)";
-
-  document.querySelectorAll<HTMLElement>("[data-depth-board]").forEach((board) => {
-    const plane = board.querySelector<HTMLElement>("[data-depth-plane]")!;
-    const svg = board.querySelector<SVGSVGElement>(".depth__edges")!;
-    const layout = () => {
-      if (!window.matchMedia(WIDE).matches) {
-        plane.style.transform = "";
-        board.style.height = "";
-        svg.innerHTML = "";
-        return;
-      }
-      // Fit the plane to the canvas's width, never enlarged (centred then).
-      const pw = plane.offsetWidth;
-      const scale = Math.min(1, board.clientWidth / pw);
-      plane.style.transform = `translateX(${(board.clientWidth - pw * scale) / 2}px) scale(${scale})`;
-      board.style.height = `${plane.offsetHeight * scale}px`;
-      draw();
-    };
-    const draw = () => {
-      // Offsets are in the plane's own (unscaled) coordinates.
-      const point = (key: string, side: Side) => {
-        const el = plane.querySelector<HTMLElement>(`[data-node="${key}"]`);
-        if (!el) return null;
-        const x = el.offsetLeft;
-        const y = el.offsetTop;
-        return {
-          x: side === "left" ? x : side === "right" ? x + el.offsetWidth : x + el.offsetWidth / 2,
-          y: side === "top" ? y : side === "bottom" ? y + el.offsetHeight : y + el.offsetHeight / 2,
-        };
-      };
-      let html = "";
-      for (const [from, fs, to, ts] of LINKS) {
-        const a = point(from, fs);
-        const b = point(to, ts);
-        if (!a || !b) continue;
-        const k = Math.max(40, Math.hypot(b.x - a.x, b.y - a.y) * 0.4);
-        const [nx1, ny1] = NORMAL[fs];
-        const [nx2, ny2] = NORMAL[ts];
-        const d = `M ${a.x} ${a.y} C ${a.x + nx1 * k} ${a.y + ny1 * k}, ${b.x + nx2 * k} ${b.y + ny2 * k}, ${b.x} ${b.y}`;
-        const tx = -nx2;
-        const ty = -ny2;
-        const wing = (sgn: number) => `${b.x - tx * 7.5 - ty * 6 * sgn},${b.y - ty * 7.5 + tx * 6 * sgn}`;
-        html += `<path d="${d}"/><polyline points="${wing(1)} ${b.x},${b.y} ${wing(-1)}"/>`;
-      }
-      svg.innerHTML = html;
-    };
-    new ResizeObserver(layout).observe(board);
-    window.addEventListener("load", layout);
-    document.fonts?.ready.then(layout);
-  });
-</script>
-
 <style>
   .depth {
-    padding-block: var(--section-gap-s) 0;
+    padding-block: var(--section-gap) 0;
   }
 
   .depth__title {
@@ -215,252 +134,128 @@ const ORDER = ["calc", "dash", "nested", "views", "search"];
     color: #2563eb;
   }
 
-  .depth__board {
-    position: relative;
-  }
-
-  .depth__edges {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .depth__edges :global(path),
-  .depth__edges :global(polyline) {
-    fill: none;
-    stroke: #94a3b8;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .depth__edges :global(.depth__pill) {
-    fill: #f0f9ff;
-    stroke: #bae6fd;
-  }
-
-  .depth__edges :global(.depth__pill-text) {
-    font: 600 11px ui-monospace, SFMono-Regular, Menlo, monospace;
-    fill: #0369a1;
-  }
-
-  .feature,
-  .feature--soon {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* The selected node shows its handles past its edge. */
-  .feature.node--selected {
-    overflow: visible;
-  }
-
-  .feature.node--selected .feature__shot {
-    border-radius: 11px 11px 0 0;
-  }
-
-  /* Node colours (the app's palette), on the caption of four of them. */
-  .feature--views { border-color: #5eead4; }
-  .feature--views .feature__text { background: #f0fdfa; }
-  .feature--calc { border-color: #7dd3fc; }
-  .feature--calc .feature__text { background: #f0f9ff; }
-  .feature--nested { border-color: #fdba74; }
-  .feature--nested .feature__text { background: #fff7ed; }
-  .feature--search { border-color: #d8b4fe; }
-  .feature--search .feature__text { background: #faf5ff; }
-
   .depth__lede {
+    display: inline-block;
     max-width: 34rem;
     margin-bottom: var(--space-2xl);
     font-size: var(--text-lead);
   }
 
-
-
-  .feature {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .feature__shot {
-    margin: 0;
-    overflow: hidden;
-    border-bottom: 1px solid oklch(0.929 0.013 255.508);
-    background: #fafafa;
-  }
-
-  .feature__shot :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .feature__text {
-    padding: 14px 18px 16px;
-  }
-
-  .feature h3 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.3;
-    color: var(--color-ink);
-  }
-
-  .feature h3 svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    color: #64748b;
-  }
-
-  .feature p {
-    margin-top: 6px;
-    font-size: 15px;
-    line-height: 1.55;
-    color: var(--color-ink-2);
-  }
-
-  .feature--soon {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 18px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #713f12;
-  }
-
-  .feature--soon svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  /* The canvas: full width (24px from the screen's edges), the app's
-     dotted background, its breadcrumb and toolbar. */
-  .depth__canvas {
+  .depth__stage {
     position: relative;
-    width: calc(100vw - 48px);
-    margin-left: calc(50% - 50vw + 24px);
-    padding: 80px 48px 96px;
-    border: 1px solid oklch(0.929 0.013 255.508);
-    border-radius: 16px;
-    background-color: #fafafa;
-    background-image: radial-gradient(#d1d1d6 1px, transparent 1.3px);
-    background-size: 16px 16px;
-    container-type: inline-size;
-    overflow: hidden;
   }
 
-  .depth__crumb {
+  .depth__canvas,
+  .depth__search {
+    margin: 0;
+  }
+
+  .media__in {
+    position: relative;
+  }
+
+  .depth__search {
+    width: min(100%, 26rem);
+    margin: var(--space-lg) 0 0 auto;
+  }
+
+  /* A numbered pin, the app's selection blue. */
+  .pin {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    gap: 8px;
-    padding: 4px 10px 4px 6px;
-    font-size: 13px;
-  }
-
-  .depth__crumb strong {
-    color: #0f172a;
-  }
-
-  .depth__crumb svg {
-    width: 14px;
-    height: 14px;
-    color: #64748b;
-  }
-
-  .depth__tile {
     display: inline-flex;
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
-    background: #7c3aed;
-    font-size: 11px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #2563eb;
+    box-shadow: 0 2px 6px rgb(15 23 42 / 0.25);
+    font-size: 13px;
     font-weight: 800;
     color: #fff;
   }
 
-  .depth__toolbar {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    width: 340px;
-    height: auto;
-    transform: translateX(-50%);
+  .pin--static {
+    position: static;
+    margin: 0;
+    flex-shrink: 0;
   }
 
-  @media (max-width: 59.99rem) {
-    .depth__canvas {
-      padding: 64px 12px 24px;
-    }
-
-    .depth__toolbar {
-      display: none;
-    }
+  .depth__legend {
+    display: grid;
+    gap: var(--space-lg) var(--space-xl);
+    margin: var(--space-2xl) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .depth__plane {
-    position: relative;
+  .depth__legend li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 4px 12px;
+    align-content: start;
   }
 
-  /* Medium screens: the nodes in two columns, flowed. */
-  @media (min-width: 40rem) and (max-width: 74.99rem) {
-    .depth__plane {
-      display: grid;
+  .depth__legend h3 {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-ink);
+  }
+
+  .depth__legend p {
+    grid-column: 2;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-ink-2);
+  }
+
+  .depth__soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: var(--space-xl);
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #713f12;
+  }
+
+  .depth__soon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (min-width: 40rem) {
+    .depth__legend {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-lg);
-      align-items: start;
-    }
-
-    .depth__edges {
-      display: none;
     }
   }
 
-  @media (max-width: 39.99rem) {
-    .depth__plane {
-      display: grid;
-      gap: var(--space-lg);
-    }
-  }
-
-  /* Wide screens: a plane of fixed size, nodes placed at the spots in AT,
-     the whole plane zoomed to the canvas (see the script). */
-  @media (min-width: 75rem) {
-    .depth__board {
-      position: relative;
+  @media (min-width: 60rem) {
+    /* The search panel is laid over the canvas's lower right corner, and
+       runs past it, like a window opened on top. */
+    .depth__stage {
+      margin-right: 3rem;
+      margin-bottom: 4rem;
     }
 
-    .depth__plane {
+    .depth__search {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: var(--pw);
-      height: var(--ph);
-      transform-origin: 0 0;
+      right: -3rem;
+      bottom: -4rem;
+      width: 34%;
+      margin: 0;
+      box-shadow:
+        0 24px 48px -16px rgb(15 23 42 / 0.3),
+        0 1px 2px rgb(15 23 42 / 0.06);
     }
 
-    .feature,
-    .feature--soon {
-      position: absolute;
-      left: var(--x);
-      top: var(--y);
-      width: var(--w);
-    }
-
-    .feature--soon {
-      align-items: flex-start;
+    .depth__legend {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-xl) var(--space-2xl);
     }
   }
 </style>
