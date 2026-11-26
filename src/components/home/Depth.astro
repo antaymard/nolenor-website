@@ -9,11 +9,11 @@ import searchFr from "@/assets/img/home/f-search-fr.webp";
 
 const lang = getLang(Astro.currentLocale);
 
-type Title = [before: string, selected: string, after: string];
+type Title = [line1: string, before: string, selected: string, after: string];
 type Point = { n: number; title: string; body: string };
 
 const en = {
-  title: ["Who said canvases were ", "only", " for brainstorming?"] as Title,
+  title: ["Who said canvases were", "", "only", " for brainstorming?"] as Title,
   lede: "On a Nolënor canvas, you file, you calculate, you find things again. Things a whiteboard doesn’t do.",
   soon: "Coming soon: automations.",
   canvas: canvasEn,
@@ -29,7 +29,7 @@ const en = {
   ] as Point[],
 };
 const fr: typeof en = {
-  title: ["Qui a dit que les canvas, c’était ", "seulement", " pour brainstormer ?"] as Title,
+  title: ["Qui a dit que les canvas,", "c’était ", "seulement", " pour brainstormer ?"] as Title,
   lede: "Sur un canvas Nolënor, on range, on calcule, on retrouve. Ce qu’un tableau blanc ne fait pas.",
   soon: "Bientôt : les automatisations.",
   canvas: canvasFr,
@@ -66,7 +66,8 @@ const PINS: Record<number, { x: number; y: number }> = {
 <section id="depth" class="depth" aria-labelledby="depth-title">
   <div class="wrap">
     <h2 id="depth-title" class="depth__title">
-      {copy.title[0]}<span class="title-node title-node--selected depth__word">{copy.title[1]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[2]}
+      <span class="depth__line">{copy.title[0]}</span>
+      <span class="depth__line">{copy.title[1]}<span class="title-node title-node--selected depth__word">{copy.title[2]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.title[3]}</span>
     </h2>
     <div class="node doc depth__lede"><p>{copy.lede}</p></div>
 
@@ -115,13 +116,18 @@ const PINS: Record<number, { x: number; y: number }> = {
     padding-block: var(--section-gap) 0;
   }
 
+  /* Bigger than the other section titles, on two set lines: it is the
+     question the whole page answers. */
   .depth__title {
-    max-width: 20ch;
     margin: 0 0 var(--space-lg);
-    font-size: var(--text-section);
+    font-size: clamp(2rem, 2.4vw + 1.1rem, 3.25rem);
     font-weight: var(--weight-display);
-    line-height: 1.15;
+    line-height: 1.28;
     letter-spacing: var(--tracking-display);
+  }
+
+  .depth__line {
+    display: block;
   }
 
   /* "seulement" / "only", the word that turns the question, is a selected
