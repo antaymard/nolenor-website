@@ -29,7 +29,7 @@ const fr: typeof en = {
 const copy = { en, fr }[lang];
 
 /*
- * The hero is a corner of a light canvas. The headline is a Title node,
+ * The hero is a corner of a canvas on softened indigo. The headline is a Title node,
  * selected, with a teammate's cursor on it; beside it, the pitch and the
  * two ways in. Below, the window holds the pages-to-canvas slider.
  */
@@ -54,7 +54,7 @@ const copy = { en, fr }[lang];
       <p class="hero__lede">{copy.lede}</p>
       <div class="hero__go">
       <div class="hero__actions">
-        <a href={APP_SIGNUP_URL} class="btn" rel="noopener noreferrer">{copy.cta}</a>
+        <a href={APP_SIGNUP_URL} class="btn hero__primary" rel="noopener noreferrer">{copy.cta}</a>
         <a href={PUBLIC_CANVAS_URL} class="node link-node hero__second" rel="noopener noreferrer">
           <Icon name="lucide:layout-grid" />{copy.second}<Icon name="lucide:arrow-up-right" class="hero__ext" />
         </a>
@@ -76,11 +76,35 @@ const copy = { en, fr }[lang];
 </section>
 
 <style>
-  /* A corner of a light canvas: the page's own ground, with its dots. */
+  /* A corner of a canvas on the brand's indigo, softened, with its dots:
+     present, without the weight of a dark ground. Nodes stay white. */
   .hero {
     position: relative;
     z-index: 1;
     padding-block: var(--space-3xl) var(--section-gap-s);
+    background-color: #6b72a3;
+    background-image: radial-gradient(rgb(255 255 255 / 0.2) 1.1px, transparent 1.3px);
+    background-size: 18px 18px;
+  }
+
+  .hero__title {
+    color: #fff;
+  }
+
+  .hero__title.title-node--selected {
+    box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85);
+  }
+
+  /* The primary way in, white on the indigo. */
+  .hero__primary {
+    border-color: #fff;
+    background: #fff;
+    color: var(--color-accent);
+  }
+
+  .hero__primary:hover {
+    border-color: #eef0f8;
+    background: #eef0f8;
   }
 
   .hero__top {
@@ -103,7 +127,7 @@ const copy = { en, fr }[lang];
   }
 
   .hero__ai {
-    color: var(--color-accent);
+    color: #dfe2f5;
   }
 
   /* Jonas's cursor, on the title's lower right corner, drifting a little. */
@@ -156,7 +180,7 @@ const copy = { en, fr }[lang];
   .hero__lede {
     font-size: var(--text-lead);
     line-height: 1.5;
-    color: var(--color-ink-2);
+    color: #f4f5fb;
     text-wrap: pretty;
   }
 
@@ -187,12 +211,12 @@ const copy = { en, fr }[lang];
   .hero__terms {
     margin-top: var(--space-md);
     font-size: var(--text-sm);
-    color: #64748b;
+    color: #dfe2f5;
   }
 
   .hero__made {
     font-weight: 700;
-    color: var(--color-ink);
+    color: #fff;
   }
 
   .hero__window {
