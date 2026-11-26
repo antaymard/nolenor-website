@@ -58,18 +58,18 @@ const copy = { en, fr }[lang];
       <PagesToCanvas />
     </div>
 
-    <div class="hero__below">
+    <!-- The pitch and the two ways in, in one brand-coloured block sitting
+         across the line where the dark hero meets the light page. -->
+    <div class="hero__cta">
       <div class="hero__pitch">
-        <div class="node doc hero__lede">
-          <p>{copy.lede}</p>
-          <p class="hero__terms">{copy.terms}</p>
-        </div>
-        <div class="hero__actions">
-          <a href={APP_SIGNUP_URL} class="btn btn--inverse" rel="noopener noreferrer">{copy.cta}</a>
-          <a href={PUBLIC_CANVAS_URL} class="node link-node" rel="noopener noreferrer">
-            <Icon name="lucide:link" />{copy.second}<Icon name="lucide:arrow-up-right" class="hero__ext" />
-          </a>
-        </div>
+        <p class="hero__lede">{copy.lede}</p>
+        <p class="hero__terms">{copy.terms}</p>
+      </div>
+      <div class="hero__actions">
+        <a href={APP_SIGNUP_URL} class="btn btn--inverse" rel="noopener noreferrer">{copy.cta}</a>
+        <a href={PUBLIC_CANVAS_URL} class="hero__second" rel="noopener noreferrer">
+          <Icon name="lucide:link" />{copy.second}<Icon name="lucide:arrow-up-right" class="hero__ext" />
+        </a>
       </div>
     </div>
   </div>
@@ -80,7 +80,9 @@ const copy = { en, fr }[lang];
      of the slider apart. Nodes stay white, as they do on a dark canvas in
      the app. */
   .hero {
-    padding-block: var(--space-3xl) var(--section-gap-s);
+    position: relative;
+    z-index: 1;
+    padding-block: var(--space-3xl) var(--space-2xl);
     background-color: #0f172a;
     background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.3px);
     background-size: 16px 16px;
@@ -90,25 +92,95 @@ const copy = { en, fr }[lang];
     color: #f8fafc;
   }
 
+  /* Half on the dark hero, half on the light page below. */
+  .hero__cta {
+    position: relative;
+    display: grid;
+    gap: var(--space-lg) var(--space-2xl);
+    align-items: center;
+    max-width: 62rem;
+    margin: var(--space-2xl) auto calc(-1 * var(--space-2xl) - 24px);
+    padding: var(--space-lg);
+    border-radius: 16px;
+    background: var(--color-accent);
+    box-shadow:
+      0 24px 48px -20px rgb(15 23 42 / 0.45),
+      0 0 0 1px rgb(255 255 255 / 0.08) inset;
+    color: #fff;
+  }
+
+  .hero__lede {
+    max-width: 36rem;
+    font-size: var(--text-lead);
+    line-height: 1.5;
+    color: #fff;
+    text-wrap: pretty;
+  }
+
+  .hero__terms {
+    margin-top: var(--space-xs);
+    font-size: var(--text-sm);
+    color: oklch(0.87 0.03 276);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-lg);
+  }
+
+  .hero__second {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.4);
+    text-underline-offset: 0.3em;
+  }
+
+  .hero__second:hover {
+    text-decoration-color: #fff;
+  }
+
+  .hero__second svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .hero__second :global(.hero__ext) {
+    width: 15px;
+    height: 15px;
+    opacity: 0.7;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__cta {
+      grid-template-columns: minmax(0, 1fr) auto;
+      margin-bottom: calc(-1 * var(--space-2xl) - 72px);
+      padding: var(--space-xl) var(--space-2xl);
+    }
+
+    .hero__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .hero__actions .btn {
+      width: 100%;
+    }
+  }
+
   .hero__top {
     display: grid;
     gap: var(--space-lg);
     align-items: end;
   }
 
-  .hero__below {
-    display: grid;
-    gap: var(--space-lg) var(--space-2xl);
-    align-items: start;
-    margin-top: var(--space-xl);
-  }
 
-  .hero__pitch {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-lg);
-  }
 
   .hero__title {
     display: flex;
@@ -129,28 +201,9 @@ const copy = { en, fr }[lang];
   }
 
 
-  .hero__lede {
-    max-width: 38rem;
-    font-size: var(--text-lead);
-  }
 
-  .hero__terms {
-    font-size: var(--text-sm);
-    color: var(--color-muted);
-  }
 
-  .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-md);
-  }
 
-  .hero__ext {
-    width: 15px !important;
-    height: 15px !important;
-    color: var(--color-muted);
-  }
 
 
 
