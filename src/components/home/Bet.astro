@@ -188,16 +188,21 @@ const copy = { en, fr }[lang];
       svg.innerHTML = "";
       heads.innerHTML = "";
       if (!window.matchMedia("(min-width: 60rem)").matches) return;
-      const base = list.getBoundingClientRect();
-      const texts = [...list.querySelectorAll<HTMLElement>("[data-why-text]")].map((el) => el.getBoundingClientRect());
+      // Layout offsets, not screen rectangles: the steps fade up into place
+      // (data-reveal), and a transform mid-animation would shift the ends.
+      const texts = [...list.querySelectorAll<HTMLElement>("[data-why-text]")].map((el) => {
+        const row = el.offsetParent as HTMLElement;
+        return { x: row.offsetLeft + el.offsetLeft, y: row.offsetTop + el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
+      });
       let html = "";
       let tips = "";
+      const GAP = 4; // the arrow stops just outside the target node
       for (let i = 0; i < texts.length - 1; i++) {
-        const a = { x: texts[i].left + texts[i].width / 2 - base.left, y: texts[i].bottom - base.top };
-        const b = { x: texts[i + 1].left + texts[i + 1].width / 2 - base.left, y: texts[i + 1].top - base.top };
+        const a = { x: texts[i].x + texts[i].w / 2, y: texts[i].y + texts[i].h };
+        const b = { x: texts[i + 1].x + texts[i + 1].w / 2, y: texts[i + 1].y - GAP };
         const k = Math.max(60, (b.y - a.y) * 0.5);
         html += `<path d="M ${a.x} ${a.y} C ${a.x} ${a.y + k}, ${b.x} ${b.y - k}, ${b.x} ${b.y}"/>`;
-        tips += `<polyline points="${b.x - 6},${b.y - 8} ${b.x},${b.y - 0.5} ${b.x + 6},${b.y - 8}"/>`;
+        tips += `<polyline points="${b.x - 6},${b.y - 7.5} ${b.x},${b.y} ${b.x + 6},${b.y - 7.5}"/>`;
       }
       svg.innerHTML = html;
       heads.innerHTML = tips;
