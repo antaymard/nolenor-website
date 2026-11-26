@@ -5,22 +5,22 @@ import { getLang } from "@/i18n";
 const lang = getLang(Astro.currentLocale);
 
 const en = {
-  heading: "With or without AI, it’s your call.",
-  lede: "The same canvas, the switch off or on. Watch both.",
+  heading: "A tool for thinking, first. AI is the accelerator.",
+  lede: "Nolënor is above all an interface to think and create, visually. It works fully without AI. When you need it, switch it on: it speeds your work up, without doing it for you.",
   ai: "AI",
   window: "WMS rollout · budget",
   hint: { off: "Click to turn it on", on: "Click to turn it off" },
   states: {
     off: {
       label: "Off",
-      title: "AI off, it is already a tool.",
+      title: "AI off, the tool is complete.",
       steps: [["Open", " a PDF next to your canvas."], ["Drop", " a table in."], ["Pull", " a computed value from it."]],
       note: "No AI involved: the canvas does the work, and the numbers follow.",
       alt: "A quote PDF opens in a window docked on the right; a CSV file is dropped onto the canvas and becomes a table; a link dragged from the table creates a computed value, the scanner budget, which follows the table.",
     },
     on: {
       label: "On",
-      title: "AI on, it works with you.",
+      title: "AI on, everything goes faster.",
       steps: [["Alt + click", " the table and the quote: Nolë gets them."], ["Ask out loud", " for a dashboard of the scanner budget."], ["Watch", " Nolë read them and build three linked charts."]],
       note: "Each step happens on the canvas, in violet: you see what it reads, what it makes.",
       alt: "Alt + click on the table, then on the quote: both get a dashed violet outline and a chip in Nolë’s composer. The request is dictated; Nolë reads the two nodes, then creates three linked chart nodes one after the other, each under a pulsing violet halo: scanners by site, budget by item, roll-out over ten weeks.",
@@ -28,22 +28,22 @@ const en = {
   },
 };
 const fr: typeof en = {
-  heading: "Avec ou sans IA, c’est vous qui décidez.",
-  lede: "Le même canvas, l’interrupteur éteint ou allumé. Regardez les deux.",
+  heading: "D’abord un outil pour penser. L’IA, un accélérateur.",
+  lede: "Nolënor est avant tout une interface pour penser et créer, visuellement. Elle fonctionne pleinement sans IA. Quand vous en avez besoin, allumez-la : elle accélère votre travail, sans le faire à votre place.",
   ai: "IA",
   window: "Déploiement WMS · budget",
   hint: { off: "Cliquez pour l’allumer", on: "Cliquez pour l’éteindre" },
   states: {
     off: {
       label: "Éteinte",
-      title: "IA éteinte, c’est déjà un outil.",
+      title: "IA éteinte, l’outil est complet.",
       steps: [["Ouvrez", " un PDF à côté de votre canvas."], ["Déposez", " un tableau."], ["Tirez", "-en une valeur calculée."]],
       note: "Sans IA : le canvas fait le travail, et les chiffres suivent.",
       alt: "Un devis PDF s’ouvre dans une fenêtre ancrée à droite ; un fichier CSV déposé sur le canvas devient un tableau ; un lien tiré depuis le tableau crée une valeur calculée, le budget scanners, qui suit le tableau.",
     },
     on: {
       label: "Allumée",
-      title: "IA allumée, elle travaille avec vous.",
+      title: "IA allumée, tout va plus vite.",
       steps: [["Alt\xa0+ clic", " sur le tableau et le devis\xa0: Nolë les reçoit."], ["Demandez à voix haute", " un tableau de bord du budget."], ["Regardez", " Nolë les lire et construire trois graphiques reliés."]],
       note: "Chaque étape se fait sur le canvas, en violet : vous voyez ce qu’il lit, ce qu’il crée.",
       alt: "Alt + clic sur le tableau, puis sur le devis : tous deux prennent un contour violet en pointillés et une pastille dans la saisie de Nolë. La demande est dictée ; Nolë lit les deux nœuds, puis crée trois nœuds graphiques reliés, l’un après l’autre, chacun sous un halo violet qui pulse : scanners par site, budget par poste, déploiement sur dix semaines.",
