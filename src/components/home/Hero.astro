@@ -33,7 +33,10 @@ const copy = { en, fr }[lang];
  */
 ---
 
-<section class="hero" aria-labelledby="hero-title">
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <!-- An edge from the title down to the animation, curving between the
+       pitch and the buttons (drawn by the script below, wide screens). -->
+  <svg class="hero__edge" aria-hidden="true"></svg>
   <div class="wrap hero__top">
     <div class="hero__head">
       <h1 id="hero-title" class="title-node title-node--selected hero__title">
@@ -64,7 +67,66 @@ const copy = { en, fr }[lang];
   </div>
 </section>
 
+<script>
+  document.querySelectorAll<HTMLElement>("[data-hero]").forEach((hero) => {
+    const svg = hero.querySelector<SVGSVGElement>(".hero__edge")!;
+    const title = hero.querySelector<HTMLElement>(".hero__title")!;
+    const lede = hero.querySelector<HTMLElement>(".hero__lede")!;
+    const actions = hero.querySelector<HTMLElement>(".hero__actions")!;
+    const win = hero.querySelector<HTMLElement>(".hero__window")!;
+    const draw = () => {
+      svg.innerHTML = "";
+      if (!window.matchMedia("(min-width: 60rem)").matches) return;
+      const o = hero.getBoundingClientRect();
+      const r = (el: Element) => {
+        const b = el.getBoundingClientRect();
+        return { l: b.left - o.left, t: b.top - o.top, r: b.right - o.left, b: b.bottom - o.top };
+      };
+      const range = document.createRange();
+      range.selectNodeContents(lede);
+      const text = r(range);
+      const t = r(title);
+      const a = r(actions);
+      const w = r(win);
+      // From the title's bottom handle, out to the gap between the pitch's
+      // words and the buttons, then down into the top of the window.
+      const sx = (t.l + t.r) / 2;
+      const sy = t.b + 5;
+      const gx = (text.r + a.l) / 2;
+      const ex = gx;
+      const ey = w.t - 4;
+      // One smooth curve, vertical at both ends: down out of the title,
+      // across to the gap between the words and the buttons, down into the
+      // window.
+      const d = `M ${sx} ${sy} C ${sx} ${sy + 70}, ${ex} ${sy - 10}, ${ex} ${ey}`;
+      svg.innerHTML = `<path d="${d}"/><polyline points="${ex - 6},${ey - 7.5} ${ex},${ey} ${ex + 6},${ey - 7.5}"/>`;
+    };
+    new ResizeObserver(draw).observe(hero);
+    window.addEventListener("load", draw);
+    document.fonts?.ready.then(draw);
+  });
+</script>
+
 <style>
+  .hero__edge {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .hero__edge :global(path),
+  .hero__edge :global(polyline) {
+    fill: none;
+    stroke: #64748b;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   /* A corner of a canvas on lavender, the brand's indigo turned light,
      with its dots. Nodes stay white. */
   .hero {
