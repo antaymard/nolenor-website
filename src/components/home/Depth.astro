@@ -22,7 +22,7 @@ const en = {
     both: "Nolënor brings the two together",
     rest: ": think in space, file, find, work, and hand the execution to an agent.",
   },
-  soon: "Coming soon: automations.",
+  soon: { tag: "Coming soon", title: "Automations.", body: "So the canvas keeps working when you’re not there." },
   canvas: canvasEn,
   canvasAlt: "A joinery workshop’s canvas: three sub-canvases (clients, workshop, purchasing), an open-quotes database seen as a kanban, two values computed from it through dotted ƒ links (weighted pipeline, win rate), and a live mini-app showing the visitors on the website (42 right now, the curve of the last minutes, the top pages) and a chart of quotes won by month.",
   search: searchEn,
@@ -45,7 +45,7 @@ const fr: typeof en = {
     both: "Nolënor réunit les deux",
     rest: " : penser dans l’espace, ranger, retrouver, travailler, et confier l’exécution à un agent.",
   },
-  soon: "Bientôt : les automatisations.",
+  soon: { tag: "Bientôt", title: "Les automatisations.", body: "Pour que le canvas travaille aussi quand vous n’êtes pas là." },
   canvas: canvasFr,
   canvasAlt: "Le canvas d’un atelier de menuiserie : trois sous-canvas (clients, atelier, achats), une base des devis en cours vue en kanban, deux valeurs calculées à partir d’elle par des liens ƒ en pointillés (pipeline pondéré, taux de signature), une mini-app en direct des visiteurs sur le site (42 en ce moment, la courbe des dernières minutes, les pages les plus vues) et un graphique des devis signés par mois.",
   search: searchFr,
@@ -124,18 +124,21 @@ const PINS: Record<number, { x: number; y: number }> = {
           </li>
         ))
       }
+      <li class="depth__soon">
+        <span class="pin pin--static pin--soon" aria-hidden="true"><Icon name="lucide:workflow" /></span>
+        <h3>
+          {copy.soon.title} <span class="depth__tag">{copy.soon.tag}</span>
+        </h3>
+        <p>{copy.soon.body}</p>
+      </li>
     </ol>
 
-    <div class="node node--yellow depth__soon">
-      <Icon name="lucide:workflow" />
-      {copy.soon}
-    </div>
   </div>
 </section>
 
 <style>
   .depth {
-    padding-block: var(--section-gap) 0;
+    padding-block: var(--section-gap);
   }
 
   /* Bigger than the other section titles, on two set lines: it is the
@@ -216,6 +219,36 @@ const PINS: Record<number, { x: number; y: number }> = {
     color: #fff;
   }
 
+  /* Not built yet: an outlined pin, and the item a shade quieter. */
+  .pin--soon {
+    border: 1.5px dashed #94a3b8;
+    background: transparent;
+    box-shadow: none;
+    color: #64748b;
+  }
+
+  .pin--soon :global(svg) {
+    width: 14px;
+    height: 14px;
+  }
+
+  .depth__soon h3 {
+    color: #475569;
+  }
+
+  .depth__tag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    vertical-align: 2px;
+    color: #64748b;
+  }
+
   .pin--static {
     position: static;
     margin: 0;
@@ -251,21 +284,7 @@ const PINS: Record<number, { x: number; y: number }> = {
     color: var(--color-ink-2);
   }
 
-  .depth__soon {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: var(--space-xl);
-    padding: 10px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #713f12;
-  }
 
-  .depth__soon svg {
-    width: 16px;
-    height: 16px;
-  }
 
   @media (min-width: 40rem) {
     .depth__legend {
