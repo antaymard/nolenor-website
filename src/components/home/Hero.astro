@@ -30,7 +30,7 @@ const copy = { en, fr }[lang];
 
 /*
  * The hero is a corner of a canvas on lavender. The headline is a Title node,
- * selected, with a teammate's cursor on it; beside it, the pitch and the
+ * selected; beside it, the pitch and the
  * two ways in. Below, the window holds the pages-to-canvas slider.
  */
 ---
@@ -43,10 +43,6 @@ const copy = { en, fr }[lang];
         <span class="hero__ai">{copy.ai}</span>
         <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
       </h1>
-      <!-- A teammate on the same canvas, pointing at the title. -->
-      <span class="hero__peer" aria-hidden="true">
-        <svg width="18" height="20" viewBox="0 0 18 20"><path d="M1 1 L1 16 L5 12 L8 19 L11 18 L8 11 L14 11 Z" fill="#2563eb" stroke="white" stroke-width="1.5"></path></svg>
-      </span>
     </div>
 
     <div class="hero__aside">
@@ -109,34 +105,6 @@ const copy = { en, fr }[lang];
 
   .hero__ai {
     color: var(--color-accent);
-  }
-
-  /* A teammate's cursor, on the title's lower right corner, drifting a little. */
-  .hero__peer {
-    position: absolute;
-    right: -0.9rem;
-    bottom: -1.1rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 2px;
-    animation: peer-drift 6s ease-in-out infinite;
-  }
-
-
-  @keyframes peer-drift {
-    0%,
-    100% {
-      transform: translate(0, 0);
-    }
-    50% {
-      transform: translate(-10px, -6px);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero__peer {
-      animation: none;
-    }
   }
 
   .hero__aside {
