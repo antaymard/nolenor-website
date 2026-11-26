@@ -15,8 +15,8 @@ const lang = getLang(Astro.currentLocale);
 type Point = { title: string; body: string; img: ImageMetadata; alt: string };
 
 const en = {
-  title: "Why a canvas is the right place to work with AI.",
-  lede: "A chat narrows your thinking to a conversation, and leaves you nothing to do without it. A canvas lets you think first, then makes room for the AI.",
+  title: ["Why a canvas is the right place", "to work with AI."],
+  lede: "A chat narrows your thinking to a conversation, and leaves you nothing to do without it. On a canvas, you do the thinking and the making, and the AI comes to work alongside you.",
   points: [
     {
       title: "A space that frees your thinking.",
@@ -54,8 +54,8 @@ const en = {
   },
 };
 const fr: typeof en = {
-  title: "Pourquoi le canvas est la bonne interface pour travailler avec l’IA.",
-  lede: "Un chat réduit votre pensée à une conversation, et ne vous laisse rien faire sans lui. Un canvas vous laisse penser d’abord, puis fait de la place à l’IA.",
+  title: ["Pourquoi le canvas est la bonne interface", "pour travailler avec l’IA."],
+  lede: "Un chat réduit votre pensée à une conversation, et ne vous laisse rien faire sans lui. Sur un canvas, c’est vous qui pensez et créez, et l’IA vient travailler à vos côtés.",
   points: [
     {
       title: "Un espace qui libère la réflexion.",
@@ -106,7 +106,7 @@ const copy = { en, fr }[lang];
 
 <section id="why" class="why" aria-labelledby="why-title">
   <div class="wrap">
-    <h2 id="why-title" class="title-node why__title">{copy.title}</h2>
+    <h2 id="why-title" class="title-node why__title">{copy.title.map((line) => <span class="why__line">{line}</span>)}</h2>
     <div class="node doc why__lede"><p>{copy.lede}</p></div>
 
     <ol class="why__points">
@@ -171,8 +171,11 @@ const copy = { en, fr }[lang];
     padding-block: var(--section-gap);
   }
 
+  .why__line {
+    display: block;
+  }
+
   .why__title {
-    max-width: 24ch;
     margin: 0 0 var(--space-md) -8px;
     font-size: var(--text-section);
     line-height: 1.12;
