@@ -79,7 +79,11 @@ const copy = { en, fr }[lang];
   /* The app's dark canvas preset (#0f172a, dots): it sets the light grey
      of the slider apart. Nodes stay white, as they do on a dark canvas in
      the app. */
+  /* The CTA block hangs below the hero by this much; the hero's margin
+     gives it back, so the next section keeps its full gap below the block. */
   .hero {
+    --cta-overhang: calc(var(--space-2xl) + 24px);
+    margin-bottom: var(--cta-overhang);
     position: relative;
     z-index: 1;
     padding-block: var(--space-3xl) var(--space-2xl);
@@ -99,7 +103,7 @@ const copy = { en, fr }[lang];
     gap: var(--space-lg) var(--space-2xl);
     align-items: center;
     max-width: 62rem;
-    margin: var(--space-2xl) auto calc(-1 * var(--space-2xl) - 24px);
+    margin: var(--space-2xl) auto calc(-1 * var(--cta-overhang));
     padding: var(--space-lg);
     border-radius: 16px;
     background: var(--color-accent);
@@ -158,9 +162,13 @@ const copy = { en, fr }[lang];
   }
 
   @media (min-width: 60rem) {
+    .hero {
+      --cta-overhang: calc(var(--space-2xl) + 72px);
+    }
+
     .hero__cta {
       grid-template-columns: minmax(0, 1fr) auto;
-      margin-bottom: calc(-1 * var(--space-2xl) - 72px);
+      margin-bottom: calc(-1 * var(--cta-overhang));
       padding: var(--space-xl) var(--space-2xl);
     }
 
