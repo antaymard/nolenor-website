@@ -10,6 +10,7 @@ import boardFr from "@/assets/img/home/s10-piloter-fr.webp";
 const lang = getLang(Astro.currentLocale);
 
 const en = {
+  heading: "You at the centre of the thinking. AI in support.",
   pain: "You wanted to think out loud. The AI has already handed in its essay.",
   painBody: "Now you are proofreading an idea that never had time to become yours. Pages you didn’t ask for, and still have to read.",
   bet: "Everywhere, you’re told to keep up with AI. We did the opposite: we made it keep up with you.",
@@ -30,6 +31,7 @@ const en = {
   ],
 };
 const fr: typeof en = {
+  heading: "Vous au centre de la réflexion. L’IA en appui.",
   pain: "Vous vouliez réfléchir à voix haute. L’IA a déjà rendu sa copie.",
   painBody: "Et vous voilà à relire une idée qui n’a pas eu le temps de devenir la vôtre. Des pages que vous n’avez pas demandées, et qu’il faut pourtant relire.",
   bet: "Partout, on vous somme de suivre le rythme de l’IA. Nous avons fait l’inverse : on l’a mise au vôtre.",
@@ -58,8 +60,10 @@ const copy = { en, fr }[lang];
  */
 ---
 
-<section id="why" class="bet" aria-labelledby="bet-title">
+<section id="why" class="bet" aria-labelledby="why-title">
   <div class="wrap">
+    <h2 id="why-title" class="title-node bet__heading">{copy.heading}</h2>
+
     <div class="node doc bet__pain" data-reveal>
       <h3>{copy.pain}</h3>
       <p>{copy.painBody}</p>
@@ -68,7 +72,7 @@ const copy = { en, fr }[lang];
     <Edge from={22} to={58} height={88} />
 
     <div class="bet__thesis" data-reveal>
-      <h2 id="bet-title" class="title-node bet__title">{copy.bet}</h2>
+      <p class="title-node bet__title">{copy.bet}</p>
       <div class="node doc bet__body"><p>{copy.betBody}</p></div>
     </div>
 
@@ -112,6 +116,14 @@ const copy = { en, fr }[lang];
     letter-spacing: -0.01em;
   }
 
+  /* The section's answer, before the story that leads to it. */
+  .bet__heading {
+    max-width: 22ch;
+    margin: 0 0 var(--space-2xl) -8px;
+    font-size: var(--text-section);
+    line-height: 1.12;
+  }
+
   .bet__thesis {
     display: flex;
     flex-direction: column;
@@ -123,8 +135,8 @@ const copy = { en, fr }[lang];
 
   .bet__title {
     margin: 0 0 0 -8px;
-    font-size: var(--text-section);
-    line-height: 1.08;
+    font-size: clamp(1.375rem, 0.8vw + 1rem, 1.875rem);
+    line-height: 1.2;
   }
 
   .bet__body {
@@ -166,7 +178,15 @@ const copy = { en, fr }[lang];
       display: none;
     }
 
-    .bet__thesis {
+    /* The section's answer, before the story that leads to it. */
+  .bet__heading {
+    max-width: 22ch;
+    margin: 0 0 var(--space-2xl) -8px;
+    font-size: var(--text-section);
+    line-height: 1.12;
+  }
+
+  .bet__thesis {
       margin-bottom: var(--space-2xl);
     }
   }
