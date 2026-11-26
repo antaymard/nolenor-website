@@ -199,13 +199,14 @@ const modes = ["off", "on"] as const;
 </script>
 
 <style>
-  /* A change of ground mid-page: the app's dark canvas preset, as in the
-     hero, edge to edge. The nodes stay white, as on a dark canvas in the app. */
+  /* A change of ground mid-page: the brand's indigo, very light, with its
+     dots, edge to edge. */
   .ai {
     padding-block: var(--section-gap) var(--section-gap);
-    background-color: #0f172a;
-    background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1.3px);
-    background-size: 16px 16px;
+    background-color: #eef0f7;
+    background-image: radial-gradient(rgb(80 87 133 / 0.22) 1.1px, transparent 1.3px);
+    background-size: 20px 20px;
+    border-block: 1px solid #dfe2ef;
   }
 
   .ai__intro {
@@ -216,7 +217,6 @@ const modes = ["off", "on"] as const;
     margin: 0 0 var(--space-md) -8px;
     font-size: var(--text-section);
     line-height: 1.3;
-    color: #f8fafc;
   }
 
   /* "accélérateur", the word the section turns on, is a selected Title node. */
@@ -225,7 +225,7 @@ const modes = ["off", "on"] as const;
     margin: 0 2px;
     font-size: inherit;
     line-height: inherit;
-    color: #93c5fd;
+    color: #2563eb;
   }
 
   .ai__lede {
