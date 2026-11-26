@@ -3,7 +3,7 @@ import { Icon } from "astro-icon/components";
 import Layout from "@/layouts/Layout.astro";
 import Container from "@/components/ui/Container.astro";
 import SectionLabel from "@/components/ui/SectionLabel.astro";
-import { GITHUB_REPO_URL, SITE_NAME } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 import { getLang, localizePath } from "@/i18n";
 
 const lang = getLang(Astro.currentLocale);
@@ -49,7 +49,6 @@ const en = {
     "A precise tool for precise people. Here's what Nolënor deliberately isn't, so you can tell quickly whether it's for you.",
   closing: "Think we're not living up to one of these? Tell us.",
   closingBody: "Principles are only worth something if someone can hold us to them.",
-  closingLink: "Open an issue on GitHub",
   principles: [
     {
       title: "The canvas is the interface.",
@@ -79,7 +78,7 @@ const en = {
     {
       title: "Your thinking leaves with you.",
       body: "A tool you can't leave isn't a tool, it's a dependency. Your work has to stay readable outside of Nolënor.",
-      proof: "Export in open formats (Markdown, JSON, CSV), canvases open to other assistants over MCP, and the source code is public.",
+      proof: "Export in open formats (Markdown, JSON, CSV), canvases open to other assistants over MCP.",
     },
     {
       title: "Do less, but do it right.",
@@ -128,7 +127,6 @@ const fr: typeof en = {
     "Un outil précis, pour des gens précis. Voici ce que Nolënor a choisi de ne pas être. Vous saurez vite s’il est fait pour vous.",
   closing: "Vous nous prenez en défaut sur l’un de ces principes ? Dites-le-nous.",
   closingBody: "Des principes ne valent rien si personne ne peut nous en demander compte.",
-  closingLink: "Ouvrir une issue sur GitHub",
   principles: [
     {
       title: "Le canevas est l’interface.",
@@ -158,7 +156,7 @@ const fr: typeof en = {
     {
       title: "Si vous partez, votre travail part avec vous.",
       body: "Un outil qu’on ne peut pas quitter, ce n’est plus un outil, c’est une dépendance. Votre travail doit rester lisible hors de Nolënor.",
-      proof: "Export en formats ouverts (Markdown, JSON, CSV), canevas accessibles à d’autres assistants par MCP, code source public.",
+      proof: "Export en formats ouverts (Markdown, JSON, CSV), canevas accessibles à d’autres assistants par MCP.",
     },
     {
       title: "Faire moins, mais faire juste.",
@@ -276,14 +274,6 @@ const copy = { en, fr }[lang];
         <p class="text-pretty text-muted-foreground">
           {copy.closingBody}
         </p>
-        <a
-          href={`${GITHUB_REPO_URL}/issues`}
-          class="group mt-2 inline-flex items-center gap-1.5 font-semibold text-brand underline-offset-4 hover:underline"
-          rel="noopener noreferrer"
-        >
-          {copy.closingLink}
-          <Icon name="lucide:arrow-right" class="h-4 w-4 transition-transform duration-200 motion-safe:group-hover:translate-x-0.5" />
-        </a>
       </div>
     </Container>
   </section>

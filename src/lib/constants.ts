@@ -38,8 +38,6 @@ export const REST_API_BASE = `${API_ORIGIN}/api/v1`;
 // graceful-failure handling this requires.
 export const WISHLIST_ENDPOINT = `${API_ORIGIN}/wishlist/subscribe`;
 
-// Verified public via the GitHub API.
-export const GITHUB_REPO_URL = "https://github.com/antaymard/nolenor";
 
 export const TAGLINE = {
   en: "Your whole project on one canvas. And AI by your side.",

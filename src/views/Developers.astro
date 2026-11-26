@@ -14,7 +14,6 @@ import {
 } from "@/data/developers";
 import {
   APP_API_TOKENS_URL,
-  GITHUB_REPO_URL,
   MCP_ENDPOINT,
   REST_API_BASE,
   SITE_NAME,
@@ -148,8 +147,7 @@ const en = {
   },
   cta: {
     heading: "Building something?",
-    body: "Missing an endpoint, or a tool your agent needs? Nolënor is open source: open an issue, or read how it works.",
-    issue: "Open an issue",
+    body: "Missing an endpoint, or a tool your agent needs? Start with a token: everything else is on this page.",
     token: "Create a token",
   },
 };
@@ -252,8 +250,7 @@ const fr: typeof en = {
   },
   cta: {
     heading: "Un projet sur l’établi ?",
-    body: "Il vous manque un endpoint, ou un outil pour votre agent ? Nolënor est open source : ouvrez une issue, ou allez voir comment c’est fait.",
-    issue: "Ouvrir une issue",
+    body: "Il vous manque un endpoint, ou un outil pour votre agent ? Commencez par créer un token : tout le reste est sur cette page.",
     token: "Créer un token",
   },
 };
@@ -721,10 +718,6 @@ const errorExample = `{ "error": { "code": "bad_request", "message": "Missing ca
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <Button href={`${GITHUB_REPO_URL}/issues`} variant="ghost" class="border border-border">
-            <Icon name="lucide:github" class="h-4 w-4" />
-            {copy.cta.issue}
-          </Button>
           <Button href={APP_API_TOKENS_URL}>
             {copy.cta.token}
             <Icon name="lucide:arrow-right" class="h-4 w-4" />
