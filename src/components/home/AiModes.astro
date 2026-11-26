@@ -5,7 +5,7 @@ import { getLang } from "@/i18n";
 const lang = getLang(Astro.currentLocale);
 
 const en = {
-  heading: "A tool for thinking, first. And AI as the accelerator.",
+  heading: ["A tool for thinking, first. And AI as the ", "accelerator", "."] as [string, string, string],
   lede: "Nolënor is above all an interface to think and create, visually. It works fully without AI. When you need it, switch it on: it speeds your work up, without doing it for you.",
   ai: "AI",
   window: "WMS rollout · budget",
@@ -28,7 +28,7 @@ const en = {
   },
 };
 const fr: typeof en = {
-  heading: "D’abord un outil pour penser. Et l’IA en accélérateur.",
+  heading: ["D’abord un outil pour penser. Et l’IA en ", "accélérateur", "."] as [string, string, string],
   lede: "Nolënor est avant tout une interface pour penser et créer, visuellement. Elle fonctionne pleinement sans IA. Quand vous en avez besoin, allumez-la : elle accélère votre travail, sans le faire à votre place.",
   ai: "IA",
   window: "Déploiement WMS · budget",
@@ -64,7 +64,7 @@ const modes = ["off", "on"] as const;
 
 <section id="ai" class="ai" aria-labelledby="ai-heading" data-ai-section data-state="off">
   <div class="wrap ai__intro">
-    <h2 id="ai-heading" class="title-node ai__heading">{copy.heading}</h2>
+    <h2 id="ai-heading" class="title-node ai__heading">{copy.heading[0]}<span class="title-node title-node--selected ai__word">{copy.heading[1]}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>{copy.heading[2]}</h2>
     <div class="node doc ai__lede"><p>{copy.lede}</p></div>
   </div>
   <div class="wrap ai__layout ai__layout--wide">
@@ -216,7 +216,16 @@ const modes = ["off", "on"] as const;
   .ai__heading {
     margin: 0 0 var(--space-md) -8px;
     font-size: var(--text-section);
-    line-height: 1.1;
+    line-height: 1.3;
+  }
+
+  /* "accélérateur", the word the section turns on, is a selected Title node. */
+  .ai__word {
+    padding: 0 6px;
+    margin: 0 2px;
+    font-size: inherit;
+    line-height: inherit;
+    color: #2563eb;
   }
 
   .ai__lede {

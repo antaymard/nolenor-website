@@ -8,8 +8,8 @@ import { getLang } from "@/i18n";
 const lang = getLang(Astro.currentLocale);
 
 const en = {
-  pace: "Think at your own pace.",
-  ai: "AI when you want it.",
+  pace: "Your whole project on one canvas.",
+  ai: "And AI by your side.",
   lede: "Nolënor is an infinite canvas for deep work. Structure your ideas, explore options with AI, keep your dashboards in one place, plan what comes next.",
   terms: "Open beta. No card, export any time.",
   cta: "Open a canvas",
@@ -18,8 +18,8 @@ const en = {
   window: "Unfold your page tree: your whole project at a glance.",
 };
 const fr: typeof en = {
-  pace: "Pensez à votre rythme.",
-  ai: "L’IA, quand vous voulez.",
+  pace: "Tout votre projet sur un canvas.",
+  ai: "Et l’IA à vos côtés.",
   lede: "Nolënor est un canvas infini pour travailler en profondeur. Structurez vos idées, explorez des pistes avec l’IA, centralisez vos tableaux de bord, planifiez la suite.",
   terms: "Bêta ouverte. Sans carte, export à tout moment.",
   cta: "Ouvrir un canvas",
@@ -193,9 +193,10 @@ const copy = { en, fr }[lang];
   .hero__title {
     display: flex;
     flex-direction: column;
+    justify-self: start;
     margin: 0 0 0 -8px;
-    font-size: var(--text-display);
-    line-height: 1.02;
+    font-size: min(var(--text-display), 3.4rem);
+    line-height: 1.04;
   }
 
   .hero__ai {
@@ -225,13 +226,21 @@ const copy = { en, fr }[lang];
 
 
   .hero__note {
-    max-width: 20rem;
+    max-width: 19rem;
     color: #713f12;
     font-weight: 600;
   }
 
   .hero__edge {
     display: none;
+  }
+
+  /* Wide enough: the title keeps its two set lines, the note sits beside. */
+  @media (min-width: 75rem) {
+    .hero__top {
+      grid-template-columns: max-content minmax(0, 1fr);
+      gap: var(--space-2xl);
+    }
   }
 
   .hero__window {
@@ -258,8 +267,7 @@ const copy = { en, fr }[lang];
 
   @media (min-width: 60rem) {
     .hero__top {
-      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-      gap: var(--space-2xl);
+      gap: var(--space-lg);
     }
 
     .hero__note {
@@ -270,8 +278,10 @@ const copy = { en, fr }[lang];
       display: block;
     }
 
+    /* The slider is the hero's proof: it takes the full bleed on both sides. */
     .hero__window {
       margin-top: 0;
+      margin-inline: calc(-1 * var(--bleed));
     }
 
 
