@@ -505,3 +505,47 @@ html {
   white-space: nowrap;
   color: #fff;
 }
+
+/* ── Texture ─────────────────────────────────────────────────────────────
+   A fine paper grain over the coloured grounds (hero, AI section), so the
+   flat colour reads as a surface rather than a screen fill. */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.2 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+/* A ground without dots, to alternate with the dotted canvas. */
+.ground-plain {
+  background-color: #fff;
+  border-block: 1px solid #e8ecf1;
+}
+
+/* A real photo on the canvas, as an image node, cut by the edge of the
+   page: the canvas goes on past the screen. Wide screens only. */
+.photo-node {
+  position: absolute;
+  z-index: 0;
+  display: none;
+  width: var(--w, 360px);
+  margin: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  pointer-events: none;
+}
+.photo-node img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+@media (min-width: 75rem) {
+  .photo-node { display: block; }
+}

@@ -6,6 +6,7 @@ import canvasEn from "@/assets/img/home/depth-canvas-en.webp";
 import canvasFr from "@/assets/img/home/depth-canvas-fr.webp";
 import searchEn from "@/assets/img/home/f-search-en.webp";
 import searchFr from "@/assets/img/home/f-search-fr.webp";
+import atelier from "@/assets/img/home/photos/atelier.webp";
 
 const lang = getLang(Astro.currentLocale);
 
@@ -77,7 +78,8 @@ const PINS: Record<number, { x: number; y: number }> = {
  */
 ---
 
-<section id="depth" class="depth" aria-labelledby="depth-title">
+<section id="depth" class="depth ground-plain" aria-labelledby="depth-title">
+  <figure class="node photo-node" style="--w:400px;right:-150px;top:120px" aria-hidden="true"><Image src={atelier} alt="" widths={[480, 900]} sizes="400px" /></figure>
   <div class="wrap">
     <h2 id="depth-title" class="depth__title">
       <span class="depth__line">{copy.title[0]}</span>
@@ -138,6 +140,8 @@ const PINS: Record<number, { x: number; y: number }> = {
 
 <style>
   .depth {
+    position: relative;
+    overflow-x: clip;
     padding-block: var(--section-gap);
   }
 
