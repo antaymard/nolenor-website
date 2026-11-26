@@ -15,7 +15,7 @@ const lang = getLang(Astro.currentLocale);
 type Point = { title: string; body: string; img: ImageMetadata; alt: string };
 
 const en = {
-  title: { line1: "Why a canvas is the right place", line2: ["to ", "work", " with AI."] as [string, string, string] },
+  title: { line1: "Why a canvas is the right place", line2: ["to ", "think", " with AI."] as [string, string, string] },
   lede: "A chat narrows your thinking to a conversation, and leaves you nothing to do without it. On a canvas, you do the thinking and the making, and the AI comes to work alongside you.",
   points: [
     {
@@ -54,7 +54,7 @@ const en = {
   },
 };
 const fr: typeof en = {
-  title: { line1: "Pourquoi le canvas est la bonne interface", line2: ["pour ", "travailler", " avec l’IA."] as [string, string, string] },
+  title: { line1: "Pourquoi le canvas est la bonne interface", line2: ["pour ", "réfléchir", " avec l’IA."] as [string, string, string] },
   lede: "Un chat réduit votre pensée à une conversation, et ne vous laisse rien faire sans lui. Sur un canvas, c’est vous qui pensez et créez, et l’IA vient travailler à vos côtés.",
   points: [
     {
@@ -221,7 +221,7 @@ const copy = { en, fr }[lang];
     display: block;
   }
 
-  /* "travailler" / "work": the word the section is about, a selected Title
+  /* "réfléchir" / "think": the word the section is about, a selected Title
      node inside the sentence. */
   .why__word {
     padding: 0 6px;
