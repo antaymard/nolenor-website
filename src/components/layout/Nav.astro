@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import Logo from "@/components/ui/Logo.astro";
 import { getNav } from "@/data/nav";
 import { APP_URL, APP_SIGNUP_URL } from "@/lib/constants";
@@ -18,12 +19,10 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
  * the wordmark and the section links on the left, the way in on the right.
  * A hairline underneath is the only thing that separates it from the page.
  *
- * On a phone the section anchors are hidden rather than folded into a
- * burger menu. On a one-page site they are a convenience, not the
- * navigation: the page reads top to bottom, and the footer carries the same
- * four links for anyone who wants to jump. A drawer would cost a focus
- * trap, an escape handler and a scroll lock, and would push the CTA (the
- * one thing that has to stay reachable on a phone) off to the side.
+ * Below 60rem the links fold into a menu button beside the CTA, which stays
+ * in the bar: the button opens a panel under the bar (not a drawer) with
+ * the sections, Help, Login and the other language. Escape, a tap outside
+ * or on a link closes it.
  *
  * Which link is highlighted is set by nav-active.ts; without JS they are
  * still ordinary working anchors, just never highlighted.
@@ -67,9 +66,74 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
         {otherLang.toUpperCase()}
       </a>
       <a href={APP_SIGNUP_URL} class="btn btn--sm" rel="noopener noreferrer">{t("nav.cta")}</a>
+      <button
+        type="button"
+        class="bar__menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={t("nav.menu")}
+        data-label-open={t("nav.menu")}
+        data-label-close={t("nav.close")}
+        data-menu-toggle
+      >
+        <Icon name="lucide:menu" class="bar__menu-open" aria-hidden="true" />
+        <Icon name="lucide:x" class="bar__menu-close" aria-hidden="true" />
+      </button>
     </div>
   </div>
+
+  <div id="mobile-menu" class="sheet" data-menu hidden>
+    <nav class="wrap sheet__inner" aria-label={t("nav.sections")}>
+      {
+        primaryNavLinks.map((link) => (
+          <a href={link.href} class="sheet__link" data-menu-link>
+            {link.label}
+          </a>
+        ))
+      }
+      <a href={helpLink.href} class="sheet__link" data-menu-link>{helpLink.label}</a>
+      <a href={APP_URL} class="sheet__link" data-menu-link>
+        {t("nav.login")}
+        <Icon name="lucide:arrow-up-right" aria-hidden="true" />
+      </a>
+      <div class="sheet__foot">
+        <span>{t("nav.language")}</span>
+        <a href={switchHref} hreflang={otherLang} lang={otherLang} class="sheet__lang" data-lang-switch={otherLang}>
+          {otherLang === "fr" ? "Français" : "English"}
+        </a>
+      </div>
+    </nav>
+  </div>
 </header>
+
+<script>
+  // The mobile menu: a panel under the bar, toggled by the menu button.
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const sheet = document.querySelector<HTMLElement>("[data-menu]");
+  if (toggle && sheet) {
+    const set = (open: boolean, focusBack = false) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", (open ? toggle.dataset.labelClose : toggle.dataset.labelOpen) ?? "");
+      sheet.hidden = !open;
+      document.documentElement.toggleAttribute("data-menu-open", open);
+      if (open) sheet.querySelector<HTMLElement>("a")?.focus({ preventScroll: true });
+      else if (focusBack) toggle.focus();
+    };
+    toggle.addEventListener("click", () => set(toggle.getAttribute("aria-expanded") !== "true"));
+    sheet.querySelectorAll("[data-menu-link]").forEach((a) => a.addEventListener("click", () => set(false)));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !sheet.hidden) set(false, true);
+    });
+    document.addEventListener("click", (e) => {
+      if (sheet.hidden) return;
+      const target = e.target as Node;
+      if (!sheet.contains(target) && !toggle.contains(target)) set(false);
+    });
+    window.matchMedia("(min-width: 60rem)").addEventListener("change", (e) => {
+      if (e.matches) set(false);
+    });
+  }
+</script>
 
 <style>
   /* A full-width bar, white with a hairline, like the app's own top bar:
@@ -152,9 +216,114 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
     letter-spacing: 0.04em;
   }
 
-  @media (min-width: 40rem) {
-    .nav-link--wide {
-      display: inline-flex;
+  /* Below 60rem, the menu button; the language moves into the menu. */
+  .bar__menu {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: var(--color-ink);
+  }
+
+  .bar__menu:active {
+    background: #f1f5f9;
+  }
+
+  .bar__menu:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+
+  .bar__menu :global(svg) {
+    width: 24px;
+    height: 24px;
+  }
+
+  .bar__menu-close,
+  .bar__menu[aria-expanded="true"] .bar__menu-open {
+    display: none;
+  }
+
+  .bar__menu[aria-expanded="true"] .bar__menu-close {
+    display: block;
+  }
+
+  @media (max-width: 59.99rem) {
+    .nav-link--lang {
+      display: none;
+    }
+  }
+
+  /* The panel: under the bar, full width, large rows for the thumb. */
+  .sheet {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid oklch(0.929 0.013 255.508);
+    background: #fff;
+    box-shadow: 0 24px 40px -24px rgb(15 23 42 / 0.35);
+    animation: sheet-in var(--dur-short, 160ms) var(--ease-out, ease-out);
+  }
+
+  .sheet[hidden] {
+    display: none;
+  }
+
+  .sheet__inner {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--space-sm) var(--space-md);
+  }
+
+  .sheet__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .sheet__link:active {
+    color: var(--color-accent);
+  }
+
+  .sheet__link :global(svg) {
+    width: 18px;
+    height: 18px;
+    color: #94a3b8;
+  }
+
+  .sheet__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    font-size: 15px;
+    color: #64748b;
+  }
+
+  .sheet__lang {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
     }
   }
 
@@ -162,11 +331,24 @@ const switchHref = translatePath(Astro.url.pathname, otherLang);
     .bar__links {
       display: flex;
     }
+
+    .nav-link--wide {
+      display: inline-flex;
+    }
+
+    .bar__menu,
+    .sheet {
+      display: none !important;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .nav-link {
       transition: none;
+    }
+
+    .sheet {
+      animation: none;
     }
   }
 </style>

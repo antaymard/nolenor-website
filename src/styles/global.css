@@ -511,3 +511,94 @@ html {
   background-color: #fff;
   border-block: 1px solid #e8ecf1;
 }
+
+/* ── Phones ──────────────────────────────────────────────────────────────
+   Screenshots and clips run edge to edge, and each one can be opened full
+   screen (media-zoom.ts). Nothing here applies from 40rem up. */
+.zoom-badge { display: none; }
+
+@media (max-width: 39.99rem) {
+  main .media:not(.hero__window .media, .ai__window .media),
+  main .hero__window,
+  main .ai__window {
+    margin-inline: calc(-1 * var(--gutter));
+    border-inline: 0;
+    border-radius: 0;
+  }
+
+  main .media { cursor: zoom-in; }
+
+  .zoom-badge {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 3;
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(255 255 255 / 0.6);
+    border-radius: 999px;
+    background: rgb(15 23 42 / 0.78);
+    color: #fff;
+    box-shadow: 0 4px 12px rgb(15 23 42 / 0.25);
+  }
+}
+
+.zoom {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #0b1220;
+  color: #fff;
+}
+.zoom::backdrop { background: #0b1220; }
+.zoom[open] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* The picture at the largest size the screen allows. Held upright, it lies
+   across the screen (rotated a quarter turn), as wide as the screen is tall. */
+.zoom__stage {
+  position: fixed;
+  inset: 0;
+}
+.zoom__media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  max-width: none;
+  width: calc(100vw - 24px);
+  height: calc(100dvh - 24px);
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+}
+@media (orientation: portrait) {
+  .zoom__media {
+    width: calc(100dvh - 120px);
+    height: calc(100vw - 24px);
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+}
+.zoom__close {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: 12px;
+  z-index: 1;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.14);
+  color: #fff;
+}
+html[data-zoom-open] { overflow: hidden; }

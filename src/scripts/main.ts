@@ -7,6 +7,7 @@ import { initLostThread } from "./lost-thread";
 import { initScrollVideos, initVideoWarmup } from "./video-autoplay";
 import { initStickyScroll } from "./sticky-scroll";
 import { initWishlistForm } from "./wishlist-form";
+import { initMediaZoom } from "./media-zoom";
 
 initScrollReveal();
 initNavActive();
@@ -18,3 +19,4 @@ initScrollVideos();
 initVideoWarmup();
 initStickyScroll();
 initWishlistForm();
+initMediaZoom();

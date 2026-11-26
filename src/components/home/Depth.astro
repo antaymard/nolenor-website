@@ -69,6 +69,28 @@ const PINS: Record<number, { x: number; y: number }> = {
 };
 
 /*
+ * On a phone the whole canvas is too small to read: each numbered point of
+ * the legend also shows its own area of the same picture, cropped (in % of
+ * the picture). Phones only.
+ */
+const CROPS: Record<number, { x: number; y: number; w: number; h: number }> = {
+  1: { x: 9, y: 9.5, w: 47.5, h: 17 },
+  2: { x: 9, y: 30, w: 55, h: 33 },
+  3: { x: 9, y: 71, w: 40, h: 18 },
+  4: { x: 63.5, y: 9.5, w: 34, h: 35 },
+};
+// The original file, as built: no extra variant to generate.
+const canvasUrl = copy.canvas.src;
+const ratio = copy.canvas.width / copy.canvas.height;
+const cropStyle = (c: { x: number; y: number; w: number; h: number }) =>
+  [
+    `background-image:url(${canvasUrl})`,
+    `background-size:${(10000 / c.w).toFixed(2)}% auto`,
+    `background-position:${((c.x / (100 - c.w)) * 100).toFixed(2)}% ${((c.y / (100 - c.h)) * 100).toFixed(2)}%`,
+    `aspect-ratio:${((c.w * ratio) / c.h).toFixed(3)}`,
+  ].join(";");
+
+/*
  * The answer to "a canvas is a whiteboard": one real canvas, rendered from
  * the app's own components at a single scale (sub-canvases, a database in a
  * view, values computed from it, a dashboard), with numbered pins, the
@@ -121,6 +143,7 @@ const PINS: Record<number, { x: number; y: number }> = {
             <span class="pin pin--static" aria-hidden="true">{p.n}</span>
             <h3>{p.title}</h3>
             <p>{p.body}</p>
+            {CROPS[p.n] && <span class="depth__crop" style={cropStyle(CROPS[p.n])} aria-hidden="true" />}
           </li>
         ))
       }
@@ -286,6 +309,28 @@ const PINS: Record<number, { x: number; y: number }> = {
   }
 
 
+
+  .depth__crop {
+    display: none;
+  }
+
+  /* Phones: the point's area of the canvas, under its text. */
+  @media (max-width: 39.99rem) {
+    .depth__crop {
+      display: block;
+      grid-column: 1 / -1;
+      margin-top: 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background-color: #f8fafc;
+      background-repeat: no-repeat;
+      box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+    }
+
+    .depth__legend {
+      gap: var(--space-xl);
+    }
+  }
 
   @media (min-width: 40rem) {
     .depth__legend {
