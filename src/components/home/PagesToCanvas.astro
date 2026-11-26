@@ -12,6 +12,7 @@ const en = {
   replay: "Replay",
   introTitle: "Your project, structured visually.",
   introSub: "Go from rigid nesting to a visual, dynamic structure.",
+  play: "Play the animation",
   full: "Full screen",
   close: "Close",
   caption: "The same project, twice. In pages, everything is filed one inside another. On a canvas, it is all in view, with what links to what.",
@@ -24,6 +25,7 @@ const fr: typeof en = {
   replay: "Rejouer",
   introTitle: "Votre projet, structuré visuellement.",
   introSub: "Passez d’une imbrication rigide à une structure visuelle et dynamique.",
+  play: "Lancer l’animation",
   full: "Plein écran",
   close: "Fermer",
   caption: "Le même projet, deux fois. En pages, tout est rangé l’un dans l’autre. Sur un canvas, tout est sous vos yeux, avec ce qui relie quoi.",
@@ -157,6 +159,7 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
     <p class="title-node title-node--selected ptc__intro-title">{copy.introTitle}<span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span></p>
     <span class="ptc__intro-edge" aria-hidden="true"></span>
     <p class="node doc ptc__intro-sub">{copy.introSub}</p>
+    <button type="button" class="btn ptc__play" data-ptc-play><Icon name="lucide:play" />{copy.play}</button>
   </div>
   <button type="button" class="ptc__full" data-ptc-full aria-label={copy.full}><Icon name="lucide:maximize-2" /></button>
   </div>
@@ -574,6 +577,23 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
   }
   .ptc__intro[data-shown="true"] .ptc__intro-sub {
     animation: intro-pop 420ms 620ms var(--ease-out, ease-out) both;
+  }
+
+  .ptc__play {
+    gap: 8px;
+    margin-top: clamp(14px, 3cqw, 32px);
+    min-height: 44px;
+    font-size: clamp(0.875rem, 1.5cqw, 1rem);
+  }
+
+  .ptc__play :global(svg) {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .ptc__intro[data-shown="true"] .ptc__play {
+    animation: intro-pop 420ms 1000ms var(--ease-out, ease-out) both;
   }
 
   @keyframes intro-pop {

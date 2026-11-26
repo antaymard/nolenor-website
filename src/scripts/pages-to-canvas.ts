@@ -1,4 +1,3 @@
-import { prefersReducedMotion } from "./reduced-motion";
 import {
   CANVAS,
   CRUMB,
@@ -48,8 +47,9 @@ function setup(root: HTMLElement) {
   const showIntro = (on: boolean) => {
     if (intro) intro.dataset.shown = String(on);
   };
-  const INTRO_MS = 2600;
-  let introTimer = 0;
+  // Before the morph, the nested-documents view holds a moment on its own.
+  const HOLD_MS = 1800;
+  let holdTimer = 0;
   // Shown or not, the button keeps its place (visibility, not display), so
   // the bar beside it never changes width.
   const showReplay = (on: boolean) => {
@@ -282,49 +282,32 @@ function setup(root: HTMLElement) {
     raf = requestAnimationFrame(tick);
   };
 
-  // The intro card, then the animation.
-  const playWithIntro = () => {
+  // The intro card stays until Play; then the nested-documents view holds,
+  // then the morph.
+  const start = () => {
     stop();
-    window.clearTimeout(introTimer);
+    window.clearTimeout(holdTimer);
+    showIntro(false);
     showReplay(false);
     show(0);
-    showIntro(true);
-    introTimer = window.setTimeout(() => {
-      showIntro(false);
-      play();
-    }, INTRO_MS);
+    holdTimer = window.setTimeout(play, HOLD_MS);
   };
+  root.querySelector<HTMLButtonElement>("[data-ptc-play]")?.addEventListener("click", start);
 
   input.addEventListener("input", () => {
     stop();
-    window.clearTimeout(introTimer);
+    window.clearTimeout(holdTimer);
     showIntro(false);
     render(Number(input.value) / 1000);
     input.setAttribute("aria-valuetext", `${Math.round(Number(input.value) / 10)} %`);
     showReplay(true);
   });
   input.addEventListener("pointerdown", stop);
-  replay.addEventListener("click", playWithIntro);
+  replay.addEventListener("click", start);
 
-  if (prefersReducedMotion()) {
-    // The intro stays until the slider is moved.
-    show(0);
-    showReplay(false);
-    return;
-  }
+  // The first picture is the intro card, with its Play button.
   showReplay(false);
   show(0);
-  // Plays once by itself, the first time most of it is on screen.
-  const io = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        io.disconnect();
-        playWithIntro();
-      }
-    },
-    { threshold: 0.6 },
-  );
-  io.observe(frame);
 }
 
 export function initPagesToCanvas(): void {
