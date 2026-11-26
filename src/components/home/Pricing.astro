@@ -224,6 +224,21 @@ const copy = { en, fr }[lang];
     color: #16a34a;
   }
 
+  /* Phones: the way in takes the card's width. */
+  @media (max-width: 39.99rem) {
+    .pricing__cta {
+      align-self: stretch;
+    }
+
+    .pricing__main {
+      padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+    }
+
+    .pricing__badge {
+      left: var(--space-lg);
+    }
+  }
+
   @media (min-width: 48rem) {
     .pricing__main {
       grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);

@@ -60,6 +60,9 @@ export function translatePath(pathname: string, lang: Lang): string {
 const uiEn = {
   "nav.sections": "Page sections",
   "nav.login": "Login",
+  "nav.menu": "Menu",
+  "nav.close": "Close the menu",
+  "nav.language": "Language",
   "nav.cta": "Open a canvas",
   "nav.switchTo": "Lire en français",
   "logo.home": "Nolënor home",
@@ -84,6 +87,9 @@ export type UiKey = keyof typeof uiEn;
 const uiFr: Record<UiKey, string> = {
   "nav.sections": "Sections de la page",
   "nav.login": "Connexion",
+  "nav.menu": "Menu",
+  "nav.close": "Fermer le menu",
+  "nav.language": "Langue",
   "nav.cta": "Ouvrir un canvas",
   "nav.switchTo": "Read in English",
   "logo.home": "Accueil Nolënor",

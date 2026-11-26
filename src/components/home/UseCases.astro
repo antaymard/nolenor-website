@@ -409,6 +409,82 @@ const copy = { en, fr }[lang];
   }
 
 
+  /* Phones: the personas become a row of chips that scrolls sideways, edge
+     to edge; in the panel, the picture comes right under the promise, then
+     the two scenarios that switch it, then the link. */
+  @media (max-width: 39.99rem) {
+    .uc__personas {
+      display: flex;
+      gap: 8px;
+      margin-top: var(--space-xl);
+      margin-inline: calc(-1 * var(--gutter));
+      padding: 4px var(--gutter) 10px;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scroll-padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+
+    .uc__personas::-webkit-scrollbar {
+      display: none;
+    }
+
+    .uc__persona {
+      flex: none;
+      gap: 8px;
+      min-height: 44px;
+      padding: 8px 14px 8px 12px;
+      border-radius: 999px;
+      scroll-snap-align: start;
+    }
+
+    .uc__persona :global(svg) {
+      width: 18px;
+      height: 18px;
+    }
+
+    .uc__persona strong {
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .uc__persona em {
+      display: none;
+    }
+
+    .uc__wide {
+      margin-top: var(--space-md);
+    }
+
+    .uc__panel {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-md);
+    }
+
+    .uc__side {
+      display: contents;
+    }
+
+    .uc__promise {
+      order: 1;
+    }
+
+    .uc__shot {
+      order: 2;
+    }
+
+    .uc__scenarios {
+      order: 3;
+    }
+
+    .uc__panel :global(.link-node) {
+      order: 4;
+      align-self: flex-start;
+    }
+  }
+
   @media (min-width: 40rem) {
     .uc__personas {
       grid-template-columns: repeat(3, minmax(0, 1fr));

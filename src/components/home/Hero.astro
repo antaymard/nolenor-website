@@ -124,6 +124,24 @@ const copy = { en, fr }[lang];
     text-wrap: pretty;
   }
 
+  /* Phones: the title node sits inside the gutter (its handles clear the
+     screen's edge), and the pitch follows closer. */
+  @media (max-width: 39.99rem) {
+    .hero {
+      padding-block: var(--space-2xl) var(--space-2xl);
+    }
+
+    .hero__top {
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .hero__title {
+      margin-left: 0;
+      font-size: clamp(2rem, 9vw, 2.5rem);
+    }
+  }
+
   /* Both ways in, the same size. */
   .hero__actions {
     display: grid;
@@ -170,6 +188,7 @@ const copy = { en, fr }[lang];
   }
 
   .hero__made {
+    white-space: nowrap;
     font-weight: 700;
     color: var(--color-ink);
   }

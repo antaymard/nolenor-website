@@ -260,11 +260,35 @@ const modes = ["off", "on"] as const;
     }
   }
 
-  /* On a phone the switch comes first, right under the clip. */
+  /* Below 60rem the switch comes first, right under the clip, as wide as
+     the column (a big target for the thumb), and each state's card is only
+     as tall as its own words. */
   @media (max-width: 59.99rem) {
     .ai__switch {
       order: -1;
       align-self: flex-start;
+    }
+
+    .ai__texts {
+      align-items: start;
+    }
+  }
+
+  /* On a phone only the current state's words take room. */
+  @media (max-width: 39.99rem) {
+    [data-state="off"] .ai__text[data-for="on"],
+    [data-state="on"] .ai__text[data-for="off"] {
+      display: none;
+    }
+  }
+
+  @media (max-width: 39.99rem) {
+    .ai__side .ai__switch {
+      align-self: stretch;
+    }
+
+    .ai__window .media {
+      margin-inline: 0;
     }
   }
 

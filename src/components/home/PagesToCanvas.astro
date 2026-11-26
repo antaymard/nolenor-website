@@ -10,6 +10,7 @@ const en = {
   to: "Structured canvas",
   slider: "From nested documents to a structured canvas",
   replay: "Replay",
+  pan: "Swipe to explore",
   caption: "The same project, twice. In pages, everything is filed one inside another. On a canvas, it is all in view, with what links to what.",
   alt: "A project in a page tool, with nested pages, tabs and a database, breaks apart into a Nolënor canvas: sub-pages become sub-canvases, the database and its views become nodes linked together, and the page stays open in a window docked on the right.",
 };
@@ -18,6 +19,7 @@ const fr: typeof en = {
   to: "Canvas structuré",
   slider: "Des documents imbriqués à un canvas structuré",
   replay: "Rejouer",
+  pan: "Glissez pour explorer",
   caption: "Le même projet, deux fois. En pages, tout est rangé l’un dans l’autre. Sur un canvas, tout est sous vos yeux, avec ce qui relie quoi.",
   alt: "Un projet dans un outil de pages, avec ses sous-pages, ses onglets et sa base de données, s’éclate en un canvas Nolënor : les sous-pages deviennent des sous-canvas, la base et ses vues deviennent des nœuds reliés entre eux, et la page reste ouverte dans une fenêtre ancrée à droite.",
 };
@@ -39,6 +41,7 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
 ---
 
 <figure class="ptc" data-ptc>
+  <div class="ptc__view" data-ptc-view>
   <div class="ptc__frame" data-ptc-frame role="img" aria-label={copy.alt}>
     <div class="ptc__stage" data-ptc-stage aria-hidden="true">
       <!-- Sidebar -->
@@ -140,6 +143,9 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
         <span style="background:#db2777">M</span>
       </div>
     </div>
+  </div>
+
+  <span class="ptc__hint" aria-hidden="true"><Icon name="lucide:move-horizontal" />{copy.pan}</span>
   </div>
 
   <div class="ptc__control">
@@ -467,6 +473,73 @@ const at = (r: { x: number; y: number; w: number; h: number }) => `left:${px(r.x
     font-weight: 600;
     white-space: nowrap;
     color: #fff;
+  }
+
+  /* On a phone the stage is shown at about twice the fitted size, in a
+     frame that pans sideways: a fade on the right edge and a small hint say
+     there is more, and the hint goes after the first swipe. */
+  .ptc__view {
+    position: relative;
+  }
+
+  .ptc__hint {
+    display: none;
+  }
+
+  @media (max-width: 39.99rem) {
+    .ptc__frame {
+      aspect-ratio: auto;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+
+    .ptc__frame::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ptc__view::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 36px;
+      background: linear-gradient(to right, rgb(241 245 249 / 0), rgb(241 245 249 / 0.95));
+      pointer-events: none;
+      transition: opacity 200ms ease;
+    }
+
+    .ptc__view[data-end]::after {
+      opacity: 0;
+    }
+
+    .ptc__hint {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgb(15 23 42 / 0.82);
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      pointer-events: none;
+      transition: opacity 250ms ease;
+    }
+
+    .ptc__hint :global(svg) {
+      width: 15px;
+      height: 15px;
+    }
+
+    .ptc__view[data-panned] .ptc__hint {
+      opacity: 0;
+    }
   }
 
   /* The control */

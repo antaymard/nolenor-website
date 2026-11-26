@@ -74,12 +74,34 @@ function setup(root: HTMLElement) {
     return { path, arrow, len };
   });
 
-  // Fit the fixed stage to its frame.
+  // Fit the fixed stage to its frame. On a phone, a larger fixed scale in a
+  // frame that pans sideways (the CSS lets it scroll).
+  const phone = window.matchMedia("(max-width: 39.99rem)");
+  const PHONE_SCALE = 0.56;
   const fit = () => {
-    stage.style.transform = `scale(${frame.clientWidth / STAGE.w})`;
+    if (phone.matches) {
+      stage.style.transform = `scale(${PHONE_SCALE})`;
+      frame.style.height = `${Math.round(STAGE.h * PHONE_SCALE)}px`;
+    } else {
+      stage.style.transform = `scale(${frame.clientWidth / STAGE.w})`;
+      frame.style.height = "";
+    }
   };
   new ResizeObserver(fit).observe(frame);
+  phone.addEventListener("change", fit);
   fit();
+
+  const view = root.querySelector<HTMLElement>("[data-ptc-view]");
+  if (view) {
+    frame.addEventListener(
+      "scroll",
+      () => {
+        if (frame.scrollLeft > 8) view.dataset.panned = "";
+        view.toggleAttribute("data-end", frame.scrollLeft + frame.clientWidth >= frame.scrollWidth - 4);
+      },
+      { passive: true },
+    );
+  }
 
   function render(t: number) {
     const split = win(t, 0.06, 0.42);
