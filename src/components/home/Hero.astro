@@ -1,7 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
 import PagesToCanvas from "@/components/home/PagesToCanvas.astro";
-import Edge from "@/components/home/Edge.astro";
 import { APP_SIGNUP_URL, PUBLIC_CANVAS_URL } from "@/lib/constants";
 import { getLang } from "@/i18n";
 
@@ -12,9 +11,9 @@ const en = {
   ai: "And AI by your side.",
   lede: "Nolënor is an infinite canvas for deep work. Structure your ideas, explore options with AI, keep your dashboards in one place, plan what comes next.",
   terms: "Open beta. No card, export any time.",
+  madeIn: "",
   cta: "Open a canvas",
   second: "See a real canvas",
-  note: "From nested documents to a visual, structured space: the same project, with all its depth. Drag to go from one to the other.",
   window: "Unfold your page tree: your whole project at a glance.",
 };
 const fr: typeof en = {
@@ -22,34 +21,31 @@ const fr: typeof en = {
   ai: "Et l’IA à vos côtés.",
   lede: "Nolënor est un canvas infini pour travailler en profondeur. Structurez vos idées, explorez des pistes avec l’IA, centralisez vos tableaux de bord, planifiez la suite.",
   terms: "Bêta ouverte. Sans carte, export à tout moment.",
+  madeIn: "Made in France",
   cta: "Ouvrir un canvas",
   second: "Voir un vrai canvas",
-  note: "De documents imbriqués à un espace visuel et structuré : le même projet, avec toute sa profondeur. Faites glisser pour passer de l’un à l’autre.",
   window: "Dépliez votre arborescence : tout votre projet, d’un seul regard.",
 };
 const copy = { en, fr }[lang];
 
 /*
  * The hero is a corner of a canvas. The headline is a Title node, selected;
- * a yellow node beside it points, with a real edge, at the window below,
- * which holds the pages-to-canvas slider. Under it, the pitch is a document
+ * the window below holds the pages-to-canvas slider. Under it, the pitch is a document
  * node and "See a real canvas" a Link node. The AI switch lives in its own
  * section, further down.
  */
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="wrap hero__top">
+  <div class="wrap">
     <h1 id="hero-title" class="title-node title-node--selected hero__title">
       <span>{copy.pace}</span>
       <span class="hero__ai">{copy.ai}</span>
       <span class="handles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     </h1>
-    <div class="node node--yellow doc hero__note">{copy.note}</div>
   </div>
 
   <div class="wrap">
-    <Edge from={87} to={84} height={44} class="hero__edge" />
     <div class="node hero__window bleed-both">
       <div class="hero__window-head">
         <Icon name="lucide:notebook-text" />
@@ -63,7 +59,7 @@ const copy = { en, fr }[lang];
     <div class="hero__cta">
       <div class="hero__pitch">
         <p class="hero__lede">{copy.lede}</p>
-        <p class="hero__terms">{copy.terms}</p>
+        <p class="hero__terms">{copy.terms}{copy.madeIn && <span class="hero__made"> · {copy.madeIn}</span>}</p>
       </div>
       <div class="hero__actions">
         <a href={APP_SIGNUP_URL} class="btn btn--inverse" rel="noopener noreferrer">{copy.cta}</a>
@@ -119,6 +115,11 @@ const copy = { en, fr }[lang];
     line-height: 1.5;
     color: #fff;
     text-wrap: pretty;
+  }
+
+  .hero__made {
+    font-weight: 700;
+    color: #fff;
   }
 
   .hero__terms {
@@ -182,20 +183,12 @@ const copy = { en, fr }[lang];
     }
   }
 
-  .hero__top {
-    display: grid;
-    gap: var(--space-lg);
-    align-items: end;
-  }
-
-
-
   .hero__title {
     display: flex;
     flex-direction: column;
     justify-self: start;
     margin: 0 0 0 -8px;
-    font-size: min(var(--text-display), 3.4rem);
+    font-size: var(--text-display);
     line-height: 1.04;
   }
 
@@ -206,40 +199,6 @@ const copy = { en, fr }[lang];
   @media (min-width: 60rem) {
     .hero__title > span:not(.handles):not(.cursor) {
       white-space: nowrap;
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  .hero__note {
-    max-width: 19rem;
-    color: #713f12;
-    font-weight: 600;
-  }
-
-  .hero__edge {
-    display: none;
-  }
-
-  /* Wide enough: the title keeps its two set lines, the note sits beside. */
-  @media (min-width: 75rem) {
-    .hero__top {
-      grid-template-columns: max-content minmax(0, 1fr);
-      gap: var(--space-2xl);
     }
   }
 
@@ -266,24 +225,10 @@ const copy = { en, fr }[lang];
   }
 
   @media (min-width: 60rem) {
-    .hero__top {
-      gap: var(--space-lg);
-    }
-
-    .hero__note {
-      justify-self: end;
-    }
-
-    .hero__edge {
-      display: block;
-    }
-
     /* The slider is the hero's proof: it takes the full bleed on both sides. */
     .hero__window {
-      margin-top: 0;
       margin-inline: calc(-1 * var(--bleed));
     }
-
 
   }
 
